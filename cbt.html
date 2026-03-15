@@ -1675,5 +1675,57 @@ if ('serviceWorker' in navigator) {
 <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
 
+  <script>
+(function() {
+    // Check if Firebase is loaded, otherwise init
+    const trackerConfig = { 
+        apiKey: "AIzaSyDGolcXv0efZxRdOvBthfeT72mkNLLbAwI", 
+        authDomain: "dsssbexamportal.firebaseapp.com", 
+        databaseURL: "https://dsssbexamportal-default-rtdb.asia-southeast1.firebasedatabase.app", 
+        projectId: "dsssbexamportal", 
+        storageBucket: "dsssbexamportal.firebasestorage.app", 
+        messagingSenderId: "853373171134", 
+        appId: "1:853373171134:web:77b967374e6f34311af5ef" 
+    };
+    if (typeof firebase !== 'undefined') {
+        if (!firebase.apps.length) { firebase.initializeApp(trackerConfig); }
+        
+        const trackDb = firebase.database();
+        let trackUid = localStorage.getItem('dsssb_user_id');
+        let trackUname = localStorage.getItem('dsssb_user_name') || 'Student';
+        if(!trackUid) {
+            trackUid = 'user_' + Math.floor(Math.random() * 1000000);
+            localStorage.setItem('dsssb_user_id', trackUid);
+        }
+
+        // Determine current page activity
+        let loc = window.location.pathname.split('/').pop() || 'index.html';
+        if(loc.includes('cbt.html')) loc = 'Giving Mock Test 📝';
+        else if(loc.includes('index.html') || loc === '') loc = 'On Dashboard 🏠';
+        else loc = 'Exploring Portal 🔍';
+
+        // 1. Update Total/Weekly Users
+        trackDb.ref('dsssb_analytics/users/' + trackUid).update({
+            name: trackUname,
+            last_active: firebase.database.ServerValue.TIMESTAMP
+        });
+
+        // 2. Update Live Presence
+        const connRef = trackDb.ref('.info/connected');
+        const presRef = trackDb.ref('dsssb_analytics/presence/' + trackUid);
+
+        connRef.on('value', (snap) => {
+            if (snap.val() === true) {
+                presRef.onDisconnect().remove(); // Tab close hote hi offline
+                presRef.set({ 
+                    name: trackUname, 
+                    activity: loc, 
+                    time: firebase.database.ServerValue.TIMESTAMP 
+                });
+            }
+        });
+    }
+})();
+</script>
 </body>
 </html>
