@@ -1,0 +1,187 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+<meta charset="UTF-8"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+<title>Smart Post-Exam Analysis</title> 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
+<style> 
+:root { 
+    --primary: #4f46e5; --primary-light: #e0e7ff; --primary-dark: #3730a3; 
+    --success: #10b981; --warning: #f59e0b; --danger: #ef4444; 
+    --bg-body: #f4f6f8; --bg-card: #ffffff; --text-main: #1f2937; --text-muted: #6b7280; 
+    --border: #e5e7eb; 
+} 
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; } 
+body { background: var(--bg-body); color: var(--text-main); padding: 20px; padding-bottom: 80px;} 
+
+.header-banner { background: linear-gradient(135deg, #4f46e5, #8b5cf6); padding: 25px; border-radius: 20px; color: white; text-align: center; box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3); margin-bottom: 25px;} 
+.header-banner h1 { font-size: 24px; font-weight: 900; margin-bottom: 5px; } 
+.header-banner p { font-size: 14px; opacity: 0.9; font-weight: 600;} 
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; } 
+.card { background: var(--bg-card); padding: 20px; border-radius: 16px; box-shadow: 0 6px 15px rgba(0,0,0,0.04); border: 1px solid var(--border); } 
+.card-title { font-weight: 800; font-size: 16px; margin-bottom: 15px; color: var(--text-main); display: flex; align-items: center; gap: 8px;} 
+
+.stat-box { text-align: center; padding: 15px; border-radius: 12px; background: var(--bg-body); border: 1px solid var(--border); } 
+.stat-val { font-size: 24px; font-weight: 900; color: var(--primary); margin-bottom: 5px;} 
+.stat-lbl { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;} 
+
+/* AI Engine Styles */ 
+.ai-engine-box { background: linear-gradient(to right, #1e293b, #0f172a); color: white; border: 1px solid #334155; } 
+.topic-pill { padding: 8px 12px; border-radius: 10px; font-size: 13px; font-weight: 700; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;} 
+.topic-weak { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); } 
+.topic-strong { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3); } 
+.progress-bar { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 5px; margin-top: 6px; overflow: hidden;} 
+.progress-fill { height: 100%; border-radius: 5px; } 
+
+.btn-action { display: block; width: 100%; padding: 15px; background: var(--primary); color: white; text-align: center; font-weight: 800; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3); margin-top: 15px; transition: 0.2s;} 
+.btn-action:active { transform: scale(0.98); }
+</style> 
+</head> 
+<body> 
+    
+<div class="header-banner"> 
+    <h1>📊 Deep Exam Analysis</h1> 
+    <p>AI-Powered Performance Insights</p> 
+</div> 
+
+<div class="grid-2"> 
+    <div class="stat-box"> 
+        <div class="stat-val" id="accVal">0%</div> 
+        <div class="stat-lbl">Accuracy</div> 
+    </div> 
+    <div class="stat-box"> 
+        <div class="stat-val" id="timeVal">0s</div> 
+        <div class="stat-lbl">Avg Time/Q</div> 
+    </div> 
+</div> 
+
+<div class="card ai-engine-box"> 
+    <div class="card-title" style="color:#fff;"><i class="fas fa-brain" style="color:#a855f7;"></i> AI Weak Topic Engine</div> 
+    <p style="font-size: 12px; color: #94a3b8; margin-bottom: 15px; line-height:1.5;">Based on your recent attempt, our AI has analyzed your concept mastery. Focus on the red topics to improve your score.</p> 
+    <div id="aiTopicsList"> 
+        <div style="text-align:center; padding: 20px; color:#64748b;">Analyzing your data...</div> 
+    </div> 
+</div> 
+
+<div class="card" style="margin-top: 20px;"> 
+    <div class="card-title"><i class="fas fa-stopwatch" style="color: var(--warning);"></i> Time Management</div> 
+    <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid var(--border); padding-bottom:10px;"> 
+        <span style="font-size:14px; font-weight:600; color:var(--text-muted);">Fastest Answer:</span> 
+        <span style="font-size:14px; font-weight:800; color:var(--success);" id="fastTime">--</span> 
+    </div> 
+    <div style="display:flex; justify-content:space-between;"> 
+        <span style="font-size:14px; font-weight:600; color:var(--text-muted);">Slowest Answer:</span> 
+        <span style="font-size:14px; font-weight:800; color:var(--danger);" id="slowTime">--</span> 
+    </div> 
+</div> 
+
+<div class="card" style="margin-top: 20px;"> 
+    <div class="card-title"><i class="fas fa-chart-pie" style="color: var(--primary);"></i> Question Distribution</div> 
+    <div style="height: 200px; position:relative; width: 100%; display: flex; justify-content: center;"> 
+        <canvas id="accuracyChart"></canvas> 
+    </div> 
+</div> 
+
+<a href="index.html" class="btn-action"><i class="fas fa-home"></i> Back to Dashboard</a> 
+<a href="replay.html" class="btn-action" style="background: var(--bg-card); color: var(--primary); border: 2px solid var(--primary); box-shadow:none;"><i class="fas fa-play-circle"></i> View Question Replay Mode</a> 
+
+<script> 
+function getSafeData(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
+
+window.onload = function() { 
+    // 1. Dhoondho test data
+    let testDataRaw = getSafeData('dsssb_analysis_data');
+    if (!testDataRaw) {
+        document.getElementById('aiTopicsList').innerHTML = '<div style="color:#ef4444; text-align:center; padding:10px; font-weight:bold;">No recent test data found. Attempt a mock test first!</div>';
+        return;
+    }
+    
+    let realData = JSON.parse(testDataRaw);
+    loadAnalysisData(realData); 
+}; 
+
+function loadAnalysisData(data) { 
+    const totalAttempted = data.correct + data.wrong; 
+    const accuracy = totalAttempted > 0 ? Math.round((data.correct / totalAttempted) * 100) : 0; 
+    
+    document.getElementById('accVal').innerText = accuracy + '%'; 
+    document.getElementById('timeVal').innerText = data.avgTime + 's'; 
+    
+    document.getElementById('fastTime').innerText = (data.fastestTime === 9999 ? 0 : data.fastestTime) + 's'; 
+    document.getElementById('slowTime').innerText = data.slowestTime + 's'; 
+
+    // AI Engine Processing 
+    const topicsBox = document.getElementById('aiTopicsList'); 
+    let topicsHtml = ''; 
+    let weakFound = false; 
+
+    // Extracting Object keys
+    let topicsArray = Object.keys(data.topicPerformance || {});
+    
+    if(topicsArray.length === 0) {
+         topicsBox.innerHTML = '<div style="color:#64748b; text-align:center; padding:10px; font-weight:bold;">No topic tags found in this mock.</div>';
+    } else {
+        topicsArray.forEach(topic => { 
+            let stats = data.topicPerformance[topic]; 
+            let tAtt = stats.c + stats.w; 
+            if (tAtt === 0) return; // Skipped topic entirely 
+
+            let tAcc = (stats.c / tAtt) * 100; 
+
+            // Logic for AI detection: Below 50% is Weak, Above 80% is Strong 
+            if (tAcc <= 50) { 
+                weakFound = true; 
+                topicsHtml += ` 
+                    <div class="topic-pill topic-weak"> 
+                        <div><i class="fas fa-times-circle"></i> ${topic}</div> 
+                        <div>${Math.round(tAcc)}% Acc.</div> 
+                    </div> 
+                    <div class="progress-bar"><div class="progress-fill" style="width: ${tAcc}%; background:#ef4444;"></div></div> 
+                    <div style="margin-bottom:15px;"></div> 
+                `; 
+            } else if (tAcc >= 80) { 
+                topicsHtml += ` 
+                    <div class="topic-pill topic-strong"> 
+                        <div><i class="fas fa-check-circle"></i> ${topic}</div> 
+                        <div>${Math.round(tAcc)}% Acc.</div> 
+                    </div> 
+                    <div class="progress-bar"><div class="progress-fill" style="width: ${tAcc}%; background:#10b981;"></div></div> 
+                    <div style="margin-bottom:15px;"></div> 
+                `; 
+            } 
+        }); 
+        
+        if (!weakFound && topicsHtml !== '') { 
+            topicsHtml = '<div style="color:#10b981; text-align:center; padding:10px; font-weight:bold;">🎉 Excellent! No major weak topics detected!</div>' + topicsHtml; 
+        } else if (topicsHtml === '') {
+            topicsHtml = '<div style="color:#64748b; text-align:center; padding:10px; font-weight:bold;">Attempt more questions to see Topic Analysis.</div>';
+        }
+        
+        topicsBox.innerHTML = topicsHtml; 
+    }
+
+    // Render Chart 
+    const ctx = document.getElementById('accuracyChart').getContext('2d'); 
+    new Chart(ctx, { 
+        type: 'doughnut', 
+        data: { 
+            labels: ['Correct', 'Wrong', 'Skipped'], 
+            datasets: [{ 
+                data: [data.correct, data.wrong, data.skipped], 
+                backgroundColor: ['#10b981', '#ef4444', '#f59e0b'], 
+                borderWidth: 0, 
+                cutout: '75%' 
+            }] 
+        }, 
+        options: { 
+            responsive: true, maintainAspectRatio: false, 
+            plugins: { legend: { position: 'bottom', labels: { color: '#6b7280', font: {family: 'Segoe UI', weight: 'bold'} } } } 
+        } 
+    }); 
+} 
+</script> 
+</body> 
+</html>

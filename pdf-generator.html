@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium CBT Mock Test PDF Generator</title>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true, packages: {'[+]': ['ams', 'noerrors', 'noundefined']} },
+            svg: { fontCache: 'global' },
+            startup: { typeset: false }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --primary-blue: #1a73e8;
+            --light-blue: #e8f0fe;
+            --text-dark: #202124;
+            --text-grey: #5f6368;
+            --ans-green: #0d652d;
+            --ans-bg: #e6f4ea;
+            --sol-orange: #e67c73;
+            --sol-bg: #fce8e6;
+            --base-font-size: 12px;
+        }
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: var(--text-dark); }
+        
+        /* --- Admin Panel --- */
+        .admin-panel { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 20px; max-width: 850px; margin-left: auto; margin-right: auto; }
+        .admin-panel h2 { margin-top: 0; color: var(--primary-blue); text-align: center; font-size: 22px; }
+        .input-group { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+        .input-field { flex: 1; min-width: 200px; padding: 10px; border: 1px solid #dadce0; border-radius: 6px; font-size: 13px; background: #fff; }
+        .controls-row { display: flex; align-items: center; justify-content: space-between; background: #f8f9fa; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #e0e0e0; flex-wrap: wrap; gap: 10px; }
+        .toggle-group { display: flex; gap: 12px; font-size: 13px; font-weight: bold; flex-wrap: wrap; }
+        .toggle-group label { cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        textarea { width: 100%; height: 150px; padding: 12px; border: 2px solid #dadce0; border-radius: 8px; font-family: monospace; font-size: 13px; box-sizing: border-box; margin-bottom: 15px; }
+        
+        /* Action Buttons */
+        .action-buttons { display: flex; gap: 10px; }
+        .btn { color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 8px; flex: 1; cursor: pointer; transition: all 0.2s; }
+        .btn-print { background: linear-gradient(135deg, #1a73e8, #1557b0); box-shadow: 0 4px 15px rgba(26, 115, 232, 0.4); }
+        .btn-print:hover { box-shadow: 0 6px 20px rgba(26, 115, 232, 0.6); transform: translateY(-1px); }
+        .btn-download { background: linear-gradient(135deg, #34a853, #1e7e34); box-shadow: 0 4px 15px rgba(52, 168, 83, 0.4); }
+        .btn-download:hover { box-shadow: 0 6px 20px rgba(52, 168, 83, 0.6); transform: translateY(-1px); }
+        
+        mjx-container svg { max-width: 100%; height: auto; }
+        
+        /* --- PDF Layout & Watermark --- */
+        #pdf-container { max-width: 900px; margin: 0 auto; background: white; position: relative; display: block; }
+        .watermark-img { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-35deg); width: 85%; max-width: 750px; opacity: 0.08; z-index: 0; pointer-events: none; display: none; }
+        
+        /* --- PREMIUM HEADER --- */
+        .paper-header { background: linear-gradient(135deg, #e65c00, #ff8a00); padding: 15px 20px; border-bottom: 5px solid #1a73e8; display: none; border-radius: 8px 8px 0 0; margin-bottom: 20px; color: white; text-align: center; position: relative; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .paper-header h1 { margin: 0; color: #ffffff; font-size: 24px; text-transform: uppercase; font-weight: 900; letter-spacing: 1px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .paper-header p { margin: 5px 0 0 0; font-weight: bold; color: #fff3e0; font-size: 13px; letter-spacing: 0.5px; }
+        .header-punchline { background: #1a73e8; color: white; display: inline-block; padding: 4px 15px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-top: 10px; text-transform: uppercase; border: 1px solid #ffffff; }
+        
+        /* --- Main Section Header --- */
+        .main-section-header { background: var(--primary-blue); color: white; padding: 8px 15px; margin: 15px 8px 5px 8px; font-size: calc((var(--base-font-size) * 1px) + 2px); font-weight: bold; border-radius: 6px; text-transform: uppercase; box-shadow: 0 2px 5px rgba(0,0,0,0.1); page-break-after: avoid; break-after: avoid; }
+        
+        /* --- NEW: Question Badges --- */
+        .q-meta { display: flex; gap: 8px; margin-bottom: 8px; font-size: calc((var(--base-font-size) * 1px) - 2px); flex-wrap: wrap; }
+        .topic-tag { background: #e8f0fe; color: #1a73e8; padding: 3px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #c2d7fa; }
+        .diff-badge { padding: 3px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #dadce0; }
+        .diff-easy { background: #e6f4ea; color: #137333; border-color: #ceead6; }
+        .diff-medium { background: #fef7e0; color: #b08d00; border-color: #fce8b2; }
+        .diff-hard { background: #fce8e6; color: #c5221f; border-color: #fad2cf; }
+
+        /* --- Questions --- */
+        .question-block { border: 1px solid #e0e0e0; border-radius: 6px; margin: 8px; background: transparent; page-break-inside: avoid; break-inside: avoid; position: relative; z-index: 1; display: block; padding: 8px 10px; }
+        .q-text { font-size: calc(var(--base-font-size) * 1px); font-weight: 600; line-height: 1.3; margin-bottom: 4px; color: #111; }
+        .q-text-hi { color: #444; margin-top: 4px; padding-top: 4px; border-top: 1px dashed #eee; }
+        .q-image { max-width: 100%; height: auto; margin: 6px 0; border: 1px solid #ccc; border-radius: 4px; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; margin-top: 6px; }
+        .option-item { display: flex; align-items: flex-start; padding: 4px 6px; border-radius: 4px; border: 1px solid #dadce0; font-size: calc((var(--base-font-size) * 1px) - 1px); background: rgba(248, 249, 250, 0.9); line-height: 1.2; }
+        .bubble { display: inline-flex; justify-content: center; align-items: center; width: 16px; height: 16px; background: white; border: 1px solid #9aa0a6; border-radius: 50%; margin-right: 6px; font-weight: bold; font-size: 9px; color: #5f6368; flex-shrink: 0; }
+        
+        /* Answers & Solutions */
+        .answer-explain-box { padding: 6px 10px; background: rgba(250, 250, 250, 0.9); border-top: 1px dashed #dadce0; border-radius: 0 0 5px 5px; margin: 0 -10px -8px -10px; }
+        .correct-ans-row { background: var(--ans-bg); color: var(--ans-green); padding: 3px 6px; border-radius: 4px; font-weight: bold; font-size: calc((var(--base-font-size) * 1px) - 2px); margin-bottom: 4px; border-left: 3px solid var(--ans-green); display: inline-block; }
+        .solution-box { background: var(--sol-bg); border-left: 3px solid var(--sol-orange); padding: 6px 8px; border-radius: 4px; font-size: calc((var(--base-font-size) * 1px) - 1px); line-height: 1.3; color: #333; }
+        .sol-title { font-weight: bold; color: #c53929; margin-bottom: 3px; display: block; font-size: calc((var(--base-font-size) * 1px) - 3px); text-transform: uppercase; }
+        
+        /* --- NEW: Quick Answer Key Table --- */
+        .answer-key-wrapper { margin: 15px 8px; background: white; padding: 15px; border-radius: 8px; border: 2px solid #1a73e8; page-break-inside: avoid; }
+        .answer-key-title { text-align: center; color: #1a73e8; font-weight: 900; margin-top: 0; margin-bottom: 12px; font-size: 16px; text-transform: uppercase; }
+        .answer-key-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 6px; }
+        .ak-item { background: #f8f9fa; border: 1px solid #dadce0; padding: 5px; text-align: center; border-radius: 4px; font-size: calc((var(--base-font-size) * 1px) - 1px); font-weight: bold; color: #333; }
+        .ak-item span { color: #1a73e8; margin-right: 4px; }
+
+        /* End Solutions Section */
+        .solutions-section-header { text-align: center; padding: 10px; background: var(--primary-blue); color: white; margin: 15px 8px; border-radius: 6px; }
+        .end-sol-item { margin: 8px; border: 1px solid #dadce0; border-radius: 6px; page-break-inside: avoid; break-inside: avoid; }
+        .end-sol-qnum { background: #f1f3f4; padding: 4px 10px; font-weight: bold; border-bottom: 1px solid #dadce0; font-size: calc((var(--base-font-size) * 1px) - 1px); }
+        
+        /* View Modes */
+        .ultra-compact .main-section-header { margin: 10px 2px 5px 2px; padding: 5px 10px; font-size: calc((var(--base-font-size) * 1px) + 1px); }
+        .ultra-compact .question-block { margin: 4px 2px; padding: 4px 6px; }
+        .ultra-compact .q-meta { margin-bottom: 4px; }
+        .ultra-compact .q-text { margin-bottom: 2px; line-height: 1.15; }
+        .ultra-compact .options-grid { gap: 2px 6px; margin-top: 4px; }
+        .ultra-compact .option-item { padding: 2px 4px; line-height: 1.15; border: none; background: transparent; border-bottom: 1px solid #eee; }
+        .two-column-mode .questions-wrapper { column-count: 2; column-gap: 10px; }
+        .two-column-mode .end-solutions-wrapper { column-count: 2; column-gap: 10px; }
+        .two-column-mode .main-section-header, .two-column-mode .answer-key-wrapper { column-span: all; margin-bottom: 10px; }
+        
+        .pdf-footer { display: none; }
+        
+        /* --- PRINT CSS --- */
+        @media print {
+            body { background: white; padding: 0; padding-bottom: 50px; }
+            .admin-panel { display: none; }
+            .paper-header, .watermark-img { display: block; }
+            #pdf-container { width: 100%; max-width: 100%; margin: 0; display: block; }
+            .question-block { border-color: #bdc1c6; }
+            .page-break-before { page-break-before: always; break-before: page; }
+            .pdf-footer { position: fixed; bottom: 0; left: 0; width: 100%; display: block !important; text-align: center; background: #1a73e8 !important; color: white !important; padding: 8px 10px 12px 10px; z-index: 1000; border-top: 4px solid #ff8a00 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .footer-punch { font-size: 11px; font-weight: 600; margin-bottom: 4px; color: #e8f0fe !important; }
+            .footer-link-box { background: #ffeb3b !important; color: #b71c1c !important; display: inline-block; padding: 4px 20px; border-radius: 25px; font-size: 13px; font-weight: 900; text-decoration: none; border: 1px dashed #b71c1c; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            @page { margin: 8mm; }
+            .ultra-compact-print { @page { margin: 4mm; } }
+        }
+    </style>
+</head>
+<body>
+
+<div class="admin-panel">
+    <h2>🚀 Premium CBT Mock PDF Generator</h2>
+    
+    <div class="input-group">
+        <input type="text" id="examTitle" class="input-field" value="🏆 DSSSB ASSISTANT SUPERINTENDENT 🏆" placeholder="Main Exam Title">
+        <input type="text" id="examSubtitle" class="input-field" value="Premium Mock Test | Detailed Solutions | Smart Layout" placeholder="Subtitle">
+        <input type="text" id="watermarkUrl" class="input-field" placeholder="Watermark URL (Transparent PNG)">
+    </div>
+    
+    <div class="input-group">
+        <input type="text" id="inputHeaderPunch" class="input-field" value="🌟 100% Exam Oriented | Based on Latest Pattern 🌟" placeholder="Header Punchline">
+        <input type="text" id="inputFooterPunch" class="input-field" value="🔥 Selection Wahi, Jo Hum Padhaye! Download 10,000+ Free Mock Tests & PYQs 🔥" placeholder="Footer Punchline">
+        <input type="text" id="inputFooterLink" class="input-field" value="👉 Join Telegram: t.me/DSSSBRank 👈" placeholder="Telegram Link/Button Text">
+    </div>
+
+    <div class="input-group">
+        <select id="langMode" class="input-field">
+            <option value="bilingual">🗣️ Bilingual (English + Hindi)</option>
+            <option value="english">🇬🇧 English Only</option>
+            <option value="hindi">🇮🇳 Hindi Only</option>
+        </select>
+        <select id="solMode" class="input-field">
+            <option value="below">⬇️ Solutions Below Question</option>
+            <option value="end">🔚 Solutions at the End of PDF</option>
+            <option value="hide">❌ Hide Solutions (Practice Mode)</option>
+        </select>
+        <input type="number" id="qLimit" class="input-field" placeholder="Max Questions (e.g. 50)" min="1">
+        <input type="text" id="sectionFilter" class="input-field" placeholder="Only this Section (e.g. Maths)">
+    </div>
+
+    <div class="controls-row">
+        <div class="toggle-group">
+            <label><input type="checkbox" id="toggleTwoColumn" checked> 📖 2-Column</label>
+            <label><input type="checkbox" id="toggleCompact"> 🗜️ Ultra Compact</label>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <label style="font-size: 12px; font-weight: bold;">Font Size:</label>
+            <input type="range" id="fontSizeSlider" min="9" max="16" value="12" oninput="updateFontSize(this.value)" style="width: 80px;">
+            <span id="fontSizeDisplay" style="font-size: 12px; font-weight: bold;">12px</span>
+        </div>
+    </div>
+
+    <textarea id="jsonInput" placeholder="Paste your strict JSON array here... Make sure to add 'difficulty' and 'topic' tags in JSON if you want badges!"></textarea>
+    
+    <div class="action-buttons">
+        <button class="btn btn-print" onclick="processPDF('print')">🖨️ Print PDF</button>
+        <button class="btn btn-download" onclick="processPDF('download')">📥 Download PDF</button>
+    </div>
+</div>
+
+<div id="pdf-container">
+    <img id="printWatermark" class="watermark-img" src="" alt="">
+    
+    <div class="paper-header" id="pdfHeader">
+        <h1 id="printTitle">🏆 Target Exam 🏆</h1>
+        <p id="printSubtitle">Premium Mock Test</p>
+        <div class="header-punchline" id="printHeaderPunch">🌟 100% Exam Oriented 🌟</div>
+    </div>
+    
+    <div id="output"></div>
+    
+    <div class="pdf-footer" id="pdfFooter">
+        <div class="footer-punch" id="printFooterPunch">🔥 Selection Wahi, Jo Hum Padhaye! 🔥</div>
+        <div class="footer-link-box" id="printFooterLink">👉 Join Telegram 👈</div>
+    </div>
+</div>
+
+<script>
+    function updateFontSize(val) {
+        document.documentElement.style.setProperty('--base-font-size', val);
+        document.getElementById('fontSizeDisplay').innerText = val + 'px';
+    }
+
+    function getIcon(section) {
+        const s = section.toLowerCase();
+        if(s.includes('math') || s.includes('quant') || s.includes('arithmetic') || s.includes('numerical')) return '🧮';
+        if(s.includes('sci')) return '🔬';
+        if(s.includes('gk') || s.includes('general') || s.includes('aware')) return '🌍';
+        if(s.includes('eng')) return '📚';
+        if(s.includes('hindi')) return 'अ';
+        if(s.includes('reason') || s.includes('logic') || s.includes('intelligence')) return '🧠';
+        if(s.includes('comput')) return '💻';
+        return '📝';
+    }
+
+    function cleanOptionText(text) {
+        if(!text) return "";
+        return text.replace(/^[X☑✔]*\s*\d+\.\s*/i, '').trim();
+    }
+
+    function processPDF(actionType) {
+        const inputData = document.getElementById('jsonInput').value;
+        const outputDiv = document.getElementById('output');
+        const pdfContainer = document.getElementById('pdf-container');
+        const body = document.body;
+        const langMode = document.getElementById('langMode').value;
+        const solMode = document.getElementById('solMode').value;
+        
+        // Update Branding
+        document.getElementById('printTitle').innerText = document.getElementById('examTitle').value;
+        document.getElementById('printSubtitle').innerText = document.getElementById('examSubtitle').value;
+        document.getElementById('printHeaderPunch').innerText = document.getElementById('inputHeaderPunch').value;
+        document.getElementById('printFooterPunch').innerText = document.getElementById('inputFooterPunch').value;
+        document.getElementById('printFooterLink').innerText = document.getElementById('inputFooterLink').value;
+        
+        const wmUrl = document.getElementById('watermarkUrl').value;
+        if(wmUrl) {
+            document.getElementById('printWatermark').src = wmUrl;
+            document.getElementById('printWatermark').style.display = 'block';
+        } else {
+            document.getElementById('printWatermark').style.display = 'none';
+        }
+
+        if(document.getElementById('toggleTwoColumn').checked) { pdfContainer.classList.add('two-column-mode'); } 
+        else { pdfContainer.classList.remove('two-column-mode'); }
+
+        if(document.getElementById('toggleCompact').checked) {
+            pdfContainer.classList.add('ultra-compact');
+            body.classList.add('ultra-compact-print');
+        } else {
+            pdfContainer.classList.remove('ultra-compact');
+            body.classList.remove('ultra-compact-print');
+        }
+
+        outputDiv.innerHTML = '';
+
+        try {
+            let questions = JSON.parse(inputData);
+            
+            // Filters
+            const sectionFilter = document.getElementById('sectionFilter').value.trim().toLowerCase();
+            if (sectionFilter) { questions = questions.filter(q => q.section.toLowerCase().includes(sectionFilter)); }
+            const qLimit = parseInt(document.getElementById('qLimit').value);
+            if (!isNaN(qLimit) && qLimit > 0) { questions = questions.slice(0, qLimit); }
+
+            if (questions.length === 0) {
+                outputDiv.innerHTML = '<p style="text-align:center; color:red; font-weight:bold;">No questions found!</p>';
+                return;
+            }
+
+            let questionsHtml = '<div class="questions-wrapper">';
+            let endSolutionsHtml = '';
+            let currentSection = "";
+            let currentSolSection = "";
+
+            questions.forEach((q, index) => {
+                const icon = getIcon(q.section);
+                if (q.section !== currentSection) {
+                    currentSection = q.section;
+                    questionsHtml += `<div class="main-section-header">${icon} ${currentSection}</div>`;
+                }
+
+                // Metadata: Badges
+                let metaHtml = '';
+                if (q.topic || q.difficulty) {
+                    metaHtml += `<div class="q-meta">`;
+                    if (q.topic) {
+                        metaHtml += `<span class="topic-tag">🏷️ Topic: ${q.topic}</span>`;
+                    }
+                    if (q.difficulty) {
+                        let dL = q.difficulty.toLowerCase();
+                        if (dL === 'easy') metaHtml += `<span class="diff-badge diff-easy">🟢 Easy</span>`;
+                        else if (dL === 'medium') metaHtml += `<span class="diff-badge diff-medium">🟡 Medium</span>`;
+                        else if (dL === 'hard') metaHtml += `<span class="diff-badge diff-hard">🔴 Hard</span>`;
+                    }
+                    metaHtml += `</div>`;
+                }
+
+                let qTextEn = `<div class="q-text"><b>Q${index + 1}.</b> ${q.q_en}</div>`;
+                let qTextHi = (q.q_hi && q.q_hi.trim() !== "") ? `<div class="q-text q-text-hi"><b>प्रश्न ${index + 1}.</b> ${q.q_hi}</div>` : '';
+                
+                let finalQuestionText = (langMode === 'english') ? qTextEn : (langMode === 'hindi') ? (qTextHi || qTextEn) : (qTextEn + qTextHi);
+
+                const combinedOptions = q.op_en.map((rawOptEn, i) => {
+                    const rawOptHi = q.op_hi && q.op_hi[i] ? q.op_hi[i] : "";
+                    const optEn = cleanOptionText(rawOptEn);
+                    const optHi = cleanOptionText(rawOptHi);
+                    
+                    let optText = '';
+                    if (langMode === 'english') optText = optEn;
+                    else if (langMode === 'hindi') optText = optHi || optEn;
+                    else {
+                        optText = optEn;
+                        if (optHi && optHi !== optEn) optText = `<b>${optEn}</b> <span style="color: #5f6368; font-size: 0.95em; margin-left: 4px;">/ ${optHi}</span>`;
+                    }
+                    return `<div class="option-item"><span class="bubble">${i + 1}</span><div class="opt-text">${optText}</div></div>`;
+                }).join('');
+
+                const imgHtml = q.image ? `<img src="${q.image}" class="q-image" alt="Diagram">` : '';
+                const solBoxHtml = `<div class="answer-explain-box"><div class="correct-ans-row">✅ Answer: Option (${q.ans})</div><div class="solution-box"><span class="sol-title">💡 Detailed Explanation:</span>${q.solution}</div></div>`;
+
+                questionsHtml += `
+                    <div class="question-block">
+                        ${metaHtml}
+                        ${finalQuestionText}
+                        ${imgHtml}
+                        <div class="options-grid">${combinedOptions}</div>
+                        ${solMode === 'below' ? solBoxHtml : ''}
+                    </div>
+                `;
+
+                if (solMode === 'end') {
+                    if (q.section !== currentSolSection) {
+                        currentSolSection = q.section;
+                        endSolutionsHtml += `<div class="main-section-header" style="margin-top: 20px;">${icon} ${currentSolSection}</div>`;
+                    }
+                    endSolutionsHtml += `<div class="end-sol-item"><div class="end-sol-qnum">Question ${index + 1}</div>${solBoxHtml}</div>`;
+                }
+            });
+
+            questionsHtml += '</div>';
+            
+            // Build Answer Key Table
+            let answerKeyHtml = `
+                <div class="page-break-before"></div>
+                <div class="answer-key-wrapper">
+                    <h3 class="answer-key-title">📋 Quick Answer Key</h3>
+                    <div class="answer-key-grid">
+            `;
+            questions.forEach((q, idx) => {
+                answerKeyHtml += `<div class="ak-item"><span>${idx + 1}-</span>${q.ans}</div>`;
+            });
+            answerKeyHtml += `</div></div>`;
+
+            let finalOutput = questionsHtml + answerKeyHtml;
+            if (solMode === 'end' && endSolutionsHtml !== '') {
+                finalOutput += `<div class="solutions-section-header"><h2 style="margin:0; font-size: 16px;">📑 Detailed Solutions</h2></div><div class="end-solutions-wrapper">${endSolutionsHtml}</div>`;
+            }
+
+            outputDiv.innerHTML = finalOutput;
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetClear([outputDiv]);
+                window.MathJax.typesetPromise([outputDiv]).then(() => triggerAction(actionType));
+            } else {
+                triggerAction(actionType);
+            }
+
+        } catch (error) {
+            alert("JSON Error! Kripya format check karein.\n\n" + error.message);
+        }
+    }
+
+    function triggerAction(actionType) {
+        if(actionType === 'print') {
+            setTimeout(() => { window.print(); }, 800);
+        } else if (actionType === 'download') {
+            // Un-hide header/footer for html2pdf screenshot temporarily
+            document.getElementById('pdfHeader').style.display = 'block';
+            
+            const element = document.getElementById('pdf-container');
+            const opt = {
+                margin:       [10, 10, 10, 10], // top, left, bottom, right
+                filename:     document.getElementById('examTitle').value + '.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Re-hide after download so UI looks normal
+                document.getElementById('pdfHeader').style.display = 'none';
+            });
+        }
+    }
+</script>
+</body>
+</html>
