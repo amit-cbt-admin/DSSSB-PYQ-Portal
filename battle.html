@@ -158,7 +158,7 @@
     <div class="timer-container"><div class="timer-bar" id="timerBar"></div></div>
 
     <div class="arena-body">
-        <div class="q-number" id="qNum">Question 1 / 5</div>
+        <div class="q-number" id="qNum">Question 1 / 10</div>
         <div class="q-text" id="qText">Loading question...</div>
         
         <div class="options-grid" id="optionsBox"></div>
@@ -238,36 +238,68 @@
     const botNames = ["Aman_07", "Priya_Delhi", "Rahul_Kumar", "Neha99", "Vikas_Jat", "Anjali_R", "Rohit_Sharma", "Sneha_D", "Sachin_M", "Pooja_Singh"];
 
     /* =========================
-       QUESTION PREPARATION
+       QUESTION PREPARATION (10 RANDOM FROM FIREBASE)
        ========================= */
-    function prepareQuestions() {
-        let loadedQs = [];
+    async function prepareQuestions() {
         try {
-            let qsRaw = localStorage.getItem('dsssb_replay_qs');
-            if(qsRaw) {
-                let realQs = JSON.parse(qsRaw);
-                realQs = realQs.sort(() => Math.random() - 0.5).slice(0, 5);
-                loadedQs = realQs.map(q => ({ q: q.q_en || q.q_hi, opt: q.op_en || q.op_hi, ans: parseInt(q.ans) - 1 }));
-            }
-        } catch(e) {}
+            // Fetch ALL questions from ALL tests in Firebase
+            const snap = await db.ref('dsssb_questions_db').once('value');
+            const data = snap.val();
+            let pool = [];
 
-        if (loadedQs.length === 0 || loadedQs.length < 5) {
-            loadedQs = [
-                { q: "What is the square of 15?", opt: ["225", "125", "250", "150"], ans: 0 },
-                { q: "What is a synonym for 'Abundant'?", opt: ["Scarce", "Plentiful", "Rare", "Deficient"], ans: 1 },
-                { q: "Which article relates to Equality before law?", opt: ["19", "14", "21", "32"], ans: 1 },
-                { q: "If A=1, B=2, what is CAT?", opt: ["24", "22", "20", "26"], ans: 0 },
-                { q: "The HCF of 12 and 16 is?", opt: ["2", "4", "6", "8"], ans: 1 }
-            ];
+            if (data) {
+                // Combine everything into a single massive pool
+                for (let testId in data) {
+                    if (Array.isArray(data[testId])) {
+                        pool = pool.concat(data[testId]);
+                    }
+                }
+            }
+
+            if (pool.length > 0) {
+                // Shuffle all questions and pick top 10
+                pool = pool.sort(() => Math.random() - 0.5).slice(0, 10);
+                
+                return pool.map(q => {
+                    let options = q.op_en && q.op_en.length > 0 ? q.op_en : q.op_hi;
+                    if(!options || options.length < 4) options = ["A", "B", "C", "D"];
+                    
+                    return { 
+                        q: q.q_en || q.q_hi || "Question missing?", 
+                        opt: options, 
+                        ans: parseInt(q.ans) - 1 
+                    };
+                });
+            }
+        } catch(e) {
+            console.log("Firebase Fetch Error: ", e);
         }
-        return loadedQs;
+
+        // Fallback 10 Questions if Firebase fails
+        return [
+            { q: "What is the square of 15?", opt: ["225", "125", "250", "150"], ans: 0 },
+            { q: "Synonym for 'Abundant'?", opt: ["Scarce", "Plentiful", "Rare", "Deficient"], ans: 1 },
+            { q: "Article relates to Equality before law?", opt: ["19", "14", "21", "32"], ans: 1 },
+            { q: "If A=1, B=2, what is CAT?", opt: ["24", "22", "20", "26"], ans: 0 },
+            { q: "HCF of 12 and 16 is?", opt: ["2", "4", "6", "8"], ans: 1 },
+            { q: "Capital of India?", opt: ["Mumbai", "Delhi", "Kolkata", "Chennai"], ans: 1 },
+            { q: "2 * 8 = ?", opt: ["14", "16", "18", "20"], ans: 1 },
+            { q: "Opposite of Good?", opt: ["Bad", "Nice", "Well", "Fine"], ans: 0 },
+            { q: "Find odd one out:", opt: ["Apple", "Banana", "Carrot", "Mango"], ans: 2 },
+            { q: "10 + 20 = ?", opt: ["30", "40", "50", "60"], ans: 0 }
+        ];
     }
 
     /* =========================
        MATCHMAKING (HYBRID LOGIC)
        ========================= */
-    function startMatchmaking() {
+    async function startMatchmaking() {
         document.getElementById('btnPlay').disabled = true;
+        document.getElementById('btnPlay').innerText = "Loading Qs...";
+        
+        // Wait to grab 10 random questions from Firebase first
+        questions = await prepareQuestions();
+        
         document.getElementById('btnPlay').innerText = "Connecting...";
         
         document.getElementById('s-lobby').classList.remove('active');
@@ -277,8 +309,6 @@
         
         document.getElementById('myNameDisp').innerText = myName;
         document.getElementById('myAvatar').innerText = myAvatar;
-
-        questions = prepareQuestions(); // Pre-load questions locally
 
         // Check if anyone is waiting
         waitRef.once('value', snap => {
@@ -570,7 +600,10 @@
         if(waitRef && myId) waitRef.child(myId).remove();
         if(isMultiplayer && matchListenRef) matchListenRef.remove();
     });
-</script>
+
+    /* ==========================================
+       🔥 LIVE TRACKER CODE START 🔥
+       ========================================== */
     // User details nikalo
     let userId = localStorage.getItem('dsssb_user_id');
     let userName = localStorage.getItem('dsssb_user_name') || 'Student';
@@ -579,11 +612,7 @@
         localStorage.setItem('dsssb_user_id', userId);
     }
 
-    // Konsa page use ho raha hai?
-    let currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    if(currentPage === 'cbt.html') currentPage = 'Giving Mock Test 📝';
-    else if(currentPage === 'battle.html') currentPage = 'In Battle Arena ⚔️';
-    else if(currentPage === 'index.html') currentPage = 'On Dashboard 🏠';
+    let currentPage = 'In Battle Arena ⚔️';
 
     // 1. Total & Weekly Users ke liye last active time save karo
     db.ref('dsssb_analytics/users/' + userId).update({
@@ -591,13 +620,13 @@
         last_active: firebase.database.ServerValue.TIMESTAMP
     });
 
-    // 2. Live Users Track (Jaise hi net band hoga ya tab close hoga, ye delete ho jayega)
+    // 2. Live Users Track
     const connectedRef = db.ref('.info/connected');
     const presenceRef = db.ref('dsssb_analytics/presence/' + userId);
 
     connectedRef.on('value', (snap) => {
         if (snap.val() === true) {
-            presenceRef.onDisconnect().remove(); // Tab close hote hi offline
+            presenceRef.onDisconnect().remove(); 
             presenceRef.set({
                 name: userName,
                 activity: currentPage,
