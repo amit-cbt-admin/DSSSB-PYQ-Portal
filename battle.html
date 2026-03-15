@@ -69,6 +69,9 @@
     .arena-body { flex: 1; padding: 20px; display: flex; flex-direction: column; overflow-y: auto;}
     .q-number { font-size: 12px; font-weight: 800; color: #fbbf24; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; text-align: center;}
     .q-text { font-size: 18px; font-weight: 600; text-align: center; margin-bottom: 30px; line-height: 1.4; padding: 0 10px;}
+    
+    /* CSS FOR IMAGES */
+    .q-text img, .opt-btn img { max-width: 100%; height: auto; border-radius: 8px; margin-top: 5px; }
 
     .options-grid { display: flex; flex-direction: column; gap: 15px; }
     .opt-btn { background: var(--bg-card); border: 2px solid #334155; padding: 16px 20px; border-radius: 12px; color: white; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s; position: relative; overflow: hidden; text-align: left; display: flex; align-items: center;}
@@ -229,8 +232,8 @@
     let opScore = 0;
     let timerInt;
     let matchListenRef = null;
-    let timeLeft = 30;
-    const maxTime = 30;
+    let timeLeft = 30; // UPDATED to 30
+    const maxTime = 30; // UPDATED to 30
     let hasAnswered = false;
     let botDelayTimeout;
 
@@ -238,17 +241,17 @@
     const botNames = ["Aman_07", "Priya_Delhi", "Rahul_Kumar", "Neha99", "Vikas_Jat", "Anjali_R", "Rohit_Sharma", "Sneha_D", "Sachin_M", "Pooja_Singh"];
 
     /* =========================
-       QUESTION PREPARATION (10 RANDOM FROM FIREBASE)
+       QUESTION PREPARATION (SMART BILINGUAL + HTML TAGS)
        ========================= */
     async function prepareQuestions() {
         try {
-            // Fetch ALL questions from ALL tests in Firebase
+            // Firebase se saare questions uthao
             const snap = await db.ref('dsssb_questions_db').once('value');
             const data = snap.val();
             let pool = [];
 
             if (data) {
-                // Combine everything into a single massive pool
+                // Saare test ke questions mix karo
                 for (let testId in data) {
                     if (Array.isArray(data[testId])) {
                         pool = pool.concat(data[testId]);
@@ -257,16 +260,64 @@
             }
 
             if (pool.length > 0) {
-                // Shuffle all questions and pick top 10
+                // Shuffle karke top 10 questions nikaalo
                 pool = pool.sort(() => Math.random() - 0.5).slice(0, 10);
                 
                 return pool.map(q => {
-                    let options = q.op_en && q.op_en.length > 0 ? q.op_en : q.op_hi;
-                    if(!options || options.length < 4) options = ["A", "B", "C", "D"];
+                    let sectionName = (q.section || "").toLowerCase();
+                    let isEnglish = sectionName.includes('english');
+                    let isHindi = sectionName.includes('hindi');
+                    
+                    let finalQuestionText = "";
+                    let optionsArray = [];
+
+                    let opEn = (q.op_en && Array.isArray(q.op_en)) ? q.op_en : [];
+                    let opHi = (q.op_hi && Array.isArray(q.op_hi)) ? q.op_hi : [];
+
+                    if (isEnglish) {
+                        // SIRF ENGLISH DIKHAO
+                        finalQuestionText = q.q_en || q.q_hi || "Question missing?";
+                        for(let i=0; i<4; i++) optionsArray.push(opEn[i] || opHi[i] || `Option ${i+1}`);
+                    } 
+                    else if (isHindi) {
+                        // SIRF HINDI DIKHAO
+                        finalQuestionText = q.q_hi || q.q_en || "Question missing?";
+                        for(let i=0; i<4; i++) optionsArray.push(opHi[i] || opEn[i] || `Option ${i+1}`);
+                    } 
+                    else {
+                        // DONO BILINGUAL DIKHAO (Maths, GK, Reasoning etc.)
+                        if (q.q_en && q.q_hi && q.q_en !== q.q_hi) {
+                            finalQuestionText = `
+                                <div style="margin-bottom:12px; font-size:16px;">${q.q_en}</div>
+                                <hr style="border:0; border-top:1px dashed #475569; margin:12px 0;">
+                                <div style="color:#cbd5e1; font-size:15px;">${q.q_hi}</div>
+                            `;
+                        } else {
+                            finalQuestionText = q.q_en || q.q_hi || "Question missing?";
+                        }
+
+                        for(let i = 0; i < 4; i++) {
+                            let enText = opEn[i] || "";
+                            let hiText = opHi[i] || "";
+                            let combinedOpt = "";
+
+                            // Agar English aur Hindi dono hain aur alag hain
+                            if(enText && hiText && enText !== hiText) {
+                                combinedOpt = `
+                                    <div>${enText}</div>
+                                    <div style="font-size:13px; color:#cbd5e1; margin-top:4px;">${hiText}</div>
+                                `;
+                            } else {
+                                // Agar sirf ek hi bhasha hai
+                                combinedOpt = enText || hiText || `Option ${i+1}`;
+                            }
+                            optionsArray.push(combinedOpt);
+                        }
+                    }
                     
                     return { 
-                        q: q.q_en || q.q_hi || "Question missing?", 
-                        opt: options, 
+                        q: finalQuestionText, 
+                        opt: optionsArray, 
                         ans: parseInt(q.ans) - 1 
                     };
                 });
@@ -275,18 +326,13 @@
             console.log("Firebase Fetch Error: ", e);
         }
 
-        // Fallback 10 Questions if Firebase fails
+        // Fallback (Agar Internet slow ho)
         return [
-            { q: "What is the square of 15?", opt: ["225", "125", "250", "150"], ans: 0 },
-            { q: "Synonym for 'Abundant'?", opt: ["Scarce", "Plentiful", "Rare", "Deficient"], ans: 1 },
-            { q: "Article relates to Equality before law?", opt: ["19", "14", "21", "32"], ans: 1 },
-            { q: "If A=1, B=2, what is CAT?", opt: ["24", "22", "20", "26"], ans: 0 },
-            { q: "HCF of 12 and 16 is?", opt: ["2", "4", "6", "8"], ans: 1 },
-            { q: "Capital of India?", opt: ["Mumbai", "Delhi", "Kolkata", "Chennai"], ans: 1 },
-            { q: "2 * 8 = ?", opt: ["14", "16", "18", "20"], ans: 1 },
-            { q: "Opposite of Good?", opt: ["Bad", "Nice", "Well", "Fine"], ans: 0 },
-            { q: "Find odd one out:", opt: ["Apple", "Banana", "Carrot", "Mango"], ans: 2 },
-            { q: "10 + 20 = ?", opt: ["30", "40", "50", "60"], ans: 0 }
+            { 
+                q: "Capital of India? <hr style='border-top:1px dashed #475569; margin:10px 0;'> भारत की राजधानी?", 
+                opt: ["Mumbai <br><small>मुंबई</small>", "Delhi <br><small>दिल्ली</small>", "Kolkata <br><small>कोलकाता</small>", "Chennai <br><small>चेन्नई</small>"], 
+                ans: 1 
+            }
         ];
     }
 
@@ -523,8 +569,8 @@
        ========================= */
     function simulateBot() {
         clearTimeout(botDelayTimeout);
-        // Bot random answer time 2 to 6 seconds
-       let botDelay = Math.floor(Math.random() * 7000) + 3000;
+        // UPDATED: Bot random answer time 3 to 10 seconds
+        let botDelay = Math.floor(Math.random() * 7000) + 3000;
         
         botDelayTimeout = setTimeout(() => {
             if(timeLeft <= 0 || hasAnswered) return;
