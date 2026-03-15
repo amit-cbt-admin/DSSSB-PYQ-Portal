@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#4f46e5">
 
-<link rel="manifest" href="/manifest.json">
+<link rel="manifest" href="manifest.json">
 
 <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -1561,7 +1561,7 @@ document.addEventListener('keydown', function(e) {
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('sw.js')
         .then(reg => console.log('Main Branch SW Registered! Scope:', reg.scope))
         .catch(err => console.error('Service Worker Error:', err));
     });
