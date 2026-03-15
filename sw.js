@@ -1,14 +1,14 @@
 const CACHE_NAME = 'dsssb-pyq-cache-v1';
 const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/cbt.html',
-  '/analysis.html',
-  '/replay.html',
-  '/battle.html',
-  '/manifest.json',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png'
+  './',
+  './index.html',
+  './cbt.html',
+  './analysis.html',
+  './replay.html',
+  './battle.html',
+  './manifest.json',
+  './icons/icon-192x192.png',
+  './icons/icon-512x512.png'
 ];
 
 // Install Event - Caching the app shell
