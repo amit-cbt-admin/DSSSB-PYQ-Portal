@@ -524,7 +524,7 @@
     function simulateBot() {
         clearTimeout(botDelayTimeout);
         // Bot random answer time 2 to 6 seconds
-        let botDelay = Math.floor(Math.random() * 4000) + 2000;
+       let botDelay = Math.floor(Math.random() * 7000) + 3000;
         
         botDelayTimeout = setTimeout(() => {
             if(timeLeft <= 0 || hasAnswered) return;
