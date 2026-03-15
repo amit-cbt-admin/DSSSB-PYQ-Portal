@@ -571,5 +571,40 @@
         if(isMultiplayer && matchListenRef) matchListenRef.remove();
     });
 </script>
+    // User details nikalo
+    let userId = localStorage.getItem('dsssb_user_id');
+    let userName = localStorage.getItem('dsssb_user_name') || 'Student';
+    if(!userId) {
+        userId = 'user_' + Math.floor(Math.random() * 1000000);
+        localStorage.setItem('dsssb_user_id', userId);
+    }
+
+    // Konsa page use ho raha hai?
+    let currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    if(currentPage === 'cbt.html') currentPage = 'Giving Mock Test 📝';
+    else if(currentPage === 'battle.html') currentPage = 'In Battle Arena ⚔️';
+    else if(currentPage === 'index.html') currentPage = 'On Dashboard 🏠';
+
+    // 1. Total & Weekly Users ke liye last active time save karo
+    db.ref('dsssb_analytics/users/' + userId).update({
+        name: userName,
+        last_active: firebase.database.ServerValue.TIMESTAMP
+    });
+
+    // 2. Live Users Track (Jaise hi net band hoga ya tab close hoga, ye delete ho jayega)
+    const connectedRef = db.ref('.info/connected');
+    const presenceRef = db.ref('dsssb_analytics/presence/' + userId);
+
+    connectedRef.on('value', (snap) => {
+        if (snap.val() === true) {
+            presenceRef.onDisconnect().remove(); // Tab close hote hi offline
+            presenceRef.set({
+                name: userName,
+                activity: currentPage,
+                time: firebase.database.ServerValue.TIMESTAMP
+            });
+        }
+    });
+</script>   
 </body>
 </html>
