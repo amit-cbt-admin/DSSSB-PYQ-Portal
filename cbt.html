@@ -1426,6 +1426,10 @@ async function submitTest() {
       topicPerformance: topicStats
   };
   setSafeData('dsssb_analysis_data', JSON.stringify(analysisData));
+  
+  // 🔥 NEW FIX: Save Data for Replay Mode and Battle Mode 🔥
+  setSafeData('dsssb_replay_qs', JSON.stringify(QUESTIONS));
+  setSafeData('dsssb_replay_state', JSON.stringify(currentState));
 
   let tId = getSafeData('dsssb_user_id') || "guest";
   
@@ -1601,7 +1605,7 @@ async function submitTest() {
                <div style="text-align:center; margin-top:30px; padding-bottom:30px;">
                   <button onclick="downloadPDF()" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:var(--bg-body); color:var(--primary); border:2px solid var(--primary); box-shadow:none;">Download Heavy PDF 📥</button>
                   
-                  <button onclick="window.location.href='replay.html'" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:var(--warning); margin-left:10px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);">Replay Mode 🎮</button>
+                  <button onclick="localStorage.setItem('dsssb_replay_qs', JSON.stringify(QUESTIONS)); localStorage.setItem('dsssb_replay_state', JSON.stringify(currentState)); window.location.href='replay.html'" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:var(--warning); margin-left:10px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);">Replay Mode 🎮</button>
                   <button onclick="window.location.href='analysis.html'" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:#8b5cf6; margin-left:10px; margin-top:10px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);">Deep AI Analysis 🧠</button>
                   <button onclick="window.location.href='index.html'" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:var(--primary); margin-left:10px; margin-top:10px;">Back to Home 🏠</button>
                </div>`;
