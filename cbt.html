@@ -215,21 +215,24 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
     body {
         display: grid; 
         grid-template-columns: 1fr 340px; 
-        grid-template-rows: var(--header-height) auto 1fr var(--footer-height);
+        grid-template-rows: var(--header-height) auto 1fr 70px; /* Fixed Footer Height */
         grid-template-areas: "header header" "secbar secbar" "main palette" "footer palette"; 
+        height: 100vh; overflow: hidden;
     }
     header { grid-area: header; }
     #sectionBar { grid-area: secbar; }
-    #mainArea { grid-area: main; padding: 40px 60px; max-width: 1100px; margin: 0 auto; width: 100%; }
+    /* FIXED MAIN AREA SCROLL */
+    #mainArea { grid-area: main; padding: 40px 60px; max-width: 1100px; margin: 0 auto; width: 100%; overflow-y: auto; height: 100%; } 
     #palettePanel {
-        grid-area: palette; position: relative; transform: none; width: 100%;
+        grid-area: palette; position: relative; transform: none; width: 100%; height: 100%;
         box-shadow: -5px 0 15px rgba(0,0,0,0.02); border-left: 1px solid var(--border-color); display: flex !important; z-index: 10;
     }
     .modal-header button { display: none; } 
     #paletteOverlay { display: none !important; }
     #examFooter .btn-grid { display: none; } 
-    #examFooter { grid-area: footer; justify-content: center; border-right: 1px solid var(--border-color); position:relative; }
-    .q-card { box-shadow: 0 10px 40px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); }
+    /* FIXED FOOTER POSITION */
+    #examFooter { grid-area: footer; justify-content: center; border-right: 1px solid var(--border-color); position: relative; border-top: 1px solid var(--border-color); }
+    .q-card { box-shadow: 0 10px 40px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); margin-bottom: 20px; }
     .opt { padding: 18px; } 
 }
 
@@ -483,18 +486,20 @@ setInterval(function() {
   }
 }, 1000);
 
+// FIX 1: Removed faulty auto-submit on window resize for laptop users
 window.addEventListener('resize', function() {
-  const widthThreshold = window.outerWidth - window.innerWidth > 160;
-  const heightThreshold = window.outerHeight - window.innerHeight > 160;
-  if ((widthThreshold || heightThreshold) && !currentState.submitted && TEST_MODE !== 'quiz') {
-      alert("🚨 Developer Tools Detected! Auto-submitting exam.");
-      submitTest();
-  }
+    // Ab laptop par window resize karne par test automatically submit nahi hoga.
+    console.log("Window resized."); 
 });
 
 if (window.top !== window.self) { window.top.location = window.self.location; }
 document.addEventListener('contextmenu', e => e.preventDefault());
+
+// FIX 2: Disabled 'Enter' key so accidental submit doesn't happen
 document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+      e.preventDefault(); // Enter dabane se koi button press nahi hoga
+  }
   if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) || (e.ctrlKey && ['U', 'S', 'P', 'H'].includes(e.key.toUpperCase()))) {
       e.preventDefault(); e.stopPropagation(); alert("🚨 Unauthorized action detected!"); return false;
   }
