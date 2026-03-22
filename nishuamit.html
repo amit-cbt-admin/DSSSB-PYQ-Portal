@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DSSSB Super Admin ⚡</title>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
@@ -22,7 +23,7 @@
     .menu-item:hover, .menu-item.active { background: var(--primary); color: white; opacity: 1; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4); }
     
     /* MAIN CONTENT */
-    .main { flex: 1; padding: 30px; overflow-y: auto; }
+    .main { flex: 1; padding: 30px; overflow-y: auto; display: none; } /* HIDDEN UNTIL LOGGED IN */
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
     h2 { font-weight: 800; color: var(--dark); }
     
@@ -56,7 +57,7 @@
 
     /* AUTH */
     #authScreen { position: fixed; inset: 0; background: var(--dark); z-index: 1000; display: flex; justify-content: center; align-items: center; }
-    .login-box { background: white; padding: 40px; border-radius: 20px; width: 350px; text-align: center; }
+    .login-box { background: white; padding: 40px; border-radius: 20px; width: 350px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
     
     /* BADGES */
     .badge-online { background: #dcfce7; color: #16a34a; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; }
@@ -73,9 +74,12 @@
 
 <div id="authScreen">
     <div class="login-box">
-        <h2 style="margin-bottom:10px;">🔒 Admin Access</h2>
-        <input type="password" id="adminPin" placeholder="Enter PIN (1234)" style="width: 100%; margin-bottom: 15px; text-align: center; letter-spacing: 5px; font-size: 20px;">
-        <button onclick="checkPin()" style="width: 100%;">UNLOCK</button>
+        <div style="font-size: 40px; margin-bottom: 10px; color: var(--primary);"><i class="fas fa-user-shield"></i></div>
+        <h2 style="margin-bottom:10px;">Admin Login</h2>
+        <p style="font-size: 12px; color: grey; margin-bottom: 25px;">Secure Firebase Authentication</p>
+        <input type="email" id="adminEmail" placeholder="Admin Email" style="width: 100%; margin-bottom: 15px; text-align: center;">
+        <input type="password" id="adminPass" placeholder="Password" style="width: 100%; margin-bottom: 20px; text-align: center;">
+        <button id="loginBtn" onclick="loginAdmin()" style="width: 100%;"><i class="fas fa-lock-open"></i> UNLOCK PANEL</button>
     </div>
 </div>
 
@@ -88,6 +92,10 @@
     <div class="menu-item" onclick="showSec('engagement', this)"><i class="fas fa-fire"></i> Broadcast & QOD</div>
     <div class="menu-item" onclick="showSec('users', this)"><i class="fas fa-users"></i> Users & Tracking</div>
     <div class="menu-item" onclick="showSec('settings', this)"><i class="fas fa-cogs"></i> App Settings</div>
+    
+    <div class="menu-item" onclick="logoutAdmin()" style="margin-top:auto; background:#fee2e2; color:#ef4444; font-weight:bold; justify-content:center;">
+        <i class="fas fa-sign-out-alt"></i> Logout Admin
+    </div>
 </div>
 
 <div class="main">
@@ -331,7 +339,7 @@
 
         <h3 style="margin-top:20px;">🟢 Live & Recent Students</h3>
         <div class="table-box">
-            <table><thead><tr><th>User Info</th><th>Status</th><th>Last Active</th></tr></thead><tbody id="presenceTable"></tbody></table>
+            <table><thead><tr><th>User Info</th><th>Activity</th><th>Time</th></tr></thead><tbody id="presenceTable"></tbody></table>
         </div>
 
         <h3 style="margin-top:20px;">🚩 Student Issues</h3>
@@ -396,10 +404,10 @@
 
 <script>
 /* =========================================
-   FIREBASE CONFIG & GLOBAL VARS
+   🔥 ORIGINAL FIREBASE CONFIG 🔥
    ========================================= */
 const firebaseConfig = { 
-    apiKey: "AIzaSyDGolcXv0efZxRdOvBthfeT72mkNLLbAwI", 
+    apiKey: "AIzaSyDGolcXV0efZxRdOvBtHfeT72mkNLlbAwI", 
     authDomain: "dsssbexamportal.firebaseapp.com", 
     databaseURL: "https://dsssbexamportal-default-rtdb.asia-southeast1.firebasedatabase.app", 
     projectId: "dsssbexamportal", 
@@ -417,17 +425,52 @@ let userMap = {};
 let proUsersSnap = null; 
 
 /* =========================================
-   CORE UI FUNCTIONS
+   🔥 FIREBASE AUTHENTICATION LOGIC 🔥
    ========================================= */
-function checkPin() { 
-    if(document.getElementById('adminPin').value === "1234") { 
-        document.getElementById('authScreen').style.display = 'none'; 
-        loadData(); 
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        document.getElementById('authScreen').style.display = 'none';
+        document.querySelector('.main').style.display = 'block';
+        loadData();
     } else {
-        alert("Wrong PIN!"); 
+        document.getElementById('authScreen').style.display = 'flex';
+        document.querySelector('.main').style.display = 'none';
+    }
+});
+
+function loginAdmin() {
+    const email = document.getElementById('adminEmail').value.trim();
+    const pass = document.getElementById('adminPass').value.trim();
+    const btn = document.getElementById('loginBtn');
+    
+    if(!email || !pass) return alert("⚠️ Please fill email and password!");
+    
+    btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Authenticating...";
+    btn.disabled = true;
+
+    firebase.auth().signInWithEmailAndPassword(email, pass)
+        .then(() => {
+            btn.innerHTML = "<i class='fas fa-lock-open'></i> UNLOCK PANEL";
+            btn.disabled = false;
+        })
+        .catch(err => {
+            alert("❌ Login Failed: " + err.message);
+            btn.innerHTML = "<i class='fas fa-lock-open'></i> UNLOCK PANEL";
+            btn.disabled = false;
+        });
+}
+
+function logoutAdmin() {
+    if(confirm("Are you sure you want to logout?")) {
+        firebase.auth().signOut().then(() => {
+            location.reload();
+        });
     }
 }
 
+/* =========================================
+   CORE UI FUNCTIONS
+   ========================================= */
 function showSec(id, el) { 
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); 
     document.getElementById(id).classList.add('active'); 
@@ -442,7 +485,7 @@ function formatTime(ts) {
 }
 
 /* =========================================
-   DATA LOADING (DASHBOARD, USERS, PRO, CONTENT)
+   DATA LOADING & 🔥 NEW TRACKING SYSTEM 🔥
    ========================================= */
 function loadData() {
     // 1. Pending Payments
@@ -474,33 +517,49 @@ function loadData() {
         });
     });
 
-    // 3. Presence (Live Users) & User Name Mapping
-    db.ref('dsssb_presence').on('value', snap => {
-        let onlineCount = 0; let html = ''; let users = [];
+    // 3. 🔥 LIVE ACTIVITY TRACKING (SPY SYSTEM) 🔥
+    db.ref('dsssb_analytics/presence').on('value', snap => {
+        let html = ''; let users = [];
         
         snap.forEach(child => { 
             let u = { id: child.key, ...child.val() };
             users.push(u); 
-            if(u.id) userMap[String(u.id).trim()] = u.name;
+            if(u.id && u.name) userMap[String(u.id).trim()] = u.name;
         });
         
-        users.sort((a, b) => b.lastActive - a.lastActive);
-        document.getElementById('statUsers').innerText = users.length;
+        // Sort by time (most recent first)
+        users.sort((a, b) => (b.time || 0) - (a.time || 0));
+        
+        let onlineCount = users.length; 
+        document.getElementById('statUsers').innerText = onlineCount; // Sync users stat
+        document.getElementById('statLive').innerText = onlineCount;
 
         users.forEach(u => {
-            if(u.state === 'online') onlineCount++;
-            let badge = u.state === 'online' ? '<span class="badge-online">🟢 Online</span>' : '<span class="badge-offline">⚫ Offline</span>';
+            // Activity color coding
+            let actColor = "var(--primary)";
+            let actIcon = "fa-location-arrow";
+            
+            if(u.activity && u.activity.includes("Giving Mock Test")) {
+                actColor = "#ef4444"; actIcon = "fa-pen-nib"; // Red for test
+            } else if(u.activity && u.activity.includes("Dashboard")) {
+                actColor = "#10b981"; actIcon = "fa-home"; // Green for home
+            } else {
+                actColor = "#8b5cf6"; actIcon = "fa-search"; // Purple for exploring
+            }
+
             html += `<tr>
-                <td><b>${u.name}</b><br><small style="color:grey;">ID: ${u.id}</small></td>
-                <td>${badge}</td>
-                <td><span style="font-size:12px;">${formatTime(u.lastActive)}</span></td>
+                <td><b style="font-size:14px;">${u.name || 'Unknown User'}</b><br><small style="color:grey; font-weight:600;">ID: ${u.id}</small></td>
+                <td>
+                    <span style="font-size:12px; color:${actColor}; font-weight:700; background:${actColor}15; padding:6px 10px; border-radius:8px; display:inline-block;">
+                        <i class="fas ${actIcon}"></i> ${u.activity || 'Exploring Portal'}
+                    </span>
+                </td>
+                <td><span style="font-size:12px; color:grey; font-weight:600;"><i class="fas fa-clock"></i> ${formatTime(u.time)}</span></td>
             </tr>`;
         });
         
-        document.getElementById('statLive').innerText = onlineCount;
-        document.getElementById('presenceTable').innerHTML = html || "<tr><td colspan='3' style='text-align:center;'>No data yet</td></tr>";
-        
-        renderProUsersTable(); // Re-render Pro table since names are updated
+        document.getElementById('presenceTable').innerHTML = html || "<tr><td colspan='3' style='text-align:center; padding:30px; color:grey;'>No active users right now...</td></tr>";
+        renderProUsersTable();
     });
 
     // 4. Pro Users List
