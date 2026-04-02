@@ -447,7 +447,14 @@ let db = {
             once: function(){ return Promise.resolve({exists:()=>false, val:()=>null, forEach:()=>{} }); }, 
             set: function(){ return Promise.resolve(); }, 
             push: function(){ return Promise.resolve(); },
-            remove: function(){ return Promise.resolve(); }
+            remove: function(){ return Promise.resolve(); },
+            onDisconnect: function() { 
+                return { 
+                    update: function(){ return Promise.resolve(); }, 
+                    remove: function(){ return Promise.resolve(); }, 
+                    set: function(){ return Promise.resolve(); } 
+                }; 
+            }
         }; 
     } 
 };
@@ -584,10 +591,11 @@ function initApp() {
       document.getElementById('startNameInput').value = tName + " (Solution Mode)";
       document.getElementById('startExamBtn').innerText = "VIEW SOLUTIONS ➔";
       document.getElementById('timer').style.display = 'none'; 
-  } else if (TEST_MODE === 'quiz') {
+ } else if (TEST_MODE === 'quiz') {
       document.getElementById('startNameInput').value = tName + " (Quiz Mode)";
       document.getElementById('startExamBtn').innerText = "START QUIZ ⚡";
-      document.getElementById('timer').style.display = 'none'; 
+      document.getElementById('timer').style.display = 'block'; // 🔥 Timer visible for Quiz
+      document.getElementById('timer').innerText = "00:00";
   } else {
       document.getElementById('startNameInput').value = tName;
   }
@@ -700,13 +708,14 @@ function startGame(isResuming) {
       document.getElementById('mainSubmitBtn').style.display = 'none'; 
       document.getElementById('paletteStatsBox').style.display = 'none'; 
       showToast(`Showing Solutions...`, "success");
-  } else if (TEST_MODE === 'quiz') {
+ } else if (TEST_MODE === 'quiz') {
       document.getElementById('mainSubmitBtn').style.display = 'none'; 
       document.getElementById('paletteStatsBox').style.display = 'none'; 
       showToast(`Quiz Mode Started ⚡`, "success");
+      startTimer(); // 🔥 Start per-question stopwatch for Quiz
   } else {
       startTimer();
-      setInterval(saveState, 5000); 
+      setInterval(saveState, 5000);
       showToast(`Welcome, ${currentState.name} 🚀`, "success");
       if(!isResuming && window.innerWidth < 1024) {
           document.getElementById('tgPopup').style.display = "block";
@@ -949,11 +958,12 @@ function postComment() {
   if(!text) return showToast("Please write something first!", "warning");
   
   const qKey = CURRENT_TEST_ID + "_Q" + currentState.idx;
+  let timeStamp = (typeof firebase !== 'undefined' && firebase.database) ? firebase.database.ServerValue.TIMESTAMP : Date.now();
   
   db.ref(`${DB_DISCUSS_REF}/${qKey}`).push({
       name: currentState.name || "Student",
       text: text,
-      timestamp: firebase.database.ServerValue.TIMESTAMP
+      timestamp: timeStamp
   }).then(() => {
       input.value = "";
       showToast("Comment posted!", "success");
@@ -982,10 +992,49 @@ function selectAns(i) {
   if(TEST_MODE === 'quiz' && currentState.answers[currentState.idx] !== null) return; 
   
   currentState.answers[currentState.idx] = i; 
-  saveState(); 
-  loadQuestion(currentState.idx); 
-}
 
+  if (TEST_MODE === 'quiz') {
+      // 🔥 QUIZ MODE ONLY: Instant Evaluation, Mistake Tracking & Scroll 🔥
+      const qKey = CURRENT_TEST_ID + "_Q" + currentState.idx;
+      const qData = QUESTIONS[currentState.idx];
+      const correctIdx = parseInt(qData.ans) - 1;
+      let mistakesDiary = JSON.parse(getSafeData('dsssb_mistakes')) || {};
+
+      if (i !== correctIdx) {
+          if (mistakesDiary[qKey]) {
+              mistakesDiary[qKey].mistakeCount = (mistakesDiary[qKey].mistakeCount || 1) + 1;
+              mistakesDiary[qKey].timestamp = Date.now();
+          } else {
+              qData.mistakeCount = 1;
+              qData.timestamp = Date.now();
+              mistakesDiary[qKey] = qData;
+          }
+      } else {
+          if(mistakesDiary[qKey]) delete mistakesDiary[qKey];
+      }
+      setSafeData('dsssb_mistakes', JSON.stringify(mistakesDiary));
+
+      saveState(); 
+      loadQuestion(currentState.idx); 
+
+      // Auto-Open Solution
+      setTimeout(() => {
+          const solBox = document.getElementById('solutionDisplay');
+          if (solBox) {
+              const toggleBtn = solBox.querySelector('button');
+              const solContent = solBox.querySelector('.sol-content');
+              if (solContent && solContent.style.display === 'none') {
+                  toggleAppSolution(toggleBtn);
+              }
+              solBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+      }, 150);
+  } else {
+      // ⏳ EXAM MODE: Just save selection, don't check right/wrong yet
+      saveState(); 
+      loadQuestion(currentState.idx); 
+  }
+}
 function showConfirmDialog(title, desc, onProceed) {
   document.getElementById('confirmTitle').innerText = title;
   document.getElementById('confirmDesc').innerText = desc;
@@ -1107,17 +1156,29 @@ function startTimer() {
   timerInt = setInterval(() => {
       if(currentState.submitted) return;
       
-      if (TEST_MODE !== 'solution' && TEST_MODE !== 'quiz' && currentState.idx !== undefined) {
+      // 🔥 Track time per question for BOTH Exam & Quiz
+      if (TEST_MODE !== 'solution' && currentState.idx !== undefined) {
           currentState.timePerQ[currentState.idx] = (currentState.timePerQ[currentState.idx] || 0) + 1;
       }
 
-      if(currentState.time <= 0) { submitTest(); return; }
-      currentState.time--;
-      const m = Math.floor(currentState.time / 60).toString().padStart(2,'0');
-      const s = (currentState.time % 60).toString().padStart(2,'0');
       const el = document.getElementById('timer');
-      el.innerText = `${m}:${s}`;
-      if(currentState.time < 300) el.classList.add('low');
+
+      if (TEST_MODE === 'quiz') {
+          // ⏱️ QUIZ MODE: Show Per-Question Stopwatch
+          let qTime = currentState.timePerQ[currentState.idx] || 0;
+          const m = Math.floor(qTime / 60).toString().padStart(2,'0');
+          const s = (qTime % 60).toString().padStart(2,'0');
+          el.innerText = `${m}:${s}`;
+          el.classList.remove('low');
+      } else {
+          // ⏳ EXAM MODE: Show Overall Countdown
+          if(currentState.time <= 0) { submitTest(); return; }
+          currentState.time--;
+          const m = Math.floor(currentState.time / 60).toString().padStart(2,'0');
+          const s = (currentState.time % 60).toString().padStart(2,'0');
+          el.innerText = `${m}:${s}`;
+          if(currentState.time < 300) el.classList.add('low');
+      }
   }, 1000);
 }
 
@@ -1398,7 +1459,7 @@ async function submitTest() {
           skipped++; 
           sectionScores[secName].s++;
           topicStats[topicName].s++;
-      } else if(myAns === correctIdx) { 
+    } else if(myAns === correctIdx) { 
           correct++; 
           totalScore += POSITIVE_MARK; 
           sectionScores[secName].c++; 
@@ -1409,8 +1470,17 @@ async function submitTest() {
           totalScore -= NEGATIVE_MARK; 
           sectionScores[secName].w++; 
           topicStats[topicName].w++;
-          mistakesDiary[qKey] = q;
-      }
+          
+          // 🔥 AI MISTAKE LOGIC FOR EXAM MODE 🔥
+          if (mistakesDiary[qKey]) {
+              mistakesDiary[qKey].mistakeCount = (mistakesDiary[qKey].mistakeCount || 1) + 1;
+              mistakesDiary[qKey].timestamp = Date.now();
+          } else {
+              q.mistakeCount = 1;
+              q.timestamp = Date.now();
+              mistakesDiary[qKey] = q;
+          }
+      } 
   });
 
   setSafeData('dsssb_mistakes', JSON.stringify(mistakesDiary));
@@ -1436,12 +1506,13 @@ async function submitTest() {
   setSafeData('dsssb_replay_qs', JSON.stringify(QUESTIONS));
   setSafeData('dsssb_replay_state', JSON.stringify(currentState));
 
-  let tId = getSafeData('dsssb_user_id') || "guest";
+ let tId = getSafeData('dsssb_user_id') || "guest";
+  let timeStamp = (typeof firebase !== 'undefined' && firebase.database) ? firebase.database.ServerValue.TIMESTAMP : Date.now();
   
   const userData = {
       name: currentState.name, userId: tId, testId: CURRENT_TEST_ID, 
       score: parseFloat(totalScore.toFixed(2)), timeTaken: timeSpentSeconds,
-      timestamp: firebase.database.ServerValue.TIMESTAMP, correct: correct, wrong: wrong,
+      timestamp: timeStamp, correct: correct, wrong: wrong,
       timePerQ: currentState.timePerQ 
   };
   
@@ -1606,27 +1677,23 @@ async function submitTest() {
           `;
       });
 
-      html += `</div>
-               <div style="text-align:center; margin-top:30px; padding-bottom:30px;">
-                  <button onclick="downloadPDF()" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:var(--bg-body); color:var(--primary); border:2px solid var(--primary); box-shadow:none;">Download Heavy PDF 📥</button>
-                  
-                  <button onclick="localStorage.setItem('dsssb_replay_qs', JSON.stringify(QUESTIONS)); localStorage.setItem('dsssb_replay_state', JSON.stringify(currentState)); window.location.href='replay.html'" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:var(--warning); margin-left:10px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);">Replay Mode 🎮</button>
-                  <button onclick="window.location.href='analysis.html'" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:#8b5cf6; margin-left:10px; margin-top:10px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);">Deep AI Analysis 🧠</button>
-                  <button onclick="window.location.href='index.html'" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:var(--primary); margin-left:10px; margin-top:10px;">Back to Home 🏠</button>
-               </div>`;
+   html += `</div>
+               <div style="text-align:center; margin-top:30px; padding-bottom:30px;">
+                  <button onclick="downloadPDF()" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:var(--bg-body); color:var(--primary); border:2px solid var(--primary); box-shadow:none;">Download Heavy PDF 📥</button>
+                  
+                  <button onclick="localStorage.setItem('dsssb_replay_qs', JSON.stringify(QUESTIONS)); localStorage.setItem('dsssb_replay_state', JSON.stringify(currentState)); window.location.href='replay.html'" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:var(--warning); margin-left:10px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);">Replay Mode 🎮</button>
+                  <button onclick="window.location.href='analysis.html'" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:#8b5cf6; margin-left:10px; margin-top:10px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);">Deep AI Analysis 🧠</button>
+                  <button onclick="window.location.href='index.html'" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:var(--primary); margin-left:10px; margin-top:10px;">Back to Home 🏠</button>
+               </div>`;
 
-      resBox.innerHTML = html;
-
-      new Chart(document.getElementById('pieChart'), { type: 'doughnut', data: { labels: ['Correct', 'Wrong', 'Skipped'], datasets: [{ data: [correct, wrong, skipped], backgroundColor: ['#10b981', '#ef4444', '#f59e0b'] }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display:false } } } });
-      const secLabels = Object.keys(sectionScores);
-      const secCorrect = secLabels.map(s => sectionScores[s].c);
-      const secWrong = secLabels.map(s => sectionScores[s].w);
-      const secSkipped = secLabels.map(s => sectionScores[s].s);
-      new Chart(document.getElementById('barChart'), { type: 'bar', data: { labels: secLabels, datasets: [{ label: 'Correct', data: secCorrect, backgroundColor: '#10b981' }, { label: 'Wrong', data: secWrong, backgroundColor: '#ef4444' }, { label: 'Skipped', data: secSkipped, backgroundColor: '#f59e0b' }] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true } }, plugins: { legend: { display:false } } } });
+    resBox.innerHTML = html;
+  }).catch(err => {
+      console.error("Error generating analysis:", err);
+      resBox.innerHTML = `<div style="text-align:center; padding:30px; color:var(--danger);">Error generating analysis. Result saved locally.</div>`;
   });
-}
+} // submitTest function properly ends here
 
-function downloadPDF() {
+function downloadPDF() { 
   const element = document.getElementById('pdfContent');
   
   const printWrapper = document.createElement('div');
@@ -1713,10 +1780,12 @@ if ('serviceWorker' in navigator) {
         else if(loc.includes('index.html') || loc === '') loc = 'On Dashboard 🏠';
         else loc = 'Exploring Portal 🔍';
 
+    let trackerTimeStamp = (typeof firebase !== 'undefined' && firebase.database) ? firebase.database.ServerValue.TIMESTAMP : Date.now();
+
         // 1. Update Total/Weekly Users
         trackDb.ref('dsssb_analytics/users/' + trackUid).update({
             name: trackUname,
-            last_active: firebase.database.ServerValue.TIMESTAMP
+            last_active: trackerTimeStamp
         });
 
         // 2. Update Live Presence
@@ -1729,10 +1798,10 @@ if ('serviceWorker' in navigator) {
                 presRef.set({ 
                     name: trackUname, 
                     activity: loc, 
-                    time: firebase.database.ServerValue.TIMESTAMP 
+                    time: trackerTimeStamp 
                 });
             }
-        });
+        });    
     }
 })();
 </script>
