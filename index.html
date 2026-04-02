@@ -86,6 +86,18 @@ body { display: block; background: var(--bg-body); color: var(--text-main); padd
 .dark-mode .daily-goal-card { background: linear-gradient(135deg, #2a1b0d, #1a0f05); border-color: #431407; }
 .dark-mode .daily-goal-card.completed { background: linear-gradient(135deg, #064e3b, #022c22); border-color: #065f46; }
 
+/* 🔥 ADVANCED DAILY TARGET CSS 🔥 */
+.adv-goal-card { background: var(--bg-card); border: 1px solid var(--border); margin: 15px 20px 0; padding: 18px 20px; border-radius: 16px; box-shadow: 0 6px 15px rgba(0,0,0,0.04); position: relative; overflow: hidden; }
+.adv-goal-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary); }
+.adv-goal-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; }
+.adv-goal-title { font-weight: 900; font-size: 15px; color: var(--text-main); display: flex; align-items: center; gap: 6px; }
+.auto-set-btn { font-size: 11px; background: var(--primary-light); color: var(--primary-dark); padding: 3px 8px; border-radius: 6px; cursor: pointer; font-weight: 800; border: 1px solid rgba(79, 70, 229, 0.2); transition: 0.2s; }
+.auto-set-btn:active { transform: scale(0.95); }
+.goal-checklist { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+.goal-item { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: var(--text-muted); transition: 0.3s; }
+.goal-item.done { color: var(--success); text-decoration: line-through; opacity: 0.8; }
+.goal-chk { width: 18px; height: 18px; accent-color: var(--success); cursor: pointer; }
+.goal-pct-text { font-size: 13px; font-weight: 900; color: var(--primary); }
 .quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 15px 20px 0; }
 .action-item { background: var(--bg-card); padding: 12px 8px; border-radius: 14px; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: 0.2s; border-bottom: 3px solid var(--border); }
 .action-item:active { transform: translateY(2px); border-bottom-width: 1px; margin-top: 2px;}
@@ -287,6 +299,63 @@ textarea { height: 120px; resize: none; }
     .test-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
     .mega-folder:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
 }
+/* 🔥 NETFLIX STYLE HORIZONTAL SCROLLING (VAULT) 🔥 */
+.netflix-section { margin-bottom: 25px; padding-left: 20px; position: relative; }
+.netflix-title { font-size: 16px; font-weight: 900; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; color: var(--text-main); padding-right: 20px; letter-spacing: 0.5px;}
+.netflix-scroll { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; padding-right: 20px; scrollbar-width: none; scroll-behavior: smooth; }
+.netflix-scroll::-webkit-scrollbar { display: none; }
+.netflix-card { 
+    min-width: 140px; max-width: 140px; background: var(--bg-card); border-radius: 14px; 
+    border: 1px solid var(--border); overflow: hidden; box-shadow: 0 6px 15px rgba(0,0,0,0.04); 
+    transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; position: relative; flex-shrink: 0;
+    border-bottom: 3px solid var(--border);
+}
+.netflix-card:active { transform: scale(0.95); border-bottom-width: 1px; }
+
+.n-img-box { 
+    height: 85px; display: flex; align-items: center; justify-content: center; 
+    font-size: 32px; position: relative; overflow: hidden;
+}
+.n-img-box::after {
+    content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 100%);
+}
+.n-badge { 
+    position: absolute; top: 8px; right: 8px; background: #ef4444; color: white; 
+    font-size: 9px; font-weight: 900; padding: 3px 6px; border-radius: 6px; z-index: 2; letter-spacing: 0.5px;
+    box-shadow: 0 2px 5px rgba(239, 68, 68, 0.4);
+}
+.n-content { padding: 12px; position: relative; z-index: 2; background: var(--bg-card);}
+.n-title { font-size: 12px; font-weight: 800; color: var(--text-main); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2;}
+.n-desc { font-size: 10px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;}
+
+/* Color Variants for Cards */
+.nc-red { background: linear-gradient(135deg, #ef4444, #991b1b); }
+.nc-blue { background: linear-gradient(135deg, #3b82f6, #1e3a8a); }
+.nc-orange { background: linear-gradient(135deg, #f97316, #9a3412); }
+.nc-purple { background: linear-gradient(135deg, #8b5cf6, #4c1d95); }
+.nc-green { background: linear-gradient(135deg, #10b981, #064e3b); }
+
+@media (min-width: 1024px) {
+    .netflix-card { min-width: 180px; max-width: 180px; }
+    .netflix-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    .netflix-section .desk-scroll-btn { display: flex; }
+    .netflix-section .desk-scroll-btn.left-btn { left: 5px; top: 55%; }
+    .netflix-section .desk-scroll-btn.right-btn { right: 5px; top: 55%; }
+    .netflix-scroll:active { cursor: grabbing; }
+}
+/* 🔥 TOPIC HEATMAP UI 🔥 */
+.heatmap-list { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; height: 240px; padding-right: 5px; scrollbar-width: none; }
+.heatmap-list::-webkit-scrollbar { display: none; }
+.hm-item { background: var(--bg-body); border-radius: 12px; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); transition: 0.2s; cursor: pointer; }
+.hm-item:active { transform: scale(0.98); border-color: var(--primary); }
+.hm-info { display: flex; flex-direction: column; gap: 4px; }
+.hm-subject { font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
+.hm-topic { font-size: 14px; font-weight: 800; color: var(--text-main); }
+.hm-score-box { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 900; }
+.hm-badge { padding: 4px 10px; border-radius: 8px; font-size: 12px; color: #fff; font-weight: 800; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+.hm-green { background: #10b981; border: 1px solid #059669; }
+.hm-yellow { background: #f59e0b; border: 1px solid #d97706; }
+.hm-red { background: #ef4444; border: 1px solid #dc2626; }
 </style>
 </head>
 <body>
@@ -362,12 +431,18 @@ textarea { height: 120px; resize: none; }
             <span class="cd-text" style="font-weight: 700;">🎯 Target Exam</span><span class="cd-timer" id="examTimer">00 Days Left</span>
         </div>
 
-        <div id="dailyGoalCard" class="daily-goal-card">
-            <div class="dg-text">
-                <span class="dg-title">🎯 Daily Mock Goal</span>
-                <span class="dg-status" id="dgStatus">Pending ⏳</span>
+        <div id="advancedDailyGoal" class="adv-goal-card">
+            <div class="adv-goal-header">
+                <div>
+                    <div class="adv-goal-title">🎯 Today's Mission <span class="auto-set-btn" onclick="generateAutoTarget()">🔄 Auto Set</span></div>
+                </div>
+                <div class="goal-pct-text">Progress: <span id="goalPctText">0%</span></div>
             </div>
-            <button class="dg-btn" onclick="switchTab('tests', document.querySelectorAll('.nav-item')[1])">Give Mock</button>
+            
+            <div class="prog-ring" style="height: 8px; margin-top: 0; background: var(--border);"><div class="prog-fill" id="goalProgBar" style="width: 0%; background: linear-gradient(90deg, #f59e0b, #10b981);"></div></div>
+            
+            <div class="goal-checklist" id="goalChecklist">
+                </div>
         </div>
 
         <div class="quick-actions">
@@ -507,24 +582,40 @@ textarea { height: 120px; resize: none; }
                 <i class="fas fa-search" style="color:var(--text-muted);"></i>
                 <input type="text" id="testSearch" placeholder="Search for Mocks or Subjects..." onkeyup="debouncedTestSearch(this.value)">
             </div>
+            
+            <div style="margin: 0 15px 15px; background: var(--bg-card); padding: 10px 15px; border-radius: 14px; border: 2px solid var(--border); display: flex; align-items: center; gap: 12px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+                <div style="font-size: 22px; background: var(--primary-light); width: 40px; height: 40px; display: grid; place-items: center; border-radius: 10px;">🎓</div>
+                <div style="flex: 1;">
+                    <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Target Exam Folder</div>
+                    <select id="examTreeFilter" onchange="applyTreeFilter()" style="width: 100%; border: none; background: transparent; font-size: 15px; font-weight: 800; color: var(--primary-dark); outline: none; appearance: none; cursor: pointer;">
+                        <option value="ALL">🌟 All Exams</option>
+                        <option value="DASS">DSSSB ASO / DASS Grade II</option>
+                        <option value="ASST">Assistant Superintendent</option>
+                        <option value="SSC">SSC PYQ (CGL, CHSL, MTS)</option>
+                    </select>
+                </div>
+                <i class="fas fa-chevron-down" style="color: var(--primary); font-size: 14px;"></i>
+            </div>
+
             <div style="position: relative; margin-bottom: 5px; margin-left: 15px; margin-right: 15px;">
                 <button class="desk-scroll-btn left-btn" style="top: 40%; width: 34px; height: 34px; font-size: 14px;" onclick="document.getElementById('mockFiltersRow').scrollBy({left: -200, behavior: 'smooth'})"><i class="fas fa-chevron-left"></i></button>
                 <button class="desk-scroll-btn right-btn" style="top: 40%; width: 34px; height: 34px; font-size: 14px;" onclick="document.getElementById('mockFiltersRow').scrollBy({left: 200, behavior: 'smooth'})"><i class="fas fa-chevron-right"></i></button>
                 
                 <div class="filter-scroll" id="mockFiltersRow" style="margin-bottom: 0;">
-                    <div class="filter-pill active" onclick="filterTests('all', this)">All Tests</div>
-                    <div class="filter-pill" style="color:#ef4444;" onclick="filterTests('Live', this)">Live 🔴</div>
-                    <div class="filter-pill" style="color:#f59e0b;" onclick="filterTests('Saved', this)">Saved ⭐</div>
-                    <div class="filter-pill" style="color:#10b981;" onclick="filterTests('Attempted', this)">Attempted ✅</div>
-                    <div class="filter-pill" onclick="filterTests('Full Mock', this)">Full Mock</div>
-                    <div class="filter-pill" onclick="filterTests('Reasoning', this)">Reasoning</div>
-                    <div class="filter-pill" onclick="filterTests('Maths', this)">Maths</div>
-                    <div class="filter-pill" onclick="filterTests('English', this)">English</div>
-                    <div class="filter-pill" onclick="filterTests('Hindi', this)">Hindi</div>
-                    <div class="filter-pill" onclick="filterTests('Computer', this)">Computer</div>
-                    <div class="filter-pill" onclick="filterTests('GK', this)">GK</div>
+                    <div class="filter-pill active" onclick="setSectionFilter('all', this)">All Sections</div>
+                    <div class="filter-pill" style="color:#ef4444;" onclick="setSectionFilter('Live', this)">Live 🔴</div>
+                    <div class="filter-pill" style="color:#f59e0b;" onclick="setSectionFilter('Saved', this)">Saved ⭐</div>
+                    <div class="filter-pill" style="color:#10b981;" onclick="setSectionFilter('Attempted', this)">Attempted ✅</div>
+                    <div class="filter-pill" onclick="setSectionFilter('Full Mock', this)">📦 Full Mock</div>
+                    <div class="filter-pill" onclick="setSectionFilter('Reasoning', this)">🧠 Reasoning Sectional</div>
+                    <div class="filter-pill" onclick="setSectionFilter('Maths', this)">🧮 Maths Sectional</div>
+                    <div class="filter-pill" onclick="setSectionFilter('English', this)">🅰️ English Sectional</div>
+                    <div class="filter-pill" onclick="setSectionFilter('Hindi', this)">अ Hindi Sectional</div>
+                    <div class="filter-pill" onclick="setSectionFilter('GK', this)">🌍 GK Sectional</div>
+                    <div class="filter-pill" onclick="setSectionFilter('Computer', this)">💻 Computer Sectional</div>
                 </div>
             </div>
+            
             <div id="testListContainer" style="margin-top: 15px;"></div>
         </div>
     </div>
@@ -553,13 +644,7 @@ textarea { height: 120px; resize: none; }
         <p style="color:var(--text-muted); font-size:13px; margin-bottom:25px; font-weight:600;">Access dedicated PYQ and subject-wise mocks.</p>
         
         <div class="mega-folder ssc-folder" onclick="openExamFolder('ssc_pyq', false)">
-            <div class="mf-icon">🏛️</div>
-            <div class="mf-content">
-                <h3>SSC PYQ Series</h3>
-                <p>CGL, CHSL, MTS & CPO</p>
             </div>
-            <div class="mf-arrow"><i class="fas fa-chevron-right"></i></div>
-        </div>
 
         <h3 style="font-size:16px; font-weight:800; margin: 30px 0 15px; color:var(--text-main);">Subject Wise Folders</h3>
         
@@ -706,6 +791,19 @@ textarea { height: 120px; resize: none; }
         </div>
     </div>
 </div>
+</div>
+
+<div id="personalReportModal" class="modal">
+    <div class="modal-content" style="max-width: 600px; max-height: 85vh; overflow-y: auto; padding: 0; border-radius: 20px;">
+        <div style="position: sticky; top: 0; background: var(--gradient-header); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 10;">
+            <h3 id="prTitle" style="font-size: 16px; margin: 0;">Test Report</h3>
+            <button onclick="document.getElementById('personalReportModal').style.display='none'" style="background:none; border:none; color:white; font-size: 20px; cursor: pointer;">&times;</button>
+        </div>
+        <div id="prBody" style="padding: 20px;">
+            </div>
+    </div>
+</div>
+
 <div class="nav-bar">
     <div class="nav-item active" onclick="switchTab('home', this)"><i class="fas fa-home"></i> <span>Home</span></div>
     <div class="nav-item" onclick="switchTab('tests', this)"><i class="fas fa-file-signature"></i> <span>Mocks</span></div>
@@ -739,7 +837,15 @@ let db = {
             once: function(){ return Promise.resolve({exists:()=>false, val:()=>null, forEach:()=>{} }); }, 
             set: function(){ return Promise.resolve(); }, 
             push: function(){ return Promise.resolve(); },
-            remove: function(){ return Promise.resolve(); }
+            remove: function(){ return Promise.resolve(); },
+            // Yeh add karna zaroori hai 👇
+            onDisconnect: function() { 
+                return { 
+                    update: function(){ return Promise.resolve(); }, 
+                    remove: function(){ return Promise.resolve(); }, 
+                    set: function(){ return Promise.resolve(); } 
+                }; 
+            }
         }; 
     } 
 };
@@ -949,33 +1055,41 @@ function openExamFolder(folderId, isSubject = false) {
     const testTabIcon = document.querySelectorAll('.nav-item')[1];
     switchTab('tests', testTabIcon);
     const searchInput = document.getElementById('testSearch');
-    
     searchInput.value = ''; 
 
+    let examDropdown = document.getElementById('examTreeFilter');
+    let isExamClick = false;
+
+    // 1. Auto-select Exam from Dashboard Folders
+    if(folderId === 'asst_sup') { examDropdown.value = 'ASST'; isExamClick = true; }
+    else if(folderId === 'dass_grade_2') { examDropdown.value = 'DASS'; isExamClick = true; }
+    else if(folderId === 'ssc_pyq') { examDropdown.value = 'SSC'; isExamClick = true; }
+    else { examDropdown.value = 'ALL'; }
+
+    // 2. Select Sectional Pill
     let pillText = folderId;
     if(folderId === 'my_attempts') pillText = 'Attempted';
     if(folderId === 'Live') pillText = 'Live';
     if(folderId === 'Saved') pillText = 'Saved';
     if(folderId === 'Full Mock') pillText = 'Full Mock';
 
+    if(isExamClick || folderId === 'my_attempts') pillText = 'All Sections';
+
     let pills = Array.from(document.querySelectorAll('.filter-pill'));
     let targetPill = pills.find(p => p.innerText.toLowerCase().includes(pillText.toLowerCase()));
 
     if (targetPill) {
-        filterTests(folderId, targetPill);
+        document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));
+        targetPill.classList.add('active');
+        currentTreeSection = targetPill.innerText.replace(/[^a-zA-Z ]/g, '').trim();
+        
         const row = document.getElementById('mockFiltersRow');
         const scrollPos = targetPill.offsetLeft - (row.clientWidth / 2) + (targetPill.clientWidth / 2);
         row.scrollTo({ left: scrollPos, behavior: 'smooth' });
-    } else {
-        let searchText = folderId;
-        if(folderId === 'asst_sup') searchText = 'Assistant Superintendent';
-        if(folderId === 'dass_grade_2') searchText = 'DASS Grade II';
-        if(folderId === 'ssc_pyq') searchText = 'SSC';
-        
-        searchInput.value = searchText;
-        filterTests('all', document.querySelector('.filter-pill.active'), searchText);
     }
-    showToast(`Opening ${folderId} Vault 📂`);
+    
+    applyTreeFilter();
+    showToast(`Opening ${folderId.replace(/_/g, ' ').toUpperCase()} Vault 📂`);
 }
 
 function checkStreak() {
@@ -1093,7 +1207,10 @@ function checkQOD(el, idx, correct) {
         showToast("Correct! +2 Points 🔥"); 
     } else { 
         el.classList.add('wrong'); 
-        document.querySelectorAll('.qod-opt')[correct].classList.add('correct'); 
+        const correctEl = document.querySelectorAll('.qod-opt')[correct];
+        if(correctEl) {
+            correctEl.classList.add('correct'); 
+        }
         showToast("Oops! Better luck tomorrow.");
     }
 }
@@ -1102,7 +1219,10 @@ function checkQOD(el, idx, correct) {
 function submitReport() {
     const txt = document.getElementById('reportText').value;
     if(!txt) return showToast("Please write an issue first!");
-    db.ref('dsssb_reports').push({ user: currentUser, id: currentUserId, issue: txt, time: firebase.database.ServerValue.TIMESTAMP });
+    
+    let timeStamp = (typeof firebase !== 'undefined' && firebase.database) ? firebase.database.ServerValue.TIMESTAMP : Date.now();
+    db.ref('dsssb_reports').push({ user: currentUser, id: currentUserId, issue: txt, time: timeStamp });
+    
     showToast("Report Sent Successfully! 🛡️"); 
     document.getElementById('reportModal').style.display='none'; 
     document.getElementById('reportText').value='';
@@ -1175,9 +1295,31 @@ function renderNotebook(type = 'bookmarks') {
     let topFilter = topSelect.value;
 
     let grouped = {};
-    Object.keys(dataObj).forEach(k => {
+    
+    // 🔥 AI LOGIC: Array banakar pehle Sorting karenge
+    let itemsArray = Object.keys(dataObj).map(k => {
         let q = dataObj[k];
         q._key = k;
+        return q;
+    });
+
+    if (type === 'mistakes') {
+        // AI Sorting: "Revise Now (3+ Days)" aur "Repeat Mistakes" ko sabse upar laao
+        itemsArray.sort((a, b) => {
+            let aScore = 0, bScore = 0;
+            if ((a.mistakeCount || 1) > 1) aScore += 10;
+            if (a.timestamp && (Date.now() - a.timestamp) / (1000 * 60 * 60 * 24) >= 3) aScore += 5;
+            
+            if ((b.mistakeCount || 1) > 1) bScore += 10;
+            if (b.timestamp && (Date.now() - b.timestamp) / (1000 * 60 * 60 * 24) >= 3) bScore += 5;
+            
+            return bScore - aScore; // Hightest score upar
+        });
+    } else {
+        itemsArray.reverse(); // Normal bookmarks ke liye newest first
+    }
+
+    itemsArray.forEach(q => {
         let sec = q.section || "General";
         let top = q.topic || "";
         
@@ -1201,13 +1343,28 @@ function renderNotebook(type = 'bookmarks') {
     for(let sec in grouped) {
         html += `<h3 style="color:var(--primary); border-bottom:2px solid var(--primary); padding-bottom:5px; margin-top:15px; font-size:16px;">${sec} <span style="font-size:12px; color:var(--text-muted); float:right; background:var(--primary-light); padding:2px 8px; border-radius:10px;">${grouped[sec].length} Qs</span></h3>`;
         
-        grouped[sec].reverse().forEach(q => {
+        grouped[sec].forEach(q => {
             let correctIdx = parseInt(q.ans) - 1;
             let qText = q.q_hi || q.q_en;
             let optArr = q.op_hi || q.op_en;
             let correctAnsText = optArr && optArr[correctIdx] ? optArr[correctIdx] : "Not Specified";
             
             let topicHtml = q.topic ? `<span style="margin-left:8px; background:var(--primary-light); color:var(--primary-dark); padding:2px 6px; border-radius:4px; font-size:10px;">🏷️ ${q.topic}</span>` : '';
+            
+            // 🔥 AI BADGES INJECTION 🔥
+            let aiBadgesHTML = '';
+            if (type === 'mistakes') {
+                let mCount = q.mistakeCount || 1;
+                let daysPassed = q.timestamp ? (Date.now() - q.timestamp) / (1000 * 60 * 60 * 24) : 0;
+                
+                if (mCount > 1) {
+                    aiBadgesHTML += `<span style="font-size:10px; background:#fee2e2; color:#b91c1c; padding:3px 8px; border-radius:6px; font-weight:900; margin-left:8px; border:1px solid #fca5a5; box-shadow: 0 2px 5px rgba(239,68,68,0.2);">🔥 ${mCount}x Repeat Mistake</span>`;
+                }
+                if (q.timestamp && daysPassed >= 3) {
+                    aiBadgesHTML += `<span style="font-size:10px; background:#dcfce7; color:#15803d; padding:3px 8px; border-radius:6px; font-weight:900; margin-left:8px; border:1px solid #86efac; animation: pulse 2s infinite; box-shadow: 0 2px 5px rgba(22,163,74,0.2);">⏳ Revise Now</span>`;
+                }
+            }
+
             let solId = `sol_${type}_${q._key}`;
 
             let optionsHTML = '<div style="margin-top:10px; display:flex; flex-direction:column; gap:8px;">';
@@ -1221,9 +1378,10 @@ function renderNotebook(type = 'bookmarks') {
             html += `
             <div class="test-card" style="margin-bottom:15px; border-left:4px solid ${type==='bookmarks'?'var(--warning)':'var(--danger)'};">
                 <div style="display:flex; justify-content:space-between; margin-bottom:12px; align-items:flex-start;">
-                    <div>
+                    <div style="line-height: 2;">
                         <span style="font-size:11px; background:${type==='bookmarks'?'var(--warning)':'var(--danger)'}; color:#fff; padding:3px 8px; border-radius:6px; font-weight:800;">${type==='bookmarks'?'Saved':'Mistake'}</span>
                         ${topicHtml}
+                        ${aiBadgesHTML}
                     </div>
                     <button onclick="removeNotebookItem('${q._key}', '${type}')" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-weight:700;"><i class="fas fa-trash"></i></button>
                 </div>
@@ -1248,7 +1406,6 @@ function renderNotebook(type = 'bookmarks') {
     container.innerHTML = html;
     if(window.MathJax) { MathJax.typesetPromise([container]); }
 }
-
 function toggleNbSolution(id, btn) {
     const el = document.getElementById(id);
     if(el.style.display === 'none' || el.style.display === '') {
@@ -1283,11 +1440,12 @@ function reattemptTest(testId, fullUrlQuery) {
 /* 9. MAIN DATA FETCHING */
 async function fetchData(user) {
     try {
-        if(currentUserId !== "guest") {
+       if(currentUserId !== "guest") {
             const userRef = db.ref('dsssb_presence/' + currentUserId);
-            userRef.set({ name: currentUser, id: currentUserId, state: 'online', lastActive: firebase.database.ServerValue.TIMESTAMP });
-            userRef.onDisconnect().update({ state: 'offline', lastActive: firebase.database.ServerValue.TIMESTAMP });
-        }
+            let timeStamp = (typeof firebase !== 'undefined' && firebase.database) ? firebase.database.ServerValue.TIMESTAMP : Date.now();
+            userRef.set({ name: currentUser, id: currentUserId, state: 'online', lastActive: timeStamp });
+            userRef.onDisconnect().update({ state: 'offline', lastActive: timeStamp });
+        } 
         
         const [testsSnap, proSnap, notesSnap] = await Promise.all([ 
             db.ref("dsssb_tests_db").once("value"), 
@@ -1379,14 +1537,10 @@ async function fetchData(user) {
             renderCharts(chartAverages);
             filterTests('all', document.querySelector('.filter-pill.active')); 
 
-            if (myTestCount > 0) {
-                let goalCard = document.getElementById('dailyGoalCard');
-                if(goalCard) {
-                    goalCard.classList.add('completed');
-                    document.getElementById('dgStatus').innerText = 'Completed ✅';
-                }
-            }
-        }).catch(e => console.error("Leaderboard fetch error:", e));
+ // 🔥 UPDATE ADVANCED GOAL PROGRESS 🔥
+            initAdvancedGoals(myTestCount);
+
+        }).catch(e => console.error("Leaderboard fetch error:", e));          
 
     } catch(e) { 
         console.error("Data Load Error:", e); 
@@ -1398,53 +1552,92 @@ async function fetchData(user) {
 const debouncedTestSearch = debounce((val) => searchTests(val), 300);
 const debouncedNoteSearch = debounce((val) => searchNotes(val), 300);
 
+let currentTreeSection = 'all';
+
+function setSectionFilter(sec, el) {
+    if(el) { 
+        document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active')); 
+        el.classList.add('active'); 
+    }
+    currentTreeSection = sec;
+    filterTests(sec, el); 
+}
+
 function searchTests(query) { 
-    let activeFilterEl = document.querySelector('.filter-pill.active'); 
-    let cat = activeFilterEl ? activeFilterEl.innerText.replace(/[^a-zA-Z ]/g, '').trim() : 'all'; 
-    filterTests(cat, activeFilterEl, query); 
+    filterTests(currentTreeSection, document.querySelector('.filter-pill.active'), query); 
+}
+
+function applyTreeFilter() {
+    filterTests(currentTreeSection, document.querySelector('.filter-pill.active'));
 }
 
 function filterTests(cat, el, searchQuery = "") {
     if(el) { 
         document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active')); 
         el.classList.add('active'); 
+        currentTreeSection = cat;
     }
     
+    let examVal = document.getElementById('examTreeFilter') ? document.getElementById('examTreeFilter').value : 'ALL';
+    let secVal = currentTreeSection.toLowerCase();
+    
+    if(!searchQuery && document.getElementById('testSearch')) {
+        searchQuery = document.getElementById('testSearch').value;
+    }
+
     let list = [...allTests].reverse();
     let savedTests = JSON.parse(getSafeData('savedTests') || '[]');
     
-    // EXCLUDE auto_qod from dashboard list
     list = list.filter(t => t.dbKey !== 'auto_qod');
 
-    if (searchQuery) { 
-        let q = searchQuery.toLowerCase().trim();
-        if(q === 'reas') q = 'reasoning';
-        else if(q === 'math' || q === 'quant') q = 'math';
-        else if(q === 'eng') q = 'english';
-        else if(q === 'comp') q = 'computer';
-        else if(q === 'hin') q = 'hindi';
-        
-        list = list.filter(t => (t.title||"").toLowerCase().includes(q) || (t.category||"").toLowerCase().includes(q) || (t.title||"").toLowerCase().includes(searchQuery.toLowerCase())); 
-    } else if(cat && cat.toLowerCase() !== 'all tests' && cat.toLowerCase() !== 'all') {
-        const key = cat.toLowerCase();
-        if(key.includes('saved')) list = list.filter(t => savedTests.includes(t.dbKey));
-        else if (key.includes('live')) list = list.filter(t => (t.isLive && t.isLive.toString() === 'true') || (t.scheduledTime && Date.now() >= t.scheduledTime));
-        else if (key.includes('attempted')) list = list.filter(t => attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id));
-        else list = list.filter(t => { 
-            const title = (t.title||"").toLowerCase(), c = (t.category||"").toLowerCase(); 
-            if(key.includes('reasoning')) return title.includes('reas') || title.includes('logic') || c.includes('reas');
-            if(key.includes('maths')) return title.includes('math') || title.includes('quant') || c.includes('math');
-            if(key.includes('english')) return title.includes('eng') || c.includes('eng');
-            if(key.includes('hindi')) return title.includes('hin') || c.includes('hin');
-            if(key.includes('computer')) return title.includes('comp') || c.includes('comp');
-            if(key.includes('gk')) return title.includes('gk') || title.includes('general') || c.includes('gk');
-            return title.includes(key) || c.includes(key); 
+    // 🎯 TIER 1: FILTER BY EXAM
+    if (examVal !== 'ALL') {
+        list = list.filter(t => {
+            let c = (t.category||"").toLowerCase(), title = (t.title||"").toLowerCase();
+            if(examVal === 'DASS') return title.includes('dass') || title.includes('aso') || c.includes('dass') || c.includes('aso');
+            if(examVal === 'ASST') return title.includes('asst') || title.includes('super') || c.includes('asst');
+            if(examVal === 'SSC') return title.includes('ssc') || c.includes('ssc');
+            return true;
         });
     }
-    
-    let html = "";
 
-    // Helper to generate Card HTML
+    // 🧩 TIER 2: FILTER BY SECTION
+    if (secVal !== 'all tests' && secVal !== 'all sections' && secVal !== 'all') {
+        if(secVal.includes('saved')) list = list.filter(t => savedTests.includes(t.dbKey));
+        else if (secVal.includes('live')) list = list.filter(t => (t.isLive && t.isLive.toString() === 'true') || (t.scheduledTime && Date.now() >= t.scheduledTime));
+        else if (secVal.includes('attempted')) list = list.filter(t => attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id));
+        else {
+            list = list.filter(t => { 
+                let title = (t.title||"").toLowerCase(), c = (t.category||"").toLowerCase(); 
+                if(secVal.includes('full')) return title.includes('full') || c.includes('full');
+                if(secVal.includes('reasoning')) return title.includes('reas') || title.includes('logic') || c.includes('reas');
+                if(secVal.includes('maths') || secVal.includes('math')) return title.includes('math') || title.includes('quant') || c.includes('math');
+                if(secVal.includes('english')) return title.includes('eng') || c.includes('eng');
+                if(secVal.includes('hindi')) return title.includes('hin') || c.includes('hin');
+                if(secVal.includes('computer')) return title.includes('comp') || c.includes('comp');
+                if(secVal.includes('gk')) return title.includes('gk') || title.includes('general') || c.includes('gk');
+                return title.includes(secVal) || c.includes(secVal); 
+            });
+        }
+    }
+
+    // 🔍 TIER 3: TEXT SEARCH
+    if (searchQuery) { 
+        let q = searchQuery.toLowerCase().trim();
+        list = list.filter(t => (t.title||"").toLowerCase().includes(q) || (t.category||"").toLowerCase().includes(q)); 
+    }
+
+    // 🔥 NEW LOGIC: SORT LIVE MOCKS TO THE VERY TOP 🔥
+    list.sort((a, b) => {
+        let aLive = (a.isLive && a.isLive.toString() === 'true') || (a.scheduledTime && Date.now() >= a.scheduledTime);
+        let bLive = (b.isLive && b.isLive.toString() === 'true') || (b.scheduledTime && Date.now() >= b.scheduledTime);
+        
+        if (aLive && !bLive) return -1; // a को ऊपर भेजो
+        if (!aLive && bLive) return 1;  // b को ऊपर भेजो
+        return 0; // दोनों same हैं, तो ओरिजिनल आर्डर रहने दो
+    });
+
+    let html = "";
     const generateCardHTML = (t) => {
         let locked = t.type === 'pro' && !isPro;
         let isAttempted = attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id);
@@ -1467,9 +1660,13 @@ function filterTests(cat, el, searchQuery = "") {
             </div>` : 
             `<button class="start-btn" onclick="window.location.href='cbt.html?${urlQuery}&mode=exam'">Start Mock Test ➔</button>`;
         
-        // NEW LEADERBOARD BUTTON
-        let viewRankBtn = `<button class="start-btn" style="background:var(--primary-light); color:var(--primary-dark); border:1px solid var(--primary); padding: 8px; font-size:13px; margin-top:8px; width:100%; box-shadow:none;" onclick="openTestLeaderboard('${t.dbKey}', '${(t.title||'').replace(/'/g, "\\'")}')">🏆 View Leaderboard</button>`;
+let viewRankBtn = `<button class="start-btn" style="background:var(--primary-light); color:var(--primary-dark); border:1px solid var(--primary); padding: 8px; font-size:13px; margin-top:8px; width:100%; box-shadow:none;" onclick="openTestLeaderboard('${t.dbKey}', '${(t.title||'').replace(/'/g, "\\'")}')">🏆 Global Ranks</button>`;
 
+        // 🔥 ADDED: Personalized Analytics Button for Attempted Tests
+        let analyticsBtn = "";
+        if (isAttempted) {
+            analyticsBtn = `<button class="start-btn" style="background:#f0f9ff; color:#0369a1; border:1px solid #0ea5e9; padding: 8px; font-size:13px; margin-top:8px; width:100%; box-shadow:none;" onclick="viewPersonalReport('${t.dbKey}', '${(t.title||'').replace(/'/g, "\\'")}')">📊 My Detailed Analysis</button>`;
+        }
         return `<div class="test-card ${locked?'locked':''}">
                     ${liveHTML}
                     <button class="save-btn ${isSaved?'saved':''}" onclick="toggleSaveTest('${t.dbKey}', this, event)">
@@ -1481,32 +1678,33 @@ function filterTests(cat, el, searchQuery = "") {
                         <span><i class="far fa-clock"></i> ${t.time || '15'} Mins</span>
                         <span><i class="fas fa-check-circle"></i> ${t.marks || t.qs || '20'} Marks</span>
                     </div>
-                    ${buttonHTML}
-                    ${viewRankBtn}
+                   ${buttonHTML}
+                    <div style="display:flex; gap:8px;">
+                        ${analyticsBtn}
+                        ${viewRankBtn}
+                    </div>
                 </div>`;
     };
 
-    // LOGIC TO DIVIDE INTO SECTIONS (If specific exam is searched)
-    if (searchQuery && list.length > 0) {
+    // 📂 UI GROUPING
+    if (examVal !== 'ALL' && list.length > 0 && secVal === 'all') {
         let fullMocks = list.filter(t => (t.category || "").toLowerCase().includes('full') || (t.title || "").toLowerCase().includes('full'));
         let sectionalMocks = list.filter(t => !(t.category || "").toLowerCase().includes('full') && !(t.title || "").toLowerCase().includes('full'));
         
         if (fullMocks.length > 0) {
-            html += `<div class="section-title" style="margin-top:5px; color:var(--primary);">📑 Full Length Mocks</div>`;
+            html += `<div class="section-title" style="margin-top:5px; color:var(--primary);">📦 ${examDropdown.options[examDropdown.selectedIndex].text} - Full Length Mocks</div>`;
             fullMocks.forEach(t => html += generateCardHTML(t));
         }
         if (sectionalMocks.length > 0) {
-            html += `<div class="section-title" style="margin-top:20px; color:#ea580c;">🧩 Sectional Mocks</div>`;
+            html += `<div class="section-title" style="margin-top:20px; color:#ea580c;">🧩 Sectional Tests</div>`;
             sectionalMocks.forEach(t => html += generateCardHTML(t));
         }
     } else {
-        // Standard Flat List
         list.forEach(t => html += generateCardHTML(t));
     }
 
     document.getElementById('testListContainer').innerHTML = html || "<div style='text-align:center; color:var(--text-muted); padding:40px;'><i class='fas fa-box-open fa-3x' style='opacity:0.3; margin-bottom:10px;'></i><br>No tests found</div>";
 }
-
 function searchNotes(query) {
     let list = [...allNotes]; 
     if(query) list = list.filter(n => (n.title||"").toLowerCase().includes(query.toLowerCase()) || (n.subject||"").toLowerCase().includes(query.toLowerCase()));
@@ -1551,10 +1749,15 @@ function renderVideos() {
     });
     document.getElementById('videoListContainer').innerHTML = html;
 }
+let myBarChart = null;
+let myRadarChart = null;
 
 function renderCharts(dataArr) {
     const ctx = document.getElementById('barChart').getContext('2d');
-    new Chart(ctx, { 
+    
+    if(myBarChart) myBarChart.destroy();
+    
+    myBarChart = new Chart(ctx, { 
         type: 'bar', 
         data: { 
             labels: ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'], 
@@ -1572,7 +1775,10 @@ function renderCharts(dataArr) {
 
     const ctxRadar = document.getElementById('radarChart').getContext('2d');
     const darkLine = document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)';
-    new Chart(ctxRadar, { 
+    
+    if(myRadarChart) myRadarChart.destroy();
+
+    myRadarChart = new Chart(ctxRadar, { 
         type: 'radar', 
         data: { 
             labels: ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'], 
@@ -1758,6 +1964,203 @@ document.addEventListener('keydown', function(e) {
     if (e.ctrlKey && ['U', 'u', 'C', 'c'].includes(e.key)) { e.preventDefault(); return false; }
 });
 
+/* 🔥 ADVANCED DAILY TARGET LOGIC 🔥 */
+function generateAutoTarget() {
+    const targets = [
+        { t1: "Give 1 Full Mock Test", t2: "Solve 50 Questions", t3: "Revise 1 Weak Topic", reqMocks: 1 },
+        { t1: "Attempt 2 Sectional Mocks", t2: "Read English Vocab", t3: "Solve 20 Math Qs", reqMocks: 2 },
+        { t1: "Give 1 Live Mock", t2: "Clear Mistake Book", t3: "Learn 1 New Concept", reqMocks: 1 }
+    ];
+    // Random target select karo
+    const todayTarget = targets[Math.floor(Math.random() * targets.length)];
+    todayTarget.date = new Date().toDateString();
+    
+    setSafeData('dsssb_daily_goal', JSON.stringify(todayTarget));
+    
+    // Simulate UI refresh with toast
+    showToast("🎯 New Daily Mission Set!", "success");
+    initAdvancedGoals(parseInt(document.getElementById('valTests').innerText) || 0);
+}
+
+function initAdvancedGoals(totalMocksAttempted) {
+    let savedGoal = getSafeData('dsssb_daily_goal');
+    let today = new Date().toDateString();
+    let goalData;
+
+    if (savedGoal) {
+        goalData = JSON.parse(savedGoal);
+        if (goalData.date !== today) goalData = null; // Purana din hai toh null karo
+    }
+
+    // Agar aaj ka goal nahi hai, toh auto generate karo
+    if (!goalData) {
+        goalData = { t1: "Give 1 Mock Test", t2: "Revise Notes", t3: "Clear Notebook Doubts", reqMocks: 1, date: today };
+        setSafeData('dsssb_daily_goal', JSON.stringify(goalData));
+    }
+
+    // Progress Logic (For now, we tie progress directly to Mock attempts since it's the core metric)
+    // 0 mocks = 33% (Just opening app), 1 mock = 66% or 100% depending on reqMocks
+    let baseMocksToday = parseInt(getSafeData('mocks_start_of_day') || totalMocksAttempted);
+    if(getSafeData('lastVisit') !== today) {
+        setSafeData('mocks_start_of_day', totalMocksAttempted);
+        baseMocksToday = totalMocksAttempted;
+    }
+    
+    let mocksGivenToday = totalMocksAttempted - baseMocksToday;
+    if(mocksGivenToday < 0) mocksGivenToday = 0; // fallback
+
+    let chk1 = mocksGivenToday >= goalData.reqMocks;
+    let chk2 = mocksGivenToday >= (goalData.reqMocks > 1 ? 1 : 0.5); // Example metric
+    let chk3 = document.getElementById('tab-bookmarks').style.display === 'block'; // Example metric
+
+    // Calculate Percentage
+    let doneCount = (chk1 ? 1 : 0) + (chk2 ? 1 : 0);
+    let pct = Math.round((doneCount / 3) * 100);
+    
+    // UI Update
+    document.getElementById('goalProgBar').style.width = pct + "%";
+    document.getElementById('goalPctText').innerText = pct + "%";
+    
+    let html = `
+        <div class="goal-item ${chk1 ? 'done' : ''}"><input type="checkbox" class="goal-chk" ${chk1 ? 'checked' : ''} onclick="return false;"> <span>${goalData.t1}</span></div>
+        <div class="goal-item ${chk2 ? 'done' : ''}"><input type="checkbox" class="goal-chk" ${chk2 ? 'checked' : ''} onclick="this.parentElement.classList.toggle('done'); updateManualProgress();"> <span>${goalData.t2}</span></div>
+        <div class="goal-item"><input type="checkbox" class="goal-chk" onclick="this.parentElement.classList.toggle('done'); updateManualProgress();"> <span>${goalData.t3}</span></div>
+    `;
+    document.getElementById('goalChecklist').innerHTML = html;
+    
+    // Trigger manual progress once to sync UI
+    setTimeout(updateManualProgress, 100);
+}
+
+function updateManualProgress() {
+    let checkboxes = document.querySelectorAll('.goal-chk');
+    let checkedCount = 0;
+    checkboxes.forEach(chk => { if(chk.checked || chk.parentElement.classList.contains('done')) checkedCount++; });
+    
+    let pct = Math.round((checkedCount / checkboxes.length) * 100);
+    document.getElementById('goalProgBar').style.width = pct + "%";
+    document.getElementById('goalPctText').innerText = pct + "%";
+    
+    if(pct === 100 && !window.goalCelebrated) {
+        window.goalCelebrated = true;
+        if(window.confetti) confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        showToast("Mission Accomplished! 🏆", "success");
+    }
+}
+/* 🔥 PERSONAL TEST ANALYSIS LOGIC (UPGRADED V2) 🔥 */
+function renderComparisonBar(label, userVal, maxVal, topperVal, maxTopperVal, unit = "") {
+    // Added safety checks so math never fails
+    const safeUserVal = Number(userVal) || 0;
+    const safeMaxVal = Number(maxVal) > 0 ? Number(maxVal) : 100;
+    const safeTopperVal = Number(topperVal) || 0;
+    const safeMaxTopperVal = Number(maxTopperVal) > 0 ? Number(maxTopperVal) : 100;
+
+    const userPct = Math.min(100, (safeUserVal / safeMaxVal) * 100);
+    const topperPct = Math.min(100, (safeTopperVal / safeMaxTopperVal) * 100);
+    
+    return `
+    <div style="margin-top: 15px;">
+        <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; margin-bottom: 8px; color: var(--text-muted);"><span>${label}</span></div>
+        <div style="display:grid; grid-template-columns: 50px 1fr 60px; gap:10px; align-items:center; margin-bottom:8px;">
+            <span style="font-size:11px; font-weight:900; color:var(--primary); background:var(--primary-light); padding:3px 6px; border-radius:4px; text-align:center;">YOU</span>
+            <div style="height: 10px; background: var(--border); border-radius: 99px; overflow: hidden;"><div style="height: 100%; background: var(--primary); width:${userPct}%"></div></div>
+            <span style="font-size:13px; font-weight:800; text-align:right; color:var(--text-main);">${safeUserVal}${unit}</span>
+        </div>
+        <div style="display:grid; grid-template-columns: 50px 1fr 60px; gap:10px; align-items:center;">
+            <span style="font-size:11px; font-weight:900; color:var(--success); background:#dcfce7; padding:3px 6px; border-radius:4px; text-align:center;">TOP</span>
+            <div style="height: 10px; background: var(--border); border-radius: 99px; overflow: hidden;"><div style="height: 100%; background: var(--success); width:${topperPct}%"></div></div>
+            <span style="font-size:13px; font-weight:800; text-align:right; color:var(--text-main);">${safeTopperVal}${unit}</span>
+        </div>
+    </div>`;
+}
+
+function viewPersonalReport(testId, testTitle) {
+    const reportModal = document.getElementById('personalReportModal');
+    const prBody = document.getElementById('prBody');
+    
+    // 🎨 FIX 1: Missing CSS Handle directly in JS
+    document.getElementById('prTitle').parentElement.style.background = 'linear-gradient(135deg, #4f46e5, #8b5cf6)';
+    document.getElementById('prTitle').innerText = "📊 Analysis: " + testTitle;
+    
+    reportModal.style.display = 'flex';
+    prBody.innerHTML = `<div style="text-align:center; padding:40px 20px; font-weight:800; color:var(--primary);"><i class="fas fa-spinner fa-spin fa-2x" style="margin-bottom:10px;"></i><br>Fetching your scorecard from server...</div>`;
+
+    // Extract base test config
+    let testInfo = allTests.find(t => t.dbKey === testId) || {};
+    let expectedTotalMarks = testInfo.marks || testInfo.qs || 100;
+    let expectedTotalQs = testInfo.qs || testInfo.marks || 100;
+
+    db.ref("dsssb_results_live").once("value").then(snap => {
+        let results = [];
+        let myData = null;
+
+        if(snap.exists()){
+            snap.forEach(c => { 
+                let val = c.val();
+                if(val.testId === testId) {
+                    results.push(val);
+                    // 🛡️ FIX 2: Better user matching
+                    if (String(val.userId).trim() === String(currentUserId).trim() || val.name === currentUser) {
+                        if(!myData || val.score > myData.score) myData = val; 
+                    }
+                }
+            });
+        }
+
+        if(!myData) {
+            prBody.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);">
+                <i class="fas fa-exclamation-triangle fa-3x" style="margin-bottom:15px; color:var(--warning);"></i>
+                <p style="font-weight:600; font-size:14px; margin-bottom:5px;">Analysis data not found.</p>
+                <p style="font-size:12px; margin-bottom:20px;">Make sure your test was submitted online successfully.</p>
+                <button class="start-btn" style="width:100%; border:none; box-shadow:none; background:var(--bg-body); color:var(--text-main); border:1px solid var(--border);" onclick="document.getElementById('personalReportModal').style.display='none'">Close</button>
+            </div>`;
+            return;
+        }
+
+        results.sort((a,b) => b.score - a.score);
+        const topper = results[0] || {score: 0, correct: 0};
+
+        let correct = myData.correct || 0;
+        let wrong = myData.wrong || 0;
+        
+        // 🧮 FIX 3: Safely calculate skipped questions without going negative
+        let totalQs = myData.timePerQ ? myData.timePerQ.length : expectedTotalQs;
+        let skipped = totalQs - (correct + wrong); 
+        if(skipped < 0) skipped = 0;
+        
+        let accuracy = (correct + wrong) > 0 ? ((correct / (correct + wrong)) * 100).toFixed(1) : 0;
+
+        prBody.innerHTML = `
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; text-align: center; margin-bottom:20px;">
+                <div style="background:#e0e7ff; padding:15px; border-radius:16px; border:1px solid rgba(79, 70, 229, 0.2); box-shadow: 0 4px 10px rgba(79, 70, 229, 0.1);">
+                    <h4 style="margin:0 0 5px 0; font-size:12px; color:var(--primary-dark); text-transform:uppercase; letter-spacing:0.5px;">My Score</h4>
+                    <p style="margin:0; font-size:26px; font-weight:900; color:var(--primary);">${myData.score}</p>
+                </div>
+                <div style="background:#d1fae5; padding:15px; border-radius:16px; border:1px solid rgba(16, 185, 129, 0.2); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.1);">
+                    <h4 style="margin:0 0 5px 0; font-size:12px; color:#065f46; text-transform:uppercase; letter-spacing:0.5px;">Accuracy</h4>
+                    <p style="margin:0; font-size:26px; font-weight:900; color:var(--success);">${accuracy}%</p>
+                </div>
+            </div>
+            
+            <div style="background:var(--bg-card); padding:18px; border-radius:16px; margin-bottom:20px; border:1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                <h4 style="margin:0; font-size:15px; color:var(--text-main); font-weight:900; border-bottom:1px solid var(--border); padding-bottom:10px;">📈 You vs Topper</h4>
+                ${renderComparisonBar("Overall Score", myData.score, Math.max(expectedTotalMarks, topper.score), topper.score, Math.max(expectedTotalMarks, topper.score))}
+                ${renderComparisonBar("Correct Answers", correct, Math.max(totalQs, topper.correct||0), topper.correct || 0, Math.max(totalQs, topper.correct||0))}
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; text-align: center; margin-bottom:25px;">
+                <div style="padding:12px 10px; border-radius:14px; background:#dcfce7; border:1px solid #86efac; color:#166534; font-weight:800; font-size:12px;">✅ Correct<br><span style="font-size:20px; font-weight:900; display:block; margin-top:4px;">${correct}</span></div>
+                <div style="padding:12px 10px; border-radius:14px; background:#fee2e2; border:1px solid #fca5a5; color:#991b1b; font-weight:800; font-size:12px;">❌ Wrong<br><span style="font-size:20px; font-weight:900; display:block; margin-top:4px;">${wrong}</span></div>
+                <div style="padding:12px 10px; border-radius:14px; background:#fef3c7; border:1px solid #fde68a; color:#b45309; font-weight:800; font-size:12px;">🟡 Skipped<br><span style="font-size:20px; font-weight:900; display:block; margin-top:4px;">${skipped}</span></div>
+            </div>
+
+            <button class="btn-primary" onclick="document.getElementById('personalReportModal').style.display='none'; window.location.href='cbt.html?testid=${testId}&title=${encodeURIComponent(testTitle)}&mode=solution'" style="width:100%; padding:15px; font-size:15px; box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35); border-bottom:3px solid var(--primary-dark);">👁️ Re-check Solutions</button>
+        `;
+    }).catch(e => {
+        prBody.innerHTML = `<div style="text-align:center; padding:20px; color:red; font-weight:bold;">Error fetching analysis data. Check your internet connection.</div>`;
+    });
+}
+
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js')
@@ -1797,10 +2200,13 @@ if ('serviceWorker' in navigator) {
         else if(loc.includes('index.html') || loc === '') loc = 'On Dashboard 🏠';
         else loc = 'Exploring Portal 🔍';
 
+        // YEH LINE ADD KAREIN 👇
+        let trackerTimeStamp = (typeof firebase !== 'undefined' && firebase.database) ? firebase.database.ServerValue.TIMESTAMP : Date.now();
+
         // 1. Update Total/Weekly Users
         trackDb.ref('dsssb_analytics/users/' + trackUid).update({
             name: trackUname,
-            last_active: firebase.database.ServerValue.TIMESTAMP
+            last_active: trackerTimeStamp
         });
 
         // 2. Update Live Presence
@@ -1813,7 +2219,7 @@ if ('serviceWorker' in navigator) {
                 presRef.set({ 
                     name: trackUname, 
                     activity: loc, 
-                    time: firebase.database.ServerValue.TIMESTAMP 
+                    time: trackerTimeStamp 
                 });
             }
         });
