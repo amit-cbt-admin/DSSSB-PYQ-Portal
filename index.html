@@ -1,17 +1,17 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>PYQ Notes - Mock Tests</title>
 
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#4f46e5">
 
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
+<link rel="apple-touch-icon" href="icons/icon-192x192.png">
 <link rel="manifest" href="manifest.json">
 
 <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
@@ -48,7 +48,7 @@ body.dark-mode {
     --bg-glass: rgba(30, 41, 59, 0.85);
     --border: #334155;
 }
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; max-width: 100%; word-wrap: break-word; }
 
 body { display: block; background: var(--bg-body); color: var(--text-main); padding-bottom: var(--nav-height); transition: background 0.3s ease, color 0.3s ease; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; overflow-x: hidden; }
 
@@ -536,7 +536,7 @@ textarea { height: 120px; resize: none; }
                 <div style="display:flex; flex-direction:column; gap:12px;">
                    <div class="search-box" style="margin:0; box-shadow:none; border:1px solid var(--border-color); padding: 10px 15px; display:flex; align-items:center;">
                         <i class="fas fa-search" style="color:var(--text-muted);"></i>
-                        <input type="text" id="testSearch" placeholder="Search Mocks (e.g., SSC, DSSSB)..." onkeyup="debouncedTestSearch(this.value)" style="flex:1;">
+                        <input type="text" id="testSearch" placeholder="Search Mocks (e.g., SSC, Teaching)..." onkeyup="debouncedTestSearch(this.value)" style="flex:1;">
                         <i class="fas fa-microphone" style="color:var(--primary); cursor:pointer;" onclick="showToast('Voice search feature coming soon! 🎙️')"></i>
                     </div>
 
@@ -789,7 +789,7 @@ try {
 let currentUser = "Student", currentUserId = "guest", isPro = false;
 let myScores = [], allTests = [], allNotes = [];
 let lastAlertTime = 0;
-let attemptedTestIds = new Set(); 
+let attemptedTestIds = new Map(); 
 let currentNbType = 'bookmarks'; // NEW: Track notebook type globally
 
 let fallbackQOD = { q: "Fetching today's challenge...", opt: ["-", "-", "-", "-"], ans: 0 };
@@ -863,7 +863,9 @@ function initDashboard() {
     loadAutoQOD();
 
     if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
-        const tg = window.Telegram.WebApp; tg.expand();
+       const tg = window.Telegram.WebApp; 
+        tg.expand();
+        try { if(tg.requestFullscreen) tg.requestFullscreen(); } catch(e){} 
         if(tg.colorScheme === 'dark' && !theme) document.body.classList.add('dark-mode');
         
         const u = tg.initDataUnsafe.user;
@@ -1353,13 +1355,15 @@ function removeNotebookItem(key, type) {
 // ------------------------------------------
 
 function reattemptTest(testId, fullUrlQuery) {
-    if(confirm("Re-attempting will clear your previous answers on this device. Continue?")) {
+    // Native confirm() removed because TWA blocks it. Using smooth Toast instead.
+    showToast("Starting fresh attempt... 🔄");
+    
+    setTimeout(() => {
         removeSafeData("dsssb_cbt_rank_v2_" + testId); 
         removeSafeData("dsssb_cbt_rank_v2_" + testId + "_final"); 
         window.location.href = `cbt.html?${fullUrlQuery}`;
-    }
+    }, 800); // 0.8 seconds ka delay taaki user toast padh sake
 }
-
 /* 9. MAIN DATA FETCHING */
 async function fetchData(user) {
     try {
@@ -1440,7 +1444,7 @@ async function fetchData(user) {
                 if (String(r.userId || "").trim() === String(currentUserId).trim() || rName === currentUser) {
                     userMap[rName].isMe = true; 
                     myTestCount++; 
-                    if(r.testId) attemptedTestIds.add(r.testId); 
+                    if(r.testId) attemptedTestIds.set(r.testId, r.time || r.timestamp || Date.now()); 
                     
                     let cat = r.category || (testData[r.testId] ? testData[r.testId].category : "GK");
                     let max = r.testId && testData[r.testId] ? (parseInt(testData[r.testId].qs) || parseInt(testData[r.testId].marks) || 20) : 20;
@@ -1614,10 +1618,12 @@ function renderTestCards(filteredList) {
     let savedTests = JSON.parse(getSafeData('savedTests') || '[]');
 
     filteredList.forEach(t => {
-        let locked = t.type === 'pro' && !isPro;
+let locked = t.type === 'pro' && !isPro;
         let isAttempted = attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id);
+        let attemptTime = attemptedTestIds.get(t.dbKey) || attemptedTestIds.get(t.id);
+        let attemptDateStr = attemptTime ? new Date(attemptTime).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
+        let attemptLabel = isAttempted && attemptDateStr ? `<div style="font-size: 11px; color: var(--success); font-weight: 800; margin-bottom: 5px; text-align: center; background: var(--bg-body); padding: 4px; border-radius: 6px;"><i class="fas fa-calendar-check"></i> Attempted on: ${attemptDateStr}</div>` : '';
         let isSaved = savedTests.includes(t.dbKey);
-        
         let isActuallyLive = (t.isLive && t.isLive.toString() === 'true') || 
                              (t.scheduledTime && Date.now() >= t.scheduledTime) ||
                              (t.category && t.category.toLowerCase().includes('live')) ||
@@ -1633,8 +1639,8 @@ function renderTestCards(filteredList) {
         
         let buttonHTML = locked ? 
             `<button class="start-btn locked" onclick="document.getElementById('paymentModal').style.display='flex'">Unlock Premium</button>` : 
-            isAttempted ? 
-            `<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-top:5px;">
+          isAttempted ? 
+            `${attemptLabel}<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-top:5px;">
                 <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); border:1px solid var(--border); padding: 8px; font-size:12px;" onclick="reattemptTest('${t.dbKey}', '${urlQuery}&mode=exam')">🔄 Retake</button>
                 <button class="start-btn" style="background:var(--warning); color:#fff; border:none; padding: 8px; font-size:12px;" onclick="window.location.href='cbt.html?${urlQuery}&mode=quiz'">⚡ Quiz Mode</button>
                 <button class="start-btn" style="padding: 8px; background:#10b981; font-size:12px;" onclick="window.location.href='cbt.html?${urlQuery}&mode=solution'">👁️ Solutions</button>
@@ -2062,8 +2068,11 @@ function filterDynamicTests(examKey, subFilterKey, pillEl) {
     let savedTests = JSON.parse(getSafeData('savedTests') || '[]');
 
     list.forEach(t => {
-        let locked = t.type === 'pro' && !isPro;
+      let locked = t.type === 'pro' && !isPro;
         let isAttempted = attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id);
+        let attemptTime = attemptedTestIds.get(t.dbKey) || attemptedTestIds.get(t.id);
+        let attemptDateStr = attemptTime ? new Date(attemptTime).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
+        let attemptLabel = isAttempted && attemptDateStr ? `<div style="font-size: 11px; color: var(--success); font-weight: 800; margin-bottom: 5px; text-align: center; background: var(--bg-body); padding: 4px; border-radius: 6px;"><i class="fas fa-calendar-check"></i> Attempted on: ${attemptDateStr}</div>` : '';
         let isSaved = savedTests.includes(t.dbKey);
         
         // 🔥 LIVE BADGE FIX DYNAMIC
@@ -2082,8 +2091,8 @@ function filterDynamicTests(examKey, subFilterKey, pillEl) {
         
         let buttonHTML = locked ? 
             `<button class="start-btn locked" onclick="document.getElementById('paymentModal').style.display='flex'">Unlock Premium</button>` : 
-            isAttempted ? 
-            `<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-top:5px;">
+           isAttempted ? 
+            `${attemptLabel}<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-top:5px;">
                 <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); border:1px solid var(--border); padding: 8px; font-size:12px;" onclick="reattemptTest('${t.dbKey}', '${urlQuery}&mode=exam')">🔄 Retake</button>
                 <button class="start-btn" style="background:var(--warning); color:#fff; border:none; padding: 8px; font-size:12px;" onclick="window.location.href='cbt.html?${urlQuery}&mode=quiz'">⚡ Quiz Mode</button>
                 <button class="start-btn" style="padding: 8px; background:#10b981; font-size:12px;" onclick="window.location.href='cbt.html?${urlQuery}&mode=solution'">👁️ Solutions</button>
@@ -2194,6 +2203,19 @@ if ('serviceWorker' in navigator) {
         .catch(err => console.error('Service Worker Error:', err));
     });
 }
+
+// 🔥 Mobile Browser Full Screen Auto-Trigger (On First Tap)
+document.addEventListener('click', function goFullScreen() {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        let doc = window.document;
+        let docEl = doc.documentElement;
+        let requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+        if(requestFullScreen && !doc.fullscreenElement) {
+            requestFullScreen.call(docEl).catch(err => console.log("Fullscreen auto-trigger ignored by browser"));
+        }
+    }
+    document.removeEventListener('click', goFullScreen); // Sirf pehli baar chalega
+});
   
 </script>
 
