@@ -667,6 +667,7 @@ const TEST_MODE = urlParams.get('mode') || "exam";
 const POSITIVE_MARK = parseFloat(urlParams.get('pm')) || 1.0;
 const NEGATIVE_MARK = parseFloat(urlParams.get('nm')) || 0.25;
 const SECTION_LOCK = urlParams.get('lock') === 'false' ? false : true;
+const SECTION_TIME_MINS = parseInt(urlParams.get('secTime')) || 0; // 🔥 NAYA: Section time fetch
 
 const STORAGE_KEY = "dsssb_cbt_rank_v2";
 const TELEGRAM_BOT_TOKEN="8486464606:AAFT_Bd0P2HYqKNPjCm3s7TGgfM4HWmOYvs";
@@ -675,7 +676,7 @@ const TELEGRAM_CHAT_ID="@dsssbcbtresult";
 let DYNAMIC_CUTOFF = 0; 
 let QUESTIONS = [];
 let SECTION_MAP = [];
-let currentState = { idx: 0, answers: [], review: [], time: TOTAL_TIME_MINS * 60, secIdx: 0, submitted: false, name: "", timePerQ: [] };
+let currentState = { idx: 0, answers: [], review: [], time: TOTAL_TIME_MINS * 60, secIdx: 0, submitted: false, name: "", timePerQ: [], secTimeLeft: 0 }; // 🔥 Added secTimeLeft
 let timerInt;
 let secIndices = [];
 let fontOffset = 0;
@@ -957,9 +958,10 @@ function startGame(isResuming) {
   document.getElementById('mainArea').style.display = 'block';
   document.getElementById('examFooter').style.display = 'flex';
   
-  if(!isResuming) {
+ if(!isResuming) {
       currentState.idx = secIndices[0] || 0;
       currentState.secIdx = 0;
+      currentState.secTimeLeft = SECTION_TIME_MINS * 60; // 🔥 Set initial section timer
   }
   
   if(TEST_MODE === 'solution' || TEST_MODE === 'quiz') {
@@ -1308,13 +1310,20 @@ function next() {
 
       const nextQ = QUESTIONS[currentState.idx + 1]; 
       const currQ = QUESTIONS[currentState.idx];
-      if((nextQ.section || "General") !== (currQ.section || "General")) {
+     if((nextQ.section || "General") !== (currQ.section || "General")) {
           if (SECTION_LOCK) {
+              // 🔥 NAYA: Agar strict section timer hai, toh manual jump rok do
+              if (SECTION_TIME_MINS > 0 && currentState.secTimeLeft > 0) {
+                  showToast(`You must wait until section time is over!`, "warning");
+                  return; // Movement block kardi
+              }
+
               showConfirmDialog(
                   "Submit Section?", 
                   `Are you sure you want to finish the ${currQ.section || "General"} section? You cannot modify answers in this section later.`,
                   () => {
                       currentState.secIdx++; 
+                      currentState.secTimeLeft = SECTION_TIME_MINS * 60; // Reset for next section (agar zaroorat ho)
                       renderSectionTabs(); 
                       loadQuestion(currentState.idx + 1);
                   }
@@ -1368,9 +1377,12 @@ function updateNavButtons() {
   const revBtn = document.getElementById('reviewNextBtn');
   const prevBtn = document.getElementById('prevBtn');
   
+  // 🔥 Reset button styling (in case it was locked by the timer)
+  btn.style.pointerEvents = 'auto';
+  btn.style.opacity = '1';
+
   btn.style.display = "flex";
   prevBtn.style.display = "flex";
-  
   if (currentState.submitted || TEST_MODE === 'quiz') {
       revBtn.style.display = "none";
       if(currentState.idx === QUESTIONS.length - 1) {
@@ -1404,10 +1416,50 @@ function startTimer() {
 
       if(currentState.time <= 0) { submitTest(); return; }
       currentState.time--;
-      const m = Math.floor(currentState.time / 60).toString().padStart(2,'0');
-      const s = (currentState.time % 60).toString().padStart(2,'0');
-      const el = document.getElementById('timer');
-      el.innerText = `${m}:${s}`;
+      
+      let displayMins = Math.floor(currentState.time / 60);
+      let displaySecs = currentState.time % 60;
+      let el = document.getElementById('timer');
+
+      // 🔥 SECTION TIMER LOGIC 🔥
+      if (SECTION_LOCK && SECTION_TIME_MINS > 0) {
+          if (currentState.secTimeLeft > 0) {
+              currentState.secTimeLeft--;
+              let sMins = Math.floor(currentState.secTimeLeft / 60);
+              let sSecs = currentState.secTimeLeft % 60;
+              
+              // Top badge me section time dikhana
+              el.innerHTML = `<span style="color:#fcd34d; font-size:10px;">Sec Time</span><br>${sMins.toString().padStart(2,'0')}:${sSecs.toString().padStart(2,'0')}`;
+              
+              // Agar ye section ka aakhri question hai, to button disable karke timer dikhao
+              let nextBtn = document.getElementById('nextBtn');
+              let isLastQInSection = (currentState.secIdx === SECTION_MAP.length - 1) 
+                  ? (currentState.idx === QUESTIONS.length - 1) 
+                  : (currentState.idx === secIndices[currentState.secIdx + 1] - 1);
+              
+              if (isLastQInSection) {
+                  nextBtn.innerText = `Wait (${sMins}:${sSecs.toString().padStart(2,'0')})`;
+                  nextBtn.style.opacity = '0.5';
+                  nextBtn.style.pointerEvents = 'none';
+              }
+          } else {
+              // Time khatam! Auto-move to next section
+              let nextSecIdx = currentState.secIdx + 1;
+              if (nextSecIdx < SECTION_MAP.length) {
+                  showToast("Time Up! Moving to Next Section...", "warning");
+                  currentState.secIdx = nextSecIdx;
+                  currentState.secTimeLeft = SECTION_TIME_MINS * 60; // Agle section ka time reset
+                  renderSectionTabs();
+                  loadQuestion(secIndices[nextSecIdx]);
+              } else {
+                  submitTest(); // Aakhri section tha toh submit kardo
+                  return;
+              }
+          }
+      } else {
+          el.innerText = `${displayMins.toString().padStart(2,'0')}:${displaySecs.toString().padStart(2,'0')}`;
+      }
+
       if(currentState.time < 300) el.classList.add('low');
   }, 1000);
 }
