@@ -1373,15 +1373,16 @@ async function fetchData(user) {
             userRef.onDisconnect().update({ state: 'offline', lastActive: firebase.database.ServerValue.TIMESTAMP });
         }
         
-        const [testsSnap, proSnap, notesSnap] = await Promise.all([ 
+        // NAYA CODE: Isme videosSnap aur dsssb_videos_db add kiya hai
+        const [testsSnap, proSnap, notesSnap, videosSnap] = await Promise.all([ 
             db.ref("dsssb_tests_db").once("value"), 
             db.ref("dsssb_pro_users").once("value"), 
-            db.ref("dsssb_notes_db").once("value") 
+            db.ref("dsssb_notes_db").once("value"),
+            db.ref("dsssb_videos_db").once("value") // 🔥 Videos Yahan Se Aayenge
         ]).catch(e => {
             console.error("Promise.all error:", e);
-            return [{exists:()=>false, val:()=>null}, {exists:()=>false, val:()=>null}, {exists:()=>false, val:()=>null}];
+            return [{exists:()=>false, val:()=>null}, {exists:()=>false, val:()=>null}, {exists:()=>false, val:()=>null}, {exists:()=>false, val:()=>null}];
         });
-
         isPro = false;
         if(proSnap.exists()) {
             let myUsername = (user.username && user.username !== "guest") ? String(user.username).toLowerCase().trim().replace("@", "") : null;
@@ -1413,9 +1414,9 @@ async function fetchData(user) {
         }
 
         allNotes = Object.values(notesSnap.val() || {}).reverse(); 
+        let allVideos = Object.values(videosSnap.val() || {}).reverse(); // 🔥 DB se videos array banaya
         searchNotes(''); 
-        renderVideos();
-
+        renderVideos(allVideos); // 🔥 Un videos ko screen par bheja
        const testData = testsSnap.val() || {}; 
         allTests = Object.keys(testData).map(key => ({ dbKey: key, ...testData[key] }));
         filterTests('all', document.querySelector('.filter-pill.active'));
@@ -1620,8 +1621,14 @@ function renderTestCards(filteredList) {
     filteredList.forEach(t => {
 let locked = t.type === 'pro' && !isPro;
         let isAttempted = attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id);
-        let attemptTime = attemptedTestIds.get(t.dbKey) || attemptedTestIds.get(t.id);
-        let attemptDateStr = attemptTime ? new Date(attemptTime).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
+       let attemptTime = attemptedTestIds.get(t.dbKey) || attemptedTestIds.get(t.id);
+let attemptDateStr = '';
+if (attemptTime) {
+    let parsedDate = new Date(isNaN(attemptTime) ? attemptTime : Number(attemptTime));
+    if (!isNaN(parsedDate.getTime())) {
+        attemptDateStr = parsedDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+}
         let attemptLabel = isAttempted && attemptDateStr ? `<div style="font-size: 11px; color: var(--success); font-weight: 800; margin-bottom: 5px; text-align: center; background: var(--bg-body); padding: 4px; border-radius: 6px;"><i class="fas fa-calendar-check"></i> Attempted on: ${attemptDateStr}</div>` : '';
         let isSaved = savedTests.includes(t.dbKey);
         let isActuallyLive = (t.isLive && t.isLive.toString() === 'true') || 
@@ -1704,7 +1711,7 @@ function searchNotes(query) {
                         <span><i class="fas fa-book"></i> ${n.subject || 'General'}</span>
                         <span style="color:#ef4444;"><i class="fas fa-file-pdf"></i> PDF File</span>
                     </div>
-                    <button class="download-btn" onclick="${locked ? "document.getElementById('paymentModal').style.display='flex'" : `window.open('${n.url}', '_blank')`}">
+                    <button class="download-btn" onclick="${locked ? "document.getElementById('paymentModal').style.display='flex'" : `window.open('${n.url}', '_self')`}">
                         <i class="fas fa-cloud-download-alt"></i> Download PDF
                     </button>
                 </div>`; 
@@ -1712,28 +1719,35 @@ function searchNotes(query) {
     document.getElementById('notesListContainer').innerHTML = html || "<div style='text-align:center; color:grey; padding:20px;'>No notes available</div>";
 }
 
-function renderVideos() {
-    const list = [ 
-        { title: "Percentage Shortcuts", subject: "Maths", thumb: "https://img.youtube.com/vi/aL2X1M78p3U/mqdefault.jpg", url: "https://youtu.be/aL2X1M78p3U", pro: false }, 
-        { title: "Analogy Tricks", subject: "Reasoning", thumb: "https://img.youtube.com/vi/W59A76-P6sI/mqdefault.jpg", url: "https://youtu.be/W59A76-P6sI", pro: true }, 
-        { title: "English Vocab Class 1", subject: "English", thumb: "https://img.youtube.com/vi/1_M0B4-2PME/mqdefault.jpg", url: "https://youtu.be/1_M0B4-2PME", pro: false } 
-    ];
+function renderVideos(videoList = []) {
     let html = ""; 
-    list.forEach(v => { 
-        let locked = v.pro && !isPro; 
-        html += `<div class="video-card ${locked?'locked':''}" onclick="${locked ? "document.getElementById('paymentModal').style.display='flex'" : `window.open('${v.url}', '_blank')`}">
+    
+    videoList.forEach(v => { 
+        // Pro check (Agar admin ne true kiya hai)
+        let locked = (v.type === 'pro' || v.pro === true || v.pro === 'true') && !isPro; 
+        
+        // 🔥 SMART THUMBNAIL GENERATOR: Agar photo nahi hai toh YT link se nikal lega
+        let thumb = v.thumb || "https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg";
+        if (!v.thumb && v.url && v.url.includes("youtu")) {
+            let ytId = v.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
+            if(ytId && ytId[1]) thumb = `https://img.youtube.com/vi/${ytId[1]}/mqdefault.jpg`;
+        }
+
+        html += `<div class="video-card ${locked ? 'locked' : ''}" onclick="${locked ? "document.getElementById('paymentModal').style.display='flex'" : `window.open('${v.url}', '_self')`}">
                     <div class="vid-thumb">
-                        <img src="${v.thumb}">
+                        <img src="${thumb}" alt="Video Thumbnail">
                         <i class="fab fa-youtube fa-3x" style="position:absolute; color:red; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));"></i>
                         ${locked ? '<div style="position:absolute; top:10px; right:10px; background:var(--warning); color:white; padding:4px 8px; border-radius:6px; font-size:10px; font-weight:800; z-index:5;">🔒 PRO</div>' : ''}
                     </div>
                     <div class="vid-content">
-                        <div class="t-title" style="margin-bottom:4px;">${v.title}</div>
-                        <div style="font-size:12px; color:var(--text-muted); font-weight:600;"><i class="fas fa-play-circle"></i> ${v.subject}</div>
+                        <div class="t-title" style="margin-bottom:4px;">${v.title || 'Video Class'}</div>
+                        <div style="font-size:12px; color:var(--text-muted); font-weight:600;"><i class="fas fa-play-circle"></i> ${v.subject || 'General'}</div>
                     </div>
                 </div>`; 
     });
-    document.getElementById('videoListContainer').innerHTML = html;
+    
+    // Agar Firebase mein 0 videos hain toh ye dikhayega
+    document.getElementById('videoListContainer').innerHTML = html || "<div style='text-align:center; color:var(--text-muted); padding:40px;'><i class='fas fa-video fa-3x' style='opacity:0.3; margin-bottom:10px;'></i><br>No new video classes available right now.</div>";
 }
 
 function renderCharts(dataArr) {
@@ -2070,8 +2084,14 @@ function filterDynamicTests(examKey, subFilterKey, pillEl) {
     list.forEach(t => {
       let locked = t.type === 'pro' && !isPro;
         let isAttempted = attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id);
-        let attemptTime = attemptedTestIds.get(t.dbKey) || attemptedTestIds.get(t.id);
-        let attemptDateStr = attemptTime ? new Date(attemptTime).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
+       let attemptTime = attemptedTestIds.get(t.dbKey) || attemptedTestIds.get(t.id);
+let attemptDateStr = '';
+if (attemptTime) {
+    let parsedDate = new Date(isNaN(attemptTime) ? attemptTime : Number(attemptTime));
+    if (!isNaN(parsedDate.getTime())) {
+        attemptDateStr = parsedDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+}
         let attemptLabel = isAttempted && attemptDateStr ? `<div style="font-size: 11px; color: var(--success); font-weight: 800; margin-bottom: 5px; text-align: center; background: var(--bg-body); padding: 4px; border-radius: 6px;"><i class="fas fa-calendar-check"></i> Attempted on: ${attemptDateStr}</div>` : '';
         let isSaved = savedTests.includes(t.dbKey);
         
