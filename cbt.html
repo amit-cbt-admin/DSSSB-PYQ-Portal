@@ -86,9 +86,16 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 .badge-diff.medium { background: var(--warning-bg); color: #b77c00; border-color: rgba(245, 158, 11, 0.3); }
 .badge-diff.hard { background: var(--danger-bg); color: var(--danger); border-color: rgba(239, 68, 68, 0.3); }
 
+/* 🔥 Smooth Slide Animation for Questions */
+@keyframes slideInRight { 
+    from { opacity: 0; transform: translateX(15px); } 
+    to { opacity: 1; transform: translateX(0); } 
+}
+.q-animate { animation: slideInRight 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+
 .opt { display: flex; align-items: center; padding: 14px; border: 2px solid var(--border-color); border-radius: 12px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); background: var(--bg-card); font-size: 15px; position: relative; overflow: hidden; }
 .opt:hover { border-color: var(--primary); background: var(--primary-light); transform: translateY(-2px); }
-.opt.sel { background: var(--primary-light); border-color: var(--primary); font-weight: 600; box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2); }
+.opt.sel { background: var(--primary-light); border-color: var(--primary); font-weight: 600; box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2); transform: scale(1.01); border-width: 3px; }
 .opt-badge { width: 30px; height: 30px; border-radius: 50%; background: var(--bg-body); border: 2px solid var(--border-color); display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 12px; font-weight: 800; flex-shrink: 0; color: var(--text-muted); transition: 0.2s; }
 .opt.sel .opt-badge { background: var(--primary); border-color: var(--primary); color: #fff; }
 .opt.correct-ans { border-color: var(--success); background: var(--success-bg); }
@@ -169,6 +176,21 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 .qbtn.p-correct { background: #10b981; border-color: #10b981; color: #fff; }
 .qbtn.p-wrong { background: #ef4444; border-color: #ef4444; color: #fff; }
 .qbtn.p-skip { background: transparent; border-color: #475569; color: #64748b; }
+
+/* --- NEW LIST VIEW STYLES --- */
+.p-list { display: flex; flex-direction: column; gap: 8px; padding: 0 15px 15px 15px; }
+.qbtn-list { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-radius: 8px; border: 1px solid #475569; background: transparent; color: #cbd5e1; font-weight: 600; font-size: 13px; cursor: pointer; transition: 0.2s; }
+.qbtn-list:hover:not(:disabled) { background: rgba(255,255,255,0.05); }
+
+.qbtn-list.current { border: 2px solid #fff; color: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.1); }
+.qbtn-list.attempted { background: rgba(59, 130, 246, 0.15); border-color: #3b82f6; color: #60a5fa; }
+.qbtn-list.unattempted { background: rgba(100, 116, 139, 0.15); border-color: #64748b; color: #cbd5e1; }
+.qbtn-list.unseen { background: transparent; border-color: #334155; color: #64748b; }
+.qbtn-list.review { background: rgba(239, 68, 68, 0.1); border-color: #ef4444; color: #f87171; }
+
+.qbtn-list.p-correct { background: rgba(16, 185, 129, 0.15); border-color: #10b981; color: #34d399; }
+.qbtn-list.p-wrong { background: rgba(239, 68, 68, 0.15); border-color: #ef4444; color: #f87171; }
+.qbtn-list.p-skip { background: transparent; border-color: #475569; color: #64748b; }
 
 .modal-header { padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 18px; color: var(--primary); background: var(--primary-light); }
 
@@ -560,8 +582,8 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         <button onclick="togglePalette()" style="border:none; background:none; font-size:28px; color:#fff; cursor:pointer; line-height:1;">&times;</button>
     </div>
     <div class="palette-tabs">
-        <div class="p-tab active">Grid View</div>
-        <div class="p-tab" onclick="showToast('List View coming soon!','info')">List View</div>
+        <div class="p-tab active" id="tabGrid" onclick="setPaletteView('grid')">Grid View</div>
+        <div class="p-tab" id="tabList" onclick="setPaletteView('list')">List View</div>
     </div>
     <div class="palette-legend" id="paletteStatsBox">
         <div class="p-leg-item"><div class="p-dot review">★</div> Marked for Review</div>
@@ -685,11 +707,28 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
 document.addEventListener('contextmenu', e => e.preventDefault());
 
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') {
-      e.preventDefault(); 
-  }
+  // 1. Anti-Cheat Security
   if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) || (e.ctrlKey && ['U', 'S', 'P', 'H'].includes(e.key.toUpperCase()))) {
       e.preventDefault(); e.stopPropagation(); alert("🚨 Unauthorized action detected!"); return false;
+  }
+  
+  // 2. 🔥 Keyboard Shortcuts for Students (Only works during active test)
+  const isOverlayOpen = document.getElementById('startScreen').style.display !== 'none' || document.getElementById('instructionScreen').style.display !== 'none';
+  
+  if (!isOverlayOpen && !currentState.submitted && TEST_MODE !== 'solution') {
+      // Prev/Next Question
+      if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+      
+      // Select Options A, B, C, D (or 1, 2, 3, 4)
+      if (['a', 'A', '1'].includes(e.key)) { e.preventDefault(); selectAns(0); }
+      if (['b', 'B', '2'].includes(e.key)) { e.preventDefault(); selectAns(1); }
+      if (['c', 'C', '3'].includes(e.key)) { e.preventDefault(); selectAns(2); }
+      if (['d', 'D', '4'].includes(e.key)) { e.preventDefault(); selectAns(3); }
+      
+      // Mark for Review (W) and Clear Response (Q)
+      if (['w', 'W'].includes(e.key)) { e.preventDefault(); reviewAndNext(); } 
+      if (['q', 'Q'].includes(e.key)) { e.preventDefault(); clearResponse(); } 
   }
 });
 document.addEventListener('selectstart', e => e.preventDefault());
@@ -1135,6 +1174,15 @@ window.toggleAppSolution = function(btn) {
 function loadQuestion(idx) {
   currentState.idx = idx; 
   const q = QUESTIONS[idx]; 
+  
+  // 🔥 Question Load Animation Trigger
+  const qCardWrapper = document.querySelector('.q-card');
+  if(qCardWrapper) {
+      qCardWrapper.classList.remove('q-animate');
+      void qCardWrapper.offsetWidth; // Magic line to restart animation
+      qCardWrapper.classList.add('q-animate');
+  }
+
   const currentLangBtnText = document.getElementById('langBtn').innerText.trim().toUpperCase();
   const isHindi = currentLangBtnText === "HI";
   
@@ -1462,6 +1510,15 @@ function togglePalette() {
   if(p.classList.contains('show')) { p.classList.remove('show'); o.style.display = 'none'; } else { p.classList.add('show'); o.style.display = 'block'; }
 }
 
+let isPaletteListView = false;
+
+function setPaletteView(type) {
+    isPaletteListView = (type === 'list');
+    document.getElementById('tabGrid').classList.toggle('active', !isPaletteListView);
+    document.getElementById('tabList').classList.toggle('active', isPaletteListView);
+    renderPalette();
+}
+
 function renderPalette() {
     const container = document.getElementById('paletteGrid'); 
     container.innerHTML = "";
@@ -1471,7 +1528,7 @@ function renderPalette() {
         let endIdx = (secIndex === SECTION_MAP.length - 1) ? QUESTIONS.length : secIndices[secIndex + 1];
         
         let secStats = { ans: 0, unans: 0, rev: 0, unseen: 0 };
-        let gridHtml = `<div class="p-grid">`;
+        let gridHtml = `<div class="${isPaletteListView ? 'p-list' : 'p-grid'}">`;
         
         for(let i = startIdx; i < endIdx; i++) {
             const myAns = currentState.answers[i]; 
@@ -1487,25 +1544,25 @@ function renderPalette() {
                 }
             }
 
-            // Determine precise state class for dark theme mapping
+            // Determine precise state class and status text
             let stateCls = "unseen";
+            let statusText = "Unseen";
+            
             if (currentState.submitted || isQuizAnswered) {
                 const correctIdx = parseInt(QUESTIONS[i].ans) - 1;
-                if (myAns === correctIdx) stateCls = "p-correct";
-                else if (myAns !== null && myAns !== correctIdx) stateCls = "p-wrong";
-                else stateCls = "p-skip";
-                if(currentState.review[i]) stateCls += " review"; 
+                if (myAns === correctIdx) { stateCls = "p-correct"; statusText = "Correct ✅"; }
+                else if (myAns !== null && myAns !== correctIdx) { stateCls = "p-wrong"; statusText = "Wrong ❌"; }
+                else { stateCls = "p-skip"; statusText = "Skipped 🟡"; }
+                if(currentState.review[i]) { stateCls += " review"; statusText += " (Review)"; }
             } else {
-                if(myAns !== null) { stateCls = "attempted"; secStats.ans++; }
-                else if(currentState.review[i]) { stateCls = "review"; secStats.rev++; }
-                else if(isAccessible && i <= currentState.idx && !(SECTION_LOCK && secIndex > currentState.secIdx)) { stateCls = "unattempted"; secStats.unans++; }
-                else { stateCls = "unseen"; secStats.unseen++; }
+                if(myAns !== null) { stateCls = "attempted"; statusText = "Attempted"; secStats.ans++; }
+                else if(currentState.review[i]) { stateCls = "review"; statusText = "Review ★"; secStats.rev++; }
+                else if(isAccessible && i <= currentState.idx && !(SECTION_LOCK && secIndex > currentState.secIdx)) { stateCls = "unattempted"; statusText = "Unattempted"; secStats.unans++; }
+                else { stateCls = "unseen"; statusText = "Unseen"; secStats.unseen++; }
                 
-                if(i === currentState.idx) stateCls += " current"; 
+                if(i === currentState.idx) { stateCls += " current"; statusText = "Current 🟢"; }
             }
 
-            cls += " " + stateCls;
-            
             let styleStr = "";
             if(!isAccessible) {
                 styleStr = 'opacity: 0.3; cursor: not-allowed; border-color: #334155;';
@@ -1513,13 +1570,21 @@ function renderPalette() {
                 styleStr = 'cursor: pointer;';
             }
 
-            gridHtml += `<button class="${cls}" style="${styleStr}" ${isAccessible ? `onclick="loadQuestion(${i}); if(window.innerWidth < 1024) togglePalette();"` : `disabled`}>${i + 1}</button>`;
+            if (isPaletteListView) {
+                // List View Button
+                gridHtml += `<button class="qbtn-list ${stateCls}" style="${styleStr}" ${isAccessible ? `onclick="loadQuestion(${i}); if(window.innerWidth < 1024) togglePalette();"` : `disabled`}>
+                    <span style="font-size:14px;">Q. ${i + 1}</span>
+                    <span style="font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">${statusText}</span>
+                </button>`;
+            } else {
+                // Grid View Button
+                cls += " " + stateCls;
+                gridHtml += `<button class="${cls}" style="${styleStr}" ${isAccessible ? `onclick="loadQuestion(${i}); if(window.innerWidth < 1024) togglePalette();"` : `disabled`}>${i + 1}</button>`;
+            }
         }
         gridHtml += `</div>`;
         
-        // Section Accordion Logic - Khali current section open rahega
         let isCollapsed = (secIndex !== currentState.secIdx); 
-        // Submit hone par sare sections open rakhte hain
         if(currentState.submitted || TEST_MODE === 'quiz') isCollapsed = false;
 
         let secHtml = `
