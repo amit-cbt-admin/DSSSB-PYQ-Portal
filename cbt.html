@@ -593,7 +593,8 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
     </div>
     <div class="palette-sections-container" id="paletteGrid">
         </div>
-    <div style="padding:15px; border-top:1px solid #2d3748; background:#1a1b1e;">
+    <div style="padding:15px; border-top:1px solid #2d3748; background:#1a1b1e; display: flex; flex-direction: column; gap: 10px;">
+        <button id="sectionSubmitBtn" onclick="manualSubmitSection()" class="btn-primary" style="background:transparent; border: 2px solid #5e7b95; box-shadow:none; margin: 0; width: 100%; color: #cbd5e1; font-weight: bold; border-radius: 8px; padding: 10px;">SUBMIT SECTION</button>
         <button id="mainSubmitBtn" onclick="submitTestDialog()" class="btn-primary" style="background:#5e7b95; box-shadow:none; margin: 0; width: 100%; color: #fff; font-weight: bold; border-radius: 8px;">SUBMIT TEST</button>
     </div>
 </div>
@@ -739,6 +740,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const CURRENT_TEST_ID = urlParams.get('testid') || "TEST_UNKNOWN";
 const CURRENT_TEST_TITLE = urlParams.get('title') || "DSSSB Mock Test";
 const TOTAL_TIME_MINS = parseInt(urlParams.get('time')) || 120; 
+const MIN_SUBMIT_MINS = parseInt(urlParams.get('mintime')) || 0; // 🔥 Naya Time Lock Variable
 const TEST_MODE = urlParams.get('mode') || "exam"; 
 
 const POSITIVE_MARK = parseFloat(urlParams.get('pm')) || 1.0;
@@ -1065,10 +1067,12 @@ function startGame(isResuming) {
   } catch(e) { console.log("Fullscreen catch block:", e); }
   if (TEST_MODE === 'solution') {
       document.getElementById('mainSubmitBtn').style.display = 'none'; 
+      if(document.getElementById('sectionSubmitBtn')) document.getElementById('sectionSubmitBtn').style.display = 'none';
       document.getElementById('paletteStatsBox').style.display = 'none'; 
       showToast(`Showing Solutions...`, "success");
   } else if (TEST_MODE === 'quiz') {
       document.getElementById('mainSubmitBtn').style.display = 'none'; 
+      if(document.getElementById('sectionSubmitBtn')) document.getElementById('sectionSubmitBtn').style.display = 'none';
       document.getElementById('paletteStatsBox').style.display = 'none'; 
       showToast(`Quiz Mode Started ⚡`, "success");
   } else {
@@ -1383,6 +1387,54 @@ function reviewAndNext() {
   if(currentState.submitted) return;
   currentState.review[currentState.idx] = true;
   next();
+}
+
+function manualSubmitSection() {
+    if(currentState.submitted || TEST_MODE === 'quiz') return;
+
+    // 🔥 TIME LOCK CHECK FOR SECTION 🔥
+    let timeSpentSec = (TOTAL_TIME_MINS * 60) - currentState.time;
+    if (MIN_SUBMIT_MINS > 0 && timeSpentSec < (MIN_SUBMIT_MINS * 60)) {
+        let remainSec = (MIN_SUBMIT_MINS * 60) - timeSpentSec;
+        let m = Math.floor(remainSec / 60);
+        let s = remainSec % 60;
+        return showToast(`कृपया सबमिट करने के लिए ${m} मिनट ${s} सेकंड और प्रतीक्षा करें!`, "warning");
+    }
+
+    if (currentState.secIdx < SECTION_MAP.length - 1) {
+        const currentSecName = SECTION_MAP[currentState.secIdx];
+        showConfirmDialog(
+            "Submit Section?", 
+            `Are you sure you want to submit the '${currentSecName}' section? You cannot modify answers in this section later.`,
+            () => {
+                currentState.secIdx++; 
+                renderSectionTabs(); 
+                loadQuestion(secIndices[currentState.secIdx]);
+                if(window.innerWidth < 1024) togglePalette();
+            }
+        );
+    } else {
+        submitTestDialog();
+    }
+}
+
+function submitTestDialog() {
+  if(currentState.submitted) return;
+
+  // 🔥 TIME LOCK CHECK FOR FINAL SUBMIT 🔥
+  let timeSpentSec = (TOTAL_TIME_MINS * 60) - currentState.time;
+  if (MIN_SUBMIT_MINS > 0 && timeSpentSec < (MIN_SUBMIT_MINS * 60)) {
+      let remainSec = (MIN_SUBMIT_MINS * 60) - timeSpentSec;
+      let m = Math.floor(remainSec / 60);
+      let s = remainSec % 60;
+      return showToast(`टेस्ट सबमिट करने के लिए ${m} मिनट ${s} सेकंड और प्रतीक्षा करें!`, "warning");
+  }
+
+  showConfirmDialog(
+      "Final Submit?", 
+      "Are you absolutely sure you want to submit the entire Mock Test? You will not be able to change your answers.",
+      () => submitTest()
+  );
 }
 
 function next() {
@@ -1728,15 +1780,6 @@ function getRanksAndToppers(myScore, myTime) {
   });
 }
 
-function submitTestDialog() {
-  if(currentState.submitted) return;
-  showConfirmDialog(
-      "Final Submit?", 
-      "Are you absolutely sure you want to submit the entire Mock Test? You will not be able to change your answers.",
-      () => submitTest()
-  );
-}
-
 async function submitTest() {
   if(currentState.submitted) return;
   
@@ -1833,6 +1876,7 @@ async function submitTest() {
                       </div>`;
   document.getElementById('resultModal').style.display = 'flex';
   document.getElementById('mainSubmitBtn').style.display = 'none';
+  if(document.getElementById('sectionSubmitBtn')) document.getElementById('sectionSubmitBtn').style.display = 'none';
 
   let unsynced = JSON.parse(getSafeData('dsssb_unsynced_results') || '[]');
   unsynced.push(userData);
@@ -1859,8 +1903,8 @@ async function submitTest() {
               wrong: t.wrong || 0, 
               time: t.timeTaken,
             timePerQ: t.timePerQ || []
-          };
-      }
+          };
+      }
 
       // 🔥 AUTO CUTOFF LOGIC (70% DEFAULT) 🔥
       let maxPossibleMarks = QUESTIONS.length * POSITIVE_MARK;
@@ -1871,7 +1915,7 @@ async function submitTest() {
           finalCutoff = Math.round(maxPossibleMarks * 0.7); 
       }
 
-      let html = `
+      let html = `
       <div id="pdfContent" class="analysis-container" style="background:#fff; padding:20px; border-radius:12px;">
           <div style="text-align:center; padding: 10px 0 20px 0; border-bottom: 2px solid var(--border-color); margin-bottom: 20px;">
               <h2 style="color:var(--primary); margin:0; font-size:26px; font-weight:900; letter-spacing:1px;">PYQ NOTES EXAM REPORT</h2>
@@ -2046,7 +2090,6 @@ if ('serviceWorker' in navigator) {
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
-
 
   <script>
 (function() {
