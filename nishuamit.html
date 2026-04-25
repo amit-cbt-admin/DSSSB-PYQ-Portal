@@ -10,6 +10,8 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 <style>
     :root { --primary: #4f46e5; --dark: #0f172a; --light: #f1f5f9; --success: #10b981; --danger: #ef4444; --card: #ffffff; }
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
@@ -68,9 +70,21 @@
     .modal-card { background: var(--card); width: 100%; max-width: 600px; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
     .modal-header { padding: 20px; background: var(--light); font-weight: 800; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; }
     .modal-body { padding: 25px; max-height: 80vh; overflow-y: auto;}
+
+    /* PDF EXPORT STYLES (HIDDEN ON WEB) */
+    #pdfExportContainer { display: none; }
+    .pdf-page { padding: 30px; background: white; color: black; font-family: 'Segoe UI', sans-serif; font-size: 14px; }
+    .pdf-header { text-align: center; border-bottom: 2px solid #4f46e5; padding-bottom: 10px; margin-bottom: 20px; }
+    .pdf-q-box { margin-bottom: 20px; page-break-inside: avoid; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; }
+    .pdf-q-en { font-weight: 600; margin-bottom: 8px; font-size: 15px; }
+    .pdf-q-hi { margin-bottom: 12px; color: #334155; }
+    .pdf-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .pdf-sol { background: #f8fafc; padding: 12px; border-left: 4px solid #10b981; font-size: 13px; margin-top: 10px; }
 </style>
 </head>
 <body>
+
+<div id="pdfExportContainer"></div>
 
 <div id="authScreen">
     <div class="login-box">
@@ -118,22 +132,18 @@
         </div>
     </div>
 
-    <div id="liveTyping" class="section">
+<div id="liveTyping" class="section">
         <div class="header"><h2>🎮 Global Auto-Arena (Live Battle)</h2></div>
         
         <div class="grid-2">
             <div class="form-box" style="border:2px solid #8b5cf6; background: #faf5ff;">
                 <div class="form-title" style="color:#8b5cf6;"><i class="fas fa-globe"></i> 1. Setup Global Arena</div>
                 <p style="color:grey; font-size:12px; margin-bottom:10px;">Select a passage and open the waiting lobby globally.</p>
-                
                 <input type="text" id="arenaTitle" placeholder="Arena Title (e.g., Sunday Mega Battle)" style="margin-bottom:10px; border-color:#8b5cf6;">
-                
-              <select id="arenaPassageSelect" style="margin-bottom:10px; border-color:#8b5cf6;">
+                <select id="arenaPassageSelect" style="margin-bottom:10px; border-color:#8b5cf6;">
                     <option value="">-- Loading Typing Passages... --</option>
                 </select>
-                
                 <input type="number" id="arenaWaitTime" placeholder="Wait Time in Seconds (e.g. 60)" value="60" style="margin-bottom:10px; border-color:#8b5cf6; font-weight:bold;">
-                
                 <button id="btnOpenArena" onclick="openGlobalArena()" style="background:#8b5cf6; width:100%; font-size:15px;"><i class="fas fa-door-open"></i> Open Arena & Start Countdown</button>
             </div>
 
@@ -193,11 +203,12 @@
             </div>
         </div>
         
-        <div class="form-box">
+      <div class="form-box">
             <div class="form-title" style="color:var(--primary);">➕ Add New Test (Metadata)</div>
             <div class="grid-2">
                 <input type="text" id="tTitle" placeholder="Test Title">
                 <input type="text" id="tID" placeholder="Unique ID (e.g., mock_01)">
+                <select id="tFolder" style="border-color: var(--primary); font-weight:bold;"><option value="">📁 -- Select Folder (Optional) --</option></select>
                 <select id="tCat"><option>Full Mock</option><option>Maths</option><option>Reasoning</option><option>English</option><option>Hindi</option><option>GK</option><option>Computer</option><option>Assistant Superintendent</option><option>DASS Grade II</option></select>
                 <input type="number" id="tTime" placeholder="Total Mins">
                 <input type="number" id="tQs" placeholder="Total Questions">
@@ -209,6 +220,7 @@
                     <option value="true">🔒 Sections Locked</option>
                     <option value="false">🔓 Sections Unlocked</option>
                 </select>
+                <input type="number" id="tSecTime" placeholder="Sec Time (e.g. 15 mins)">
                 <select id="tLive" style="grid-column: span 2;" onchange="document.getElementById('tScheduleBox').style.display = this.value === 'scheduled' ? 'block' : 'none'">
                     <option value="false">⚪ Normal Test</option>
                     <option value="true">🔴 LIVE Test</option>
@@ -236,9 +248,15 @@
             <div class="grid-2">
                 <input type="text" id="mixTitle" placeholder="New Mix Test Title (e.g. Mega Mock)">
                 <input type="text" id="mixID" placeholder="New Unique ID (e.g. mix_mock_01)">
-                <input type="text" id="mixSourceIDs" placeholder="Source Test IDs (comma separated, e.g. mock_01, mock_02)" style="grid-column: span 2;">
-                <select id="mixCat"><option>Full Mock</option><option>Maths</option><option>Reasoning</option><option>English</option><option>Hindi</option><option>GK</option><option>Computer</option><option>Assistant Superintendent</option></select>
-                <input type="number" id="mixTime" placeholder="Total Mins">
+                
+                <label style="font-size:12px; font-weight:bold; color:#10b981; grid-column: span 2; margin-bottom: -10px;"><i class="fas fa-list-check"></i> Select Tests to Mix:</label>
+                <div id="mixTestSelector" style="grid-column: span 2; background: white; border: 2px solid #10b981; border-radius: 10px; padding: 10px; max-height: 180px; overflow-y: auto; margin-bottom: 10px; display: flex; flex-direction: column; gap: 5px;">
+                    <p style="font-size:12px; color:grey; text-align:center; padding:10px;">Loading tests list...</p>
+                </div>
+                
+                <select id="mixFolder" style="border-color: #10b981; font-weight:bold;"><option value="">📁 -- Select Folder (Optional) --</option></select>
+                <select id="mixCat"><option>Full Mock</option><option>Maths</option><option>Reasoning</option><option>English</option><option>Hindi</option><option>GK</option></select>
+                <input type="number" id="mixTime" placeholder="Total Mins (Optional)">
                 <input type="number" id="mixQs" placeholder="Total Questions (Optional)">
                 <input type="number" id="mixCutoff" placeholder="Cut-off Marks">
                 <input type="number" id="mixPm" placeholder="+ve Marks (e.g. 1)" step="0.1" value="1">
@@ -248,6 +266,7 @@
                     <option value="true">🔒 Sections Locked</option>
                     <option value="false">🔓 Sections Unlocked</option>
                 </select>
+                <input type="number" id="mixSecTime" placeholder="Sec Time (e.g. 15 mins)">
                 <select id="mixLive" style="grid-column: span 2;" onchange="document.getElementById('mixScheduleBox').style.display = this.value === 'scheduled' ? 'block' : 'none'">
                     <option value="false">⚪ Normal Test</option>
                     <option value="true">🔴 LIVE Test</option>
@@ -259,6 +278,15 @@
                 <input type="datetime-local" id="mixScheduleTime" style="border-color:#f59e0b;">
             </div>
             <button onclick="generateMixTest()" style="background:#10b981; width:100%; font-size: 15px;"><i class="fas fa-magic"></i> Generate & Upload Mix Test</button>
+        </div>
+        <div class="form-box" style="border:2px solid #ec4899; background: #fdf2f8;">
+            <div class="form-title" style="color:#ec4899;"><i class="fas fa-cut"></i> ✂️ Auto-Split: Full Mock to Sectional Mocks</div>
+            <p style="color:grey; font-size:12px; margin-bottom:10px;">Ek bade 'Full Mock' ko uske sections (Maths, Reasoning, etc.) ke hisaab se alag-alag chhote Mocks mein convert karein.</p>
+            <div class="input-group">
+                <input type="text" id="splitSourceID" placeholder="Enter Full Mock ID (e.g., mock_01)" style="border-color:#ec4899; flex:1;">
+                <button onclick="splitMockToSectional()" style="background:#ec4899;"><i class="fas fa-magic"></i> Auto-Split</button>
+            </div>
+            <div id="splitStats" style="font-size:12px; color:#ec4899; font-weight:bold; margin-top:10px;"></div>
         </div>
 
         <div class="form-box" style="border:2px solid #8b5cf6; background: #faf5ff;">
@@ -307,21 +335,58 @@
             <button onclick="saveTypingPassage()" style="background:#eab308; width:100%;"><i class="fas fa-upload"></i> Upload Typing Passage</button>
         </div>
         
-        <h3 style="margin-top:20px; margin-bottom:10px;">Manage All Content (Edit / Delete)</h3>
+       <div style="display: flex; justify-content: space-between; align-items: center; margin-top:20px; margin-bottom:10px;">
+            <h3>Manage All Content (Edit / Delete)</h3>
+            <div style="position: relative; width: 350px;">
+                <i class="fas fa-search" style="position: absolute; left: 15px; top: 12px; color: var(--primary);"></i>
+                <input type="text" id="contentSearchInput" placeholder="Search Test by Title or ID..." onkeyup="filterContentTable()" style="padding-left: 40px; width: 100%; border-color: var(--primary); font-weight: bold; background: #f8fafc;">
+            </div>
+        </div>
         <div class="table-box">
             <table><thead><tr><th>Type</th><th>Title</th><th>Action</th></tr></thead><tbody id="contentTable"></tbody></table>
         </div>
     </div>
 
-    <div id="extractor" class="section">
-        <div class="header"><h2>🔍 Master JSON Extractor</h2></div>
+   <div id="extractor" class="section">
+        <div class="header"><h2>🔍 Firebase Backup & Master Extractor</h2></div>
         
-        <div class="form-box" style="border:2px solid #0ea5e9; background: #f0f9ff;">
-            <div class="form-title" style="color:#0ea5e9;"><i class="fas fa-database"></i> 1. Paste Master Question Bank (JSON Array)</div>
-            <p style="color:grey; font-size:12px; margin-bottom:10px;">Apna bada JSON (jisme 1000+ questions ho) yahan paste karein.</p>
-            <textarea id="masterJson" placeholder='[{"section": "Maths", "topic": "Algebra", ...}]' style="height:150px; font-family:monospace; font-size:12px; border-color:#0ea5e9; margin-bottom:10px;"></textarea>
-            <button onclick="analyzeJson()" style="background:#0ea5e9; width:100%;"><i class="fas fa-search"></i> Analyze & Load Filters</button>
-            <div id="loadStats" style="font-size:13px; font-weight:bold; color:#0ea5e9; margin-top:10px;"></div>
+        <div class="grid-2">
+            <div class="form-box" style="border:2px solid #14b8a6; background: #ccfbf1;">
+                <div class="form-title" style="color:#0f766e;"><i class="fas fa-cloud-download-alt"></i> 1A. Fetch From Firebase (Backup)</div>
+                <p style="color:grey; font-size:12px; margin-bottom:10px;">Database se saare ya specific mock ke questions fetch karein.</p>
+                <div class="input-group" style="margin-bottom:10px;">
+                    <button onclick="fetchAllFirebaseQuestions()" style="background:#0f766e; flex:1;"><i class="fas fa-eye"></i> View All in Extractor</button>
+                    <button onclick="downloadFullBackupFile()" style="background:#dc2626; flex:1;"><i class="fas fa-file-download"></i> Download Local Backup (.json)</button>
+                </div>
+                <div class="input-group" style="margin-bottom:0;">
+                    <select id="fetchMockSelect" style="border-color:#0f766e; flex: 1;">
+                        <option value="">-- Loading Mocks --</option>
+                    </select>
+                    <button onclick="fetchSpecificMockQuestions()" style="background:#14b8a6;"><i class="fas fa-file-import"></i> Fetch Mock</button>
+                </div>
+            </div>
+
+            <div class="form-box" style="border:2px solid #0ea5e9; background: #f0f9ff;">
+                <div class="form-title" style="color:#0ea5e9;"><i class="fas fa-database"></i> 1B. Or Paste Master JSON</div>
+                <p style="color:grey; font-size:12px; margin-bottom:10px;">Apna local JSON array yahan paste karein.</p>
+                <textarea id="masterJson" placeholder='[{"section": "Maths", ...}]' style="height:80px; font-family:monospace; font-size:12px; border-color:#0ea5e9; margin-bottom:10px;"></textarea>
+                <button onclick="analyzeJson()" style="background:#0ea5e9; width:100%;"><i class="fas fa-search"></i> Analyze & Load Filters</button>
+            </div>
+        </div>
+        <div id="loadStats" style="font-size:13px; font-weight:bold; color:#0ea5e9; margin-bottom:15px; text-align:center;"></div>
+
+        <div class="form-box" style="border:2px solid #ec4899; background: #fdf2f8;">
+            <div class="form-title" style="color:#ec4899;"><i class="fas fa-layer-group"></i> Multiple Mocks to JSON Exporter</div>
+            <p style="color:grey; font-size:12px; margin-bottom:10px;">Ek sath multiple mocks select karein aur unka combined JSON data nikal lein PDF banane ke liye.</p>
+            
+            <div id="multiJsonSelector" style="background: white; border: 2px solid #ec4899; border-radius: 10px; padding: 10px; max-height: 180px; overflow-y: auto; margin-bottom: 10px; display: flex; flex-direction: column; gap: 5px;">
+                <p style="font-size:12px; color:grey; text-align:center; padding:10px;">Loading tests list...</p>
+            </div>
+            
+            <button onclick="generateMultiMockJSON()" style="background:#ec4899; width:100%; margin-bottom:15px;"><i class="fas fa-cloud-download-alt"></i> Generate Combined JSON</button>
+            
+            <textarea id="multiJsonOutput" readonly placeholder="Combined JSON data yahan aayega..." style="height:150px; font-family:monospace; font-size:12px; border-color:#ec4899; margin-bottom:10px; display:none;"></textarea>
+            <button id="btnCopyMultiJson" onclick="copyMultiJSON()" style="background:#10b981; width:100%; display:none;"><i class="fas fa-copy"></i> Copy JSON</button>
         </div>
 
         <div class="form-box" id="filterControls" style="display:none; border:2px solid #8b5cf6; background: #faf5ff;">
@@ -352,11 +417,23 @@
             <button onclick="extractQuestions()" style="background:#8b5cf6; width:100%; margin-top:10px;"><i class="fas fa-bolt"></i> Extract & Shuffle Questions</button>
         </div>
 
-        <div class="form-box" id="extractorResultBox" style="display:none; border:2px solid #10b981; background: #f0fdf4;">
-            <div class="form-title" style="color:#10b981;"><i class="fas fa-check-circle"></i> 3. Extracted JSON Result</div>
+       <div class="form-box" id="extractorResultBox" style="display:none; border:2px solid #10b981; background: #f0fdf4;">
+            <div class="form-title" style="color:#10b981;"><i class="fas fa-check-circle"></i> 3. Extracted JSON Result & Create Mock</div>
             <textarea id="outputJson" readonly placeholder="Filtered questions will appear here..." style="height:150px; font-family:monospace; font-size:12px; border-color:#10b981; margin-bottom:10px;"></textarea>
             <div id="outStats" style="font-size:13px; font-weight:bold; color:#10b981; margin-bottom:10px;"></div>
-            <button onclick="copyJSON()" style="background:#10b981; width:100%;"><i class="fas fa-copy"></i> Copy to Clipboard</button>
+            <button onclick="copyJSON()" style="background:#10b981; width:100%; margin-bottom:15px;"><i class="fas fa-copy"></i> Copy to Clipboard</button>
+            
+            <hr style="border:0; border-top:1px dashed #10b981; margin-bottom:15px;">
+            <div class="form-title" style="color:#059669;"><i class="fas fa-rocket"></i> Directly Create New Mock from this Data</div>
+            <div class="grid-2">
+                <input type="text" id="newExtrTitle" placeholder="Test Title (e.g. Filtered Math Mock)" style="border-color:#10b981;">
+                <input type="text" id="newExtrID" placeholder="Unique ID (e.g. mock_extr_01)" style="border-color:#10b981;">
+                <select id="newExtrCat" style="border-color:#10b981;"><option>Full Mock</option><option>Maths</option><option>Reasoning</option><option>English</option><option>Hindi</option><option>GK</option></select>
+                <input type="number" id="newExtrTime" placeholder="Total Mins" style="border-color:#10b981;">
+                <input type="number" id="newExtrCutoff" placeholder="Cutoff (Def: 40)" style="border-color:#10b981;">
+                <input type="number" id="newExtrSecTime" placeholder="Sec Time (Mins)" style="border-color:#10b981;">
+            </div>
+            <button onclick="createMockFromExtracted()" style="background:#059669; width:100%; margin-top:10px;"><i class="fas fa-upload"></i> Create & Upload New Mock</button>
         </div>
     </div>
 
@@ -382,9 +459,15 @@
                 
                 <hr style="border: 0; border-top: 1px dashed #f97316; margin-bottom: 15px;">
 
-                <p style="color:grey; font-size:12px; margin-bottom:10px;"><b>Method 2:</b> Bulk Upload (CBT JSON v4.0 Array)</p>
-                <textarea id="qodBulkJSON" placeholder='[{"section": "GK", "topic": "Polity", "level": "Easy", "q_en": "...", "q_hi": "...", "op_en": ["A", "B", "C", "D"], "op_hi": ["A", "B", "C", "D"], "ans": "1", "solution": "<p>...</p>"}]' style="height:120px; font-family:monospace; font-size:12px; border-color:#f97316; margin-bottom:10px;"></textarea>
-                <button onclick="bulkUploadQOD()" style="background:#ea580c; width:100%;"><i class="fas fa-database"></i> Upload CBT JSON to QOD Bank</button>
+               <p style="color:grey; font-size:12px; margin-bottom:10px;"><b>Method 2:</b> Bulk Upload (CBT JSON v4.0 Array)</p>
+                <textarea id="qodBulkJSON" placeholder='[{"section": "GK", "topic": "Polity", "level": "Easy", "q_en": "...", "q_hi": "...", "op_en": ["A", "B", "C", "D"], "op_hi": ["A", "B", "C", "D"], "ans": "1", "solution": "<p>...</p>"}]' style="height:80px; font-family:monospace; font-size:12px; border-color:#f97316; margin-bottom:10px;"></textarea>
+                <button onclick="bulkUploadQOD()" style="background:#ea580c; width:100%; margin-bottom:15px;"><i class="fas fa-database"></i> Upload Manual JSON to QOD Bank</button>
+                
+                <hr style="border: 0; border-top: 1px dashed #f97316; margin-bottom: 15px;">
+                
+                <p style="color:#ea580c; font-size:13px; font-weight:bold; margin-bottom:10px;"><i class="fas fa-robot"></i> Method 3: Smart Auto-Pilot (Recommended)</p>
+                <p style="color:grey; font-size:11px; margin-bottom:10px;">Ye button database ke mocks se 30 random questions uthayega aur QOD Bank ko agle 30 din ke liye auto-fill kar dega. (Raat 12 baje app khud question change kar legi)</p>
+                <button onclick="autoFill30DaysQOD()" style="background:#8b5cf6; width:100%;"><i class="fas fa-bolt"></i> Auto-Generate 30 Days QOD Bank</button>
             </div>
             
             <div class="form-box">
@@ -442,9 +525,19 @@
     <div id="folders" class="section">
         <div class="header"><h2>📂 Manage Exam Folders (3D System)</h2></div>
         
+      <div style="display:flex; justify-content:flex-end; margin-bottom:15px;">
+            <button onclick="createDSSSBMockFolder()" style="background:#8b5cf6;"><i class="fas fa-magic"></i> Auto-Create "DSSSB ANS KEY MOCKS" Folder</button>
+        </div>
         <div class="form-box" style="border:2px solid var(--primary); background: #f5f3ff;">
             <div class="form-title" style="color:var(--primary);"><i class="fas fa-plus-circle"></i> Create New Exam Folder</div>
-            <div class="grid-2">
+          <div class="grid-2">
+                <select id="fBoard" style="border-color: var(--primary); font-weight: bold;">
+                    <option value="DSSSB">🏛️ DSSSB</option>
+                    <option value="SSC">🏛️ SSC</option>
+                    <option value="Railways">🚆 Railways</option>
+                    <option value="State Exams">🗺️ State Exams</option>
+                    <option value="Other Exams">📂 Other Exams</option>
+                </select>
                 <input type="text" id="fName" placeholder="Exam Name (e.g. SSC CGL 2024)">
                 <input type="text" id="fKey" placeholder="Exam Key (Unique, e.g. ssc_cgl)">
                 <input type="text" id="fIcon" placeholder="Emoji Icon (e.g. 🏛️)">
@@ -479,9 +572,10 @@
             <span>✏️ Edit Test Information</span>
             <button onclick="closeEditModal()" style="border:none; background:none; font-size:24px; color:grey; cursor:pointer;">&times;</button>
         </div>
-        <div class="modal-body">
+       <div class="modal-body">
             <div class="input-group"><input type="text" id="eTitle" placeholder="Test Title" style="flex:1;"><input type="text" id="eID" readonly style="background:#e2e8f0; width:140px; cursor:not-allowed;"></div>
             <div class="grid-2">
+                <select id="eFolder" style="border-color: var(--primary); font-weight:bold;"><option value="">📁 -- Select Folder (Optional) --</option></select>
                 <select id="eCat"><option>Full Mock</option><option>Maths</option><option>Reasoning</option><option>English</option><option>Hindi</option><option>GK</option><option>Computer</option><option>Assistant Superintendent</option><option>DASS Grade II</option></select>
                 <input type="number" id="eTime" placeholder="Mins">
                 <input type="number" id="eQs" placeholder="Questions">
@@ -493,6 +587,7 @@
                     <option value="true">🔒 Sections Locked</option>
                     <option value="false">🔓 Sections Unlocked</option>
                 </select>
+                <input type="number" id="eSecTime" placeholder="Sec Time (e.g. 15 mins)">
                 <select id="eLive" style="grid-column: span 2;" onchange="document.getElementById('eScheduleBox').style.display = this.value === 'scheduled' ? 'block' : 'none'">
                     <option value="false">Normal (Hidden)</option>
                     <option value="true">LIVE Now</option>
@@ -504,6 +599,41 @@
                 <input type="datetime-local" id="eScheduleTime" style="border-color:#f59e0b;">
             </div>
             <button onclick="saveEditTestMetadata()" style="width:100%; background:var(--success);"><i class="fas fa-check-circle"></i> Save Changes</button>
+        </div>
+   </div>
+</div>
+
+<div id="editFolderModal" class="modal-overlay">
+    <div class="modal-card">
+        <div class="modal-header">
+            <span>✏️ Edit Exam Folder</span>
+            <button onclick="closeEditFolderModal()" style="border:none; background:none; font-size:24px; color:grey; cursor:pointer;">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="efKeyOriginal">
+            <div class="grid-2">
+                <select id="efBoard" style="border-color: var(--primary); font-weight: bold;">
+                    <option value="DSSSB">🏛️ DSSSB</option>
+                    <option value="SSC">🏛️ SSC</option>
+                    <option value="Railways">🚆 Railways</option>
+                    <option value="State Exams">🗺️ State Exams</option>
+                    <option value="Other Exams">📂 Other Exams</option>
+                </select>
+                <input type="text" id="efName" placeholder="Exam Name (e.g. SSC CGL 2024)">
+                <input type="text" id="efKey" placeholder="Exam Key (Unique, e.g. ssc_cgl)">
+                <input type="text" id="efIcon" placeholder="Emoji Icon (e.g. 🏛️)">
+                <select id="efColor">
+                    <option value="f-blue">Blue (Standard)</option>
+                    <option value="f-purple">Purple (Special)</option>
+                    <option value="f-green">Green (Success)</option>
+                    <option value="f-live">Red (Live/Alert)</option>
+                    <option value="f-math">Deep Blue (Maths)</option>
+                    <option value="f-reas">Violet (Reasoning)</option>
+                </select>
+                <input type="number" id="efOrder" placeholder="Display Order (1, 2, 3...)">
+                <input type="text" id="efSubs" placeholder="Sub-Categories (Comma separated)">
+            </div>
+            <button onclick="updateExamFolder()" style="width:100%; background:var(--success);"><i class="fas fa-check-circle"></i> Save Changes</button>
         </div>
     </div>
 </div>
@@ -534,7 +664,7 @@ db.ref(".info/serverTimeOffset").on("value", function(snap) {
 function getSyncedTime() { return Date.now() + serverTimeOffset; }
 
 // 🔥 UPGRADED CACHE: added typing passages
-let contentCache = { tests: {}, videos: {}, notes: {}, typing: {} };
+let contentCache = { tests: {}, videos: {}, notes: {}, typing: {}, folders: {} };
 let userMap = {}; 
 let proUsersSnap = null; 
 
@@ -687,9 +817,35 @@ function loadData() {
         contentCache.tests = s.val() || {};
         
         const testSelect = document.getElementById('editTestSelect');
+        const fetchSelect = document.getElementById('fetchMockSelect');
+        const mixSelector = document.getElementById('mixTestSelector');
+        const multiJsonSelector = document.getElementById('multiJsonSelector'); // NAYA
+        
         testSelect.innerHTML = '<option value="">-- Select Test to Edit Questions --</option>';
+        if(fetchSelect) fetchSelect.innerHTML = '<option value="">-- Select Mock to Fetch --</option>';
+        if(mixSelector) mixSelector.innerHTML = '';
+        if(multiJsonSelector) multiJsonSelector.innerHTML = ''; // NAYA
+        
         Object.entries(contentCache.tests).forEach(([k,v]) => {
             testSelect.innerHTML += `<option value="${k}">${v.title} (${k})</option>`;
+            if(fetchSelect) fetchSelect.innerHTML += `<option value="${k}">${v.title} (${k})</option>`;
+            
+            if(mixSelector) {
+                mixSelector.innerHTML += `
+                    <label style="display:flex; align-items:center; gap:10px; font-size:13px; padding:6px 10px; border-bottom:1px solid #f1f5f9; cursor:pointer; background:#fff; border-radius:6px;">
+                        <input type="checkbox" name="mixSourceCheck" value="${k}" style="width:18px; height:18px; accent-color:#10b981;">
+                        <span style="flex:1;"><b>${v.title}</b> <br><small style="color:grey;">ID: ${k}</small></span>
+                    </label>
+                `;
+            }
+            if(multiJsonSelector) {
+                multiJsonSelector.innerHTML += `
+                    <label style="display:flex; align-items:center; gap:10px; font-size:13px; padding:6px 10px; border-bottom:1px solid #fdf2f8; cursor:pointer; background:#fff; border-radius:6px;">
+                        <input type="checkbox" name="multiJsonCheck" value="${k}" style="width:18px; height:18px; accent-color:#ec4899;">
+                        <span style="flex:1;"><b>${v.title}</b> <br><small style="color:grey;">ID: ${k}</small></span>
+                    </label>
+                `;
+            }
         });
         renderContentTable();
     });
@@ -698,19 +854,33 @@ function loadData() {
     db.ref('dsssb_videos_db').on('value', s => { contentCache.videos = s.val() || {}; renderContentTable(); });
     db.ref('dsssb_notes_db').on('value', s => { contentCache.notes = s.val() || {}; renderContentTable(); });
     
-    // 📂 7. Dynamic Folders Tree Loading
+   // 📂 7. Dynamic Folders Tree Loading
     db.ref('dsssb_folders_tree').on('value', snap => {
         const tbody = document.getElementById('folderTableBody');
         if(!tbody) return;
         tbody.innerHTML = '';
+        contentCache.folders = snap.exists() ? snap.val() : {};
+        
+        // Folder Dropdowns update karna
+        let folderOptions = '<option value="">📁 -- Select Folder (Optional) --</option>';
+        Object.values(contentCache.folders).forEach(f => {
+            folderOptions += `<option value="${f.examKey}">${f.icon} ${f.name} (${f.board})</option>`;
+        });
+        if(document.getElementById('tFolder')) document.getElementById('tFolder').innerHTML = folderOptions;
+        if(document.getElementById('mixFolder')) document.getElementById('mixFolder').innerHTML = folderOptions;
+        if(document.getElementById('eFolder')) document.getElementById('eFolder').innerHTML = folderOptions;
+
         if(snap.exists()) {
             Object.entries(snap.val()).forEach(([k, f]) => {
                 let subNames = (f.subCategories || []).map(s => s.name).join(', ');
                 tbody.innerHTML += `<tr>
                     <td style="font-size:24px;">${f.icon || '📁'}</td>
                     <td><b>${f.name}</b><br><small style="color:var(--primary); font-weight:700;">Order: ${f.order || 0}</small></td>
-                    <td><span class="badge-offline">${f.examKey}</span><br><small style="color:grey;">${subNames}</small></td>
-                    <td><button class="btn-del" onclick="delItem('dsssb_folders_tree/${k}')"><i class="fas fa-trash"></i> Delete</button></td>
+                   <td><span class="badge-offline">${f.examKey}</span><br><small style="color:grey;">${subNames}</small></td>
+                    <td>
+                        <button class="btn-edit" onclick="openEditFolderModal('${k}')" style="margin-bottom:5px;"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="btn-del" onclick="delItem('dsssb_folders_tree/${k}')"><i class="fas fa-trash"></i> Delete</button>
+                    </td>
                 </tr>`;
             });
         } else {
@@ -945,6 +1115,7 @@ function renderContentTable() {
             <td><b style="font-size:15px;">${v.title}</b> <br><span style="font-size:11px; color:grey; font-weight:600;">ID: ${k} &bull; ${badge} &bull; ${liveStatus}</span></td>
             <td>
                 <button class="btn-edit" onclick="openEditMetadataModal('${k}')"><i class="fas fa-edit"></i> Edit</button>
+                <button class="btn-edit" onclick="downloadMockPDF('${k}', '${v.title.replace(/'/g, "\\'")}')" style="background:#fef08a; color:#854d0e; border: 1px solid #eab308;"><i class="fas fa-file-pdf"></i> PDF</button>
                 <button class="btn-del" onclick="delItem('dsssb_tests_db/${k}', true, '${k}')"><i class="fas fa-trash"></i> Delete</button>
             </td>
         </tr>`;
@@ -976,9 +1147,28 @@ function renderContentTable() {
             <td><b>${v.title}</b> <br><span style="font-size:11px; color:grey; font-weight:600;">ID: ${k} &bull; ${badge}</span></td>
             <td><button class="btn-del" onclick="delItem('typing_passages/${k}', false)"><i class="fas fa-trash"></i> Delete</button></td>
         </tr>`;
-    });
+   });
     
     tbody.innerHTML = html;
+}
+
+// 🔥 NEW: REAL-TIME CONTENT SEARCH/FILTER LOGIC 🔥
+function filterContentTable() {
+    let input = document.getElementById("contentSearchInput").value.toLowerCase();
+    let rows = document.getElementById("contentTable").getElementsByTagName("tr");
+    
+    for (let i = 0; i < rows.length; i++) {
+        // Title and ID are stored in the second column <td> (index 1)
+        let titleColumn = rows[i].getElementsByTagName("td")[1]; 
+        if (titleColumn) {
+            let textValue = titleColumn.textContent || titleColumn.innerText;
+            if (textValue.toLowerCase().indexOf(input) > -1) {
+                rows[i].style.display = ""; // Show matching row
+            } else {
+                rows[i].style.display = "none"; // Hide non-matching row
+            }
+        }
+    }
 }
 
 /* =========================================
@@ -1011,10 +1201,11 @@ function saveTypingPassage() {
    METADATA EDITOR (MODAL) LOGIC
    ========================================= */
 function openEditMetadataModal(key) {
-    const t = contentCache.tests[key];
+   const t = contentCache.tests[key];
     document.getElementById('eID').value = key;
     document.getElementById('eTitle').value = t.title || "";
     document.getElementById('eCat').value = t.category || "";
+    document.getElementById('eFolder').value = t.folderKey || ""; // Load Folder Key
     document.getElementById('eTime').value = t.time || "";
     document.getElementById('eQs').value = t.qs || "";
     document.getElementById('eCutoff').value = t.cutoff || ""; 
@@ -1025,6 +1216,7 @@ function openEditMetadataModal(key) {
 
     let lockStat = (t.lock === false || t.lock === "false") ? "false" : "true";
     document.getElementById('eLock').value = lockStat;
+    document.getElementById('eSecTime').value = t.secTime || "";
 
     let statusVal = t.status || (t.isLive === 'true' || t.isLive === true ? 'true' : 'false');
     if(t.scheduledTime && Date.now() < t.scheduledTime) statusVal = 'scheduled';
@@ -1059,7 +1251,8 @@ function saveEditTestMetadata() {
         else return alert("Select a scheduled time!");
     }
 
-    const lockVal = document.getElementById('eLock').value === 'true';
+   const lockVal = document.getElementById('eLock').value === 'true';
+   const secTimeVal = document.getElementById('eSecTime').value || 0;
 
     const d = {
         title: document.getElementById('eTitle').value,
@@ -1067,19 +1260,21 @@ function saveEditTestMetadata() {
         time: document.getElementById('eTime').value,
         qs: document.getElementById('eQs').value,
         category: document.getElementById('eCat').value,
+        folderKey: document.getElementById('eFolder').value, // Save Folder Key
         type: document.getElementById('eType').value,
         isLive: statusVal === 'true' ? 'true' : 'false',
         status: statusVal,
         scheduledTime: scheduledTime,
         pm: document.getElementById('ePm').value || 1,
         nm: document.getElementById('eNm').value || 0.25,
-        lock: lockVal 
+        lock: lockVal,
+        secTime: parseInt(secTimeVal)
     };
 
-    const cutoffVal = document.getElementById('eCutoff').value;
+    const cutoffVal = document.getElementById('eCutoff').value || 40; // DEFAULT TO 40 IF EMPTY
 
     db.ref('dsssb_tests_db/' + id).update(d).then(() => {
-        if(cutoffVal) return db.ref('dsssb_tests_meta/' + id + '/cutoff').set(parseFloat(cutoffVal));
+        return db.ref('dsssb_tests_meta/' + id + '/cutoff').set(parseFloat(cutoffVal));
     }).then(() => {
         alert("✅ Test Updated Successfully!");
         closeEditModal();
@@ -1128,11 +1323,13 @@ function addTest() {
     const qsVal = document.getElementById('tQs').value;
     const catVal = document.getElementById('tCat').value;
     const typeVal = document.getElementById('tType').value;
-    const cutoffVal = document.getElementById('tCutoff').value || 0;
+    const cutoffVal = document.getElementById('tCutoff').value || 40; // DEFAULT TO 40 IF EMPTY
     const pmVal = document.getElementById('tPm').value || 1;        
     const nmVal = document.getElementById('tNm').value || 0.25;    
     const lockVal = document.getElementById('tLock').value === 'true'; 
+    const secTimeVal = document.getElementById('tSecTime').value || 0; 
     const statusVal = document.getElementById('tLive').value; 
+    const folderVal = document.getElementById('tFolder').value; // NAYA: Folder Key
 
     let scheduledTime = null;
     if(statusVal === 'scheduled') {
@@ -1141,14 +1338,15 @@ function addTest() {
         else return alert("Select a scheduled time!");
     }
 
-    const d = { 
+   const d = { 
         title: titleVal, id: idVal, time: timeVal, qs: qsVal, 
-        category: catVal, type: typeVal, 
+        category: catVal, folderKey: folderVal, type: typeVal, 
         isLive: statusVal === 'true' ? 'true' : 'false', 
         status: statusVal, scheduledTime: scheduledTime,
         pm: pmVal, nm: nmVal,
-        lock: lockVal 
-    }; 
+        lock: lockVal,
+        secTime: parseInt(secTimeVal)
+    };
 
     if(titleVal && idVal) {
         db.ref('dsssb_tests_db/' + idVal).set(d).then(() => { 
@@ -1177,16 +1375,20 @@ function uploadQuestions() {
 async function generateMixTest() {
     const titleVal = document.getElementById('mixTitle').value.trim();
     const idVal = document.getElementById('mixID').value.trim();
-    const sourceIdsVal = document.getElementById('mixSourceIDs').value.trim();
     const timeVal = document.getElementById('mixTime').value;
     const qsVal = document.getElementById('mixQs').value;
     const catVal = document.getElementById('mixCat').value;
     const typeVal = document.getElementById('mixType').value;
-    const cutoffVal = document.getElementById('mixCutoff').value || 0;
+    const cutoffVal = document.getElementById('mixCutoff').value || 40; // DEFAULT TO 40 IF EMPTY
     const pmVal = document.getElementById('mixPm').value || 1;        
     const nmVal = document.getElementById('mixNm').value || 0.25;    
     const lockVal = document.getElementById('mixLock').value === 'true'; 
+    const secTimeVal = document.getElementById('mixSecTime').value || 0; 
     const statusVal = document.getElementById('mixLive').value; 
+
+    // Collect IDs from selected checkboxes
+    const checkedBoxes = document.querySelectorAll('input[name="mixSourceCheck"]:checked');
+    let sourceIDs = Array.from(checkedBoxes).map(cb => cb.value);
 
     let scheduledTime = null;
     if(statusVal === 'scheduled') {
@@ -1195,9 +1397,9 @@ async function generateMixTest() {
         else return alert("Select a scheduled time!");
     }
 
-    if(!titleVal || !idVal || !sourceIdsVal) return alert("⚠️ Title, New ID, aur Source IDs bharna zaroori hai!");
-    const sourceIDs = sourceIdsVal.split(',').map(id => id.trim()).filter(id => id);
-    if(sourceIDs.length === 0) return alert("⚠️ Invalid Source IDs format.");
+    if(!titleVal || !idVal || sourceIDs.length === 0) {
+        return alert("⚠️ Pehle Title, New ID bharein aur niche list se kam se kam ek test select karein!");
+    }
 
     try {
         let combinedQuestions = [];
@@ -1214,13 +1416,15 @@ async function generateMixTest() {
         await db.ref('dsssb_questions_db/' + idVal).set(combinedQuestions);
         await db.ref('dsssb_tests_meta/' + idVal + '/cutoff').set(parseFloat(cutoffVal));
         
+        const folderVal = document.getElementById('mixFolder').value;
         const d = { 
             title: titleVal, id: idVal, time: timeVal, qs: qsVal || combinedQuestions.length, 
-            category: catVal, type: typeVal, 
+            category: catVal, folderKey: folderVal, type: typeVal,
             isLive: statusVal === 'true' ? 'true' : 'false', 
             status: statusVal, scheduledTime: scheduledTime,
             pm: pmVal, nm: nmVal,
-            lock: lockVal 
+            lock: lockVal,
+            secTime: parseInt(secTimeVal)
         }; 
         await db.ref('dsssb_tests_db/' + idVal).set(d);
 
@@ -1267,9 +1471,112 @@ function updateTestJSON() {
 }
 
 /* =========================================
-   🔥 JSON EXTRACTOR LOGIC
+   🔥 JSON EXTRACTOR & BACKUP LOGIC
    ========================================= */
 let masterData = [];
+
+function fetchAllFirebaseQuestions() {
+    document.getElementById('loadStats').innerText = "⏳ Fetching ALL questions to Extractor... Please wait.";
+    db.ref('dsssb_questions_db').once('value').then(snap => {
+        if(!snap.exists()) return alert("No questions found in database!");
+        let allQs = [];
+        snap.forEach(child => {
+            let qsArr = child.val();
+            if(Array.isArray(qsArr)) allQs = allQs.concat(qsArr);
+        });
+        document.getElementById('masterJson').value = JSON.stringify(allQs, null, 2);
+        analyzeJson();
+        alert(`✅ Fetched ${allQs.length} total questions to Extractor.`);
+    }).catch(e => alert("Error: " + e.message));
+}
+
+function downloadFullBackupFile() {
+    document.getElementById('loadStats').innerText = "⏳ Preparing Full Backup File... Please wait.";
+    db.ref('dsssb_questions_db').once('value').then(snap => {
+        if(!snap.exists()) return alert("No questions found in database to backup!");
+        
+        let fullBackup = {};
+        let totalQs = 0;
+        
+        // Mocks की ID के साथ पूरा स्ट्रक्चर सेव कर रहे हैं
+        snap.forEach(child => {
+            let qsArr = child.val();
+            fullBackup[child.key] = qsArr; 
+            if(Array.isArray(qsArr)) totalQs += qsArr.length;
+        });
+
+        // JSON File Create करना और Download करवाना
+        const dataStr = JSON.stringify(fullBackup, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+        a.download = `DSSSB_Master_Backup_${date}_(${totalQs}_Qs).json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        document.getElementById('loadStats').innerText = `✅ Backup Downloaded: ${totalQs} questions saved securely.`;
+        alert(`✅ Full Backup Successfully Downloaded to your device!\n\nTotal Questions Saved: ${totalQs}`);
+    }).catch(e => alert("Error: " + e.message));
+}
+function fetchSpecificMockQuestions() {
+    const tId = document.getElementById('fetchMockSelect').value;
+    if(!tId) return alert("Please select a mock first!");
+    
+    document.getElementById('loadStats').innerText = `⏳ Fetching questions for ${tId}...`;
+    db.ref('dsssb_questions_db/' + tId).once('value').then(snap => {
+        if(!snap.exists()) return alert("No questions found for this test!");
+        let qsArr = snap.val();
+        if(!Array.isArray(qsArr)) return alert("Data format error in this test.");
+        
+        document.getElementById('masterJson').value = JSON.stringify(qsArr, null, 2);
+        analyzeJson();
+    }).catch(e => alert("Error: " + e.message));
+}
+
+function createMockFromExtracted() {
+    const titleVal = document.getElementById('newExtrTitle').value.trim();
+    const idVal = document.getElementById('newExtrID').value.trim();
+    const catVal = document.getElementById('newExtrCat').value;
+    const timeVal = document.getElementById('newExtrTime').value;
+    const cutoffVal = document.getElementById('newExtrCutoff').value || 40; // DEFAULT TO 40 IF EMPTY
+    const secTimeVal = document.getElementById('newExtrSecTime').value || 0;
+    const jsonText = document.getElementById('outputJson').value.trim();
+
+    if(!titleVal || !idVal || !timeVal) return alert("⚠️ Title, Unique ID, aur Time bharna zaroori hai!");
+    if(!jsonText) return alert("⚠️ Extracted JSON empty hai. Pehle questions extract karein!");
+
+    try {
+        const questionsArray = JSON.parse(jsonText);
+        if(!Array.isArray(questionsArray) || questionsArray.length === 0) return alert("⚠️ Valid JSON Array required!");
+
+        const d = { 
+            title: titleVal, id: idVal, time: timeVal, qs: questionsArray.length, 
+            category: catVal, type: "free", isLive: "false", status: "false",
+            pm: 1, nm: 0.25, lock: false, secTime: parseInt(secTimeVal)
+        };
+
+        // Saving metadata and questions
+        db.ref('dsssb_tests_db/' + idVal).set(d).then(() => {
+            return db.ref('dsssb_questions_db/' + idVal).set(questionsArray);
+        }).then(() => {
+            return db.ref('dsssb_tests_meta/' + idVal + '/cutoff').set(parseFloat(cutoffVal));
+        }).then(() => {
+            alert(`🚀 Naya Mock '${titleVal}' Successfully Create Ho Gaya (${questionsArray.length} Qs)!`);
+            document.getElementById('newExtrTitle').value = "";
+            document.getElementById('newExtrID').value = "";
+            document.getElementById('newExtrTime').value = "";
+            document.getElementById('newExtrCutoff').value = "";
+        }).catch(err => { alert("Error: " + err.message); });
+
+    } catch(e) {
+        alert("❌ JSON Parse Error: " + e.message);
+    }
+}
 
 function analyzeJson() {
     const raw = document.getElementById('masterJson').value;
@@ -1333,6 +1640,62 @@ function copyJSON() {
     out.select();
     document.execCommand('copy');
     alert("📋 JSON Copied! Now you can paste it in the 'Bulk Upload Questions' box above.");
+}
+
+/* =========================================
+   🔥 MULTI-MOCK TO JSON LOGIC 🔥
+   ========================================= */
+async function generateMultiMockJSON() {
+    const checkedBoxes = document.querySelectorAll('input[name="multiJsonCheck"]:checked');
+    let sourceIDs = Array.from(checkedBoxes).map(cb => cb.value);
+    
+    if(sourceIDs.length === 0) return alert("⚠️ Please select at least one mock from the list!");
+    
+    const btn = event.currentTarget;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Fetching Data...";
+    btn.disabled = true;
+    
+    try {
+        let combinedQuestions = [];
+        
+        for (let sourceId of sourceIDs) {
+            const snap = await db.ref('dsssb_questions_db/' + sourceId).once('value');
+            if (snap.exists()) {
+                let qs = snap.val();
+                if(Array.isArray(qs)) {
+                    combinedQuestions = combinedQuestions.concat(qs);
+                }
+            }
+        }
+        
+        const outBox = document.getElementById('multiJsonOutput');
+        const copyBtn = document.getElementById('btnCopyMultiJson');
+        
+        if(combinedQuestions.length === 0) {
+            alert("⚠️ No questions found in the selected mocks.");
+            outBox.style.display = 'none';
+            copyBtn.style.display = 'none';
+        } else {
+            outBox.value = JSON.stringify(combinedQuestions, null, 2);
+            outBox.style.display = 'block';
+            copyBtn.style.display = 'block';
+            alert(`✅ Superb! Successfully combined ${combinedQuestions.length} questions from ${sourceIDs.length} mocks!`);
+        }
+    } catch(e) {
+        alert("❌ Error generating combined JSON: " + e.message);
+    } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
+}
+
+function copyMultiJSON() {
+    const out = document.getElementById('multiJsonOutput');
+    if(!out.value) return;
+    out.select();
+    document.execCommand('copy');
+    alert("📋 Combined JSON Copied! Ab isey aap apne PDF Generator tool mein paste kar sakte hain.");
 }
 
 /* =========================================
@@ -1404,8 +1767,137 @@ function delItem(p, isTest = false, tId = "") {
     } 
 }
 function resolve(k) { db.ref('dsssb_reports/'+k).remove(); }
+
+// --- 📄 HIGH QUALITY PDF EXPORT LOGIC ---
+async function downloadMockPDF(testId, testTitle) {
+    try {
+        alert(`⏳ Fetching questions for PDF: ${testTitle}...\n\nPlease wait, High-Quality PDF generation takes a few seconds.`);
+        const snap = await db.ref('dsssb_questions_db/' + testId).once('value');
+        if(!snap.exists()) return alert("❌ No questions found for this Mock!");
+        
+        const qs = snap.val();
+        if(!Array.isArray(qs) || qs.length === 0) return alert("❌ Data is empty or not in correct format.");
+
+        let htmlContent = `<div class="pdf-page">
+            <div class="pdf-header">
+                <h1 style="color:#4f46e5; margin-bottom:5px; font-size: 24px;">${testTitle}</h1>
+                <p style="color:grey; font-weight:bold;">Total Questions: ${qs.length} | Extracted from DSSSB Admin Portal</p>
+            </div>`;
+
+        qs.forEach((q, i) => {
+            // Support both normal CBT format and extracted format
+            let optsEn = Array.isArray(q.op_en) ? q.op_en : [q.op1, q.op2, q.op3, q.op4].filter(Boolean);
+            let optsHi = Array.isArray(q.op_hi) ? q.op_hi : [];
+            
+            let optionsHtml = '';
+            optsEn.forEach((opt, idx) => {
+                let hiOpt = optsHi[idx] ? `<br><span style="color:grey; font-size:12px;">${optsHi[idx]}</span>` : '';
+                optionsHtml += `<div><b>${String.fromCharCode(65+idx)})</b> ${opt} ${hiOpt}</div>`;
+            });
+
+            let sectionBadge = q.section ? `<span style="background:#e2e8f0; padding:3px 8px; border-radius:4px; font-size:11px; margin-left: 10px;">🏷️ ${q.section}</span>` : '';
+            let topicBadge = q.topic ? `<span style="background:#fef3c7; color:#d97706; padding:3px 8px; border-radius:4px; font-size:11px; margin-left: 5px;">${q.topic}</span>` : '';
+
+            htmlContent += `
+            <div class="pdf-q-box">
+                <div style="margin-bottom: 12px; font-size: 16px;"><b>Q${i+1}.</b> ${sectionBadge} ${topicBadge}</div>
+                <div class="pdf-q-en">${q.q_en || q.q || 'N/A'}</div>
+                ${q.q_hi ? `<div class="pdf-q-hi">${q.q_hi}</div>` : ''}
+                <div class="pdf-options">${optionsHtml}</div>
+                <div class="pdf-sol">
+                    <b>✔️ Answer: Option ${q.ans}</b>
+                    <div style="margin-top:8px;"><b>Solution:</b> ${q.solution || 'No solution provided.'}</div>
+                </div>
+            </div>`;
+        });
+
+        htmlContent += `</div>`;
+        
+        const container = document.getElementById('pdfExportContainer');
+        container.innerHTML = htmlContent;
+        container.style.display = 'block';
+
+        const opt = {
+            margin: 0.3,
+            filename: `${testTitle.replace(/[^a-zA-Z0-9 ]/g, "")}_(${testId}).pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, letterRendering: true }, // Scale 2 ensures high quality
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+
+        await html2pdf().set(opt).from(container.firstElementChild).save();
+        
+        container.style.display = 'none';
+        container.innerHTML = '';
+        alert("✅ PDF Generated & Downloaded Successfully!");
+
+    } catch(err) {
+        document.getElementById('pdfExportContainer').style.display = 'none';
+        alert("❌ PDF Error: " + err.message);
+    }
+}
+
 // --- 📂 FOLDER MANAGEMENT FUNCTIONS ---
+function openEditFolderModal(k) {
+    const f = contentCache.folders[k];
+    if(!f) return;
+    document.getElementById('efKeyOriginal').value = k;
+    document.getElementById('efBoard').value = f.board || "DSSSB";
+    document.getElementById('efName').value = f.name || "";
+    document.getElementById('efKey').value = f.examKey || "";
+    document.getElementById('efIcon').value = f.icon || "";
+    document.getElementById('efColor').value = f.colorClass || "f-blue";
+    document.getElementById('efOrder').value = f.order || "";
+    document.getElementById('efSubs').value = (f.subCategories || []).map(s => s.name).join(', ');
+    document.getElementById('editFolderModal').style.display = 'flex';
+}
+
+function closeEditFolderModal() {
+    document.getElementById('editFolderModal').style.display = 'none';
+}
+
+function updateExamFolder() {
+    const origKey = document.getElementById('efKeyOriginal').value;
+    const key = document.getElementById('efKey').value.trim();
+    const name = document.getElementById('efName').value.trim();
+    const subsRaw = document.getElementById('efSubs').value.split(',');
+
+    if(!name || !key) return alert("Name aur Key required hai!");
+
+    const subCategories = subsRaw.filter(s => s.trim() !== "").map(s => ({
+        name: s.trim(), filterKey: s.trim().toLowerCase().replace(/\s+/g, '_')
+    }));
+
+    const folderData = {
+        board: document.getElementById('efBoard').value,
+        name: name,
+        examKey: key,
+        icon: document.getElementById('efIcon').value.trim() || "📁",
+        colorClass: document.getElementById('efColor').value,
+        order: parseInt(document.getElementById('efOrder').value) || 99,
+        subCategories: subCategories
+    };
+
+    db.ref('dsssb_folders_tree/' + origKey).update(folderData).then(() => {
+        alert("✅ Folder Updated Successfully!");
+        closeEditFolderModal();
+    }).catch(err => alert("Error: " + err.message));
+}
+
+function createDSSSBMockFolder() {
+    const key = "dsssb_ans_key_mocks";
+    const folderData = {
+        board: "DSSSB", name: "DSSSB ANS KEY MOCKS", examKey: key,
+        icon: "📝", colorClass: "f-purple", order: 1,
+        subCategories: [{ name: "Full Mock", filterKey: "full_mock" }]
+    };
+    db.ref('dsssb_folders_tree/folder_' + key).set(folderData).then(() => {
+        alert("✅ 'DSSSB ANS KEY MOCKS' Folder created automatically!");
+    });
+}
+
 function addExamFolder() {
+    const boardVal = document.getElementById('fBoard').value;
     const name = document.getElementById('fName').value.trim();
     const key = document.getElementById('fKey').value.trim();
     const icon = document.getElementById('fIcon').value.trim();
@@ -1421,7 +1913,8 @@ function addExamFolder() {
         filterKey: s.trim().toLowerCase().replace(/\s+/g, '_')
     }));
 
-    const folderData = {
+   const folderData = {
+        board: boardVal,
         name: name,
         examKey: key,
         icon: icon || "📁",
@@ -1430,12 +1923,177 @@ function addExamFolder() {
         subCategories: subCategories
     };
 
-    // Creating folder with unique ID based on key
+   // Creating folder with unique ID based on key
     db.ref('dsssb_folders_tree/folder_' + key).set(folderData).then(() => {
         alert("✅ Naya Folder Dashboard par update ho gaya!");
         // Clear input fields
         ['fName', 'fKey', 'fIcon', 'fSubs', 'fOrder'].forEach(id => document.getElementById(id).value = "");
+        document.getElementById('fBoard').selectedIndex = 0; // Reset Dropdown
     }).catch(err => alert("Error: " + err.message));
+}
+
+/* =========================================
+   🔥 FULL MOCK TO SECTIONAL SPLITTER LOGIC
+   ========================================= */
+async function splitMockToSectional() {
+    const sourceId = document.getElementById('splitSourceID').value.trim();
+    if(!sourceId) return alert("⚠️ Please enter the Source Full Mock ID!");
+
+    const statBox = document.getElementById('splitStats');
+    statBox.innerText = "⏳ Fetching and splitting data... Please wait.";
+
+    try {
+        // 1. Database se Original Questions aur Metadata lana
+        const qSnap = await db.ref('dsssb_questions_db/' + sourceId).once('value');
+        const mSnap = await db.ref('dsssb_tests_db/' + sourceId).once('value');
+
+        if(!qSnap.exists()) {
+            statBox.innerText = "";
+            return alert("❌ No questions found for ID: " + sourceId);
+        }
+
+        const questions = qSnap.val();
+        const meta = mSnap.val() || { title: sourceId, folderKey: "" };
+
+        if(!Array.isArray(questions)) return alert("❌ Data format error. Questions array me nahi hain.");
+
+        // 2. Questions ko 'section' key ke hisaab se alag-alag array me daalna
+        let sectionsMap = {};
+        questions.forEach(q => {
+            let sec = q.section ? q.section.trim() : "Uncategorized";
+            if(!sectionsMap[sec]) sectionsMap[sec] = [];
+            sectionsMap[sec].push(q);
+        });
+
+        let createdMocks = [];
+
+        // 3. Har section ka ek naya Mock banakar Firebase me upload karna
+        for(let sec in sectionsMap) {
+            let secQs = sectionsMap[sec];
+            
+        // Unique ID banana (eg: mock_01_maths)
+            let safeSecName = sec.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase(); 
+            let newId = `${sourceId}_${safeSecName}`;
+
+            // 🔥 TITLE CLEANER: Title se 'Full Mock' ya 'Mock' shabd hatana
+            let cleanBaseTitle = meta.title.replace(/FULL MOCK/gi, '').replace(/MOCK/gi, '').replace(/\s\s+/g, ' ').trim();
+            let newTitle = `${cleanBaseTitle} - ${sec}`; 
+
+            // 🔥 Smart Time & Category Manager: Auto-set based on Subject Name
+            let secNameLower = sec.toLowerCase();
+            let defaultTime = secQs.length; // Fallback time
+            let mappedCategory = sec; // Fallback category
+            
+            if (secNameLower.includes('math') || secNameLower.includes('quantitative') || secNameLower.includes('arithmetical') || secNameLower.includes('numerical')) {
+                defaultTime = 20;
+                mappedCategory = "Maths";
+            } else if (secNameLower.includes('reasoning') || secNameLower.includes('intelligence')) {
+                defaultTime = 20;
+                mappedCategory = "Reasoning";
+            } else if (secNameLower.includes('english')) {
+                defaultTime = 12;
+                mappedCategory = "English";
+            } else if (secNameLower.includes('hindi')) {
+                defaultTime = 10;
+                mappedCategory = "Hindi";
+            } else if (secNameLower.includes('gk') || secNameLower.includes('awareness') || secNameLower.includes('knowledge') || secNameLower.includes('general')) {
+                defaultTime = 10;
+                mappedCategory = "GK";
+            } else if (secNameLower.includes('computer')) {
+                defaultTime = 10;
+                mappedCategory = "Computer";
+            }
+
+            // Sectional mock ka naya metadata set karna
+            let newMeta = {
+                id: newId,
+                title: newTitle,
+                category: mappedCategory, // 🔥 Ab automatic correct short category assign hogi!
+                folderKey: meta.folderKey || "",
+                qs: secQs.length,
+                time: defaultTime, // 🔥 Ab automatic fix time set hoga!
+                type: meta.type || "free",
+                isLive: "false",
+                status: "false",
+                pm: meta.pm || 1,
+                nm: meta.nm || 0.25,
+                lock: false,
+                secTime: defaultTime
+            };
+
+            // Naye Test aur Questions ko upload karna
+            await db.ref('dsssb_tests_db/' + newId).set(newMeta);
+            await db.ref('dsssb_questions_db/' + newId).set(secQs);
+            await db.ref('dsssb_tests_meta/' + newId + '/cutoff').set(40); // DEFAULT 40 ENSURED
+            
+            createdMocks.push(newTitle);
+        }
+
+        statBox.innerText = `✅ Successfully generated ${createdMocks.length} Sectional Mocks!`;
+        alert(`🎉 Kamal ho gaya! Original Mock se ye Sectional Mocks automatically ban gaye hain:\n\n` + createdMocks.join('\n'));
+        document.getElementById('splitSourceID').value = "";
+
+   } catch (error) {
+        statBox.innerText = "❌ Failed!";
+        alert("Error: " + error.message);
+    }
+}
+
+/* =========================================
+   🔥 AUTO-FILL 30 DAYS QOD BANK LOGIC
+   ========================================= */
+async function autoFill30DaysQOD() {
+    const btn = event.currentTarget;
+    const originalText = btn.innerHTML;
+    
+    if(!confirm("Kya aap sach mein QOD Bank ko naye 30 random questions se overwrite karna chahte hain? Puraana bank delete ho jayega.")) return;
+
+    try {
+        btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Generating 30 Days Bank...";
+        btn.disabled = true;
+
+        // 1. Saare available Test IDs nikalna
+        const testIds = Object.keys(contentCache.tests);
+        if (testIds.length === 0) throw new Error("Database mein koi tests nahi mile!");
+
+        let qodBankArray = [];
+        let totalDays = 30;
+
+        // 2. 30 random questions uthana
+        for(let i = 0; i < totalDays; i++) {
+            // Random test select karo
+            let randomTestId = testIds[Math.floor(Math.random() * testIds.length)];
+            
+            // Us test ke questions fetch karo
+            let qSnap = await db.ref('dsssb_questions_db/' + randomTestId).once('value');
+            if (qSnap.exists()) {
+                let questions = qSnap.val();
+                if (Array.isArray(questions) && questions.length > 0) {
+                    // Ek random question pick karo
+                    let randomQ = questions[Math.floor(Math.random() * questions.length)];
+                    
+                    // Thodi si formatting safai (taki QOD bank mein error na aaye)
+                    if(!randomQ.level) randomQ.level = "Medium"; // Default
+                    if(!randomQ.section) randomQ.section = "Mixed"; // Default
+                    
+                    qodBankArray.push(randomQ);
+                }
+            }
+        }
+
+        if(qodBankArray.length === 0) throw new Error("Questions generate nahi ho paaye.");
+
+        // 3. QOD Bank mein save karna (Bulk Upload ki tarah)
+        await db.ref('dsssb_qod_bank').set(qodBankArray);
+
+        alert(`🎉 Success! QOD Bank mein ${qodBankArray.length} naye behtareen sawal set kar diye gaye hain.\n\nAb agle 1 mahine tak aapki app raat 12 baje khud naya sawal dikhati rahegi!`);
+        
+    } catch (error) {
+        alert("❌ Error: " + error.message);
+    } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
 }
 </script>
 </body>
