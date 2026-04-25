@@ -1858,11 +1858,20 @@ async function submitTest() {
               correct: t.correct || 0, 
               wrong: t.wrong || 0, 
               time: t.timeTaken,
-              timePerQ: t.timePerQ || []
-          };
+            timePerQ: t.timePerQ || []
+          };
+      }
+
+      // 🔥 AUTO CUTOFF LOGIC (70% DEFAULT) 🔥
+      let maxPossibleMarks = QUESTIONS.length * POSITIVE_MARK;
+      let finalCutoff = DYNAMIC_CUTOFF;
+      
+      // Agar cutoff manually set nahi hai (default 40 utha raha hai), toh 70% set kar do
+      if (DYNAMIC_CUTOFF === 40) {
+          finalCutoff = Math.round(maxPossibleMarks * 0.7); 
       }
 
-      let html = `
+      let html = `
       <div id="pdfContent" class="analysis-container" style="background:#fff; padding:20px; border-radius:12px;">
           <div style="text-align:center; padding: 10px 0 20px 0; border-bottom: 2px solid var(--border-color); margin-bottom: 20px;">
               <h2 style="color:var(--primary); margin:0; font-size:26px; font-weight:900; letter-spacing:1px;">PYQ NOTES EXAM REPORT</h2>
@@ -1872,7 +1881,7 @@ async function submitTest() {
           <div class="card-dashboard" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px;">
               <div class="info-grid">
                   <div><b>Name:</b> ${currentState.name}</div>
-                  <div><b>Status:</b> ${totalScore >= DYNAMIC_CUTOFF ? '<span style="color:var(--success)">QUALIFIED 🏆</span>' : '<span style="color:var(--danger)">NOT QUALIFIED ❌</span>'} <span style="font-size:11px; color:var(--text-muted);">(Cut-off: ${DYNAMIC_CUTOFF})</span></div>
+                  <div><b>Status:</b> ${totalScore >= finalCutoff ? '<span style="color:var(--success)">QUALIFIED 🏆</span>' : '<span style="color:var(--danger)">NOT QUALIFIED ❌</span>'} <span style="font-size:11px; color:var(--text-muted);">(Cut-off: ${finalCutoff})</span></div>
               </div>
           </div>
 
