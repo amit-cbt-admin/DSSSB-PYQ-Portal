@@ -129,26 +129,54 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 .btn-primary { background: var(--gradient-main); color: #fff; border: none; padding: 14px; width: 100%; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 20px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); }
 .btn-primary:active { transform: scale(0.98); }
 
-#palettePanel { position: fixed; top: 0; right: 0; bottom: 0; width: 320px; background: var(--bg-card); z-index: 2000; display: flex; flex-direction: column; box-shadow: -5px 0 30px rgba(0,0,0,0.2); transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+/* ======= NEW DARK THEME GRID VIEW PALETTE ======= */
+#palettePanel { position: fixed; top: 0; right: 0; bottom: 0; width: 340px; background: #1a1b1e; z-index: 2000; display: flex; flex-direction: column; box-shadow: -5px 0 30px rgba(0,0,0,0.5); transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #e2e8f0; }
 #palettePanel.show { transform: translateX(0); }
+
+.palette-tabs { display: flex; background: #2d3748; }
+.p-tab { flex: 1; text-align: center; padding: 12px; font-size: 14px; font-weight: 600; color: #a0aec0; cursor: pointer; border-bottom: 2px solid transparent; }
+.p-tab.active { color: #fff; border-bottom-color: #cbd5e1; background: #1a1b1e; }
+
+.palette-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; font-size: 12px; border-bottom: 1px solid #2d3748; color: #cbd5e1; }
+.p-leg-item { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+.p-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; }
+.p-dot.review { background: transparent; color: #ef4444; font-size: 14px; }
+.p-dot.unattempted { background: #64748b; }
+.p-dot.attempted { background: #3b82f6; }
+.p-dot.unseen { border: 2px solid #64748b; background: transparent; width: 8px; height: 8px; }
+
+.palette-sections-container { flex: 1; overflow-y: auto; padding-bottom: 20px; scroll-behavior: smooth; }
+.p-sec-header { display: flex; justify-content: space-between; align-items: center; padding: 15px; cursor: pointer; font-weight: 600; font-size: 14px; border-bottom: 1px solid #2d3748; color: #fff; background: #1a1b1e; position: sticky; top: 0; z-index: 2; transition: 0.2s; }
+.p-sec-header:hover { background: #2d3748; }
+.p-sec-header::after { content: '▲'; font-size: 10px; transition: 0.3s; color: #cbd5e1; }
+.p-sec-header.collapsed::after { transform: rotate(180deg); }
+.p-sec-body { overflow: hidden; }
+.p-sec-body.collapsed { display: none; }
+
+.p-sec-stats { display: flex; gap: 15px; padding: 10px 15px; font-size: 11px; color: #94a3b8; font-weight: bold; }
+.p-sec-stats span { display: flex; align-items: center; gap: 4px; }
+
+.p-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(35px, 1fr)); gap: 10px; padding: 0 15px 15px 15px; }
+.qbtn { aspect-ratio: 1; border-radius: 50%; border: 1px solid #475569; background: transparent; color: #cbd5e1; font-weight: 600; font-size: 13px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; padding: 0; }
+
+.qbtn.current { border: 2px solid #fff; color: #fff; transform: scale(1.1); box-shadow: 0 0 10px rgba(255,255,255,0.2); }
+.qbtn.attempted { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+.qbtn.unattempted { background: #64748b; border-color: #64748b; color: #fff; }
+.qbtn.unseen { background: transparent; border-color: #475569; color: #94a3b8; }
+.qbtn.review { background: transparent; border: 1px solid #ef4444; color: #fff; position: relative; overflow: hidden; }
+.qbtn.review::before { content: '★'; position: absolute; color: #ef4444; font-size: 12px; top: -2px; right: -2px; }
+
+.qbtn.p-correct { background: #10b981; border-color: #10b981; color: #fff; }
+.qbtn.p-wrong { background: #ef4444; border-color: #ef4444; color: #fff; }
+.qbtn.p-skip { background: transparent; border-color: #475569; color: #64748b; }
+
 .modal-header { padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 18px; color: var(--primary); background: var(--primary-light); }
 
-.palette-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px 20px; background: var(--bg-body); border-bottom: 1px solid var(--border-color); font-size: 12px; font-weight: 600; color: var(--text-main); }
-.stat-box { display: flex; align-items: center; gap: 6px; }
-.stat-dot { width: 12px; height: 12px; border-radius: 50%; }
-.dot-ans { background: var(--success); }
-.dot-unans { background: var(--bg-card); border: 2px solid var(--border-color); }
-.dot-rev { background: var(--warning); }
-.dot-skip { background: var(--text-muted); opacity: 0.5; }
-
-.p-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; padding: 20px; overflow-y: auto; flex: 1; align-content: start; }
-.qbtn { aspect-ratio: 1; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-body); font-weight: 700; font-size: 13px; cursor: pointer; color: var(--text-main); transition: 0.2s; }
-.qbtn.current { border: 2px solid var(--primary); background: #fff; color: var(--primary); transform: scale(1.1); box-shadow: 0 4px 10px rgba(99,102,241,0.2); }
-.qbtn.answered { background: var(--success); color: #fff; border: none; }
-.qbtn.review { background: var(--warning); color: #fff; border: none; }
-.qbtn.p-correct { background: var(--success); color: #fff; border-color: var(--success); }
-.qbtn.p-wrong { background: var(--danger); color: #fff; border-color: var(--danger); }
-.qbtn.p-skip { background: var(--text-muted); color: #fff; border-color: var(--text-muted); opacity: 0.5; }
+/* Premium Scrollbar for Desktop (Dark Palette) */
+.palette-sections-container::-webkit-scrollbar { width: 6px; }
+.palette-sections-container::-webkit-scrollbar-track { background: transparent; }
+.palette-sections-container::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+.palette-sections-container::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1500; display: none; backdrop-filter: blur(5px); justify-content: center; align-items: center; padding: 15px; }
 .modal-card { background: var(--bg-card); width: 100%; max-width: 800px; max-height: 90vh; border-radius: 24px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.4); border: 1px solid var(--glass-border); }
@@ -523,18 +551,26 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 </div>
 
 <div id="palettePanel">
-    <div class="modal-header">
-        <span>Question Palette</span>
-        <button onclick="togglePalette()" style="border:none; background:none; font-size:24px; color:var(--primary); cursor:pointer;">&times;</button>
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:15px; background:#1a1b1e; border-bottom:1px solid #2d3748;">
+        <div style="display:flex; align-items:center; gap:10px; color:#94a3b8; font-size:14px; cursor:pointer;" onclick="document.getElementById('instructionScreen').style.display='flex'">
+            <span style="border: 1px solid #94a3b8; border-radius: 50%; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px;">i</span> View Instructions
+        </div>
+        <button onclick="togglePalette()" style="border:none; background:none; font-size:28px; color:#fff; cursor:pointer; line-height:1;">&times;</button>
     </div>
-    <div class="palette-stats" id="paletteStatsBox">
-        <div class="stat-box"><div class="stat-dot dot-ans"></div> <span id="c-ans">0</span> Answered</div>
-        <div class="stat-box"><div class="stat-dot dot-unans"></div> <span id="c-unans">0</span> Not Answered</div>
-        <div class="stat-box"><div class="stat-dot dot-rev"></div> <span id="c-rev">0</span> Review</div>
+    <div class="palette-tabs">
+        <div class="p-tab active">Grid View</div>
+        <div class="p-tab" onclick="showToast('List View coming soon!','info')">List View</div>
     </div>
-    <div class="p-grid" id="paletteGrid"></div>
-    <div style="padding:20px; border-top:1px solid var(--border-color); background:var(--bg-body);">
-        <button id="mainSubmitBtn" onclick="submitTestDialog()" class="btn-primary" style="background:var(--danger); box-shadow:0 4px 15px rgba(239, 68, 68, 0.4);">SUBMIT EXAM</button>
+    <div class="palette-legend" id="paletteStatsBox">
+        <div class="p-leg-item"><div class="p-dot review">★</div> Marked for Review</div>
+        <div class="p-leg-item"><div class="p-dot unattempted"></div> Unattempted</div>
+        <div class="p-leg-item"><div class="p-dot unseen"></div> Unseen</div>
+        <div class="p-leg-item"><div class="p-dot attempted"></div> Attempted</div>
+    </div>
+    <div class="palette-sections-container" id="paletteGrid">
+        </div>
+    <div style="padding:15px; border-top:1px solid #2d3748; background:#1a1b1e;">
+        <button id="mainSubmitBtn" onclick="submitTestDialog()" class="btn-primary" style="background:#5e7b95; box-shadow:none; margin: 0; width: 100%; color: #fff; font-weight: bold; border-radius: 8px;">SUBMIT TEST</button>
     </div>
 </div>
 
@@ -667,7 +703,6 @@ const TEST_MODE = urlParams.get('mode') || "exam";
 const POSITIVE_MARK = parseFloat(urlParams.get('pm')) || 1.0;
 const NEGATIVE_MARK = parseFloat(urlParams.get('nm')) || 0.25;
 const SECTION_LOCK = urlParams.get('lock') === 'false' ? false : true;
-const SECTION_TIME_MINS = parseInt(urlParams.get('secTime')) || 0; // 🔥 NAYA: Section time fetch
 
 const STORAGE_KEY = "dsssb_cbt_rank_v2";
 const TELEGRAM_BOT_TOKEN="8486464606:AAFT_Bd0P2HYqKNPjCm3s7TGgfM4HWmOYvs";
@@ -676,7 +711,7 @@ const TELEGRAM_CHAT_ID="@dsssbcbtresult";
 let DYNAMIC_CUTOFF = 0; 
 let QUESTIONS = [];
 let SECTION_MAP = [];
-let currentState = { idx: 0, answers: [], review: [], time: TOTAL_TIME_MINS * 60, secIdx: 0, submitted: false, name: "", timePerQ: [], secTimeLeft: 0 }; // 🔥 Added secTimeLeft
+let currentState = { idx: 0, answers: [], review: [], time: TOTAL_TIME_MINS * 60, secIdx: 0, submitted: false, name: "", timePerQ: [] };
 let timerInt;
 let secIndices = [];
 let fontOffset = 0;
@@ -958,10 +993,9 @@ function startGame(isResuming) {
   document.getElementById('mainArea').style.display = 'block';
   document.getElementById('examFooter').style.display = 'flex';
   
- if(!isResuming) {
+  if(!isResuming) {
       currentState.idx = secIndices[0] || 0;
       currentState.secIdx = 0;
-      currentState.secTimeLeft = SECTION_TIME_MINS * 60; // 🔥 Set initial section timer
   }
   
   if(TEST_MODE === 'solution' || TEST_MODE === 'quiz') {
@@ -1310,20 +1344,13 @@ function next() {
 
       const nextQ = QUESTIONS[currentState.idx + 1]; 
       const currQ = QUESTIONS[currentState.idx];
-     if((nextQ.section || "General") !== (currQ.section || "General")) {
+      if((nextQ.section || "General") !== (currQ.section || "General")) {
           if (SECTION_LOCK) {
-              // 🔥 NAYA: Agar strict section timer hai, toh manual jump rok do
-              if (SECTION_TIME_MINS > 0 && currentState.secTimeLeft > 0) {
-                  showToast(`You must wait until section time is over!`, "warning");
-                  return; // Movement block kardi
-              }
-
               showConfirmDialog(
                   "Submit Section?", 
                   `Are you sure you want to finish the ${currQ.section || "General"} section? You cannot modify answers in this section later.`,
                   () => {
                       currentState.secIdx++; 
-                      currentState.secTimeLeft = SECTION_TIME_MINS * 60; // Reset for next section (agar zaroorat ho)
                       renderSectionTabs(); 
                       loadQuestion(currentState.idx + 1);
                   }
@@ -1377,12 +1404,9 @@ function updateNavButtons() {
   const revBtn = document.getElementById('reviewNextBtn');
   const prevBtn = document.getElementById('prevBtn');
   
-  // 🔥 Reset button styling (in case it was locked by the timer)
-  btn.style.pointerEvents = 'auto';
-  btn.style.opacity = '1';
-
   btn.style.display = "flex";
   prevBtn.style.display = "flex";
+  
   if (currentState.submitted || TEST_MODE === 'quiz') {
       revBtn.style.display = "none";
       if(currentState.idx === QUESTIONS.length - 1) {
@@ -1416,50 +1440,10 @@ function startTimer() {
 
       if(currentState.time <= 0) { submitTest(); return; }
       currentState.time--;
-      
-      let displayMins = Math.floor(currentState.time / 60);
-      let displaySecs = currentState.time % 60;
-      let el = document.getElementById('timer');
-
-      // 🔥 SECTION TIMER LOGIC 🔥
-      if (SECTION_LOCK && SECTION_TIME_MINS > 0) {
-          if (currentState.secTimeLeft > 0) {
-              currentState.secTimeLeft--;
-              let sMins = Math.floor(currentState.secTimeLeft / 60);
-              let sSecs = currentState.secTimeLeft % 60;
-              
-              // Top badge me section time dikhana
-              el.innerHTML = `<span style="color:#fcd34d; font-size:10px;">Sec Time</span><br>${sMins.toString().padStart(2,'0')}:${sSecs.toString().padStart(2,'0')}`;
-              
-              // Agar ye section ka aakhri question hai, to button disable karke timer dikhao
-              let nextBtn = document.getElementById('nextBtn');
-              let isLastQInSection = (currentState.secIdx === SECTION_MAP.length - 1) 
-                  ? (currentState.idx === QUESTIONS.length - 1) 
-                  : (currentState.idx === secIndices[currentState.secIdx + 1] - 1);
-              
-              if (isLastQInSection) {
-                  nextBtn.innerText = `Wait (${sMins}:${sSecs.toString().padStart(2,'0')})`;
-                  nextBtn.style.opacity = '0.5';
-                  nextBtn.style.pointerEvents = 'none';
-              }
-          } else {
-              // Time khatam! Auto-move to next section
-              let nextSecIdx = currentState.secIdx + 1;
-              if (nextSecIdx < SECTION_MAP.length) {
-                  showToast("Time Up! Moving to Next Section...", "warning");
-                  currentState.secIdx = nextSecIdx;
-                  currentState.secTimeLeft = SECTION_TIME_MINS * 60; // Agle section ka time reset
-                  renderSectionTabs();
-                  loadQuestion(secIndices[nextSecIdx]);
-              } else {
-                  submitTest(); // Aakhri section tha toh submit kardo
-                  return;
-              }
-          }
-      } else {
-          el.innerText = `${displayMins.toString().padStart(2,'0')}:${displaySecs.toString().padStart(2,'0')}`;
-      }
-
+      const m = Math.floor(currentState.time / 60).toString().padStart(2,'0');
+      const s = (currentState.time % 60).toString().padStart(2,'0');
+      const el = document.getElementById('timer');
+      el.innerText = `${m}:${s}`;
       if(currentState.time < 300) el.classList.add('low');
   }, 1000);
 }
@@ -1477,64 +1461,83 @@ function togglePalette() {
 }
 
 function renderPalette() {
-  const grid = document.getElementById('paletteGrid'); grid.innerHTML = "";
-  let stats = { ans: 0, unans: 0, rev: 0 }; 
-  
-  QUESTIONS.forEach((q, i) => {
-      const myAns = currentState.answers[i]; 
-      let cls = "qbtn";
-      
-      let startIdx = secIndices[currentState.secIdx];
-      let endIdx = (currentState.secIdx === SECTION_MAP.length - 1) ? QUESTIONS.length : secIndices[currentState.secIdx + 1];
-      
-      if (!currentState.submitted && TEST_MODE !== 'quiz' && i >= startIdx && i < endIdx) {
-          if(myAns !== null) stats.ans++;
-          else stats.unans++;
-          if(currentState.review[i]) stats.rev++;
-      }
+    const container = document.getElementById('paletteGrid'); 
+    container.innerHTML = "";
+    
+    SECTION_MAP.forEach((sec, secIndex) => {
+        let startIdx = secIndices[secIndex];
+        let endIdx = (secIndex === SECTION_MAP.length - 1) ? QUESTIONS.length : secIndices[secIndex + 1];
+        
+        let secStats = { ans: 0, unans: 0, rev: 0, unseen: 0 };
+        let gridHtml = `<div class="p-grid">`;
+        
+        for(let i = startIdx; i < endIdx; i++) {
+            const myAns = currentState.answers[i]; 
+            let cls = "qbtn";
+            
+            let isQuizAnswered = (TEST_MODE === 'quiz' && myAns !== null);
+            let isAccessible = currentState.submitted || TEST_MODE === 'quiz';
+            
+            if (!currentState.submitted && TEST_MODE !== 'quiz') {
+                if (!SECTION_LOCK) isAccessible = true;
+                else if (i >= secIndices[currentState.secIdx] && i < ((currentState.secIdx === SECTION_MAP.length - 1) ? QUESTIONS.length : secIndices[currentState.secIdx + 1])) { 
+                    isAccessible = true; 
+                }
+            }
 
-      let isQuizAnswered = (TEST_MODE === 'quiz' && myAns !== null);
+            // Determine precise state class for dark theme mapping
+            let stateCls = "unseen";
+            if (currentState.submitted || isQuizAnswered) {
+                const correctIdx = parseInt(QUESTIONS[i].ans) - 1;
+                if (myAns === correctIdx) stateCls = "p-correct";
+                else if (myAns !== null && myAns !== correctIdx) stateCls = "p-wrong";
+                else stateCls = "p-skip";
+                if(currentState.review[i]) stateCls += " review"; 
+            } else {
+                if(myAns !== null) { stateCls = "attempted"; secStats.ans++; }
+                else if(currentState.review[i]) { stateCls = "review"; secStats.rev++; }
+                else if(isAccessible && i <= currentState.idx && !(SECTION_LOCK && secIndex > currentState.secIdx)) { stateCls = "unattempted"; secStats.unans++; }
+                else { stateCls = "unseen"; secStats.unseen++; }
+                
+                if(i === currentState.idx) stateCls += " current"; 
+            }
 
-      if (currentState.submitted || isQuizAnswered) {
-          const correctIdx = parseInt(q.ans) - 1;
-          if (myAns === correctIdx) cls += " p-correct";
-          else if (myAns !== null && myAns !== correctIdx) cls += " p-wrong";
-          else cls += " p-skip";
-          if(currentState.review[i]) cls += " review"; 
-      } else {
-          if(i === currentState.idx) cls += " current"; 
-          else if(myAns !== null) cls += " answered"; 
-          else if(currentState.review[i]) cls += " review";
-      }
-      
-      let isAccessible = currentState.submitted || TEST_MODE === 'quiz';
-      if (!currentState.submitted && TEST_MODE !== 'quiz') {
-          if (!SECTION_LOCK) {
-              isAccessible = true;
-          } else if (i >= startIdx && i < endIdx) { 
-              isAccessible = true; 
-          }
-      }
-      
-      const btn = document.createElement('button'); btn.className = cls; btn.innerText = i + 1;
-      
-      if(isAccessible) { 
-          btn.onclick = () => { loadQuestion(i); if(window.innerWidth < 1024) togglePalette(); }; 
-          btn.style.cursor = "pointer";
-      } else {
-          btn.style.opacity = "0.2";
-          btn.style.cursor = "not-allowed";
-          btn.style.background = "var(--border-color)";
-          btn.style.color = "var(--text-muted)";
-      }
-      grid.appendChild(btn);
-  });
+            cls += " " + stateCls;
+            
+            let styleStr = "";
+            if(!isAccessible) {
+                styleStr = 'opacity: 0.3; cursor: not-allowed; border-color: #334155;';
+            } else {
+                styleStr = 'cursor: pointer;';
+            }
 
-  if (!currentState.submitted && TEST_MODE !== 'solution' && TEST_MODE !== 'quiz') {
-      document.getElementById('c-ans').innerText = stats.ans;
-      document.getElementById('c-unans').innerText = stats.unans;
-      document.getElementById('c-rev').innerText = stats.rev;
-  }
+            gridHtml += `<button class="${cls}" style="${styleStr}" ${isAccessible ? `onclick="loadQuestion(${i}); if(window.innerWidth < 1024) togglePalette();"` : `disabled`}>${i + 1}</button>`;
+        }
+        gridHtml += `</div>`;
+        
+        // Section Accordion Logic - Khali current section open rahega
+        let isCollapsed = (secIndex !== currentState.secIdx); 
+        // Submit hone par sare sections open rakhte hain
+        if(currentState.submitted || TEST_MODE === 'quiz') isCollapsed = false;
+
+        let secHtml = `
+        <div class="p-sec-wrapper">
+            <div class="p-sec-header ${isCollapsed ? 'collapsed' : ''}" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">
+                ${sec}
+            </div>
+            <div class="p-sec-body ${isCollapsed ? 'collapsed' : ''}">
+                <div class="p-sec-stats">
+                    <span style="color:#ef4444">★ ${secStats.rev}</span>
+                    <span style="color:#3b82f6">● ${secStats.ans}</span>
+                    <span style="color:#64748b">● ${secStats.unans}</span>
+                    <span style="color:#64748b; font-size:10px;">○ ${secStats.unseen}</span>
+                </div>
+                ${gridHtml}
+            </div>
+        </div>
+        `;
+        container.insertAdjacentHTML('beforeend', secHtml);
+    });
 }
 
 function clearResponse() { currentState.answers[currentState.idx] = null; currentState.review[currentState.idx] = false; loadQuestion(currentState.idx); }
