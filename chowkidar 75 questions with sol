@@ -1,0 +1,1577 @@
+[
+    {
+        "section": "English",
+        "topic": "Sentence Rearrangement",
+        "level": "Moderate",
+        "q_en": "Parts of a sentence are given below. The first part (1) is in the correct order, while the other parts of the sentence are jumbled up. Arrange the parts in the correct order to form a meaningful and coherent sentence.<br> <br>1. Forages discounted the future<br>(O) possessions with difficulty<br>(P) and could only<br>(Q) preserve food or accumulate<br>(R) because they lived<br>(S) from hand to mouth<span style=\"color:#ffffff;\">943</span>",
+        "q_hi": "Parts of a sentence are given below. The first part (1) is in the correct order, while the other parts of the sentence are jumbled up. Arrange the parts in the correct order to form a meaningful and coherent sentence.<br> <br>1. Forages discounted the future<br>(O) possessions with difficulty<br>(P) and could only<br>(Q) preserve food or accumulate<br>(R) because they lived<br>(S) from hand to mouth",
+        "op_en": [
+            "RSPQO",
+            "RPQOS",
+            "PRQOS",
+            "PSRQO"
+        ],
+        "op_hi": [
+            "RSPQO",
+            "RPQOS",
+            "PRQOS",
+            "PSRQO"
+        ],
+        "ans": "1",
+        "solution": "<b>📌 Concept:</b><br>Jumbled sentences में logical connectors और subject-verb-object का तालमेल देखना होता है। 'Because' कारण बताता है और 'Could only' के बाद verb की base form आती है।<br><br><b>🔍 Word Insight:</b><br>- <b>Hand to mouth:</b> सिर-पैर की लड़ाई (सिर्फ गुजारा कर पाना)।<br>- <b>Accumulate:</b> इकट्ठा करना।<br><br><b>🧠 Explanation (Option-wise Breakdown):</b><br>1. Option A (RSPQO) → '...the future (1) because they lived (R) from hand to mouth (S) and could only (P) preserve food or accumulate (Q) possessions with difficulty (O).' यह पूरी तरह से logical अर्थ देता है।<br>2. B, C, D → इनका पदक्रम (Sequence) अर्थहीन है।<br><br><b>⚡ Smart Exam Trick:</b><br>'Lived' के बाद अक्सर 'from hand to mouth' का मुहावरा आता है। इसलिए R के बाद S आना तय है।<br><br><b>🎯 Memory Hack:</b><br>Reason (R) $\\rightarrow$ Condition (S) $\\rightarrow$ Consequence (P-Q-O).<br><br><b>🚫 Common Mistake:</b><br>'Possessions' को 'Accumulate' से अलग कर देना।"
+    },
+    {
+        "section": "English",
+        "topic": "Idioms & Phrases",
+        "level": "Easy",
+        "q_en": "Select the most appropriate option to fill in the blank.<br><br>Heba is a ________, with immense potential waiting to be polished.",
+        "q_hi": "Select the most appropriate option to fill in the blank.<br><br>Heba is a ________, with immense potential waiting to be polished.",
+        "op_en": [
+            "pearl in the sea",
+            "emerald in the forest",
+            "diamond in the rough",
+            "ruby in the casket"
+        ],
+        "op_hi": [
+            "pearl in the sea",
+            "emerald in the forest",
+            "diamond in the rough",
+            "ruby in the casket"
+        ],
+        "ans": "3",
+        "solution": "<b>📌 Concept:</b><br>यह प्रश्न Idiom आधारित है। 'Diamond in the rough' का अर्थ है - ऐसा व्यक्ति जिसमें टैलेंट तो बहुत है पर उसे अभी निखारने (Polish) की जरूरत है।<br><br><b>🔍 Word Insight:</b><br>- <b>Rough:</b> बिना तराशा हुआ।<br>- <b>Polished:</b> निखरा हुआ।<br><br><b>🧠 Explanation (Option-wise Breakdown):</b><br>1. Option A, B, D → ये कोई standard idioms नहीं हैं जो potential (क्षमता) की बात करें।<br>2. Option C → सही। 'Polished' शब्द इस मुहावरे के साथ perfect match है।<br><br><b>⚡ Smart Exam Trick:</b><br>वाक्य में 'Polished' कीवर्ड है। हीरा (Diamond) ही तराशा या पॉलिश किया जाता है।<br><br><b>🎯 Memory Hack:</b><br>बिना तराशा हीरा = छुपा हुआ टैलेंट।<br><br><b>🚫 Common Mistake:</b><br>दूसरे विकल्पों को सुंदर समझकर चुन लेना, जबकि idiom का अर्थ अलग होता है।"
+    },
+    {
+        "section": "English",
+        "topic": "Adjectives",
+        "level": "Easy",
+        "q_en": "Select the most appropriate option to fill in the blank.<br><br>Granny narrated an ___________ story last night.",
+        "q_hi": "Select the most appropriate option to fill in the blank.<br><br>Granny narrated an ___________ story last night.",
+        "op_en": [
+            "impatient",
+            "obvious",
+            "excellent",
+            "able"
+        ],
+        "op_hi": [
+            "impatient",
+            "obvious",
+            "excellent",
+            "able"
+        ],
+        "ans": "3",
+        "solution": "<b>📌 Concept:</b><br>किसी संज्ञा (Story) की विशेषता बताने के लिए सही विशेषण (Adjective) का चुनाव करना।<br><br><b>🔍 Word Insight:</b><br>- <b>Excellent:</b> अति उत्तम (जो कहानी के लिए सही है)।<br>- <b>Impatient:</b> बेताब (व्यक्ति के लिए आता है)।<br><br><b>🧠 Explanation (Option-wise Breakdown):</b><br>1. impatient → कहानी बेताब नहीं हो सकती।<br>2. obvious → स्पष्ट (story के लिए common context नहीं है)।<br>3. excellent → सही। कहानी बहुत अच्छी (excellent) हो सकती है।<br>4. able → सक्षम (story के लिए गलत प्रयोग)।<br><br><b>⚡ Smart Exam Trick:</b><br>Blank के पहले 'an' लगा है, तो शब्द का उच्चारण स्वर (Vowel) से होना चाहिए। यहाँ चारों विकल्प स्वर से शुरू हो रहे हैं, इसलिए 'अर्थ' (meaning) मुख्य है।"
+    },
+    {
+        "section": "English",
+        "topic": "Adjectives",
+        "level": "Easy",
+        "q_en": "Select the most appropriate option to fill in the blank.<br><br>She wore a _____ dress to the party, which caught everyone's attention.<br>",
+        "q_hi": "Select the most appropriate option to fill in the blank.<br><br>She wore a _____ dress to the party, which caught everyone's attention.<br>",
+        "op_en": [
+            "faded",
+            "vibrant",
+            "ordinary",
+            "dull"
+        ],
+        "op_hi": [
+            "faded",
+            "vibrant",
+            "ordinary",
+            "dull"
+        ],
+        "ans": "2",
+        "solution": "<b>📌 Concept:</b><br>Contextual vocabulary। अगर किसी ड्रेस ने सबका ध्यान खींचा है, तो वह ड्रेस आकर्षक या चमकदार होनी चाहिए।<br><br><b>🔍 Word Insight:</b><br>- <b>Vibrant:</b> ऊर्जावान या बहुत ही चमकदार रंग वाला।<br>- <b>Faded/Dull:</b> फीका या उबाऊ।<br><br><b>🧠 Explanation (Option-wise Breakdown):</b><br>1. faded → फीकी ड्रेस ध्यान नहीं खींचती।<br>2. vibrant → सही। चमकदार ड्रेस से ही सबका ध्यान जाता है।<br>3. ordinary → साधारण।<br>4. dull → मंद।<br><br><b>⚡ Smart Exam Trick:</b><br>'Caught attention' का मतलब है कुछ हटके (positive) होना।"
+    },
+    {
+        "section": "English",
+        "topic": "Prepositions/Phrasal Use",
+        "level": "Easy",
+        "q_en": "Select the most appropriate option to fill in the blank.<br><br>This is Mr. Banerjee who lives _______ door.",
+        "q_hi": "Select the most appropriate option to fill in the blank.<br><br>This is Mr. Banerjee who lives _______ door.",
+        "op_en": [
+            "next",
+            "only",
+            "wooden",
+            "main"
+        ],
+        "op_hi": [
+            "next",
+            "only",
+            "wooden",
+            "main"
+        ],
+        "ans": "1",
+        "solution": "<b>📌 Concept:</b><br>'Next door' एक fixed phrase है जिसका मतलब है 'पड़ोस में'।<br><br><b>🔍 Word Insight:</b><br>- <b>Next door:</b> The adjacent house or room.<br><br><b>🧠 Explanation (Option-wise Breakdown):</b><br>1. next → सही। 'Next door' पड़ोसी के लिए इस्तेमाल होता है।<br>2. only/wooden/main → ये यहाँ व्याकरणिक रूप से फिट नहीं बैठते।<br><br><b>🎯 Memory Hack:</b><br>पड़ोसी $=$ Next door person."
+    },
+    {
+        "section": "English",
+        "topic": "Idioms & Phrases",
+        "level": "Easy",
+        "q_en": "Select the most appropriate meaning of the given idiom.<br><br>To let bygones be bygones",
+        "q_hi": "Select the most appropriate meaning of the given idiom.<br><br>To let bygones be bygones",
+        "op_en": [
+            "To be very angry",
+            "To be very lazy",
+            "To forget about past quarrels",
+            "To keep something secret"
+        ],
+        "op_hi": [
+            "To be very angry",
+            "To be very lazy",
+            "To forget about past quarrels",
+            "To keep something secret"
+        ],
+        "ans": "3",
+        "solution": "<b>📌 Concept:</b><br>'Let bygones be bygones' का अर्थ है पुरानी बातों को भूल जाना, खासकर लड़ाई-झगड़ों को। (बीती ताहि बिसार दे)।<br><br><b>🔍 Word Insight:</b><br>- <b>Bygones:</b> जो बीत गया (Past events).<br><br><b>🧠 Explanation (Option-wise Breakdown):</b><br>1. Option C → सही। पुरानी कड़वाहट को खत्म करना ही इसका अर्थ है।<br><br><b>⚡ Smart Exam Trick:</b><br>'Bygones' शब्द में ही 'Gone' (गया हुआ) छिपा है। यानी जो गया उसे जाने दो।"
+    },
+    {
+        "section": "English",
+        "topic": "Synonyms",
+        "level": "Moderate",
+        "q_en": "Select the most appropriate synonym of the given word.<br><br>Generous",
+        "q_hi": "Select the most appropriate synonym of the given word.<br><br>Generous",
+        "op_en": [
+            "Clever",
+            "Altruistic",
+            "Greedy",
+            "Selfish"
+        ],
+        "op_hi": [
+            "Clever",
+            "Altruistic",
+            "Greedy",
+            "Selfish"
+        ],
+        "ans": "2",
+        "solution": "<b>📌 Concept:</b><br>Generous का अर्थ है 'उदार' या 'दानवीर'। ऐसा व्यक्ति जो दूसरों की मदद करे।<br><br><b>🔍 Word Insight:</b><br>- <b>Altruistic:</b> परोपकारी (Selfless concern for others).<br>- <b>Greedy/Selfish:</b> ये इसके विलोम (Antonyms) हैं।<br><br><b>🧠 Explanation (Option-wise Breakdown):</b><br>1. Clever → चतुर।<br>2. Altruistic → सही। यह उदारता का सबसे सटीक पर्यायवाची है।<br>3. Greedy/Selfish → लालची/स्वार्थी।"
+    },
+    {
+        "section": "English",
+        "topic": "One Word Substitution",
+        "level": "Easy",
+        "q_en": "Select the option that can be used as a one-word substitute for the underlined group of words.<br><br>Tanya, who travels from country to country for work and leisure, is known among her friends as (a) <u>someone who travels widely around the world</u>.",
+        "q_hi": "Select the option that can be used as a one-word substitute for the underlined group of words.<br><br>Tanya, who travels from country to country for work and leisure, is known among her friends as (a) <u>someone who travels widely around the world</u>.",
+        "op_en": [
+            "globetrotter",
+            "refugee",
+            "nomad",
+            "migrant"
+        ],
+        "op_hi": [
+            "globetrotter",
+            "refugee",
+            "nomad",
+            "migrant"
+        ],
+        "ans": "1",
+        "solution": "<b>📌 Concept:</b><br>पूरी दुनिया की यात्रा करने वाले व्यक्ति के लिए एक शब्द।<br><br><b>🔍 Word Insight:</b><br>- <b>Globetrotter:</b> दुनिया घूमने वाला।<br>- <b>Nomad:</b> खानाबदोश (जो एक जगह न टिके)।<br><br><b>🧠 Explanation (Option-wise Breakdown):</b><br>1. globetrotter → सही। Globe (दुनिया) + Trotter (घूमने वाला)।<br>2. refugee → शरणार्थी।<br>3. nomad → जो चरागाह या खाने की तलाश में घूमे।<br>4. migrant → प्रवासी।"
+    },
+    {
+        "section": "English",
+        "topic": "Degrees of Comparison",
+        "level": "Moderate",
+        "q_en": "Select the most appropriate option to fill in the blank.<br><br>The Bilimbi, a Southeast Asian fruit, is the ____________ of all naturally occurring fruits in the world.",
+        "q_hi": "Select the most appropriate option to fill in the blank.<br><br>The Bilimbi, a Southeast Asian fruit, is the ____________ of all naturally occurring fruits in the world.",
+        "op_en": [
+            "sour",
+            "sourest",
+            "sourer",
+            "sure"
+        ],
+        "op_hi": [
+            "sour",
+            "sourest",
+            "sourer",
+            "sure"
+        ],
+        "ans": "2",
+        "solution": "<b>📌 Concept:</b><br>जब किसी एक की तुलना दुनिया की 'सभी' (all) चीजों से हो, तो Superlative Degree का प्रयोग होता है।<br><br><b>🧠 Explanation (Option-wise Breakdown):</b><br>1. sour → Positive degree (एक के लिए)।<br>2. sourest → सही। 'The' के बाद superlative degree आती है और तुलना 'all fruits' से है।<br>3. sourer → Comparative degree (दो के लिए)।<br><br><b>⚡ Smart Exam Trick:</b><br>वाक्य में 'The' आर्टिकल Superlative degree (ending with -est) का पक्का संकेत है।"
+    },
+    {
+        "section": "English",
+        "topic": "Synonyms",
+        "level": "Moderate",
+        "q_en": "Select the most appropriate synonym of the highlighted word in the given sentence.<br><br>The hikers found themselves in a <strong>precarious</strong> situation when they lost the trail in the wilderness.",
+        "q_hi": "Select the most appropriate synonym of the highlighted word in the given sentence.<br><br>The hikers found themselves in a <strong>precarious</strong> situation when they lost the trail in the wilderness.",
+        "op_en": [
+            "Exciting",
+            "Secure",
+            "Enthralling",
+            "Dangerous"
+        ],
+        "op_hi": [
+            "Exciting",
+            "Secure",
+            "Enthralling",
+            "Dangerous"
+        ],
+        "ans": "4",
+        "solution": "<b>📌 Concept:</b><br>Precarious का अर्थ है 'अनिश्चित' या 'खतरनाक' (Not securely held or out of control).<br><br><b>🔍 Word Insight:</b><br>- <b>Precarious:</b> संकटपूर्ण/जोखिम भरा।<br>- <b>Secure:</b> सुरक्षित (Antonym).<br><br><b>🧠 Explanation (Option-wise Breakdown):</b><br>1. Exciting → रोमांचक।<br>2. Secure → सुरक्षित।<br>3. Dangerous → सही। जंगल में रास्ता भटकना एक खतरनाक स्थिति है।"
+    },
+    {
+        "section": "English",
+        "topic": "Articles",
+        "level": "Easy",
+        "q_en": "Select the most appropriate article to fill in the blank. If no article is required, select 'No article required'.<br><br>They adopted ___ puppy from the animal shelter.",
+        "q_hi": "Select the most appropriate article to fill in the blank. If no article is required, select 'No article required'.<br><br>They adopted ___ puppy from the animal shelter.",
+        "op_en": [
+            "a",
+            "an",
+            "the",
+            "No article required"
+        ],
+        "op_hi": [
+            "a",
+            "an",
+            "the",
+            "No article required"
+        ],
+        "ans": "1",
+        "solution": "<b>📌 Concept:</b><br>Singular countable noun जिसका पहली बार परिचय दिया जा रहा हो, उसके साथ 'a/an' लगता है।<br><br><b>🧠 Explanation:</b><br>'Puppy' व्यंजन (Consonant) 'प' ध्वनि से शुरू हो रहा है, इसलिए 'a' लगेगा। 'The' तब लगता जब हम किसी खास पहले से पता पपी की बात करते।"
+    },
+    {
+        "section": "English",
+        "topic": "One Word Substitution",
+        "level": "Moderate",
+        "q_en": "Select the most appropriate one-word substitute for the underlined segment in the given sentence.<br><br>She is <u>someone who studies the origin of words</u>.",
+        "q_hi": "Select the most appropriate one-word substitute for the underlined segment in the given sentence.<br><br>She is <u>someone who studies the origin of words</u>.",
+        "op_en": [
+            "an etymologist",
+            "an anthropologist",
+            "a biologist",
+            "a linguist"
+        ],
+        "op_hi": [
+            "an etymologist",
+            "an anthropologist",
+            "a biologist",
+            "a linguist"
+        ],
+        "ans": "1",
+        "solution": "<b>📌 Concept:</b><br>शब्दों की उत्पत्ति (Etymology) का अध्ययन करने वाला वैज्ञानिक।<br><br><b>🔍 Word Insight:</b><br>- <b>Etymologist:</b> शब्द व्युत्पत्ति शास्त्री।<br>- <b>Linguist:</b> भाषाविद (जो कई भाषाएं जानता हो)।<br><br><b>🧠 Explanation (Option-wise Breakdown):</b><br>1. etymologist → सही। 'Etymon' का अर्थ है मूल शब्द।<br>2. anthropologist → मानव विज्ञानी।<br>3. linguist → भाषा का जानकार, पर उत्पत्ति का अध्ययन etymologist ही करता है।"
+    },
+    {
+        "section": "English",
+        "topic": "Sentence Rearrangement",
+        "level": "Moderate",
+        "q_en": "Parts of a sentence are given below in jumbled order. Arrange the parts in the correct order to form a meaningful and coherent sentence.<br><br>(P) Sabriye says the focus is<br>(Q) among the changemakers<br>(R) elaborating on the programme outline<br>(S) on inculcating a spirit of encouragement<span style=\"color:#ffffff;\">927</span>",
+        "q_hi": "Parts of a sentence are given below in jumbled order. Arrange the parts in the correct order to form a meaningful and coherent sentence.<br><br>(P) Sabriye says the focus is<br>(Q) among the changemakers<br>(R) elaborating on the programme outline<br>(S) on inculcating a spirit of encouragement",
+        "op_en": [
+            "RPSQ",
+            "RSPQ",
+            "RQSP",
+            "PRSQ"
+        ],
+        "op_hi": [
+            "RPSQ",
+            "RSPQ",
+            "RQSP",
+            "PRSQ"
+        ],
+        "ans": "1",
+        "solution": "<b>📌 Concept:</b><br>Participle clause (R) से शुरू होकर मुख्य वाक्य (P) तक जाना logical है।<br><br><b>🧠 Explanation:</b><br>R (elaborating...) $\\rightarrow$ P (Sabriye says the focus is) $\\rightarrow$ S (on inculcating...) $\\rightarrow$ Q (among the changemakers).<br>पूरा वाक्य: 'प्रोग्राम की रूपरेखा बताते हुए, सबरीये कहती हैं कि ध्यान बदलाव लाने वालों के बीच प्रोत्साहन की भावना पैदा करने पर है।'<br><br><b>⚡ Smart Exam Trick:</b><br>'Focus is' (P) के बाद हमेशा 'on' (S) आता है। P-S जोड़ी सिर्फ विकल्प 1 में है।"
+    },
+    {
+        "section": "English1",
+        "topic": "Spellings",
+        "level": "Easy",
+        "q_en": "Select the correct spelling of the underlined word in the given sentence.<br><br>She gave an excellent <u>reccomendation</u> for the new employee.",
+        "q_hi": "Select the correct spelling of the underlined word in the given sentence.<br><br>She gave an excellent <u>reccomendation</u> for the new employee.",
+        "op_en": [
+            "riccomendation",
+            "recomendation",
+            "reccommendation",
+            "recommendation"
+        ],
+        "op_hi": [
+            "riccomendation",
+            "recomendation",
+            "reccommendation",
+            "recommendation"
+        ],
+        "ans": "4",
+        "solution": "<b>📌 Concept:</b><br>Spelling rule: 'Recommend' में single 'c' और double 'm' आता है।<br><br><b>🧠 Explanation:</b><br>सही स्पेलिंग **Recommendation** है। छात्र अक्सर इसमें double 'c' लगा देते हैं, जो गलत है।"
+    },
+    {
+        "section": "English1",
+        "topic": "Spellings",
+        "level": "Easy",
+        "q_en": "Select the most appropriate option that rectifies the highlighted incorrectly spelt word in the given sentence.<br><br>She handled the situation with<strong> inteligence</strong> and care.",
+        "q_hi": "Select the most appropriate option that rectifies the highlighted incorrectly spelt word in the given sentence.<br><br>She handled the situation with<strong> inteligence</strong> and care.",
+        "op_en": [
+            "intellligence",
+            "intelligence",
+            "intelligance",
+            "intelligense"
+        ],
+        "op_hi": [
+            "intellligence",
+            "intelligence",
+            "intelligance",
+            "intelligense"
+        ],
+        "ans": "2",
+        "solution": "<b>🧠 Explanation:</b><br>सही स्पेलिंग **Intelligence** (I-N-T-E-L-L-I-G-E-N-C-E) है। इसमें double 'l' और अंत में 'ce' आता है।"
+    },
+    {
+        "section": "English1",
+        "topic": "Reading Comprehension (Fact-based)",
+        "level": "Easy",
+        "q_en": "<b>Comprehension:</b><br>Read the given passage and answer the questions that follow.<br><br>William Thomson was professor of natural philosophy at Glasgow University for 53 years, making revolutionary contributions to physics, mathematics and engineering that still resonate today.<br>He is probably best known for his work on energy and the laws of thermodynamics, the science of heat and work, which are often hailed as the most unbreakable laws of nature. The British astrophysicist Arthur Eddington is reported to have declared in the 1920s that thermodynamics holds 'the supreme position among the laws of nature', adding: “If your theory is found to be against the second law of thermodynamics, I can give you no hope; there is nothing for it but to collapse in deepest humiliation.”<br>Thermodynamics still plays a central role in modern physics, underpinning research in information science, quantum mechanics, cosmology and even theories of life and consciousness. In fact, it is as much a cornerstone of modern physics as general relativity and quantum mechanics.<br>In which of the following fields did William Thomson NOT make revolutionary contributions during his tenure as a professor at Glasgow University?",
+        "q_hi": "<b>Comprehension:</b><br>Read the given passage and answer the questions that follow.<br><br>William Thomson was professor of natural philosophy at Glasgow University for 53 years, making revolutionary contributions to physics, mathematics and engineering that still resonate today.<br>He is probably best known for his work on energy and the laws of thermodynamics, the science of heat and work, which are often hailed as the most unbreakable laws of nature. The British astrophysicist Arthur Eddington is reported to have declared in the 1920s that thermodynamics holds 'the supreme position among the laws of nature', adding: “If your theory is found to be against the second law of thermodynamics, I can give you no hope; there is nothing for it but to collapse in deepest humiliation.”<br>Thermodynamics still plays a central role in modern physics, underpinning research in information science, quantum mechanics, cosmology and even theories of life and consciousness. In fact, it is as much a cornerstone of modern physics as general relativity and quantum mechanics.<br>In which of the following fields did William Thomson NOT make revolutionary contributions during his tenure as a professor at Glasgow University?",
+        "op_en": [
+            "Biotechnology",
+            "Engineering",
+            "Physics",
+            "Mathematics"
+        ],
+        "op_hi": [
+            "Biotechnology",
+            "Engineering",
+            "Physics",
+            "Mathematics"
+        ],
+        "ans": "1",
+        "solution": "<b>🧠 Explanation:</b><br>पैसेज की पहली लाइन में स्पष्ट लिखा है कि उन्होंने Physics, Mathematics और Engineering में योगदान दिया। Biotechnology का कोई जिक्र नहीं है।"
+    },
+    {
+        "section": "English1",
+        "topic": "Reading Comprehension (Detail)",
+        "level": "Moderate",
+        "q_en": "<b>Comprehension:</b><br>Read the given passage and answer the questions that follow.<br><br>William Thomson was professor of natural philosophy at Glasgow University for 53 years, making revolutionary contributions to physics, mathematics and engineering that still resonate today.<br>He is probably best known for his work on energy and the laws of thermodynamics, the science of heat and work, which are often hailed as the most unbreakable laws of nature. The British astrophysicist Arthur Eddington is reported to have declared in the 1920s that thermodynamics holds 'the supreme position among the laws of nature', adding: “If your theory is found to be against the second law of thermodynamics, I can give you no hope; there is nothing for it but to collapse in deepest humiliation.”<br>Thermodynamics still plays a central role in modern physics, underpinning research in information science, quantum mechanics, cosmology and even theories of life and consciousness. In fact, it is as much a cornerstone of modern physics as general relativity and quantum mechanics.<br>What did Arthur Eddington call thermodynamics?",
+        "q_hi": "<b>Comprehension:</b><br>Read the given passage and answer the questions that follow.<br><br>William Thomson was professor of natural philosophy at Glasgow University for 53 years, making revolutionary contributions to physics, mathematics and engineering that still resonate today.<br>He is probably best known for his work on energy and the laws of thermodynamics, the science of heat and work, which are often hailed as the most unbreakable laws of nature. The British astrophysicist Arthur Eddington is reported to have declared in the 1920s that thermodynamics holds 'the supreme position among the laws of nature', adding: “If your theory is found to be against the second law of thermodynamics, I can give you no hope; there is nothing for it but to collapse in deepest humiliation.”<br>Thermodynamics still plays a central role in modern physics, underpinning research in information science, quantum mechanics, cosmology and even theories of life and consciousness. In fact, it is as much a cornerstone of modern physics as general relativity and quantum mechanics.<br>What did Arthur Eddington call thermodynamics?",
+        "op_en": [
+            "Supreme Law of Universe",
+            "Extreme Condition of Chemicals",
+            "Subsidised Law of Physics",
+            "Ultimate Law of Nature"
+        ],
+        "op_hi": [
+            "Supreme Law of Universe",
+            "Extreme Condition of Chemicals",
+            "Subsidised Law of Physics",
+            "Ultimate Law of Nature"
+        ],
+        "ans": "4",
+        "solution": "<b>🧠 Explanation:</b><br>पैसेज के अनुसार, उन्होंने इसे 'the supreme position among the laws of nature' कहा, जिसे विकल्प 4 (Ultimate Law of Nature) सबसे सटीक रूप से दर्शाता है।"
+    },
+    {
+        "section": "English1",
+        "topic": "Vocabulary (One Word)",
+        "level": "Hard",
+        "q_en": "<b>Comprehension:</b><br>Read the given passage and answer the questions that follow.<br><br>William Thomson was professor of natural philosophy at Glasgow University for 53 years, making revolutionary contributions to physics, mathematics and engineering that still resonate today.<br>He is probably best known for his work on energy and the laws of thermodynamics, the science of heat and work, which are often hailed as the most unbreakable laws of nature. The British astrophysicist Arthur Eddington is reported to have declared in the 1920s that thermodynamics holds 'the supreme position among the laws of nature', adding: “If your theory is found to be against the second law of thermodynamics, I can give you no hope; there is nothing for it but to collapse in deepest humiliation.”<br>Thermodynamics still plays a central role in modern physics, underpinning research in information science, quantum mechanics, cosmology and even theories of life and consciousness. In fact, it is as much a cornerstone of modern physics as general relativity and quantum mechanics.<br>Identify the word from the passage that can be used as a one-word substitute for the given group of words.<br>\n<br>\nA solid foundation laid below ground level to support or strengthen a building",
+        "q_hi": "<b>Comprehension:</b><br>Read the given passage and answer the questions that follow.<br><br>William Thomson was professor of natural philosophy at Glasgow University for 53 years, making revolutionary contributions to physics, mathematics and engineering that still resonate today.<br>He is probably best known for his work on energy and the laws of thermodynamics, the science of heat and work, which are often hailed as the most unbreakable laws of nature. The British astrophysicist Arthur Eddington is reported to have declared in the 1920s that thermodynamics holds 'the supreme position among the laws of nature', adding: “If your theory is found to be against the second law of thermodynamics, I can give you no hope; there is nothing for it but to collapse in deepest humiliation.”<br>Thermodynamics still plays a central role in modern physics, underpinning research in information science, quantum mechanics, cosmology and even theories of life and consciousness. In fact, it is as much a cornerstone of modern physics as general relativity and quantum mechanics.<br>Identify the word from the passage that can be used as a one-word substitute for the given group of words.<br>\n<br>\nA solid foundation laid below ground level to support or strengthen a building",
+        "op_en": [
+            "Collapse",
+            "Hailed",
+            "Underpinning",
+            "Resonate"
+        ],
+        "op_hi": [
+            "Collapse",
+            "Hailed",
+            "Underpinning",
+            "Resonate"
+        ],
+        "ans": "3",
+        "solution": "<b>🔍 Word Insight:</b><br>- <b>Underpinning:</b> नींव या आधार (Foundation).<br>- <b>Resonate:</b> गूँजना/महत्व रखना।"
+    },
+    {
+        "section": "English1",
+        "topic": "Reading Comprehension (Tone)",
+        "level": "Hard",
+        "q_en": "<b>Comprehension:</b><br>Read the given passage and answer the questions that follow.<br><br>William Thomson was professor of natural philosophy at Glasgow University for 53 years, making revolutionary contributions to physics, mathematics and engineering that still resonate today.<br>He is probably best known for his work on energy and the laws of thermodynamics, the science of heat and work, which are often hailed as the most unbreakable laws of nature. The British astrophysicist Arthur Eddington is reported to have declared in the 1920s that thermodynamics holds 'the supreme position among the laws of nature', adding: “If your theory is found to be against the second law of thermodynamics, I can give you no hope; there is nothing for it but to collapse in deepest humiliation.”<br>Thermodynamics still plays a central role in modern physics, underpinning research in information science, quantum mechanics, cosmology and even theories of life and consciousness. In fact, it is as much a cornerstone of modern physics as general relativity and quantum mechanics.<br>What is the tone of the speaker?",
+        "q_hi": "<b>Comprehension:</b><br>Read the given passage and answer the questions that follow.<br><br>William Thomson was professor of natural philosophy at Glasgow University for 53 years, making revolutionary contributions to physics, mathematics and engineering that still resonate today.<br>He is probably best known for his work on energy and the laws of thermodynamics, the science of heat and work, which are often hailed as the most unbreakable laws of nature. The British astrophysicist Arthur Eddington is reported to have declared in the 1920s that thermodynamics holds 'the supreme position among the laws of nature', adding: “If your theory is found to be against the second law of thermodynamics, I can give you no hope; there is nothing for it but to collapse in deepest humiliation.”<br>Thermodynamics still plays a central role in modern physics, underpinning research in information science, quantum mechanics, cosmology and even theories of life and consciousness. In fact, it is as much a cornerstone of modern physics as general relativity and quantum mechanics.<br>What is the tone of the speaker?",
+        "op_en": [
+            "Reverential",
+            "Cynical",
+            "Worried",
+            "Depressing"
+        ],
+        "op_hi": [
+            "Reverential",
+            "Cynical",
+            "Worried",
+            "Depressing"
+        ],
+        "ans": "1",
+        "solution": "<b>📌 Concept:</b><br>लेखक जिस तरह थॉमसन के काम और ऊष्मप्रवैगिकी (Thermodynamics) की प्रशंसा कर रहा है, उसे **Reverential** (श्रद्धापूर्ण/सम्मानजनक) टोन कहते हैं।"
+    },
+    {
+        "section": "English1",
+        "topic": "Reading Comprehension (Title)",
+        "level": "Moderate",
+        "q_en": "<b>Comprehension:</b><br>Read the given passage and answer the questions that follow.<br><br>William Thomson was professor of natural philosophy at Glasgow University for 53 years, making revolutionary contributions to physics, mathematics and engineering that still resonate today.<br>He is probably best known for his work on energy and the laws of thermodynamics, the science of heat and work, which are often hailed as the most unbreakable laws of nature. The British astrophysicist Arthur Eddington is reported to have declared in the 1920s that thermodynamics holds 'the supreme position among the laws of nature', adding: “If your theory is found to be against the second law of thermodynamics, I can give you no hope; there is nothing for it but to collapse in deepest humiliation.”<br>Thermodynamics still plays a central role in modern physics, underpinning research in information science, quantum mechanics, cosmology and even theories of life and consciousness. In fact, it is as much a cornerstone of modern physics as general relativity and quantum mechanics.<br>Select the most appropriate title for the passage.",
+        "q_hi": "<b>Comprehension:</b><br>Read the given passage and answer the questions that follow.<br><br>William Thomson was professor of natural philosophy at Glasgow University for 53 years, making revolutionary contributions to physics, mathematics and engineering that still resonate today.<br>He is probably best known for his work on energy and the laws of thermodynamics, the science of heat and work, which are often hailed as the most unbreakable laws of nature. The British astrophysicist Arthur Eddington is reported to have declared in the 1920s that thermodynamics holds 'the supreme position among the laws of nature', adding: “If your theory is found to be against the second law of thermodynamics, I can give you no hope; there is nothing for it but to collapse in deepest humiliation.”<br>Thermodynamics still plays a central role in modern physics, underpinning research in information science, quantum mechanics, cosmology and even theories of life and consciousness. In fact, it is as much a cornerstone of modern physics as general relativity and quantum mechanics.<br>Select the most appropriate title for the passage.",
+        "op_en": [
+            "Research in Science",
+            "The Way of the World",
+            "Theories and Solutions",
+            "Thomson’s Legacy"
+        ],
+        "op_hi": [
+            "Research in Science",
+            "The Way of the World",
+            "Theories and Solutions",
+            "Thomson’s Legacy"
+        ],
+        "ans": "4",
+        "solution": "<b>🧠 Explanation:</b><br>पूरा पैसेज विलियम थॉमसन के जीवनभर के योगदान और उनके प्रभाव (Legacy) पर केंद्रित है।"
+    },
+    {
+        "section": "English1",
+        "topic": "Cloze Test (Grammar)",
+        "level": "Moderate",
+        "q_en": "<b>Comprehension:</b><br>In the following passage, some words have been deleted. Read the passage carefully and select the most appropriate option to fill in each blank. <br><br>The ancient Egyptians were skilled builders and artists. They (1) _____ massive pyramids and temples using simple tools and human labour. These structures (2) _____ as tombs for their rulers and places of worship. The pyramids were built with limestone blocks, each one of (3) _____ weighed several tons. Workers used ramps and sleds to move the heavy stones into place. Many carvings and paintings inside the tombs (4) _____ scenes from daily life, religious ceremonies and (5) _____ of gods and goddesses.<br>Select the most appropriate option to fill in blank 1.",
+        "q_hi": "<b>Comprehension:</b><br>In the following passage, some words have been deleted. Read the passage carefully and select the most appropriate option to fill in each blank. <br><br>The ancient Egyptians were skilled builders and artists. They (1) _____ massive pyramids and temples using simple tools and human labour. These structures (2) _____ as tombs for their rulers and places of worship. The pyramids were built with limestone blocks, each one of (3) _____ weighed several tons. Workers used ramps and sleds to move the heavy stones into place. Many carvings and paintings inside the tombs (4) _____ scenes from daily life, religious ceremonies and (5) _____ of gods and goddesses.<br>Select the most appropriate option to fill in blank 1.",
+        "op_en": [
+            "built",
+            "build",
+            "builds",
+            "were building"
+        ],
+        "op_hi": [
+            "built",
+            "build",
+            "builds",
+            "were building"
+        ],
+        "ans": "1",
+        "solution": "<b>📌 Concept:</b><br>पैसेज प्राचीन मिस्र (Ancient Egypt) की बात कर रहा है, जो कि भूतकाल (Past Tense) की घटना है।<br><br><b>🧠 Explanation:</b><br>Simple Past $V_2$ form (built) का प्रयोग होगा।"
+    },
+    {
+        "section": "English1",
+        "topic": "Cloze Test (Voice)",
+        "level": "Moderate",
+        "q_en": "<b>Comprehension:</b><br>In the following passage, some words have been deleted. Read the passage carefully and select the most appropriate option to fill in each blank. <br><br>The ancient Egyptians were skilled builders and artists. They (1) _____ massive pyramids and temples using simple tools and human labour. These structures (2) _____ as tombs for their rulers and places of worship. The pyramids were built with limestone blocks, each one of (3) _____ weighed several tons. Workers used ramps and sleds to move the heavy stones into place. Many carvings and paintings inside the tombs (4) _____ scenes from daily life, religious ceremonies and (5) _____ of gods and goddesses.<br>Select the most appropriate option to fill in blank 2.",
+        "q_hi": "<b>Comprehension:</b><br>In the following passage, some words have been deleted. Read the passage carefully and select the most appropriate option to fill in each blank. <br><br>The ancient Egyptians were skilled builders and artists. They (1) _____ massive pyramids and temples using simple tools and human labour. These structures (2) _____ as tombs for their rulers and places of worship. The pyramids were built with limestone blocks, each one of (3) _____ weighed several tons. Workers used ramps and sleds to move the heavy stones into place. Many carvings and paintings inside the tombs (4) _____ scenes from daily life, religious ceremonies and (5) _____ of gods and goddesses.<br>Select the most appropriate option to fill in blank 2.",
+        "op_en": [
+            "are used",
+            "were used",
+            "using",
+            "use"
+        ],
+        "op_hi": [
+            "are used",
+            "were used",
+            "using",
+            "use"
+        ],
+        "ans": "2",
+        "solution": "<b>🧠 Explanation:</b><br>Structures (piramids) खुद का इस्तेमाल नहीं करते थे, उनका इस्तेमाल 'किया जाता था' (Passive Voice). क्योंकि बात पास्ट की है, इसलिए **were used** सही है।"
+    },
+    {
+        "section": "English1",
+        "topic": "Cloze Test (Pronouns)",
+        "level": "Moderate",
+        "q_en": "<b>Comprehension:</b><br>In the following passage, some words have been deleted. Read the passage carefully and select the most appropriate option to fill in each blank. <br><br>The ancient Egyptians were skilled builders and artists. They (1) _____ massive pyramids and temples using simple tools and human labour. These structures (2) _____ as tombs for their rulers and places of worship. The pyramids were built with limestone blocks, each one of (3) _____ weighed several tons. Workers used ramps and sleds to move the heavy stones into place. Many carvings and paintings inside the tombs (4) _____ scenes from daily life, religious ceremonies and (5) _____ of gods and goddesses.<br>Select the most appropriate option to fill in blank 3.",
+        "q_hi": "<b>Comprehension:</b><br>In the following passage, some words have been deleted. Read the passage carefully and select the most appropriate option to fill in each blank. <br><br>The ancient Egyptians were skilled builders and artists. They (1) _____ massive pyramids and temples using simple tools and human labour. These structures (2) _____ as tombs for their rulers and places of worship. The pyramids were built with limestone blocks, each one of (3) _____ weighed several tons. Workers used ramps and sleds to move the heavy stones into place. Many carvings and paintings inside the tombs (4) _____ scenes from daily life, religious ceremonies and (5) _____ of gods and goddesses.<br>Select the most appropriate option to fill in blank 3.",
+        "op_en": [
+            "whose",
+            "that",
+            "what",
+            "which"
+        ],
+        "op_hi": [
+            "whose",
+            "that",
+            "what",
+            "which"
+        ],
+        "ans": "4",
+        "solution": "<b>🧠 Explanation:</b><br>वस्तुओं (blocks) के लिए relative pronoun **which** का प्रयोग होता है।"
+    },
+    {
+        "section": "English1",
+        "topic": "Cloze Test (Verbs)",
+        "level": "Moderate",
+        "q_en": "<b>Comprehension:</b><br>In the following passage, some words have been deleted. Read the passage carefully and select the most appropriate option to fill in each blank. <br><br>The ancient Egyptians were skilled builders and artists. They (1) _____ massive pyramids and temples using simple tools and human labour. These structures (2) _____ as tombs for their rulers and places of worship. The pyramids were built with limestone blocks, each one of (3) _____ weighed several tons. Workers used ramps and sleds to move the heavy stones into place. Many carvings and paintings inside the tombs (4) _____ scenes from daily life, religious ceremonies and (5) _____ of gods and goddesses.<br>Select the most appropriate option to fill in blank 4.",
+        "q_hi": "<b>Comprehension:</b><br>In the following passage, some words have been deleted. Read the passage carefully and select the most appropriate option to fill in each blank. <br><br>The ancient Egyptians were skilled builders and artists. They (1) _____ massive pyramids and temples using simple tools and human labour. These structures (2) _____ as tombs for their rulers and places of worship. The pyramids were built with limestone blocks, each one of (3) _____ weighed several tons. Workers used ramps and sleds to move the heavy stones into place. Many carvings and paintings inside the tombs (4) _____ scenes from daily life, religious ceremonies and (5) _____ of gods and goddesses.<br>Select the most appropriate option to fill in blank 4.",
+        "op_en": [
+            "display",
+            "displays",
+            "displayed",
+            "was displayed"
+        ],
+        "op_hi": [
+            "display",
+            "displays",
+            "displayed",
+            "was displayed"
+        ],
+        "ans": "3",
+        "solution": "<b>🧠 Explanation:</b><br>नक्काशी (Carvings) दृश्यों को दर्शाती थीं (Displayed)। पास्ट टेंस की निरंतरता के लिए $V_2$ लगेगा।"
+    },
+    {
+        "section": "English1",
+        "topic": "Cloze Test (Vocabulary)",
+        "level": "Moderate",
+        "q_en": "<b>Comprehension:</b><br>In the following passage, some words have been deleted. Read the passage carefully and select the most appropriate option to fill in each blank. <br><br>The ancient Egyptians were skilled builders and artists. They (1) _____ massive pyramids and temples using simple tools and human labour. These structures (2) _____ as tombs for their rulers and places of worship. The pyramids were built with limestone blocks, each one of (3) _____ weighed several tons. Workers used ramps and sleds to move the heavy stones into place. Many carvings and paintings inside the tombs (4) _____ scenes from daily life, religious ceremonies and (5) _____ of gods and goddesses.<br>Select the most appropriate option to fill in blank 5.",
+        "q_hi": "<b>Comprehension:</b><br>In the following passage, some words have been deleted. Read the passage carefully and select the most appropriate option to fill in each blank. <br><br>The ancient Egyptians were skilled builders and artists. They (1) _____ massive pyramids and temples using simple tools and human labour. These structures (2) _____ as tombs for their rulers and places of worship. The pyramids were built with limestone blocks, each one of (3) _____ weighed several tons. Workers used ramps and sleds to move the heavy stones into place. Many carvings and paintings inside the tombs (4) _____ scenes from daily life, religious ceremonies and (5) _____ of gods and goddesses.<br>Select the most appropriate option to fill in blank 5.",
+        "op_en": [
+            "representations",
+            "images",
+            "sculptures",
+            "portraits"
+        ],
+        "op_hi": [
+            "representations",
+            "images",
+            "sculptures",
+            "portraits"
+        ],
+        "ans": "4",
+        "solution": "<b>🔍 Word Insight:</b><br>- <b>Portraits:</b> देवताओं के चित्र या स्वरूप। यहाँ संदर्भ के अनुसार सबसे सटीक है।"
+    },
+    {
+        "section": "Hindi",
+        "topic": "वाक्य शुद्धि (Redundancy)",
+        "level": "Easy",
+        "q_en": "<p dir=\"ltr\" style=\"line-height:1.295;margin-top:0pt;margin-bottom:8pt;\"><span style=\"font-family:arial,helvetica,sans-serif;\"><span style=\"font-size:14px;\">निम्नलिखित वाक्य के शुद्ध रूप का चयन करें।</span></span><br><span style=\"font-family:arial,helvetica,sans-serif;\"><span style=\"font-size:14px;\">मैं शनिवार के दिन दिन में व्रत रखती हूँ।</span></span>​</p>",
+        "q_hi": "<p dir=\"ltr\" style=\"line-height:1.295;margin-top:0pt;margin-bottom:8pt;\"><span style=\"font-family:arial,helvetica,sans-serif;\"><span style=\"font-size:14px;\">निम्नलिखित वाक्य के शुद्ध रूप का चयन करें।</span></span><br><span style=\"font-family:arial,helvetica,sans-serif;\"><span style=\"font-size:14px;\">मैं शनिवार के दिन दिन में व्रत रखती हूँ।</span></span>​</p>",
+        "op_en": [
+            "मैं शनिवार को वृत रखती हूँ।",
+            "मैं शनीवार को वृत रखती हूँ।",
+            "मैं शनिवार को व्रत रखती हूँ।",
+            "मैं शनिवार वाले दिन को वृत रखती हूँ।"
+        ],
+        "op_hi": [
+            "मैं शनिवार को वृत रखती हूँ।",
+            "मैं शनीवार को वृत रखती हूँ।",
+            "मैं शनिवार को व्रत रखती हूँ।",
+            "मैं शनिवार वाले दिन को वृत रखती हूँ।"
+        ],
+        "ans": "3",
+        "solution": "<b>📌 Concept:</b><br>जब हम 'शनिवार' कहते हैं, तो 'वार' शब्द का अर्थ ही 'दिन' होता है। इसलिए शनिवार के साथ दोबारा 'दिन' शब्द का प्रयोग करना 'पुनरुक्ति दोष' (Redundancy) कहलाता है। साथ ही 'व्रत' की सही वर्तनी पर ध्यान देना आवश्यक है।<br><br><b>🔍 Word Insight:</b><br>- <b>शनिवार:</b> शनि + वार (दिन)।<br>- <b>व्रत:</b> उपवास (सही वर्तनी)। 'वृत' का अर्थ घेरा होता है।<br><br><b>🧠 Explanation (Option-wise Breakdown):</b><br>1. विकल्प 1 → 'वृत' गलत वर्तनी है।<br>2. विकल्प 2 → 'शनीवार' और 'वृत' दोनों गलत हैं।<br>3. विकल्प 3 → सही। 'शनिवार' के साथ 'दिन' हटा दिया गया है और वर्तनी शुद्ध है।<br>4. विकल्प 4 → 'दिन' का अनावश्यक प्रयोग और 'वृत' गलत है।<br><br><b>⚡ Smart Exam Trick:</b><br>दिनों के नाम (सोमवार, मंगलवार आदि) के साथ कभी भी 'दिन' शब्द न जोड़ें।<br><br><b>🎯 Memory Hack:</b><br>वार $=$ दिन। दो बार दिन-दिन कहना गलत है।<br><br><b>🚫 Common Mistake:</b><br>बोलचाल में हम अक्सर 'शनिवार के दिन' बोलते हैं, जिसे छात्र सही मान लेते हैं।"
+    },
+    {
+        "section": "Hindi",
+        "topic": "अनेकार्थी शब्द",
+        "level": "Moderate",
+        "q_en": "'अज' का प्रयोग किसके अर्थ में नहीं होता-",
+        "q_hi": "'अज' का प्रयोग किसके अर्थ में नहीं होता-",
+        "op_en": [
+            "'बकरे' के अर्थ में",
+            "'जीव' के अर्थ में",
+            "'ईश्वर' के अर्थ में",
+            "'आम ' के अर्थ में"
+        ],
+        "op_hi": [
+            "'बकरे' के अर्थ में",
+            "'जीव' के अर्थ में",
+            "'ईश्वर' के अर्थ में",
+            "'आम ' के अर्थ में"
+        ],
+        "ans": "4",
+        "solution": "<b>📌 Concept:</b><br>'अज' एक प्रसिद्ध अनेकार्थी शब्द है जिसका प्रयोग विभिन्न आध्यात्मिक और भौतिक संदर्भों में होता है।<br><br><b>🔍 Word Insight:</b><br>- <b>अज:</b> जिसका जन्म न हुआ हो (ईश्वर), बकरा, ब्रह्मा, जीव, दशरथ के पिता।<br><br><b>🧠 Explanation (Option-wise Breakdown):</b><br>1. बकरा → 'अज' का अर्थ बकरा होता है (अजा = बकरी)।<br>2. जीव → आत्मा या जीव के लिए भी 'अज' प्रयुक्त होता है।<br>3. ईश्वर → जो अजन्मा है, वह 'अज' है।<br>4. आम → सही। 'आम' के लिए 'रसाल' या 'अमृतफल' प्रयुक्त होता है, 'अज' नहीं।<br><br><b>⚡ Smart Exam Trick:</b><br>'अ' (नहीं) + 'ज' (जन्मा)। जो कभी पैदा न हुआ हो और हमेशा रहे - ईश्वर/आत्मा।"
+    },
+    {
+        "section": "Hindi",
+        "topic": "क्रिया विशेषण (Adverb)",
+        "level": "Easy",
+        "q_en": "उपयुक्त  'क्रिया विशेषण' का चयन कर वाक्य को पूर्ण करें - <br><br>'हरीश <u>              </u> पढ़ रहा है।'",
+        "q_hi": "उपयुक्त 'क्रिया विशेषण' का चयन कर वाक्य को पूर्ण करें - <br><br>'हरीश ________ पढ़ रहा है।'",
+        "op_en": [
+            "सच",
+            "ऐसे",
+            "सहसा",
+            "ध्यानपूर्वक"
+        ],
+        "op_hi": [
+            "सच",
+            "ऐसे",
+            "सहसा",
+            "ध्यानपूर्वक"
+        ],
+        "ans": "4",
+        "solution": "<b>📌 Concept:</b><br>जो शब्द क्रिया की विशेषता (ढंग, समय, स्थान) बताते हैं, उन्हें क्रिया विशेषण कहते हैं। 'पढ़ने' की क्रिया के लिए 'रीतिवाचक' शब्द चाहिए।<br><br><b>🧠 Explanation:</b><br>'ध्यानपूर्वक' पढ़ने के ढंग (Manner) को बता रहा है, जो वाक्य के संदर्भ में सबसे उपयुक्त है। 'सहसा' (अचानक) पढ़ने के साथ फिट नहीं बैठता।"
+    },
+    {
+        "section": "Hindi",
+        "topic": "क्रिया (Verb Selection)",
+        "level": "Easy",
+        "q_en": "उपयुक्त 'क्रिया' का चयन कर रिक्त स्थान की पूर्ति कीजिए।<br>' रिया ठंठे पानी से मुँह......................................है।'",
+        "q_hi": "उपयुक्त 'क्रिया' का चयन कर रिक्त स्थान की पूर्ति कीजिए।<br>'रिया ठंठे पानी से मुँह....................है।'",
+        "op_en": [
+            "धुलती",
+            "काटती",
+            "फेरती",
+            "नहाती"
+        ],
+        "op_hi": [
+            "धुलती",
+            "काटती",
+            "फेरती",
+            "नहाती"
+        ],
+        "ans": "1",
+        "solution": "<b>🧠 Explanation:</b><br>मुँह के साथ 'धोना' या 'धुलना' क्रिया ही सार्थक अर्थ देती है। 'मुँह काटना' या 'मुँह फेरना' मुहावरे हैं, जो यहाँ साधारण अर्थ में फिट नहीं हैं।"
+    },
+    {
+        "section": "Hindi",
+        "topic": "मुहावरे (Idioms)",
+        "level": "Easy",
+        "q_en": "'कान खड़े होना' मुहावरे का सही अर्थ क्या है ?",
+        "q_hi": "'कान खड़े होना' मुहावरे का सही अर्थ क्या है ?",
+        "op_en": [
+            "गलती मान लेना",
+            "सावधान कर देना",
+            "चौकन्ना होना",
+            "ध्यान से सुनना"
+        ],
+        "op_hi": [
+            "गलती मान लेना",
+            "सावधान कर देना",
+            "चौकन्ना होना",
+            "ध्यान से सुनना"
+        ],
+        "ans": "3",
+        "solution": "<b>📌 Concept:</b><br>जब कोई खतरा महसूस हो या कोई संदिग्ध बात हो, तो सचेत हो जाने को 'कान खड़े होना' कहते हैं।<br><br><b>🧠 Explanation:</b><br>सही अर्थ है **'चौकन्ना होना'** (To be alert).<br><br><b>🚫 Common Mistake:</b><br>छात्र इसे 'ध्यान से सुनना' समझ लेते हैं, जबकि वह 'कान लगाना' होता है।"
+    },
+    {
+        "section": "Hindi",
+        "topic": "लोकोक्ति (Proverbs)",
+        "level": "Moderate",
+        "q_en": "लोकोक्ति के सही अर्थ का चयन करें- <br>‘दालभात में मूसलचन्द’",
+        "q_hi": "लोकोक्ति के सही अर्थ का चयन करें- <br>‘दालभात में मूसलचन्द’",
+        "op_en": [
+            "किसी के काम में बेकार दखल देना",
+            "बार​-बार किसी एक ही काम को करना",
+            "व्यर्थ का कार्य करना",
+            "दाल को मूसल से तोड़ना"
+        ],
+        "op_hi": [
+            "किसी के काम में बेकार दखल देना",
+            "बार​-बार किसी एक ही काम को करना",
+            "व्यर्थ का कार्य करना",
+            "दाल को मूसल से तोड़ना"
+        ],
+        "ans": "1",
+        "solution": "<b>📌 Concept:</b><br>'दाल-भात' (साधारण भोजन) में 'मूसल' (भारी लकड़ी) का कोई काम नहीं होता। अतः यह व्यर्थ के हस्तक्षेप को दर्शाता है।<br><br><b>🧠 Explanation:</b><br>इसका अर्थ है **'दो व्यक्तियों या कार्यों के बीच में बिना मतलब का दखल देना'**।"
+    },
+    {
+        "section": "Hindi",
+        "topic": "पदक्रम (Sentence Rearrangement)",
+        "level": "Moderate",
+        "q_en": "इस प्रश्न में एक वाक्य चार भागों में विभाजित है और ये चारों भाग क्रमानुसार नहीं हैं, इन्हें इस तरह क्रम में लगायें कि एक सुसंगत वाक्य का निर्माण हो सके :<br>बल्कि अच्छे जीवन मूल्यों का प्रसार(क) रोजगार प्रदान करना नहीं(ख) शिक्षा का उद्देश्य केवल(ग) करना भी होना चाहिए(घ)",
+        "q_hi": "इस प्रश्न में एक वाक्य चार भागों में विभाजित है और ये चारों भाग क्रमानुसार नहीं हैं, इन्हें इस तरह क्रम में लगायें कि एक सुसंगत वाक्य का निर्माण हो सके :<br>बल्कि अच्छे जीवन मूल्यों का प्रसार(क) रोजगार प्रदान करना नहीं(ख) शिक्षा का उद्देश्य केवल(ग) करना भी होना चाहिए(घ)",
+        "op_en": [
+            "ग ख क घ",
+            "ग ख घ क",
+            "घ क ख ग",
+            "ग क ख घ"
+        ],
+        "op_hi": [
+            "ग ख क घ",
+            "ग ख घ क",
+            "घ क ख ग",
+            "ग क ख घ"
+        ],
+        "ans": "1",
+        "solution": "<b>📌 Concept:</b><br>नकारात्मक और सकारात्मक विचारों को 'केवल... नहीं बल्कि...' के क्रम में जोड़ा जाता है।<br><br><b>🧠 Explanation:</b><br>क्रम: शिक्षा का उद्देश्य केवल (ग) + रोजगार प्रदान करना नहीं (ख) + बल्कि अच्छे जीवन मूल्यों का प्रसार (क) + करना भी होना चाहिए (घ)।<br>पूर्ण वाक्य: **\"शिक्षा का उद्देश्य केवल रोजगार प्रदान करना नहीं बल्कि अच्छे जीवन मूल्यों का प्रसार करना भी होना चाहिए।\"**"
+    },
+    {
+        "section": "Hindi",
+        "topic": "वाक्य शुद्धि (वर्तनी)",
+        "level": "Moderate",
+        "q_en": "अनावृस्टि से देश में सूखा पड़ गया।<br>वाक्य के किस अंश में अशुद्धि है ?",
+        "q_hi": "अनावृस्टि से देश में सूखा पड़ गया। वाक्य के किस अंश में अशुद्धि है ?",
+        "op_en": [
+            "देश में",
+            "पड़ गया।",
+            "अनावृस्टि से",
+            "सूखा"
+        ],
+        "op_hi": [
+            "देश में",
+            "पड़ गया।",
+            "अनावृस्टि से",
+            "सूखा"
+        ],
+        "ans": "3",
+        "solution": "<b>📌 Concept:</b><br>हिंदी में 'वृष्टि' शब्द में 'ष्' (मूर्धन्य ष) और 'ट' का प्रयोग होता है, न कि 'स' या 'स्ट'।<br><br><b>🔍 Word Insight:</b><br>- <b>अनावृष्टि:</b> (Drought) वर्षा का न होना। सही वर्तनी है - **अनावृष्टि**।<br><br><b>⚡ Smart Exam Trick:</b><br>'वृष्टि' (बारिश) शब्द को याद रखें, अतिवृष्टि (ज्यादा बारिश) और अनावृष्टि इसी से बनते हैं।"
+    },
+    {
+        "section": "Hindi",
+        "topic": "असंगत वाक्य (Odd One Out)",
+        "level": "Hard",
+        "q_en": "नीचे दिए परिच्छेद का अतिरिक्त वाक्य चुनें।<br>वहाँ मुझे ढूँढ़ते-ढूँढ़ते रामा के प्राण कंठगत हो रहे थे। संध्या समय जब सबसे पूछते-पूछते  रामा उस दुकान पर पहुँचा। हमलोग किताब पढ़ रहे थे। मैंने विजय गर्व से कहा-तुम इतने बड़े होकर भी खो जाते हो।<br>",
+        "q_hi": "नीचे दिए परिच्छेद का अतिरिक्त वाक्य चुनें।<br>वहाँ मुझे ढूँढ़ते-ढूँढ़ते रामा के प्राण कंठगत हो रहे थे। संध्या समय जब सबसे पूछते-पूछते  रामा उस दुकान पर पहुँचा। हमलोग किताब पढ़ रहे थे। मैंने विजय गर्व से कहा-तुम इतने बड़े होकर भी खो जाते हो।<br>",
+        "op_en": [
+            "<span style=\"font-size:11pt\"><span style=\"line-height:115%\"><span style=\"font-family:Calibri,sans-serif\"><span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">वहाँ</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">मुझे</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">ढूँढ़ते</span> -<span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">ढूँढ़ते</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">रामा</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">के</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">प्राण</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">कंठगत</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">हो</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">रहे</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">थे।</span></span></span></span>",
+            "<span style=\"font-size:11pt\"><span style=\"line-height:115%\"><span style=\"font-family:Calibri,sans-serif\"><span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">संध्या</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">समय</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">जब</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">सबसे</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">पूछते</span>-<span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">पूछते</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">रामा</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">उस</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">दुकान</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">पर</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">पहुँचा।</span></span></span></span>",
+            "<span style=\"font-size:11pt\"><span style=\"line-height:115%\"><span style=\"font-family:Calibri,sans-serif\"><span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">मैंने</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">विजय</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">गर्व</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">से</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">कहा</span>-<span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">तुम</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">इतने</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">बड़े</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">होकर</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">भी</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">खो</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">जाते</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">हो।</span> </span></span></span>",
+            "<span style=\"font-size:11pt\"><span style=\"line-height:115%\"><span style=\"font-family:Calibri,sans-serif\"><span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">हमलोग</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">किताब</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">पढ़</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">रहे</span> <span lang=\"EN-US\" style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">थे।</span></span></span></span>"
+        ],
+        "op_hi": [
+            "वहाँ मुझे ढूँढ़ते-ढूँढ़ते रामा के प्राण कंठगत हो रहे थे।",
+            "संध्या समय जब सबसे पूछते-पूछते रामा उस दुकान पर पहुँचा।",
+            "मैंने विजय गर्व से कहा-तुम इतने बड़े होकर भी खो जाते हो।",
+            "हमलोग किताब पढ़ रहे थे।"
+        ],
+        "ans": "4",
+        "solution": "<b>📌 Concept:</b><br>किसी भी कहानी या परिच्छेद में एक 'मुख्य घटना' होती है। यहाँ मुख्य घटना रामा द्वारा लेखक को ढूँढने की है।<br><br><b>🧠 Explanation:</b><br>विकल्प 1, 2 और 3 रामा के खोजने और मिलने के घटनाक्रम से जुड़े हैं। विकल्प 4 'हमलोग किताब पढ़ रहे थे' इस प्रसंग से पूरी तरह अलग (Irrrelevant) है, इसलिए यह अतिरिक्त है।"
+    },
+    {
+        "section": "Hindi",
+        "topic": "तद्भव शब्द",
+        "level": "Moderate",
+        "q_en": "निम्नलिखित विकल्पों में से तद्भव शब्द का चयन करें -",
+        "q_hi": "निम्नलिखित विकल्पों में से तद्भव शब्द का चयन करें -",
+        "op_en": [
+            "किसान",
+            "केशरी",
+            "कुपुत्र",
+            "कूप"
+        ],
+        "op_hi": [
+            "किसान",
+            "केशरी",
+            "कुपुत्र",
+            "कूप"
+        ],
+        "ans": "1",
+        "solution": "<b>📌 Concept:</b><br>तद्भव वे शब्द हैं जो संस्कृत (तत्सम) से बदलकर हिंदी में आए हैं।<br><br><b>🔍 Word Insight:</b><br>- <b>किसान:</b> तद्भव (तत्सम: कृषक)।<br>- <b>कूप:</b> तत्सम (तद्भव: कुआँ)।<br>- <b>कुपुत्र:</b> तत्सम (तद्भव: कपूत)।"
+    },
+    {
+        "section": "Hindi",
+        "topic": "वर्तनी शुद्धि",
+        "level": "Easy",
+        "q_en": "वर्तनी की दृष्टि से दिए गए वाक्य के अशुद्ध अंश का चयन कीजिए । <br>अपने परिवार की गरीमा का ध्यान रखना चाहिए।",
+        "q_hi": "वर्तनी की दृष्टि से दिए गए वाक्य के अशुद्ध अंश का चयन कीजिए। <br>अपने परिवार की गरीमा का ध्यान रखना चाहिए।",
+        "op_en": [
+            "रखना चाहिए।",
+            "अपने परिवार",
+            "का ध्यान",
+            "की गरीमा"
+        ],
+        "op_hi": [
+            "रखना चाहिए।",
+            "अपने परिवार",
+            "का ध्यान",
+            "की गरीमा"
+        ],
+        "ans": "4",
+        "solution": "<b>🧠 Explanation:</b><br>'गरीमा' गलत वर्तनी है। सही शब्द **'गरिमा'** (छोरी 'इ' की मात्रा) होता है।"
+    },
+    {
+        "section": "Hindi",
+        "topic": "वर्तनी शुद्धि",
+        "level": "Easy",
+        "q_en": "उपरोक्त दिए गए वाक्य के किस भाग में अशुद्धि है – <br>तुम अपने घर वापिस चले जाओ ।",
+        "q_hi": "उपरोक्त दिए गए वाक्य के किस भाग में अशुद्धि है – <br>तुम अपने घर वापिस चले जाओ ।",
+        "op_en": [
+            "तुम",
+            "वापिस",
+            "अपने घर",
+            "चले जाओ"
+        ],
+        "op_hi": [
+            "तुम",
+            "वापिस",
+            "अपने घर",
+            "चले जाओ"
+        ],
+        "ans": "2",
+        "solution": "<b>🧠 Explanation:</b><br>'वापिस' अशुद्ध है। मानक हिंदी में सही शब्द **'वापस'** होता है।"
+    },
+    {
+        "section": "Hindi",
+        "topic": "कारक (Case Marks)",
+        "level": "Easy",
+        "q_en": "उचित कारक चिन्ह का प्रयोग कर वाक्य पूर्ण करें -<br>वह कुल्हाड़ी ______ वृक्ष काटता है।",
+        "q_hi": "वह कुल्हाड़ी ______ वृक्ष काटता है।",
+        "op_en": [
+            "से",
+            "हेतु",
+            "ने",
+            "में"
+        ],
+        "op_hi": [
+            "से",
+            "हेतु",
+            "ने",
+            "में"
+        ],
+        "ans": "1",
+        "solution": "<b>📌 Concept:</b><br>'करण कारक' (Instrumental case) का चिह्न 'से' होता है, जो क्रिया के साधन (Tool) को बताता है। यहाँ कुल्हाड़ी साधन है।"
+    },
+    {
+        "section": "Hindi1",
+        "topic": "विलोम शब्द",
+        "level": "Easy",
+        "q_en": "<span style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Calibri&quot;,sans-serif\">‘</span></span></span><span style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">आधुनिक</span></span></span><span lang=\"EN-US\" style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Calibri&quot;,sans-serif\">‘ </span></span></span><span style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">का</span></span></span> <span style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">विलोम</span></span></span> <span style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">शब्द</span></span></span> <span style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">पहचानें।</span></span></span>",
+        "q_hi": "<span style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Calibri&quot;,sans-serif\">‘</span></span></span><span style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">आधुनिक</span></span></span><span lang=\"EN-US\" style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Calibri&quot;,sans-serif\">‘ </span></span></span><span style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">का</span></span></span> <span style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">विलोम</span></span></span> <span style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">शब्द</span></span></span> <span style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">पहचानें।</span></span></span>",
+        "op_en": [
+            "<span style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">प्राचीन</span></span></span>",
+            "<span style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">नवीन</span></span></span>",
+            "<span style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">पुराना</span></span></span>",
+            "<span style=\"font-size:11.0pt\"><span style=\"line-height:115%\"><span style=\"font-family:&quot;Nirmala UI&quot;,sans-serif\">पूर्व</span></span></span>"
+        ],
+        "op_hi": [
+            "प्राचीन",
+            "नवीन",
+            "पुराना",
+            "पूर्व"
+        ],
+        "ans": "1",
+        "solution": "<b>🔍 Word Insight:</b><br>- <b>आधुनिक:</b> Modern.<br>- <b>प्राचीन:</b> Ancient (सही विलोम)।"
+    },
+    {
+        "section": "Hindi1",
+        "topic": "विलोम शब्द",
+        "level": "Easy",
+        "q_en": "‘कायर’ का विलोम शब्द क्या होगा-",
+        "q_hi": "‘कायर’ का विलोम शब्द क्या होगा-",
+        "op_en": [
+            "निडर",
+            "क्रूर",
+            "कपूत",
+            "कटु"
+        ],
+        "op_hi": [
+            "निडर",
+            "क्रूर",
+            "कपूत",
+            "कटु"
+        ],
+        "ans": "1",
+        "solution": "<b>🔍 Word Insight:</b><br>- <b>कायर:</b> डरपोक।<br>- <b>निडर:</b> वीर/साहसी (बिना डर के)।"
+    },
+    {
+        "section": "Hindi1",
+        "topic": "अपठित गद्यांश (अतिथि सत्कार)",
+        "level": "Easy",
+        "q_en": "<b>Comprehension:</b><br>निम्नलिखित गद्यांश को पढ़कर दिए गए प्रश्नों के उत्तर दीजिए:<br>भारत में अतिथि सत्कार की एक अद्भुत और गौरवमयी परम्परा रही है। इतिहास साक्षी रहा है कि अतिथि प्राण से भी प्यारे होते हैं। 'साधु न भूखा जाए' यहां का गृह-सत्कार मंत्र रहा है। गृहस्वामिनी द्वार पर आए अतिथि को अपना पेट काटकर भी खिलाती है। उनके हृदय की विशालता और उदारता भारत की धरोहर है। अतिथियों को यहां देवता माना गया है। 'अतिथि देवो भव' यहां का जीवन मंत्र है। अतिथियों की जूठन के कण गृह-स्वामिनी के लिए गंगा के पवित्र जल कण हैं और उनके चरणों की धूलि मस्तिष्क पर धारण करने के पवित्र रजकण हैं। भारत का गाँव- गाँव, झोपड़ी-झोपड़ी और झोपड़ी में निवास करनेवाले जन-जन इस आत्मीय भाव से भरे-पूरे हैं। वे इस परम्परा की अवहेलना नहीं करते हैं, भूखे रहकर भी अपने अतिथि को संतुष्ट करते हैं। भारतीय चरित्र की विशालता और उदारता विश्व में अकेली परम्परा है।<br>भारत में अतिथि सत्कार की कैसी परम्परा रही है?",
+        "q_hi": "<b>Comprehension:</b><br>निम्नलिखित गद्यांश को पढ़कर दिए गए प्रश्नों के उत्तर दीजिए:<br>भारत में अतिथि सत्कार की एक अद्भुत और गौरवमयी परम्परा रही है। इतिहास साक्षी रहा है कि अतिथि प्राण से भी प्यारे होते हैं। 'साधु न भूखा जाए' यहां का गृह-सत्कार मंत्र रहा है। गृहस्वामिनी द्वार पर आए अतिथि को अपना पेट काटकर भी खिलाती है। उनके हृदय की विशालता और उदारता भारत की धरोहर है। अतिथियों को यहां देवता माना गया है। 'अतिथि देवो भव' यहां का जीवन मंत्र है। अतिथियों की जूठन के कण गृह-स्वामिनी के लिए गंगा के पवित्र जल कण हैं और उनके चरणों की धूलि मस्तिष्क पर धारण करने के पवित्र रजकण हैं। भारत का गाँव- गाँव, झोपड़ी-झोपड़ी और झोपड़ी में निवास करनेवाले जन-जन इस आत्मीय भाव से भरे-पूरे हैं। वे इस परम्परा की अवहेलना नहीं करते हैं, भूखे रहकर भी अपने अतिथि को संतुष्ट करते हैं। भारतीय चरित्र की विशालता और उदारता विश्व में अकेली परम्परा है।<br>भारत में अतिथि सत्कार की कैसी परम्परा रही है?",
+        "op_en": [
+            "अद्भुत और गौरवमयी",
+            "जानदार",
+            "आत्मीय",
+            "शानदार"
+        ],
+        "op_hi": [
+            "अद्भुत और गौरवमयी",
+            "जानदार",
+            "आत्मीय",
+            "शानदार"
+        ],
+        "ans": "1",
+        "solution": "<b>🧠 Explanation:</b><br>गद्यांश की पहली पंक्ति के अनुसार: \"भारत में अतिथि सत्कार की एक **अद्भुत और गौरवमयी** परम्परा रही है।\""
+    },
+    {
+        "section": "Hindi1",
+        "topic": "अपठित गद्यांश (भावार्थ)",
+        "level": "Moderate",
+        "q_en": "<b>Comprehension:</b><br>निम्नलिखित गद्यांश को पढ़कर दिए गए प्रश्नों के उत्तर दीजिए:<br>भारत में अतिथि सत्कार की एक अद्भुत और गौरवमयी परम्परा रही है। इतिहास साक्षी रहा है कि अतिथि प्राण से भी प्यारे होते हैं। 'साधु न भूखा जाए' यहां का गृह-सत्कार मंत्र रहा है। गृहस्वामिनी द्वार पर आए अतिथि को अपना पेट काटकर भी खिलाती है। उनके हृदय की विशालता और उदारता भारत की धरोहर है। अतिथियों को यहां देवता माना गया है। 'अतिथि देवो भव' यहां का जीवन मंत्र है। अतिथियों की जूठन के कण गृह-स्वामिनी के लिए गंगा के पवित्र जल कण हैं और उनके चरणों की धूलि मस्तिष्क पर धारण करने के पवित्र रजकण हैं। भारत का गाँव- गाँव, झोपड़ी-झोपड़ी और झोपड़ी में निवास करनेवाले जन-जन इस आत्मीय भाव से भरे-पूरे हैं। वे इस परम्परा की अवहेलना नहीं करते हैं, भूखे रहकर भी अपने अतिथि को संतुष्ट करते हैं। भारतीय चरित्र की विशालता और उदारता विश्व में अकेली परम्परा है।<br>'<strong>साधु न भूखा जाए</strong>' से लेखक का क्या आशय है?",
+        "q_hi": "<b>Comprehension:</b><br>निम्नलिखित गद्यांश को पढ़कर दिए गए प्रश्नों के उत्तर दीजिए:<br>भारत में अतिथि सत्कार की एक अद्भुत और गौरवमयी परम्परा रही है। इतिहास साक्षी रहा है कि अतिथि प्राण से भी प्यारे होते हैं। 'साधु न भूखा जाए' यहां का गृह-सत्कार मंत्र रहा है। गृहस्वामिनी द्वार पर आए अतिथि को अपना पेट काटकर भी खिलाती है। उनके हृदय की विशालता और उदारता भारत की धरोहर है। अतिथियों को यहां देवता माना गया है। 'अतिथि देवो भव' यहां का जीवन मंत्र है। अतिथियों की जूठन के कण गृह-स्वामिनी के लिए गंगा के पवित्र जल कण हैं और उनके चरणों की धूलि मस्तिष्क पर धारण करने के पवित्र रजकण हैं। भारत का गाँव- गाँव, झोपड़ी-झोपड़ी और झोपड़ी में निवास करनेवाले जन-जन इस आत्मीय भाव से भरे-पूरे हैं। वे इस परम्परा की अवहेलना नहीं करते हैं, भूखे रहकर भी अपने अतिथि को संतुष्ट करते हैं। भारतीय चरित्र की विशालता और उदारता विश्व में अकेली परम्परा है।<br>'<strong>साधु न भूखा जाए</strong>' से लेखक का क्या आशय है?",
+        "op_en": [
+            "अतिथि प्राण से प्यारे होते हैं।",
+            "भूखे रहकर भी द्वार पर आए अतिथि को भोजन जरूर कराना चाहिए।",
+            "अतिथि परंपरा पुरानी है।",
+            "अतिथि देवता है।"
+        ],
+        "op_hi": [
+            "अतिथि प्राण से प्यारे होते हैं।",
+            "भूखे रहकर भी द्वार पर आए अतिथि को भोजन जरूर कराना चाहिए।",
+            "अतिथि परंपरा पुरानी है।",
+            "अतिथि देवता है।"
+        ],
+        "ans": "2",
+        "solution": "<b>🧠 Explanation:</b><br>गद्यांश के अनुसार, गृहस्वामिनी स्वयं भूखी रहकर भी अतिथि को भोजन कराती है। यही इस पंक्ति का आशय है।"
+    },
+    {
+        "section": "Hindi1",
+        "topic": "अपठित गद्यांश (संदर्भ)",
+        "level": "Moderate",
+        "q_en": "<b>Comprehension:</b><br>निम्नलिखित गद्यांश को पढ़कर दिए गए प्रश्नों के उत्तर दीजिए:<br>भारत में अतिथि सत्कार की एक अद्भुत और गौरवमयी परम्परा रही है। इतिहास साक्षी रहा है कि अतिथि प्राण से भी प्यारे होते हैं। 'साधु न भूखा जाए' यहां का गृह-सत्कार मंत्र रहा है। गृहस्वामिनी द्वार पर आए अतिथि को अपना पेट काटकर भी खिलाती है। उनके हृदय की विशालता और उदारता भारत की धरोहर है। अतिथियों को यहां देवता माना गया है। 'अतिथि देवो भव' यहां का जीवन मंत्र है। अतिथियों की जूठन के कण गृह-स्वामिनी के लिए गंगा के पवित्र जल कण हैं और उनके चरणों की धूलि मस्तिष्क पर धारण करने के पवित्र रजकण हैं। भारत का गाँव- गाँव, झोपड़ी-झोपड़ी और झोपड़ी में निवास करनेवाले जन-जन इस आत्मीय भाव से भरे-पूरे हैं। वे इस परम्परा की अवहेलना नहीं करते हैं, भूखे रहकर भी अपने अतिथि को संतुष्ट करते हैं। भारतीय चरित्र की विशालता और उदारता विश्व में अकेली परम्परा है।<br>‘<strong>गंगा के पवित्र जल कण</strong>’ किसको कहा गया है?",
+        "q_hi": "<b>Comprehension:</b><br>निम्नलिखित गद्यांश को पढ़कर दिए गए प्रश्नों के उत्तर दीजिए:<br>भारत में अतिथि सत्कार की एक अद्भुत और गौरवमयी परम्परा रही है। इतिहास साक्षी रहा है कि अतिथि प्राण से भी प्यारे होते हैं। 'साधु न भूखा जाए' यहां का गृह-सत्कार मंत्र रहा है। गृहस्वामिनी द्वार पर आए अतिथि को अपना पेट काटकर भी खिलाती है। उनके हृदय की विशालता और उदारता भारत की धरोहर है। अतिथियों को यहां देवता माना गया है। 'अतिथि देवो भव' यहां का जीवन मंत्र है। अतिथियों की जूठन के कण गृह-स्वामिनी के लिए गंगा के पवित्र जल कण हैं और उनके चरणों की धूलि मस्तिष्क पर धारण करने के पवित्र रजकण हैं। भारत का गाँव- गाँव, झोपड़ी-झोपड़ी और झोपड़ी में निवास करनेवाले जन-जन इस आत्मीय भाव से भरे-पूरे हैं। वे इस परम्परा की अवहेलना नहीं करते हैं, भूखे रहकर भी अपने अतिथि को संतुष्ट करते हैं। भारतीय चरित्र की विशालता और उदारता विश्व में अकेली परम्परा है।<br>‘<strong>गंगा के पवित्र जल कण</strong>’ किसको कहा गया है?",
+        "op_en": [
+            "अतिथियों की जूठन को",
+            "अतिथियों को",
+            "अतिथियों के चरणों की धूल को",
+            "गृह स्वामिनी को"
+        ],
+        "op_hi": [
+            "अतिथियों की जूठन को",
+            "अतिथियों को",
+            "अतिथियों के चरणों की धूल को",
+            "गृह स्वामिनी को"
+        ],
+        "ans": "1",
+        "solution": "<b>🧠 Explanation:</b><br>पैसेज की पंक्ति देखें: \"अतिथियों की **जूठन के कण** गृह-स्वामिनी के लिए गंगा के पवित्र जल कण हैं...\""
+    },
+    {
+        "section": "Hindi1",
+        "topic": "अपठित गद्यांश (अर्थ)",
+        "level": "Easy",
+        "q_en": "<b>Comprehension:</b><br>निम्नलिखित गद्यांश को पढ़कर दिए गए प्रश्नों के उत्तर दीजिए:<br>भारत में अतिथि सत्कार की एक अद्भुत और गौरवमयी परम्परा रही है। इतिहास साक्षी रहा है कि अतिथि प्राण से भी प्यारे होते हैं। 'साधु न भूखा जाए' यहां का गृह-सत्कार मंत्र रहा है। गृहस्वामिनी द्वार पर आए अतिथि को अपना पेट काटकर भी खिलाती है। उनके हृदय की विशालता और उदारता भारत की धरोहर है। अतिथियों को यहां देवता माना गया है। 'अतिथि देवो भव' यहां का जीवन मंत्र है। अतिथियों की जूठन के कण गृह-स्वामिनी के लिए गंगा के पवित्र जल कण हैं और उनके चरणों की धूलि मस्तिष्क पर धारण करने के पवित्र रजकण हैं। भारत का गाँव- गाँव, झोपड़ी-झोपड़ी और झोपड़ी में निवास करनेवाले जन-जन इस आत्मीय भाव से भरे-पूरे हैं। वे इस परम्परा की अवहेलना नहीं करते हैं, भूखे रहकर भी अपने अतिथि को संतुष्ट करते हैं। भारतीय चरित्र की विशालता और उदारता विश्व में अकेली परम्परा है।<br>भारत में ‘<strong>अतिथि देवो भव’</strong> का क्या अर्थ है?",
+        "q_hi": "<b>Comprehension:</b><br>निम्नलिखित गद्यांश को पढ़कर दिए गए प्रश्नों के उत्तर दीजिए:<br>भारत में अतिथि सत्कार की एक अद्भुत और गौरवमयी परम्परा रही है। इतिहास साक्षी रहा है कि अतिथि प्राण से भी प्यारे होते हैं। 'साधु न भूखा जाए' यहां का गृह-सत्कार मंत्र रहा है। गृहस्वामिनी द्वार पर आए अतिथि को अपना पेट काटकर भी खिलाती है। उनके हृदय की विशालता और उदारता भारत की धरोहर है। अतिथियों को यहां देवता माना गया है। 'अतिथि देवो भव' यहां का जीवन मंत्र है। अतिथियों की जूठन के कण गृह-स्वामिनी के लिए गंगा के पवित्र जल कण हैं और उनके चरणों की धूलि मस्तिष्क पर धारण करने के पवित्र रजकण हैं। भारत का गाँव- गाँव, झोपड़ी-झोपड़ी और झोपड़ी में निवास करनेवाले जन-जन इस आत्मीय भाव से भरे-पूरे हैं। वे इस परम्परा की अवहेलना नहीं करते हैं, भूखे रहकर भी अपने अतिथि को संतुष्ट करते हैं। भारतीय चरित्र की विशालता और उदारता विश्व में अकेली परम्परा है।<br>भारत में ‘<strong>अतिथि देवो भव’</strong> का क्या अर्थ है?",
+        "op_en": [
+            "अतिथि को परंपरा मानना",
+            "अतिथियों को देवता समान मानना",
+            "सत्कार करना&nbsp;",
+            "गृहस्वामिनी द्वारा खाना खिलाना"
+        ],
+        "op_hi": [
+            "अतिथि को परंपरा मानना",
+            "अतिथियों को देवता समान मानना",
+            "सत्कार करना",
+            "गृहस्वामिनी द्वारा खाना खिलाना"
+        ],
+        "ans": "2",
+        "solution": "<b>🧠 Explanation:</b><br>इसका शाब्दिक अर्थ है: अतिथि (Guest) + देवो (God) + भव (हो)। यानी अतिथि देवता समान होता है।"
+    },
+    {
+        "section": "Hindi1",
+        "topic": "विलोम शब्द",
+        "level": "Easy",
+        "q_en": "<b>Comprehension:</b><br>निम्नलिखित गद्यांश को पढ़कर दिए गए प्रश्नों के उत्तर दीजिए:<br>भारत में अतिथि सत्कार की एक अद्भुत और गौरवमयी परम्परा रही है। इतिहास साक्षी रहा है कि अतिथि प्राण से भी प्यारे होते हैं। 'साधु न भूखा जाए' यहां का गृह-सत्कार मंत्र रहा है। गृहस्वामिनी द्वार पर आए अतिथि को अपना पेट काटकर भी खिलाती है। उनके हृदय की विशालता और उदारता भारत की धरोहर है। अतिथियों को यहां देवता माना गया है। 'अतिथि देवो भव' यहां का जीवन मंत्र है। अतिथियों की जूठन के कण गृह-स्वामिनी के लिए गंगा के पवित्र जल कण हैं और उनके चरणों की धूलि मस्तिष्क पर धारण करने के पवित्र रजकण हैं। भारत का गाँव- गाँव, झोपड़ी-झोपड़ी और झोपड़ी में निवास करनेवाले जन-जन इस आत्मीय भाव से भरे-पूरे हैं। वे इस परम्परा की अवहेलना नहीं करते हैं, भूखे रहकर भी अपने अतिथि को संतुष्ट करते हैं। भारतीय चरित्र की विशालता और उदारता विश्व में अकेली परम्परा है।<br>'<strong>पवित्र</strong>' शब्द का विलोम है -",
+        "q_hi": "<b>Comprehension:</b><br>निम्नलिखित गद्यांश को पढ़कर दिए गए प्रश्नों के उत्तर दीजिए:<br>भारत में अतिथि सत्कार की एक अद्भुत और गौरवमयी परम्परा रही है। इतिहास साक्षी रहा है कि अतिथि प्राण से भी प्यारे होते हैं। 'साधु न भूखा जाए' यहां का गृह-सत्कार मंत्र रहा है। गृहस्वामिनी द्वार पर आए अतिथि को अपना पेट काटकर भी खिलाती है। उनके हृदय की विशालता और उदारता भारत की धरोहर है। अतिथियों को यहां देवता माना गया है। 'अतिथि देवो भव' यहां का जीवन मंत्र है। अतिथियों की जूठन के कण गृह-स्वामिनी के लिए गंगा के पवित्र जल कण हैं और उनके चरणों की धूलि मस्तिष्क पर धारण करने के पवित्र रजकण हैं। भारत का गाँव- गाँव, झोपड़ी-झोपड़ी और झोपड़ी में निवास करनेवाले जन-जन इस आत्मीय भाव से भरे-पूरे हैं। वे इस परम्परा की अवहेलना नहीं करते हैं, भूखे रहकर भी अपने अतिथि को संतुष्ट करते हैं। भारतीय चरित्र की विशालता और उदारता विश्व में अकेली परम्परा है।<br>'<strong>पवित्र</strong>' शब्द का विलोम है -",
+        "op_en": [
+            "स्वच्छ",
+            "पावन",
+            "अस्वच्छ",
+            "अपवित्र"
+        ],
+        "op_hi": [
+            "स्वच्छ",
+            "पावन",
+            "अस्वच्छ",
+            "अपवित्र"
+        ],
+        "ans": "4",
+        "solution": "<b>🧠 Explanation:</b><br>पवित्र (Pure) का विलोम **अपवित्र** (Impure) होता है। 'अ' उपसर्ग जोड़कर विलोम बनाया गया है।"
+    },
+    {
+        "section": "Hindi1",
+        "topic": "रिक्त स्थान (ग्लोबल वार्मिंग)",
+        "level": "Easy",
+        "q_en": "<b>Comprehension:</b><br>उपर्युक्त गद्यांश के आधार पर निम्नलिखित प्रश्नों के उत्तर दीजिए – <br>वैज्ञानिकों का मानना है कि ग्लोबल वार्मिंग के बढ़ने का मुख्य कारण है ग्रीन हाउस गैसों  का .....( 1 ) .....। पृथ्वी के .....( 2  ) ..... में ग्रीन हाउस गैसों के बढ़ने के कारण पृथ्वी पर होने वाली गर्मी इन गैसों के बीच फँसकर रह जाती है और वह पृथ्वी के वातावरण से निकलकर .....( 3 ) ..... में नहीं जा पाती। ग्रीन हाउस गैसों में .....( 4 ) .....केवल सरकार का ही काम नहीं है । हम भी इसमें मदद कर सकते हैं, जैसे बिजली और ईंधन का उपयोग कम करके। बिजली बनाना और बचाना एक ही सिक्के के दो .....( 5 ) ..... हैं ।<br>गद्यांश के रिक्त स्थान (1) के लिए सर्वाधिक उपयुक्त शब्द क्या होगा ?",
+        "q_hi": "<b>Comprehension:</b><br>उपर्युक्त गद्यांश के आधार पर निम्नलिखित प्रश्नों के उत्तर दीजिए – <br>वैज्ञानिकों का मानना है कि ग्लोबल वार्मिंग के बढ़ने का मुख्य कारण है ग्रीन हाउस गैसों  का .....( 1 ) .....। पृथ्वी के .....( 2  ) ..... में ग्रीन हाउस गैसों के बढ़ने के कारण पृथ्वी पर होने वाली गर्मी इन गैसों के बीच फँसकर रह जाती है और वह पृथ्वी के वातावरण से निकलकर .....( 3 ) ..... में नहीं जा पाती। ग्रीन हाउस गैसों में .....( 4 ) .....केवल सरकार का ही काम नहीं है । हम भी इसमें मदद कर सकते हैं, जैसे बिजली और ईंधन का उपयोग कम करके। बिजली बनाना और बचाना एक ही सिक्के के दो .....( 5 ) ..... हैं ।<br>गद्यांश के रिक्त स्थान (1) के लिए सर्वाधिक उपयुक्त शब्द क्या होगा ?",
+        "op_en": [
+            "रुकना",
+            "बढ़ना",
+            "बहना",
+            "घटना"
+        ],
+        "op_hi": [
+            "रुकना",
+            "बढ़ना",
+            "बहना",
+            "घटना"
+        ],
+        "ans": "2",
+        "solution": "<b>🧠 Explanation:</b><br>ग्लोबल वार्मिंग गैसों के **बढ़ने** के कारण होती है।"
+    },
+    {
+        "section": "Hindi1",
+        "topic": "रिक्त स्थान (ग्लोबल वार्मिंग)",
+        "level": "Easy",
+        "q_en": "<b>Comprehension:</b><br>उपर्युक्त गद्यांश के आधार पर निम्नलिखित प्रश्नों के उत्तर दीजिए – <br>वैज्ञानिकों का मानना है कि ग्लोबल वार्मिंग के बढ़ने का मुख्य कारण है ग्रीन हाउस गैसों  का .....( 1 ) .....। पृथ्वी के .....( 2  ) ..... में ग्रीन हाउस गैसों के बढ़ने के कारण पृथ्वी पर होने वाली गर्मी इन गैसों के बीच फँसकर रह जाती है और वह पृथ्वी के वातावरण से निकलकर .....( 3 ) ..... में नहीं जा पाती। ग्रीन हाउस गैसों में .....( 4 ) .....केवल सरकार का ही काम नहीं है । हम भी इसमें मदद कर सकते हैं, जैसे बिजली और ईंधन का उपयोग कम करके। बिजली बनाना और बचाना एक ही सिक्के के दो .....( 5 ) ..... हैं ।<br>गद्यांश के रिक्त स्थान (2) के लिए सर्वाधिक उपयुक्त शब्द क्या होगा ?",
+        "q_hi": "<b>Comprehension:</b><br>उपर्युक्त गद्यांश के आधार पर निम्नलिखित प्रश्नों के उत्तर दीजिए – <br>वैज्ञानिकों का मानना है कि ग्लोबल वार्मिंग के बढ़ने का मुख्य कारण है ग्रीन हाउस गैसों  का .....( 1 ) .....। पृथ्वी के .....( 2  ) ..... में ग्रीन हाउस गैसों के बढ़ने के कारण पृथ्वी पर होने वाली गर्मी इन गैसों के बीच फँसकर रह जाती है और वह पृथ्वी के वातावरण से निकलकर .....( 3 ) ..... में नहीं जा पाती। ग्रीन हाउस गैसों में .....( 4 ) .....केवल सरकार का ही काम नहीं है । हम भी इसमें मदद कर सकते हैं, जैसे बिजली और ईंधन का उपयोग कम करके। बिजली बनाना और बचाना एक ही सिक्के के दो .....( 5 ) ..... हैं ।<br>गद्यांश के रिक्त स्थान (2) के लिए सर्वाधिक उपयुक्त शब्द क्या होगा ?",
+        "op_en": [
+            "समाज",
+            "गाँव",
+            "माहौल",
+            "वातावरण"
+        ],
+        "op_hi": [
+            "समाज",
+            "गाँव",
+            "माहौल",
+            "वातावरण"
+        ],
+        "ans": "4",
+        "solution": "<b>🧠 Explanation:</b><br>गैसें पृथ्वी के **वातावरण** (Atmosphere) में बढ़ती हैं।"
+    },
+    {
+        "section": "Hindi1",
+        "topic": "रिक्त स्थान (ग्लोबल वार्मिंग)",
+        "level": "Easy",
+        "q_en": "<b>Comprehension:</b><br>उपर्युक्त गद्यांश के आधार पर निम्नलिखित प्रश्नों के उत्तर दीजिए – <br>वैज्ञानिकों का मानना है कि ग्लोबल वार्मिंग के बढ़ने का मुख्य कारण है ग्रीन हाउस गैसों  का .....( 1 ) .....। पृथ्वी के .....( 2  ) ..... में ग्रीन हाउस गैसों के बढ़ने के कारण पृथ्वी पर होने वाली गर्मी इन गैसों के बीच फँसकर रह जाती है और वह पृथ्वी के वातावरण से निकलकर .....( 3 ) ..... में नहीं जा पाती। ग्रीन हाउस गैसों में .....( 4 ) .....केवल सरकार का ही काम नहीं है । हम भी इसमें मदद कर सकते हैं, जैसे बिजली और ईंधन का उपयोग कम करके। बिजली बनाना और बचाना एक ही सिक्के के दो .....( 5 ) ..... हैं ।<br>गद्यांश के रिक्त स्थान (3 ) के लिए सर्वाधिक उपयुक्त शब्द क्या होगा ?",
+        "q_hi": "<b>Comprehension:</b><br>उपर्युक्त गद्यांश के आधार पर निम्नलिखित प्रश्नों के उत्तर दीजिए – <br>वैज्ञानिकों का मानना है कि ग्लोबल वार्मिंग के बढ़ने का मुख्य कारण है ग्रीन हाउस गैसों  का .....( 1 ) .....। पृथ्वी के .....( 2  ) ..... में ग्रीन हाउस गैसों के बढ़ने के कारण पृथ्वी पर होने वाली गर्मी इन गैसों के बीच फँसकर रह जाती है और वह पृथ्वी के वातावरण से निकलकर .....( 3 ) ..... में नहीं जा पाती। ग्रीन हाउस गैसों में .....( 4 ) .....केवल सरकार का ही काम नहीं है । हम भी इसमें मदद कर सकते हैं, जैसे बिजली और ईंधन का उपयोग कम करके। बिजली बनाना और बचाना एक ही सिक्के के दो .....( 5 ) ..... हैं ।<br>गद्यांश के रिक्त स्थान (3 ) के लिए सर्वाधिक उपयुक्त शब्द क्या होगा ?",
+        "op_en": [
+            "पहाड़",
+            "अंतरिक्ष",
+            "सागर",
+            "नदी"
+        ],
+        "op_hi": [
+            "पहाड़",
+            "अंतरिक्ष",
+            "सागर",
+            "नदी"
+        ],
+        "ans": "2",
+        "solution": "<b>🧠 Explanation:</b><br>गर्मी वातावरण से निकलकर **अंतरिक्ष** (Space) में वापस नहीं जा पाती।"
+    },
+    {
+        "section": "Hindi1",
+        "topic": "रिक्त स्थान (ग्लोबल वार्मिंग)",
+        "level": "Easy",
+        "q_en": "<b>Comprehension:</b><br>उपर्युक्त गद्यांश के आधार पर निम्नलिखित प्रश्नों के उत्तर दीजिए – <br>वैज्ञानिकों का मानना है कि ग्लोबल वार्मिंग के बढ़ने का मुख्य कारण है ग्रीन हाउस गैसों  का .....( 1 ) .....। पृथ्वी के .....( 2  ) ..... में ग्रीन हाउस गैसों के बढ़ने के कारण पृथ्वी पर होने वाली गर्मी इन गैसों के बीच फँसकर रह जाती है और वह पृथ्वी के वातावरण से निकलकर .....( 3 ) ..... में नहीं जा पाती। ग्रीन हाउस गैसों में .....( 4 ) .....केवल सरकार का ही काम नहीं है । हम भी इसमें मदद कर सकते हैं, जैसे बिजली और ईंधन का उपयोग कम करके। बिजली बनाना और बचाना एक ही सिक्के के दो .....( 5 ) ..... हैं ।<br>गद्यांश के रिक्त स्थान (4 ) के लिए सर्वाधिक उपयुक्त शब्द क्या होगा. ?",
+        "q_hi": "<b>Comprehension:</b><br>उपर्युक्त गद्यांश के आधार पर निम्नलिखित प्रश्नों के उत्तर दीजिए – <br>वैज्ञानिकों का मानना है कि ग्लोबल वार्मिंग के बढ़ने का मुख्य कारण है ग्रीन हाउस गैसों  का .....( 1 ) .....। पृथ्वी के .....( 2  ) ..... में ग्रीन हाउस गैसों के बढ़ने के कारण पृथ्वी पर होने वाली गर्मी इन गैसों के बीच फँसकर रह जाती है और वह पृथ्वी के वातावरण से निकलकर .....( 3 ) ..... में नहीं जा पाती। ग्रीन हाउस गैसों में .....( 4 ) .....केवल सरकार का ही काम नहीं है । हम भी इसमें मदद कर सकते हैं, जैसे बिजली और ईंधन का उपयोग कम करके। बिजली बनाना और बचाना एक ही सिक्के के दो .....( 5 ) ..... हैं ।<br>गद्यांश के रिक्त स्थान (4 ) के लिए सर्वाधिक उपयुक्त शब्द क्या होगा. ?",
+        "op_en": [
+            "कमी करना",
+            "रुकावट करना",
+            "प्रदर्शन करना",
+            "बढ़ोत्तरी करना"
+        ],
+        "op_hi": [
+            "कमी करना",
+            "रुकावट करना",
+            "प्रदर्शन करना",
+            "बढ़ोत्तरी करना"
+        ],
+        "ans": "1",
+        "solution": "<b>🧠 Explanation:</b><br>ग्रीन हाउस गैसों में **कमी करना** (Reduction) ही ग्लोबल वार्मिंग को रोकने का उपाय है।"
+    },
+    {
+        "section": "Hindi1",
+        "topic": "रिक्त स्थान (ग्लोबल वार्मिंग)",
+        "level": "Moderate",
+        "q_en": "<b>Comprehension:</b><br>उपर्युक्त गद्यांश के आधार पर निम्नलिखित प्रश्नों के उत्तर दीजिए – <br>वैज्ञानिकों का मानना है कि ग्लोबल वार्मिंग के बढ़ने का मुख्य कारण है ग्रीन हाउस गैसों  का .....( 1 ) .....। पृथ्वी के .....( 2  ) ..... में ग्रीन हाउस गैसों के बढ़ने के कारण पृथ्वी पर होने वाली गर्मी इन गैसों के बीच फँसकर रह जाती है और वह पृथ्वी के वातावरण से निकलकर .....( 3 ) ..... में नहीं जा पाती। ग्रीन हाउस गैसों में .....( 4 ) .....केवल सरकार का ही काम नहीं है । हम भी इसमें मदद कर सकते हैं, जैसे बिजली और ईंधन का उपयोग कम करके। बिजली बनाना और बचाना एक ही सिक्के के दो .....( 5 ) ..... हैं ।<br>गद्यांश के रिक्त स्थान (5 ) के लिए सर्वाधिक उपयुक्त शब्द क्या होगा ?",
+        "q_hi": "<b>Comprehension:</b><br>उपर्युक्त गद्यांश के आधार पर निम्नलिखित प्रश्नों के उत्तर दीजिए – <br>वैज्ञानिकों का मानना है कि ग्लोबल वार्मिंग के बढ़ने का मुख्य कारण है ग्रीन हाउस गैसों  का .....( 1 ) .....। पृथ्वी के .....( 2  ) ..... में ग्रीन हाउस गैसों के बढ़ने के कारण पृथ्वी पर होने वाली गर्मी इन गैसों के बीच फँसकर रह जाती है और वह पृथ्वी के वातावरण से निकलकर .....( 3 ) ..... में नहीं जा पाती। ग्रीन हाउस गैसों में .....( 4 ) .....केवल सरकार का ही काम नहीं है । हम भी इसमें मदद कर सकते हैं, जैसे बिजली और ईंधन का उपयोग कम करके। बिजली बनाना और बचाना एक ही सिक्के के दो .....( 5 ) ..... हैं ।<br>गद्यांश के रिक्त स्थान (5 ) के लिए सर्वाधिक उपयुक्त शब्द क्या होगा ?",
+        "op_en": [
+            "पहलू",
+            "उदाहरण",
+            "हथियार",
+            "आइने"
+        ],
+        "op_hi": [
+            "पहलू",
+            "उदाहरण",
+            "हथियार",
+            "आइने"
+        ],
+        "ans": "1",
+        "solution": "<b>📌 Concept:</b><br>मुहावरा: एक ही सिक्के के दो **पहलू** (Two sides of the same coin)."
+    },
+    {
+        "section": "General Knowledge Including Current Affairs",
+        "topic": "History (Modern India)",
+        "level": "Easy",
+        "q_en": "When was the Indian National Congress formed?",
+        "q_hi": "भारतीय राष्ट्रीय कांग्रेस की स्थापना कब हुई थी?",
+        "op_en": [
+            "1905",
+            "1855",
+            "1805",
+            "1885"
+        ],
+        "op_hi": [
+            "1905",
+            "1855",
+            "1805",
+            "1885"
+        ],
+        "ans": "4",
+        "solution": "<b>📌 Concept:</b><br>भारतीय राष्ट्रीय कांग्रेस (INC) की स्थापना ब्रिटिश भारत में एक राजनीतिक मंच के रूप में की गई थी।<br><br><b>🔍 Word Insight:</b><br>- <b>1885:</b> वह वर्ष जब बॉम्बे (अब मुंबई) में पहला सत्र हुआ।<br>- <b>A.O. Hume:</b> इसके संस्थापक (Founder) माने जाते हैं।<br><br><b>🧠 Explanation (Option-wise Breakdown):</b><br>1. 1905 → बंगाल विभाजन (Partition of Bengal) का वर्ष।<br>2. 1855 → कांग्रेस की स्थापना से 30 साल पहले।<br>3. 1885 → सही। 28 दिसंबर 1885 को ए.ओ. ह्यूम द्वारा स्थापना हुई और डब्लू.सी. बनर्जी पहले अध्यक्ष बने।<br><br><b>⚡ Smart Exam Trick:</b><br>INC की स्थापना के समय भारत के वायसराय 'लॉर्ड डफरिन' थे। इसे 'डफरिन' के दिमाग की उपज भी कहा जाता है।<br><br><b>🎯 Memory Hack:</b><br>8-8-5 (8+8 = 16, 1+6 = 7... नहीं, सीधा याद रखें 1857 की क्रांति के लगभग 30 साल बाद)।<br><br><b>🚫 Common Mistake:</b><br>छात्र अक्सर डब्लू.सी. बनर्जी को संस्थापक समझ लेते हैं, जबकि वे 'पहले अध्यक्ष' थे।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs",
+        "topic": "Geography (Climate)",
+        "level": "Moderate",
+        "q_en": "Which of the following Union Territories receives average annual rainfall ranged nearly from 3000 to 3500 mm?",
+        "q_hi": "निम्नलिखित में से किस केंद्र शासित प्रदेश में औसत वार्षिक वर्षा लगभग 3000 से 3500 मिमी के बीच होती है?",
+        "op_en": [
+            "Ladakh",
+            "Delhi",
+            "Chandigarh",
+            "Andaman and Nicobar Islands"
+        ],
+        "op_hi": [
+            "लद्दाख",
+            "दिल्ली",
+            "चंडीगढ़",
+            "अंडमान और निकोबार द्वीप समूह"
+        ],
+        "ans": "4",
+        "solution": "<b>📌 Concept:</b><br>अंडमान और निकोबार द्वीप समूह में 'विषुवतीय जलवायु' (Equatorial climate) पाई जाती है, जहाँ साल भर भारी वर्षा होती है।<br><br><b>🧠 Explanation:</b><br>लद्दाख एक ठंडा रेगिस्तान है (बहुत कम वर्षा), दिल्ली और चंडीगढ़ मानसूनी वर्षा प्राप्त करते हैं (औसतन 600-800 मिमी)। अंडमान अपनी भौगोलिक स्थिति के कारण दक्षिण-पश्चिम और उत्तर-पूर्वी दोनों मानसून से वर्षा प्राप्त करता है, जिससे यहाँ का औसत 3000 मिमी पार कर जाता है।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs",
+        "topic": "Books and Authors",
+        "level": "Moderate",
+        "q_en": "Whose  autobiography is titled ‘And Then One Day: A Memoir’?",
+        "q_hi": "किसकी आत्मकथा का शीर्षक 'एंड देन वन डे: ए मेमॉयर' (And Then One Day: A Memoir) है?",
+        "op_en": [
+            "Naseeruddin Shah",
+            "Khushwant Singh\n<br>",
+            "Chetan Bhagat",
+            "Ravi Kumar\n<br>"
+        ],
+        "op_hi": [
+            "नसीरुद्दीन शाह",
+            "खुशवंत सिंह",
+            "चेतन भगत",
+            "रवि कुमार"
+        ],
+        "ans": "1",
+        "solution": "<b>🔍 Word Insight:</b><br>- <b>Naseeruddin Shah:</b> भारतीय सिनेमा के दिग्गज अभिनेता।<br>- <b>Memoir:</b> संस्मरण या जीवन की यादें।<br><br><b>🧠 Explanation:</b><br>यह नसीरुद्दीन शाह की चर्चित आत्मकथा है जिसमें उन्होंने अपने शुरुआती संघर्षों और अभिनय यात्रा का वर्णन किया है। खुशवंत सिंह की आत्मकथा 'Truth, Love and a Little Malice' है।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs",
+        "topic": "Economy",
+        "level": "Hard",
+        "q_en": "How would implementing a Universal Basic Income (UBI) impact the fiscal deficit?",
+        "q_hi": "यूनिवर्सल बेसिक इनकम (UBI) को लागू करने से राजकोषीय घाटे (Fiscal Deficit) पर क्या प्रभाव पड़ेगा?",
+        "op_en": [
+            "It would automatically reduce the fiscal deficit.",
+            "It would have no impact on the fiscal deficit.",
+            "It would solely impact the monetary policy.",
+            "It could potentially increase the fiscal deficit."
+        ],
+        "op_hi": [
+            "यह स्वचालित रूप से राजकोषीय घाटे को कम कर देगा।",
+            "राजकोषीय घाटे पर इसका कोई प्रभाव नहीं पड़ेगा।",
+            "यह पूरी तरह से मौद्रिक नीति को प्रभावित करेगा।",
+            "यह संभावित रूप से राजकोषीय घाटे को बढ़ा सकता है।"
+        ],
+        "ans": "4",
+        "solution": "<b>📌 Concept:</b><br>UBI का मतलब है हर नागरिक को सरकार द्वारा एक निश्चित राशि बिना किसी शर्त के देना।<br><br><b>🧠 Explanation:</b><br>चूंकि सरकार को बड़ी आबादी को पैसा देना होगा, इसलिए सरकारी खर्च (Expenditure) बढ़ेगा। अगर सरकार अपनी सब्सिडी कम नहीं करती है या टैक्स नहीं बढ़ाती, तो इससे **राजकोषीय घाटा (Fiscal Deficit) बढ़ जाएगा**।<br><br><b>⚡ Smart Exam Trick:</b><br>कोई भी 'Free money' स्कीम सरकारी खजाने पर बोझ डालती है, जिससे घाटा बढ़ता है।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs",
+        "topic": "Current Affairs (Environment)",
+        "level": "Moderate",
+        "q_en": "Where will the 2025 UN Climate Change Conference (UNFCCC COP 30) be held in November 2025?",
+        "q_hi": "नवंबर 2025 में 2025 संयुक्त राष्ट्र जलवायु परिवर्तन सम्मेलन (UNFCCC COP 30) कहाँ आयोजित किया जाएगा?",
+        "op_en": [
+            "New York, USA",
+            "Belém, Brazil",
+            "Kyoto, Japan",
+            "Paris, France"
+        ],
+        "op_hi": [
+            "न्यूयॉर्क, यूएसए",
+            "बेलेम, ब्राजील",
+            "क्योटो, जापान",
+            "पेरिस, फ्रांस"
+        ],
+        "ans": "2",
+        "solution": "<b>📌 Concept:</b><br>COP (Conference of Parties) जलवायु परिवर्तन पर चर्चा के लिए वैश्विक मंच है।<br><br><b>🧠 Explanation:</b><br>**COP 30** ब्राजील के **बेलेम (Belém)** में आयोजित होगा। यह अमेज़न वर्षावनों के करीब होने के कारण प्रतीकात्मक रूप से महत्वपूर्ण है।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs",
+        "topic": "History (Modern India)",
+        "level": "Easy",
+        "q_en": "The Khilafat movement was a political campaign launched by Indian Muslims in British India in response to British policy against which country?",
+        "q_hi": "खिलाफत आंदोलन भारतीय मुसलमानों द्वारा किस देश के खिलाफ ब्रिटिश नीति के जवाब में शुरू किया गया एक राजनीतिक अभियान था?",
+        "op_en": [
+            "Morocco",
+            "Turkey",
+            "Jordan",
+            "Iran"
+        ],
+        "op_hi": [
+            "मोरक्को",
+            "तुर्की",
+            "जॉर्डन",
+            "ईरान"
+        ],
+        "ans": "2",
+        "solution": "<b>📌 Concept:</b><br>प्रथम विश्व युद्ध के बाद तुर्की के सुल्तान (खलीफा) की शक्तियों को ब्रिटिशर्स ने कम कर दिया था, जिसके विरोध में भारत में 'खिलाफत आंदोलन' चला।<br><br><b>🧠 Explanation:</b><br>अली बंधुओं (शौकत अली और मोहम्मद अली) ने गांधी जी के साथ मिलकर इसे चलाया ताकि हिंदू-मुस्लिम एकता बढ़े। 'खलीफा' तुर्की का धार्मिक प्रमुख था।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs",
+        "topic": "Current Affairs (States)",
+        "level": "Hard",
+        "q_en": "As of November 2024, who was the youngest Chief Minister of Jharkhand?",
+        "q_hi": "नवंबर 2024 तक, झारखंड के सबसे युवा मुख्यमंत्री कौन थे?",
+        "op_en": [
+            "Hemant Soren",
+            "Shibu Soren",
+            "Babulal Marandi",
+            "Raghubar Das"
+        ],
+        "op_hi": [
+            "हेमंत सोरेन",
+            "शिबू सोरेन",
+            "बाबूलाल मरांडी",
+            "रघुवर दास"
+        ],
+        "ans": "1",
+        "solution": "<b>🧠 Explanation:</b><br>**हेमंत सोरेन** झारखंड के इतिहास में सबसे कम उम्र में मुख्यमंत्री बनने वाले नेता हैं। वे पहली बार 2013 में मात्र 38 वर्ष की आयु में मुख्यमंत्री बने थे।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs",
+        "topic": "Current Affairs (Sports)",
+        "level": "Moderate",
+        "q_en": "In which state were the 38<sup>th</sup> National Games of India, scheduled from 28 January 2025 to 14 February 2025 held?",
+        "q_hi": "2025 में आयोजित भारत के 38वें राष्ट्रीय खेल किस राज्य में आयोजित किए गए?",
+        "op_en": [
+            "Gujarat",
+            "Uttarakhand",
+            "Kerala",
+            "Punjab"
+        ],
+        "op_hi": [
+            "गुजरात",
+            "उत्तराखंड",
+            "केरल",
+            "पंजाब"
+        ],
+        "ans": "2",
+        "solution": "<b>🧠 Explanation:</b><br>भारत के **38वें राष्ट्रीय खेलों** की मेजबानी **उत्तराखंड** ने की। यह जनवरी-फरवरी 2025 में आयोजित हुए।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs",
+        "topic": "Economy (Revenue)",
+        "level": "Easy",
+        "q_en": "What is the main source of revenue for the government?",
+        "q_hi": "सरकार के लिए राजस्व (Revenue) का मुख्य स्रोत क्या है?",
+        "op_en": [
+            "Profits from private companies",
+            "Taxes collected from people and businesses",
+            "Loans from international banks",
+            "Donations from citizens"
+        ],
+        "op_hi": [
+            "निजी कंपनियों से लाभ",
+            "लोगों और व्यवसायों से एकत्र किए गए कर (Taxes)",
+            "अंतर्राष्ट्रीय बैंकों से ऋण",
+            "नागरिकों से दान"
+        ],
+        "ans": "2",
+        "solution": "<b>📌 Concept:</b><br>राजस्व (Revenue) का अर्थ है वह पैसा जो सरकार को वापस नहीं करना पड़ता।<br><br><b>🧠 Explanation:</b><br>सरकार की आय का सबसे बड़ा हिस्सा **टैक्स (Direct और Indirect)** से आता है। ऋण (Loans) राजस्व नहीं बल्कि 'पूंजीगत प्राप्ति' (Capital Receipt) है क्योंकि इसे वापस चुकाना पड़ता है।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs",
+        "topic": "Current Affairs (Space)",
+        "level": "Hard",
+        "q_en": "What is the primary objective of the NISAR satellite, a collaborative mission between NASA and ISRO scheduled for launch in 2025?",
+        "q_hi": "NASA और ISRO के सहयोगात्मक मिशन NISAR उपग्रह का प्राथमिक उद्देश्य क्या है?",
+        "op_en": [
+            "To explore the outer planets",
+            "To study the Sun’s corona",
+            "To monitor deep-space radiation levels",
+            "To map Earth’s surface changes using advanced radar imaging"
+        ],
+        "op_hi": [
+            "बाहरी ग्रहों का पता लगाने के लिए",
+            "सूर्य के कोरोना का अध्ययन करने के लिए",
+            "गहरे अंतरिक्ष विकिरण स्तरों की निगरानी के लिए",
+            "उन्नत रडार इमेजिंग का उपयोग करके पृथ्वी की सतह के परिवर्तनों का मानचित्रण करने के लिए"
+        ],
+        "ans": "4",
+        "solution": "<b>📌 Concept:</b><br>NISAR = NASA ISRO Synthetic Aperture Radar.<br><br><b>🧠 Explanation:</b><br>यह उपग्रह पृथ्वी की सतह में होने वाले सूक्ष्म परिवर्तनों (जैसे ग्लेशियर का पिघलना, भूकंप, सुनामी के बाद के बदलाव) को ट्रैक करेगा। यह दुनिया का पहला 'डुअल-बैंड रडार इमेजिंग' मिशन है।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs",
+        "topic": "Art and Culture (Architecture)",
+        "level": "Moderate",
+        "q_en": "What is the name of the early type of Buddhist monastery that consists of an open court surrounded by cells accessible through an entrance porch?",
+        "q_hi": "प्रारंभिक प्रकार के बौद्ध मठ का नाम क्या है जिसमें एक खुला प्रांगण होता है जो चारों ओर से कक्षों (Cells) से घिरा होता है?",
+        "op_en": [
+            "Chaitya\n<br>",
+            "Vihara\n<br>",
+            "Stupa\n<br>",
+            "Sangha\n<br>"
+        ],
+        "op_hi": [
+            "चैत्य",
+            "विहार",
+            "स्तूप",
+            "संघ"
+        ],
+        "ans": "2",
+        "solution": "<b>📌 Concept:</b><br>बौद्ध वास्तुकला में दो मुख्य संरचनाएं होती हैं: पूजा स्थल और निवास स्थल।<br><br><b>🔍 Word Insight:</b><br>- <b>Chaitya:</b> प्रार्थना गृह (Prayer Hall).<br>- <b>Vihara:</b> भिक्षुओं के रहने का स्थान (Monastery).<br><br><b>🧠 Explanation:</b><br>विहार एक आवासीय परिसर होता था जहाँ भिक्षु रहते थे और बीच में एक खुला आँगन होता था।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs",
+        "topic": "Static GK (Architecture)",
+        "level": "Moderate",
+        "q_en": "Who served as the chief architect of the Rashtrapati Bhavan of India?",
+        "q_hi": "भारत के राष्ट्रपति भवन के मुख्य वास्तुकार के रूप में किसने कार्य किया?",
+        "op_en": [
+            "Herbert Baker\n<br>",
+            "Frank Lloyd Wright\n<br>",
+            "Edwin Lutyens\n<br>",
+            "Balkrishna Doshi\n<br>"
+        ],
+        "op_hi": [
+            "हरबर्ट बेकर",
+            "फ्रैंक लॉयड राइट",
+            "एडविन लुटियंस",
+            "बालकृष्ण दोशी"
+        ],
+        "ans": "3",
+        "solution": "<b>🧠 Explanation:</b><br>राष्ट्रपति भवन (पूर्व में वायसराय हाउस) को **एडविन लुटियंस** ने डिजाइन किया था। हरबर्ट बेकर ने संसद भवन (पुरानी बिल्डिंग) और सचिवालय को डिजाइन करने में मदद की थी।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs",
+        "topic": "Current Affairs (Tech Policy)",
+        "level": "Hard",
+        "q_en": "When did MeitY hold the India AI Safety Institute (AISI) creation consultation?",
+        "q_hi": "MeitY (इलेक्ट्रॉनिक्स और आईटी मंत्रालय) ने भारत AI सुरक्षा संस्थान (AISI) के निर्माण पर परामर्श कब आयोजित किया?",
+        "op_en": [
+            "June 2024",
+            "August 2024",
+            "January 2024",
+            "October 2024"
+        ],
+        "op_hi": [
+            "जून 2024",
+            "अगस्त 2024",
+            "जनवरी 2024",
+            "अक्टूबर 2024"
+        ],
+        "ans": "4",
+        "solution": "<b>🧠 Explanation:</b><br>**अक्टूबर 2024** में भारत सरकार ने AI सुरक्षा के लिए एक समर्पित संस्थान बनाने की दिशा में कदम बढ़ाया। इसका उद्देश्य AI के जोखिमों को कम करना और जिम्मेदारीपूर्ण तकनीकी विकास सुनिश्चित करना है।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs1",
+        "topic": "Geography (Static)",
+        "level": "Easy",
+        "q_en": "Chikmagalur (officially Chikkamagaluru) is a famous coffee-producing town in which of the following states?",
+        "q_hi": "चिकमगलूर (Chikkamagaluru) किस राज्य में एक प्रसिद्ध कॉफी उत्पादक शहर है?",
+        "op_en": [
+            "Karnataka\n<br>",
+            "Kerala\n<br>",
+            "Andhra Pradesh",
+            "Tamil Nadu"
+        ],
+        "op_hi": [
+            "कर्नाटक",
+            "केरल",
+            "आंध्र प्रदेश",
+            "तमिलनाडु"
+        ],
+        "ans": "1",
+        "solution": "<b>📌 Concept:</b><br>भारत में कॉफी की शुरुआत सबसे पहले चिकमगलूर की 'बाबा बुदन' पहाड़ियों से हुई थी।<br><br><b>🧠 Explanation:</b><br>कर्नाटक भारत का सबसे बड़ा कॉफी उत्पादक राज्य है। यहाँ चिकमगलूर और कूर्ग (Coorg) सबसे प्रमुख क्षेत्र हैं।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs1",
+        "topic": "Polity (Committees)",
+        "level": "Moderate",
+        "q_en": "For how long is the Public Accounts Committee (PAC) constituted in the Indian Parliament?",
+        "q_hi": "भारतीय संसद में लोक लेखा समिति (PAC) का गठन कितनी अवधि के लिए किया जाता है?",
+        "op_en": [
+            "6 months",
+            "3 years",
+            "2 years",
+            "1 year"
+        ],
+        "op_hi": [
+            "6 महीने",
+            "3 वर्ष",
+            "2 वर्ष",
+            "1 वर्ष"
+        ],
+        "ans": "4",
+        "solution": "<b>📌 Concept:</b><br>PAC सबसे पुरानी और महत्वपूर्ण वित्तीय समिति है।<br><br><b>🧠 Explanation:</b><br>इसका कार्यकाल मात्र **1 वर्ष** का होता है। इसमें 22 सदस्य (15 लोकसभा + 7 राज्यसभा) होते हैं और इसका अध्यक्ष विपक्षी दल से होता है।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs1",
+        "topic": "Science (Physics)",
+        "level": "Moderate",
+        "q_en": "Who among the following accidentally discovered that a compass needle will get deflected when an electric current passes through a metallic wire placed nearby?",
+        "q_hi": "निम्नलिखित में से किसने गलती से यह खोजा था कि जब पास के धातु के तार से विद्युत धारा प्रवाहित होती है तो चुंबकीय सुई विचलित (Deflect) हो जाती है?",
+        "op_en": [
+            "Thomas Alva Edison",
+            "Nikola Tesla",
+            "Hans Christian Oersted",
+            "Michael Faraday"
+        ],
+        "op_hi": [
+            "थॉमस अल्वा एडिसन",
+            "निकोला टेस्ला",
+            "हंस क्रिश्चियन ओर्स्टेड",
+            "माइकल फैराडे"
+        ],
+        "ans": "3",
+        "solution": "<b>📌 Concept:</b><br>यह विद्युत चुंबकत्व (Electromagnetism) की आधारशिला थी।<br><br><b>🧠 Explanation:</b><br>**हंस क्रिश्चियन ओर्स्टेड** (1820) ने पाया कि बिजली और चुंबकत्व आपस में जुड़े हुए हैं। फैराडे ने बाद में इसके सिद्धांतों का विस्तार किया।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs1",
+        "topic": "Geography (Static)",
+        "level": "Easy",
+        "q_en": "Which of the following places in India receives the highest rainfall?",
+        "q_hi": "भारत में निम्नलिखित में से किस स्थान पर सर्वाधिक वर्षा होती है?",
+        "op_en": [
+            "Shillong",
+            "Mairang",
+            "Mawsynram",
+            "Imphal"
+        ],
+        "op_hi": [
+            "शिलांग",
+            "मैरांग",
+            "मौसिनराम",
+            "इम्फाल"
+        ],
+        "ans": "3",
+        "solution": "<b>🧠 Explanation:</b><br>मेघालय के खासी पहाड़ियों में स्थित **मौसिनराम** (Mawsynram) दुनिया का सबसे गीला स्थान है। पहले यह खिताब चेरापूंजी के पास था।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs1",
+        "topic": "Polity (GST)",
+        "level": "Easy",
+        "q_en": "वस्तु एवं सेवा कर (GST) परिषद की अध्यक्षता निम्नलिखित में से कौन करता है?",
+        "q_hi": "वस्तु एवं सेवा कर (GST) परिषद की अध्यक्षता निम्नलिखित में से कौन करता है?",
+        "op_en": [
+            "भारतीय रिजर्व बैंक के गवर्नर",
+            "Union Finance Minister",
+            "Chief Economic Advisor",
+            "Prime Minister of India"
+        ],
+        "op_hi": [
+            "भारतीय रिजर्व बैंक के गवर्नर",
+            "केंद्रीय वित्त मंत्री",
+            "मुख्य आर्थिक सलाहकार",
+            "भारत के प्रधानमंत्री"
+        ],
+        "ans": "2",
+        "solution": "<b>📌 Concept:</b><br>GST परिषद एक संवैधानिक निकाय (अनुच्छेद 279A) है।<br><br><b>🧠 Explanation:</b><br>इसकी अध्यक्षता **केंद्रीय वित्त मंत्री** करते हैं और राज्यों के वित्त मंत्री इसके सदस्य होते हैं।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs1",
+        "topic": "Polity (Panchayati Raj)",
+        "level": "Moderate",
+        "q_en": "Which of the following is NOT one of the political benefits of the Panchayati Raj system?",
+        "q_hi": "निम्नलिखित में से कौन सा पंचायती राज प्रणाली का राजनीतिक लाभ नहीं है?",
+        "op_en": [
+            "Increased local participation in decision making",
+            "Improved accountability",
+            "Reduction of corruption",
+            "Enhanced central control"
+        ],
+        "op_hi": [
+            "निर्णय लेने में स्थानीय भागीदारी में वृद्धि",
+            "बेहतर जवाबदेही",
+            "भ्रष्टाचार में कमी",
+            "बढ़ा हुआ केंद्रीय नियंत्रण"
+        ],
+        "ans": "4",
+        "solution": "<b>📌 Concept:</b><br>पंचायती राज का मुख्य उद्देश्य 'विकेंद्रीकरण' (Decentralization) है, न कि केंद्रीकरण।<br><br><b>🧠 Explanation:</b><br>पंचायती राज शक्तियों को दिल्ली/राजधानी से गाँव तक पहुँचाता है, जिससे **केंद्रीय नियंत्रण कम** होता है, बढ़ता नहीं।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs1",
+        "topic": "Science (Cell Biology)",
+        "level": "Easy",
+        "q_en": "In prokaryotic cells, the semi-fluid matrix is called _________.",
+        "q_hi": "प्रोकैरियोटिक कोशिकाओं में, अर्ध-तरल आव्यूह (Matrix) को _________ कहा जाता है।",
+        "op_en": [
+            "cytoplasm",
+            "nucleoplasm",
+            "protoplasm",
+            "chromoplasm"
+        ],
+        "op_hi": [
+            "कोशिका द्रव्य (cytoplasm)",
+            "केंद्रक द्रव्य (nucleoplasm)",
+            "जीवद्रव्य (protoplasm)",
+            "क्रोमोप्लाज्म"
+        ],
+        "ans": "1",
+        "solution": "<b>🧠 Explanation:</b><br>कोशिका के अंदर जो तरल पदार्थ भरा होता है उसे **साइटोप्लाज्म** कहते हैं। प्रोकैरियोटिक कोशिकाओं में स्पष्ट केंद्रक (Nucleus) नहीं होता, इसलिए सारा तरल साइटोप्लाज्म ही कहलाता है।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs1",
+        "topic": "Science (History of Chemistry)",
+        "level": "Hard",
+        "q_en": "Who published a method for the synthesis of acetic acid from inorganic compounds in 1845?",
+        "q_hi": "1845 में अकार्बनिक यौगिकों से एसिटिक एसिड के संश्लेषण (Synthesis) की विधि किसने प्रकाशित की थी?",
+        "op_en": [
+            "Friedrich Wöhler",
+            "Hermann Kolbe",
+            "Svante Arrhenius",
+            "Marcellin Berthelot"
+        ],
+        "op_hi": [
+            "फ्रेडरिक वोहलर",
+            "हरमन कोल्बे",
+            "स्वांते अरहेनियस",
+            "मार्सेलिन बर्थेलॉट"
+        ],
+        "ans": "2",
+        "solution": "<b>📌 Concept:</b><br>यह खोज इस विचार को तोड़ने के लिए महत्वपूर्ण थी कि कार्बनिक पदार्थ केवल जीवित चीजों से मिल सकते हैं।<br><br><b>🧠 Explanation:</b><br>**हरमन कोल्बे** (Hermann Kolbe) ने पूरी तरह से अकार्बनिक (Inorganic) स्रोतों से एसिटिक एसिड बनाकर दिखाया।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs1",
+        "topic": "Polity (President)",
+        "level": "Easy",
+        "q_en": "Which of the following is NOT a power of the President of India?",
+        "q_hi": "निम्नलिखित में से कौन सी भारत के राष्ट्रपति की शक्ति नहीं है?",
+        "op_en": [
+            "Dissolving the Lok Sabha",
+            "Appointing the Prime Minister",
+            "Drafting the Union Budget",
+            "Declaring war and peace"
+        ],
+        "op_hi": [
+            "लोकसभा को भंग करना",
+            "प्रधानमंत्री की नियुक्ति करना",
+            "केंद्रीय बजट तैयार करना",
+            "युद्ध और शांति की घोषणा करना"
+        ],
+        "ans": "3",
+        "solution": "<b>🧠 Explanation:</b><br>केंद्रीय बजट तैयार करने की जिम्मेदारी **वित्त मंत्रालय (आर्थिक मामलों के विभाग)** की होती है, राष्ट्रपति की नहीं। राष्ट्रपति के नाम पर इसे सदन में रखा जाता है।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs1",
+        "topic": "Polity (Fundamental Rights)",
+        "level": "Easy",
+        "q_en": "The fundamental rights are _______ in India.",
+        "q_hi": "भारत में मौलिक अधिकार _______ हैं।",
+        "op_en": [
+            "justiciable",
+            "non-compulsory",
+            "non-justiciable",
+            "directive in nature"
+        ],
+        "op_hi": [
+            "वाद योग्य (justiciable)",
+            "गैर-अनिवार्य",
+            "गैर-वाद योग्य",
+            "प्रकृति में निर्देशिका"
+        ],
+        "ans": "1",
+        "solution": "<b>📌 Concept:</b><br>यदि मौलिक अधिकारों का हनन हो, तो व्यक्ति सीधे कोर्ट जा सकता है। इसे ही **वाद योग्य (Justiciable)** होना कहते हैं।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs1",
+        "topic": "Static GK (Abbreviations)",
+        "level": "Easy",
+        "q_en": "What is the full form of WHO?",
+        "q_hi": "WHO का पूर्ण रूप क्या है?",
+        "op_en": [
+            "World Health Organization",
+            "Water Hydrogen Oxygen",
+            "Whole Health Organization",
+            "Wealth and Health Organization"
+        ],
+        "op_hi": [
+            "विश्व स्वास्थ्य संगठन",
+            "वाटर हाइड्रोजन ऑक्सीजन",
+            "होल हेल्थ ऑर्गनाइजेशन",
+            "वेल्थ एंड हेल्थ ऑर्गनाइजेशन"
+        ],
+        "ans": "1",
+        "solution": "<b>🧠 Explanation:</b><br>विश्व स्वास्थ्य संगठन (WHO) संयुक्त राष्ट्र की एक विशेष एजेंसी है जिसकी स्थापना 7 अप्रैल 1948 को हुई थी। इसका मुख्यालय **जिनेवा (स्विट्जरलैंड)** में है।"
+    },
+    {
+        "section": "General Knowledge Including Current Affairs1",
+        "topic": "Current Affairs (Agriculture)",
+        "level": "Moderate",
+        "q_en": "Which of the following programmes includes the accreditation of certification bodies, sets standards for organic production and promotes organic farming and marketing?",
+        "q_hi": "निम्नलिखित में से कौन सा कार्यक्रम प्रमाणन निकायों की मान्यता शामिल करता है, जैविक उत्पादन के लिए मानक निर्धारित करता है और जैविक खेती और विपणन को बढ़ावा देता है?",
+        "op_en": [
+            "Indian Programme for Organic Production\n<br>",
+            "Integrated Programme for Organic Production",
+            "National Programme for Organic Production",
+            "Bharat Programme for Organic Production\n<br>"
+        ],
+        "op_hi": [
+            "इंडियन प्रोग्राम फॉर ऑर्गेनिक प्रोडक्शन",
+            "इंटीग्रेटेड प्रोग्राम फॉर ऑर्गेनिक प्रोडक्शन",
+            "नेशनल प्रोग्राम फॉर ऑर्गेनिक प्रोडक्शन (NPOP)",
+            "भारत प्रोग्राम फॉर ऑर्गेनिक प्रोडक्शन"
+        ],
+        "ans": "3",
+        "solution": "<b>📌 Concept:</b><br>**NPOP** भारत सरकार की प्रमुख योजना है जो जैविक उत्पादों (Organic Products) की गुणवत्ता और निर्यात को नियंत्रित करती है। इसे 'वाणिज्य एवं उद्योग मंत्रालय' द्वारा संचालित किया जाता है।"
+    }
+]
