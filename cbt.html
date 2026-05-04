@@ -1342,7 +1342,7 @@ async function fetchAISolution(qData) {
     const correctAnsOption = qData.ans;
     const correctAnsText = optsArr[parseInt(qData.ans) - 1];
 
-  const prompt = `You are a strict exam solution generator.
+ const prompt = `You are a strict exam solution generator.
 
 QUESTION: ${qText}
 OPTIONS: 
@@ -1358,37 +1358,29 @@ INSTRUCTIONS (STRICT - NO DEVIATION):
 1. OUTPUT FORMAT:
 - Return ONLY clean HTML (no markdown, no extra text, do not wrap in \`\`\`html).
 - MUST start with <ul> and end with </ul>.
-- Inside <ul>, give EXACTLY 2 or 3 <li> points.
+- Inside <ul>, give EXACTLY 2 (max 3) <li> points.
 
-2. STYLE:
-- Each <li> must be short and crisp.
-- Highlight key rules/terms using <b> tags.
-- Add <br><br> at the end of each <li> for clear spacing.
+2. EXTREME BREVITY (CRITICAL RULE):
+- Each <li> MUST BE EXTREMELY SHORT (Maximum 10 to 15 words).
+- DO NOT write full sentences. Use short, direct phrases.
+- Highlight key terms using <b> tags.
+- Add <br><br> at the end of each <li>.
 
-3. LANGUAGE RULE (VERY STRICT):
-- English Grammar → MUST be explained in BILINGUAL format:
-  (Hindi in DEVNAGARI script + English)
-  Example: <b>Subject-Verb Agreement</b>: कर्ता singular हो तो verb भी singular होता है (e.g., He <b>runs</b>, not run).<br><br>
+3. LANGUAGE RULE:
+- English Grammar → BILINGUAL (Hindi DEVNAGARI + English).
+  Example: <b>Subject-Verb</b>: कर्ता singular तो verb भी singular.<br><br>
 - Maths, Reasoning, GK → Hindi (Devnagari) + English mix.
-- Hindi Vyakaran → Pure Hindi (Devnagari only).
+- Hindi Vyakaran → Pure Hindi (Devnagari).
 
-4. CONTENT RULE:
-- No intro, no conclusion. Direct logic only.
-- English Grammar: Rule + sentence application जरूरी है.
+4. FORCE STRUCTURE (DIRECT LOGIC ONLY):
+- Point 1 → Direct Rule/Formula/Fact.
+- Point 2 → Direct Application on Option ${correctAnsOption}.
+- NO intro, NO conclusion, NO filler words (like "Therefore", "Because").
 
 5. MATH RULE:
-- NO LaTeX.
-- Use &times;, &divide;, <sup>2</sup>, &radic;, &#36;
+- NO LaTeX. Use &times;, &divide;, <sup>2</sup>, &radic;, &#36;
 
-6. FORCE STRUCTURE:
-- Point 1 → Rule/Concept (What is the exact logic?)
-- Point 2 → Application (Why is Option ${correctAnsOption} correct based on the question?)
-- Point 3 (Optional) → Elimination trick (Why others are wrong).
-
-7. QUALITY:
-- Coaching-level explanation. No vague lines, no repetition.
-
-Generate now.`;
+Generate the shortest possible correct HTML list now.`;
     try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`, {
             method: 'POST',
