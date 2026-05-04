@@ -1359,15 +1359,15 @@ async function fetchAISolution(qData) {
     5. OUTPUT: Return only the clean HTML list tags.`;
 
     // मॉडल को 2.0 से बदलकर 1.5 कर दिया गया है
-const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+// 'v1beta' की जगह 'v1' का उपयोग करें, यह 1.5 Flash के लिए एकदम सही है
+const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
         generationConfig: { 
-            temperature: 0.2,
-            topP: 0.8,
-            topK: 40
+            temperature: 0.1, 
+            topP: 0.95 
         }
     })
 });
