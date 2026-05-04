@@ -1246,7 +1246,21 @@ function loadQuestion(idx) {
   const actionBtns = document.getElementById('actionButtons');
   const discussArea = document.getElementById('discussionArea');
 
-  if(currentState.submitted || isQuizAnswered) {
+ if(currentState.submitted || isQuizAnswered) {
+      let solutionContent = "";
+      if (q.solution && q.solution.trim() !== "") {
+          solutionContent = `<b>💡 Explanation:</b><br>${q.solution}`;
+      } else {
+          solutionContent = `
+              <div id="ai_sol_box_${idx}" style="margin-top: 10px; padding: 10px; background: rgba(99, 102, 241, 0.05); border-radius: 8px; border: 1px dashed var(--primary-light);">
+                  <p style="color:var(--text-muted); font-size:13px; margin-bottom:10px;">💡 No solution available in database.</p>
+                  <button onclick="generateAndSaveSolution('${CURRENT_TEST_ID}', ${idx})" style="background:var(--gradient-main); color:white; border:none; padding:8px 15px; border-radius:6px; cursor:pointer; font-weight:bold; font-size:13px; box-shadow: 0 4px 10px rgba(99,102,241,0.2);">
+                      🤖 Generate Smart Solution (AI)
+                  </button>
+              </div>
+          `;
+      }
+
       solBox.innerHTML = `
           <button onclick="toggleAppSolution(this)" style="width:100%; padding:12px 15px; background:var(--primary-light); color:var(--primary-dark); border:1px solid var(--primary); border-radius:8px; font-weight:bold; cursor:pointer; margin-bottom:10px; font-size:14px; display:flex; justify-content:space-between; align-items:center; transition:0.3s;">
               <span>👁️ View Detailed Solution</span>
@@ -1254,7 +1268,7 @@ function loadQuestion(idx) {
           </button>
           <div class="sol-content" style="display:none; background:var(--bg-body); padding:15px; border-left:4px solid var(--primary); font-size:14px; border-radius:8px; border:1px solid var(--border-color); line-height:1.6;">
               <b>✅ Correct Answer:</b> <span style="color:var(--success); font-weight:bold;">${optsArr[correctIdx]}</span><br><br>
-              <b>💡 Explanation:</b><br>${q.solution || 'No detailed solution provided.'}
+              ${solutionContent}
           </div>
       `;
       solBox.style.display = 'block';
@@ -1283,6 +1297,75 @@ function loadQuestion(idx) {
           MathJax.typesetPromise([contentDiv, optsContainer, solBox]).catch(err => console.log(err));
       }
   }
+}
+
+// ==========================================
+// 🧠 AI SOLUTION GENERATOR (ON-DEMAND FETCH & SAVE)
+// ==========================================
+async function generateAndSaveSolution(testId, qIndex) {
+    const btnBox = document.getElementById(`ai_sol_box_${qIndex}`);
+    btnBox.innerHTML = `<p style='color:var(--warning); font-weight:bold; font-size:13px;'>⏳ AI is analyzing the question and writing the best solution...</p>`;
+
+    try {
+        const qData = QUESTIONS[qIndex];
+        const generatedHtml = await fetchAISolution(qData);
+
+        btnBox.innerHTML = `<b>💡 AI Explanation:</b><br><div style="margin-top:8px;">${generatedHtml}</div>`;
+        btnBox.style.border = "none";
+        btnBox.style.background = "transparent";
+        btnBox.style.padding = "0";
+
+        QUESTIONS[qIndex].solution = generatedHtml;
+
+        await db.ref(`dsssb_questions_db/${testId}/${qIndex}`).update({
+            solution: generatedHtml
+        });
+
+        showToast("AI Solution Generated & Saved to Database! ✅", "success");
+
+    } catch (error) {
+        btnBox.innerHTML = `<p style="color:var(--danger); font-size:13px;">❌ Error: ${error.message}</p>
+        <button onclick="generateAndSaveSolution('${testId}', ${qIndex})" style="padding:6px 12px; border-radius:6px; cursor:pointer;">Retry</button>`;
+    }
+}
+
+async function fetchAISolution(qData) {
+    const API_KEY = "AIzaSyCI1mrX1ZSBkooqo5LKGzdibMlX0AZApNA"; // ⚠️ यहाँ अपनी Gemini API Key डालें
+    
+    const isHindi = document.getElementById('langBtn').innerText === "HI";
+    const qText = isHindi ? (qData.q_hi || qData.q_en) : (qData.q_en || qData.q_hi);
+    const optsArr = isHindi ? (qData.op_hi || qData.op_en) : (qData.op_en || qData.op_hi);
+    
+    const correctAnsOption = qData.ans;
+    const correctAnsText = optsArr[parseInt(qData.ans) - 1];
+
+    const prompt = `You are a top-tier educator for DSSSB/SSC competitive exams. 
+    QUESTION: ${qText}
+    OPTIONS: 1) ${optsArr[0]} 2) ${optsArr[1]} 3) ${optsArr[2]} 4) ${optsArr[3]}
+    OFFICIAL CORRECT ANSWER: Option ${correctAnsOption} (${correctAnsText})
+
+    STRICT RULES:
+    1. ANSWER KEY PRIORITY: You MUST prove logically why Option ${correctAnsOption} is the correct answer.
+    2. CORE STYLE: Solutions must feel like top coaching institute notes. Include Shortcuts/Tricks if applicable.
+    3. STRUCTURE: Start strictly with: "<b>अवधारणा:</b> " (Concept).
+    4. LANGUAGE: Use simple Hindi (in Devnagari script) and English mix.
+    5. MATH FORMATTING: STRICTLY AVOID LaTeX (no \\\\frac, no $$, no \\\\times). Use ONLY standard HTML tags and entities (&times;, &divide;, <sup>2</sup>, &radic;). For Dollar, use &#36;.
+    6. OUTPUT FORMAT: Return ONLY pure HTML ready to be injected. Do not use markdown formatting like \`\`\`html.`;
+
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { temperature: 0.2 }
+        })
+    });
+
+    const data = await response.json();
+    if(data.error) throw new Error(data.error.message);
+
+    let finalHtml = data.candidates[0].content.parts[0].text;
+    return finalHtml.replace(/^```html/m, '').replace(/^```/m, '').trim();
 }
 
 function toggleDiscussion() {
