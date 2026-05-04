@@ -1317,9 +1317,9 @@ async function generateAndSaveSolution(testId, qIndex) {
 
         QUESTIONS[qIndex].solution = generatedHtml;
 
-        await db.ref(`dsssb_questions_db/${testId}/${qIndex}`).update({
-            solution: generatedHtml
-        });
+       // 3. Firebase में परमानेंट सेव करें (ताकि अगली बार API कॉल न हो)
+        // 🔥 FIX: Firebase rules ke mutabiq direct 'solution' path par set kar rahe hain
+        await db.ref(`dsssb_questions_db/${testId}/${qIndex}/solution`).set(generatedHtml);
 
         showToast("AI Solution Generated & Saved to Database! ✅", "success");
 
