@@ -1342,38 +1342,44 @@ async function fetchAISolution(qData) {
     const correctAnsOption = qData.ans;
     const correctAnsText = optsArr[parseInt(qData.ans) - 1];
 
-    // 🔥 अपडेटेड द्विभाषी (Bilingual) प्रॉम्प्ट - <br> निर्देश के साथ
-    const prompt = `You are a top educator. Provide a concise, step-by-step BILINGUAL solution (Devnagari Hindi + English).
+    // 🔥 परफेक्ट द्विभाषी (Bilingual) प्रॉम्प्ट
+    const prompt = `You are a top educator. Provide a concise, step-by-step BILINGUAL solution (Mix of Devnagari Hindi + English).
     QUESTION: ${qText}
     OPTIONS: 1) ${optsArr[0]} 2) ${optsArr[1]} 3) ${optsArr[2]} 4) ${optsArr[3]}
     OFFICIAL CORRECT ANSWER: Option ${correctAnsOption} (${correctAnsText})
 
     STRICT RULES:
-    1. FORMAT: Use <ul> and <li> tags for points. 
-    2. LINE BREAKS: Use <br> tag after every logic step within an <li> to make it clear.
-    3. STYLE: Write in professional Hinglish (Mix of Devnagari Hindi + English).
-    4. STRUCTURE: 
-       - <li><b>अवधारणा (Concept):</b> Explain logic <br> Use another <br> if needed.</li>
-       - <li><b>मुख्य चरण (Steps):</b> Step 1 explanation <br> Step 2 calculation <br> Step 3 final result.</li>
-       - <li><b>Trick/Fact:</b> One-line shortcut or related fact.</li>
-    5. MATH SAFETY: STRICTLY NO LaTeX ($ or \\). Use ONLY HTML entities like &times;, &divide;, <sup>2</sup>, &radic;, &rArr;.
-    6. OUTPUT: Return only the clean HTML <ul> list.`;
+    1. STYLE: Write explanations in a mix of Hindi (Devnagari) and English (Hinglish) so both mediums can understand.
+    2. FORMAT: Use ONLY <ul> and <li> tags. DO NOT use paragraphs or markdown.
+    3. STRUCTURE: 
+       - <li><b>अवधारणा (Concept):</b> Explain the logic in simple Hindi + English mix.</li>
+       - <li><b>मुख्य बिंदु (Key Steps):</b> 2-3 logical steps in bullets.</li>
+       - <li><b>महत्वपूर्ण (Tips/Facts):</b> Short trick or related fact in bilingual text.</li>
+    4. MATH SAFETY: STRICTLY NO LaTeX (no $, \\). Use ONLY HTML entities: &times;, &divide;, <sup>2</sup>, &radic;, &rArr;.
+    5. OUTPUT: Return only the clean HTML list tags.`;
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { temperature: 0.1 }
-        })
-    });
+    // मॉडल को 2.0 से बदलकर 1.5 कर दिया गया है
+const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { 
+            temperature: 0.2,
+            topP: 0.8,
+            topK: 40
+        }
+    })
+});
 
     const data = await response.json();
     if(data.error) throw new Error(data.error.message);
 
     let finalHtml = data.candidates[0].content.parts[0].text;
+    // किसी भी संभावित कोड ब्लॉक को साफ करने के लिए
     return finalHtml.replace(/^```html/m, '').replace(/^```/m, '').trim();
 }
+
 function toggleDiscussion() {
   const container = document.getElementById('discussionContainer');
   container.style.display = container.style.display === 'none' ? 'block' : 'none';
