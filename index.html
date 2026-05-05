@@ -677,7 +677,7 @@ textarea { height: 120px; resize: none; }
         <!-- UTR INPUT -->
         <input type="text" id="utrNumberInput" placeholder="Enter 12-Digit UTR / Ref. Number" style="text-align:center; font-weight:bold; letter-spacing:1px; margin-bottom: 10px;">
         
-        <button onclick="submitUTRVerification()" class="start-btn" style="background:#10b981; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); margin-bottom: 10px; border-color:#059669;">✅ Verify & Upgrade</button>
+        <button onclick="submitUTRVerification(event)" class="start-btn" style="background:#10b981; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); margin-bottom: 10px; border-color:#059669;">✅ Verify & Upgrade</button>
 
         <p style="font-size:11px; color:var(--text-muted); margin-bottom:10px; font-weight:600;">Or contact Admin manually on Telegram / Whatsapp 8587961053.</p>
         
@@ -695,7 +695,7 @@ textarea { height: 120px; resize: none; }
         <textarea id="supportMsgText" placeholder="Write your message here..."></textarea>
         <div style="display:flex; gap:12px;">
             <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); box-shadow:none; border-color:var(--border);" onclick="document.getElementById('supportModal').style.display='none'">Cancel</button>
-            <button class="start-btn" onclick="submitSupportMsg()">Send Message</button>
+            <button class="start-btn" onclick="submitSupportMsg(event)">Send Message</button>
         </div>
     </div>
 </div>
@@ -986,10 +986,19 @@ function showToast(msg) {
     setTimeout(() => { toast.style.display = 'none'; }, 2500); 
 }
 
-/* 🔥 SUBMIT UTR & SUPPORT LOGIC 🔥 */
-function submitUTRVerification() {
+/* 🔥 SUBMIT UTR & SUPPORT LOGIC (UPDATED WITH ERROR HANDLING) 🔥 */
+function submitUTRVerification(event) {
     const utr = document.getElementById('utrNumberInput').value.trim();
     if(utr.length < 8) return showToast("Please enter a valid UTR / Ref Number!");
+    
+    const btn = event ? event.target : null;
+    let originalText = "";
+    if (btn) {
+        originalText = btn.innerHTML;
+        btn.innerHTML = "⏳ Sending Request...";
+        btn.disabled = true;
+    }
+
     db.ref('dsssb_pro_requests').push({
         user: currentUser,
         id: currentUserId,
@@ -1000,6 +1009,46 @@ function submitUTRVerification() {
         showToast("Verification request sent! Admin will check shortly. ✅");
         document.getElementById('paymentModal').style.display = 'none';
         document.getElementById('utrNumberInput').value = '';
+    }).catch(err => {
+        console.error("Firebase Error:", err);
+        showToast("Error: " + err.message);
+    }).finally(() => {
+        if (btn) {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    });
+}
+
+function submitSupportMsg(event) {
+    const msg = document.getElementById('supportMsgText').value.trim();
+    if(!msg) return showToast("Please write something first!");
+    
+    const btn = event ? event.target : null;
+    let originalText = "";
+    if (btn) {
+        originalText = btn.innerHTML;
+        btn.innerHTML = "⏳ Sending...";
+        btn.disabled = true;
+    }
+
+    db.ref('dsssb_support_tickets').push({
+        user: currentUser,
+        id: currentUserId,
+        message: msg,
+        time: firebase.database.ServerValue.TIMESTAMP
+    }).then(() => {
+        showToast("Message sent to Admin successfully! 🎧");
+        document.getElementById('supportModal').style.display = 'none';
+        document.getElementById('supportMsgText').value = '';
+    }).catch(err => {
+        console.error("Firebase Error:", err);
+        showToast("Error: " + err.message);
+    }).finally(() => {
+        if (btn) {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
     });
 }
 
