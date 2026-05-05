@@ -164,6 +164,14 @@ body { display: block; background: var(--bg-body); color: var(--text-main); padd
     box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4); 
 }
 
+/* --- EXPIRY & DATE FILTER CSS --- */
+.expired-badge {
+    display: inline-block; margin-bottom: 10px; background: var(--text-muted); color: white; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; letter-spacing: 0.5px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+.btn-expired {
+    background: var(--bg-body) !important; color: var(--text-muted) !important; border: 1px solid var(--border) !important; cursor: not-allowed !important; box-shadow: none !important; border-bottom-width: 1px !important;
+}
+
 /* CARDS HEAVY UI */
 .test-card, .note-card, .video-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 18px; position: relative; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.04); transition: 0.2s; border-bottom: 4px solid var(--border); }
 .test-card, .note-card { padding: 20px; } 
@@ -226,8 +234,8 @@ body { display: block; background: var(--bg-body); color: var(--text-main); padd
 .news-container { background: linear-gradient(90deg, #4f46e5, #8b5cf6); color: white; padding: 10px 15px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; }
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
 .modal-content { background: var(--bg-card); width: 100%; max-width: 360px; padding: 25px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-textarea, input[type="text"] { width: 100%; padding: 14px; margin: 10px 0 20px; border: 2px solid var(--border); border-radius: 12px; background: var(--bg-body); color: var(--text-main); outline:none; font-size: 14px; transition: 0.2s; border-bottom: 3px solid var(--border);}
-textarea:focus, input[type="text"]:focus { border-color: var(--primary); }
+textarea, input[type="text"], input[type="number"] { width: 100%; padding: 14px; margin: 10px 0 20px; border: 2px solid var(--border); border-radius: 12px; background: var(--bg-body); color: var(--text-main); outline:none; font-size: 14px; transition: 0.2s; border-bottom: 3px solid var(--border);}
+textarea:focus, input[type="text"]:focus, input[type="number"]:focus { border-color: var(--primary); }
 textarea { height: 120px; resize: none; }
 
 #toast { display: none; position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: var(--text-main); color: var(--bg-card); padding: 12px 24px; border-radius: 30px; z-index: 9999; font-size: 13px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: fadeInOut 2.5s forwards; white-space: nowrap; }
@@ -237,22 +245,7 @@ textarea { height: 120px; resize: none; }
 .lb-table th { background: var(--primary-light); color: var(--primary-dark); padding: 12px 10px; font-weight: 800; border-radius: 8px 8px 0 0; }
 .lb-table td { padding: 12px 10px; border-bottom: 1px solid var(--border); font-weight: 600; color: var(--text-main); }
 .lb-table tr:last-child td { border-bottom: none; }
-/* --- DESKTOP NETFLIX STYLE ARROWS --- */
-.desk-scroll-btn {
-    display: none; position: absolute; top: 50%; transform: translateY(-50%);
-    width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border);
-    background: var(--bg-card); color: var(--primary); font-size: 18px;
-    cursor: pointer; z-index: 10; box-shadow: 0 6px 15px rgba(0,0,0,0.1); transition: 0.2s;
-}
-.desk-scroll-btn:hover { background: var(--primary); color: white; transform: translateY(-50%) scale(1.1); }
-.desk-scroll-btn.left-btn { left: -15px; }
-.desk-scroll-btn.right-btn { right: -15px; }
 
-@media (min-width: 1024px) {
-    .desk-scroll-btn { display: flex; align-items: center; justify-content: center; }
-    .horizontal-3d-scroll, .filter-scroll { cursor: grab; }
-    .horizontal-3d-scroll:active, .filter-scroll:active { cursor: grabbing; }
-}
 /* 🔥 PREMIUM VAULT MEGA FOLDER CSS 🔥 */
 .mega-folder {
     background: linear-gradient(135deg, #1e293b, #0f172a);
@@ -276,56 +269,33 @@ textarea { height: 120px; resize: none; }
    📱 MOBILE OPTIMIZATION PATCH
    ========================================= */
 @media (max-width: 768px) {
-    /* 1. Prevent Horizontal Scrolling (Screen se bahar jane se rokna) */
     body, html { overflow-x: hidden !important; width: 100%; max-width: 100vw; }
-    
-    /* 2. Adjust Quick Actions Grid for small screens */
     .quick-actions { gap: 8px; padding: 15px 10px 0; }
     .action-item { padding: 10px 5px; }
     .action-item span { font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; text-align: center; }
-
-    /* 3. Adjust Stats Row */
     .stats-row { gap: 8px; padding: 15px 10px; }
     .stat-card { padding: 10px 5px; }
     .stat-val { font-size: 16px; }
-
-    /* 4. 3D Folders Adjustments (Squish hone se bachana) */
     .horizontal-3d-scroll { padding: 10px 10px 20px; gap: 10px; }
-    .horizontal-3d-scroll .folder-3d { min-width: 105px; } /* Thoda chota kiya mobile ke liye */
-    .folder-3d .f-body { padding: 15px 10px; }
-    .f-icon { font-size: 22px; margin-bottom: 8px; }
-    .f-name { font-size: 12px; }
-
-    /* 5. Target Exams Grid */
+    .horizontal-3d-scroll .folder-3d { min-width: 105px; } 
     .target-exams-section { padding: 0 10px; }
-    .folder-3d-grid { gap: 12px 10px; }
-
-    /* 6. List Container & Search Box */
     .list-container { padding: 0 10px; }
     .search-box { padding: 10px 15px; margin-bottom: 12px; }
     .filter-scroll { padding-bottom: 10px; gap: 8px; }
     .filter-pill { padding: 8px 14px; font-size: 11px; }
-
-    /* 7. Notebook Banner Padding Fix */
     .notebook-banner { margin: 0 10px 20px; padding: 12px 15px; }
     .nb-icon-box { width: 30px; height: 30px; }
-
-    /* 8. Fix App Padding so it doesn't touch the very edges */
     #app { padding-bottom: 80px; } 
 }  
 @media (min-width: 1024px) {
     body { padding-bottom: 0; display: flex; background: var(--bg-body); overflow-x: hidden; }
-    
     .nav-bar { position: fixed; top: 0; left: 0; width: 260px; height: 100vh; flex-direction: column; justify-content: flex-start; padding-top: 40px; gap: 10px; border-top: none; border-right: 1px solid var(--border); box-shadow: 4px 0 15px rgba(0,0,0,0.02); background: var(--bg-card); }
     .nav-item { width: 100%; text-align: left; padding: 15px 30px; font-size: 15px; display: flex; align-items: center; gap: 20px; border-radius: 0 30px 30px 0; margin-right: 20px; transition: 0.3s; cursor: pointer; opacity: 0.7;}
     .nav-item i { margin-bottom: 0; font-size: 20px; width: 24px; text-align: center; display: inline-block; }
     .nav-item.active { background: var(--primary-light); border-left: 4px solid var(--primary); transform: translateY(0); opacity: 1; font-weight: 800;}
-    
     #loader { margin-left: 260px; padding: 40px; width: calc(100% - 260px); }
     #app { margin-left: 260px; padding: 30px 40px; max-width: 1300px; width: calc(100% - 260px); margin-right: auto; display: none; min-height: 100vh; }
-    
     .hero-header { border-radius: 20px; top: 20px; margin-bottom: 30px; border: 1px solid var(--border); padding: 20px 30px;}
-    .user-info h1 { font-size: 22px; }
     .quick-actions { padding: 0; margin-bottom: 25px; grid-template-columns: repeat(4, 1fr); gap: 20px; }
     .stats-row { padding: 0; margin-bottom: 25px; gap: 20px; grid-template-columns: repeat(3, 1fr);}
     .notebook-banner { margin-left: 0; margin-right: 0; }
@@ -336,13 +306,8 @@ textarea { height: 120px; resize: none; }
     #testListContainer, #notesListContainer, #videoListContainer { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
     .test-card, .note-card, .video-card { margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between; height: 100%;}
     .pwa-banner, .segment-control, .countdown-box, .daily-goal-card, .qod-card { margin-left: 0; margin-right: 0; }
-    #pwaBannerBtn { padding: 10px 24px; font-size: 14px; cursor: pointer;}
-    
-    /* 🔥 HEAVY HOVER EFFECTS ON DESKTOP 🔥 */
     .folder-3d-grid { grid-template-columns: repeat(4, 1fr); gap: 25px; }
-    .folder-3d:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
     .test-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
-    .mega-folder:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
 }
 </style>
 </head>
@@ -423,9 +388,7 @@ textarea { height: 120px; resize: none; }
             <div class="dg-text" style="flex:1;">
                 <span class="dg-title">🎯 Daily Mock Goal</span>
                 <span class="dg-status" id="dgStatus">Pending ⏳</span>
-                
-                <div style="display: flex; gap: 5px; margin-top: 8px;" id="streakTrackerDots">
-                    </div>
+                <div style="display: flex; gap: 5px; margin-top: 8px;" id="streakTrackerDots"></div>
             </div>
             <button class="dg-btn" onclick="switchTab('tests', document.querySelectorAll('.nav-item')[1])">Give Mock</button>
         </div>
@@ -438,13 +401,14 @@ textarea { height: 120px; resize: none; }
             <button class="dg-btn" style="background: #ef4444; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);" onclick="switchTab('bookmarks', document.querySelectorAll('.nav-item')[5]); setTimeout(()=>switchNotebook('mistakes'), 100);">Revise Now</button>
         </div>
 
+        <!-- 🔥 SUPPORT BUTTON ADDED TO QUICK ACTIONS 🔥 -->
         <div class="quick-actions">
             <div class="action-item" onclick="window.location.href='battle.html'" style="border-bottom-color: #ef4444;">
                 <i class="fas fa-crosshairs" style="color: #ef4444;"></i>
                 <span style="color: #ef4444; font-weight: 800;">Arena</span>
             </div>
             <div class="action-item" onclick="window.open('https://t.me/DSSSBRank')"><i class="fab fa-telegram-plane"></i><span>Channel</span></div>
-            <div class="action-item" onclick="shareApp()"><i class="fas fa-share-alt"></i><span>Share</span></div>
+            <div class="action-item" onclick="document.getElementById('supportModal').style.display='flex'"><i class="fas fa-headset" style="color:var(--primary);"></i><span>Support</span></div>
             <div class="action-item" onclick="switchTab('study', document.getElementById('nav-study'))"><i class="fas fa-book-open"></i><span>Library</span></div>
         </div>
 
@@ -540,6 +504,7 @@ textarea { height: 120px; resize: none; }
                         <i class="fas fa-microphone" style="color:var(--primary); cursor:pointer;" onclick="showToast('Voice search feature coming soon! 🎙️')"></i>
                     </div>
 
+                    <!-- 🔥 UPDATED: DATE & EXPIRE FILTERS DROPDOWN 🔥 -->
                     <div style="display:flex; gap:10px;">
                         <select id="examCategoryFilter" onchange="applyModernFilters()" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border-color); background:var(--bg-body); color:var(--text-main); font-weight:600; outline:none; cursor:pointer; font-size:13px;">
                             <option value="all">📚 All Subjects</option>
@@ -552,11 +517,15 @@ textarea { height: 120px; resize: none; }
                             <option value="computer">💻 Computer</option>
                         </select>
 
-                        <select id="examStatusFilter" onchange="applyModernFilters()" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border-color); background:var(--bg-body); color:var(--text-main); font-weight:600; outline:none; cursor:pointer; font-size:13px;">
+                        <select id="examStatusFilter" onchange="toggleDateFilter(); applyModernFilters();" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border-color); background:var(--bg-body); color:var(--text-main); font-weight:600; outline:none; cursor:pointer; font-size:13px;">
                             <option value="all">⚡ All Status</option>
                             <option value="live">🔴 Live Now</option>
                             <option value="attempted">✅ Attempted</option>
                             <option value="saved">⭐ Saved</option>
+                        </select>
+                        
+                        <select id="examDateFilter" onchange="applyModernFilters()" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border-color); background:var(--bg-body); color:var(--text-main); font-weight:600; outline:none; cursor:pointer; font-size:13px; display:none;">
+                            <option value="all">📅 All Dates</option>
                         </select>
                     </div>
                 </div>
@@ -685,26 +654,49 @@ textarea { height: 120px; resize: none; }
     </div>
 </div>
 
+<!-- 🔥 UPDATED PAYMENT MODAL WITH QR & UTR 🔥 -->
 <div id="paymentModal" class="modal">
-    <div class="modal-content" style="text-align:center;">
-        <div style="font-size: 50px; margin-bottom: 10px;">👑</div>
+    <div class="modal-content" style="text-align:center; max-height: 90vh; overflow-y: auto;">
+        <div style="font-size: 40px; margin-bottom: 5px;">👑</div>
         <h2 style="color:var(--warning); margin-bottom:5px; font-weight:900;">Upgrade to PRO</h2>
-        <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px; font-weight:600;">Unlock All Premium Mock Tests, Video Classes & PDF Notes!</p>
-        
-        <div style="background:var(--primary-light); color:var(--primary-dark); padding:12px; border-radius:12px; margin-bottom:15px; font-size: 14px; font-weight: 700;">
+        <div style="background:var(--primary-light); color:var(--primary-dark); padding:8px; border-radius:8px; margin-bottom:15px; font-size: 14px; font-weight: 700;">
             Special Offer: ₹99 <span style="font-size:12px; text-decoration:line-through; color:grey;">₹499</span>
         </div>
         
-        <p style="font-size:12px; color:var(--text-main); margin-bottom:10px; font-weight:600;">To upgrade, please contact Admin Send Hi on Whatsapp 8587961053.</p>
-        
-        <div style="background:#f1f5f9; padding:10px; border-radius:8px; margin-bottom:15px; font-size:12px;">
-            Your App ID: <b id="displayUserId" style="color:var(--primary); font-size: 14px;">--</b><br>
-            <span style="font-size:10px; color:grey;">Send this ID to Admin on Telegram to activate PRO</span>
+        <!-- QR CODE SECTION -->
+        <div style="background:#fff; padding:15px; border-radius:12px; display:inline-block; border:2px solid var(--border); margin-bottom:15px;">
+            <!-- NOTE: Change pa=8587961053@ybl to your actual UPI ID -->
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=YOUR_UPI_ID_HERE@paytm%26pn=PYQNotes%26cu=INR" alt="QR Code" style="width:150px; height:150px; border-radius:8px;">
+            <div style="font-size:12px; font-weight:800; color:var(--text-main); margin-top:10px;">Scan to Pay via any UPI App</div>
         </div>
+
+        <div style="background:#f1f5f9; padding:10px; border-radius:8px; margin-bottom:15px; font-size:12px;">
+            Your App ID: <b id="displayUserId" style="color:var(--primary); font-size: 14px;">--</b>
+        </div>
+
+        <!-- UTR INPUT -->
+        <input type="text" id="utrNumberInput" placeholder="Enter 12-Digit UTR / Ref. Number" style="text-align:center; font-weight:bold; letter-spacing:1px; margin-bottom: 10px;">
         
-        <button onclick="window.open('https://t.me/DSSSBRank', '_blank')" class="start-btn" style="background:#0088cc; box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);"><i class="fab fa-telegram-plane"></i> Message Admin on Telegram</button>
+        <button onclick="submitUTRVerification()" class="start-btn" style="background:#10b981; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); margin-bottom: 10px; border-color:#059669;">✅ Verify & Upgrade</button>
+
+        <p style="font-size:11px; color:var(--text-muted); margin-bottom:10px; font-weight:600;">Or contact Admin manually on Telegram / Whatsapp 8587961053.</p>
         
-        <button onclick="document.getElementById('paymentModal').style.display='none'" class="start-btn" style="background:var(--bg-body); color:var(--text-main); margin-top:15px; box-shadow:none;">Cancel</button>
+        <button onclick="window.open('https://t.me/Dsssbsmartnotes', '_blank')" class="start-btn" style="background:#0088cc; box-shadow: 0 4px 10px rgba(0, 136, 204, 0.3); margin-bottom:10px; border-color:#0284c7;"><i class="fab fa-telegram-plane"></i> Message Admin</button>
+        
+        <button onclick="document.getElementById('paymentModal').style.display='none'" class="start-btn" style="background:var(--bg-body); color:var(--text-main); box-shadow:none; border-color:var(--border);">Cancel</button>
+    </div>
+</div>
+
+<!-- 🔥 NEW SUPPORT MODAL 🔥 -->
+<div id="supportModal" class="modal">
+    <div class="modal-content">
+        <h2 style="margin-bottom:5px; font-weight:900;">🎧 Contact Admin</h2>
+        <p style="font-size:12px; color:var(--text-muted); font-weight:600; margin-bottom: 15px;">Need help, have a suggestion or facing payment issues? Message us!</p>
+        <textarea id="supportMsgText" placeholder="Write your message here..."></textarea>
+        <div style="display:flex; gap:12px;">
+            <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); box-shadow:none; border-color:var(--border);" onclick="document.getElementById('supportModal').style.display='none'">Cancel</button>
+            <button class="start-btn" onclick="submitSupportMsg()">Send Message</button>
+        </div>
     </div>
 </div>
 
@@ -714,7 +706,7 @@ textarea { height: 120px; resize: none; }
         <p style="font-size:12px; color:var(--text-muted); font-weight:600;">Found a mistake in a question? Let us know!</p>
         <textarea id="reportText" placeholder="E.g. Mock Test 2, Q5 answer should be option C..."></textarea>
         <div style="display:flex; gap:12px;">
-            <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); box-shadow:none;" onclick="document.getElementById('reportModal').style.display='none'">Cancel</button>
+            <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); box-shadow:none; border-color:var(--border);" onclick="document.getElementById('reportModal').style.display='none'">Cancel</button>
             <button class="start-btn" onclick="submitReport()">Submit Report</button>
         </div>
     </div>
@@ -790,7 +782,8 @@ let currentUser = "Student", currentUserId = "guest", isPro = false;
 let myScores = [], allTests = [], allNotes = [];
 let lastAlertTime = 0;
 let attemptedTestIds = new Map(); 
-let currentNbType = 'bookmarks'; // NEW: Track notebook type globally
+let currentNbType = 'bookmarks'; // Track notebook type globally
+let liveCountdownInterval; // Timer Interval Variable
 
 let fallbackQOD = { q: "Fetching today's challenge...", opt: ["-", "-", "-", "-"], ans: 0 };
 
@@ -815,11 +808,10 @@ function initDashboard() {
     
     checkStreak(); startCountdown(); renderSyllabus();
 
-   // 🔥 FIX: Safe JSON Parsing for Mistake Alert 🔥
     try {
         let mistakesObj = JSON.parse(getSafeData('dsssb_mistakes') || '{}');
         let mistakesCount = Object.keys(mistakesObj).length;
-        let navBadge = document.getElementById('navMistakeBadge'); // Nav badge
+        let navBadge = document.getElementById('navMistakeBadge'); 
         
         if (mistakesCount > 0) {
             let mCard = document.getElementById('mistakeAlertCard');
@@ -827,9 +819,9 @@ function initDashboard() {
                 mCard.style.display = 'flex';
                 document.getElementById('mistakeCountText').innerText = `${mistakesCount} Unrevised Mistakes`;
             }
-            if(navBadge) navBadge.style.display = 'block'; // Red dot ON
+            if(navBadge) navBadge.style.display = 'block'; 
         } else {
-            if(navBadge) navBadge.style.display = 'none'; // Red dot OFF
+            if(navBadge) navBadge.style.display = 'none'; 
         }
     } catch(e) { console.log("Mistake check skipped"); }
     db.ref('dsssb_config/maintenance').on('value', snap => {
@@ -888,7 +880,6 @@ function initDashboard() {
     }
 }
 
-// Init on DOM load
 document.addEventListener('DOMContentLoaded', initDashboard);
 
 /* 🔥 AUTO QOD ENGINE 🔥 */
@@ -995,6 +986,38 @@ function showToast(msg) {
     setTimeout(() => { toast.style.display = 'none'; }, 2500); 
 }
 
+/* 🔥 SUBMIT UTR & SUPPORT LOGIC 🔥 */
+function submitUTRVerification() {
+    const utr = document.getElementById('utrNumberInput').value.trim();
+    if(utr.length < 8) return showToast("Please enter a valid UTR / Ref Number!");
+    db.ref('dsssb_pro_requests').push({
+        user: currentUser,
+        id: currentUserId,
+        utr: utr,
+        status: "Pending",
+        time: firebase.database.ServerValue.TIMESTAMP
+    }).then(() => {
+        showToast("Verification request sent! Admin will check shortly. ✅");
+        document.getElementById('paymentModal').style.display = 'none';
+        document.getElementById('utrNumberInput').value = '';
+    });
+}
+
+function submitSupportMsg() {
+    const msg = document.getElementById('supportMsgText').value.trim();
+    if(!msg) return showToast("Please write something first!");
+    db.ref('dsssb_support_tickets').push({
+        user: currentUser,
+        id: currentUserId,
+        message: msg,
+        time: firebase.database.ServerValue.TIMESTAMP
+    }).then(() => {
+        showToast("Message sent to Admin successfully! 🎧");
+        document.getElementById('supportModal').style.display = 'none';
+        document.getElementById('supportMsgText').value = '';
+    });
+}
+
 /* 5. SMART ROUTING FROM 3D FOLDERS */
 function openExamFolder(folderId, isSubject = false) {
     const testTabIcon = document.querySelectorAll('.nav-item')[1];
@@ -1004,11 +1027,9 @@ function openExamFolder(folderId, isSubject = false) {
     let catDropdown = document.getElementById('examCategoryFilter');
     let statDropdown = document.getElementById('examStatusFilter');
     
-    // Reset defaults
     catDropdown.value = 'all';
     statDropdown.value = 'all';
 
-   // Set exact dropdown values based on the folder clicked
     if(folderId === 'my_attempts' || folderId === 'Attempted') statDropdown.value = 'attempted';
     else if(folderId === 'Live') statDropdown.value = 'live';
     else if(folderId === 'Saved') statDropdown.value = 'saved';
@@ -1020,7 +1041,6 @@ function openExamFolder(folderId, isSubject = false) {
     else if(folderId === 'GK') catDropdown.value = 'gk';
     else if(folderId === 'Computer') catDropdown.value = 'computer';
     else {
-        // For specific exams (SSC, DASS, etc) use the search box
         let searchText = folderId;
         if(folderId === 'asst_sup') searchText = 'Assistant Superintendent';
         if(folderId === 'dass_grade_2') searchText = 'DASS Grade II';
@@ -1028,9 +1048,11 @@ function openExamFolder(folderId, isSubject = false) {
         document.getElementById('testSearch').value = searchText;
     }
     
-    applyModernFilters(); // Trigger the new filter
+    toggleDateFilter();
+    applyModernFilters(); 
     showToast(`Opened ${folderId.replace('_', ' ')} Vault 📂`);
 }
+
 function checkStreak() {
     const last = getSafeData('lastVisit');
     const today = new Date().toDateString();
@@ -1043,16 +1065,13 @@ function checkStreak() {
     }
     document.getElementById('valStreak').innerText = s;
 
-    // 🔥 NEW: Update 7-Day Streak Dots 🔥
     let dotsHtml = "";
-    let filledDots = s > 7 ? 7 : s; // Max 7 dots show karenge
+    let filledDots = s > 7 ? 7 : s; 
     
     for(let i = 1; i <= 7; i++) {
         if(i <= filledDots) {
-            // Green Dot (Completed)
             dotsHtml += `<div style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; box-shadow: 0 0 5px rgba(16, 185, 129, 0.4);"></div>`;
         } else {
-            // Gray Dot (Pending)
             dotsHtml += `<div style="width: 10px; height: 10px; border-radius: 50%; background: var(--border);"></div>`;
         }
     }
@@ -1166,7 +1185,6 @@ function calcProgress() {
     if(pct === 100 && window.confetti) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
 }
 
-/* 7. QOD CHECK */
 function checkQOD(el, idx, correct) {
     document.querySelectorAll('.qod-opt').forEach(o => o.style.pointerEvents = "none");
     if(idx === correct) { 
@@ -1180,7 +1198,6 @@ function checkQOD(el, idx, correct) {
     }
 }
 
-/* 8. FORMS & UTILS */
 function submitReport() {
     const txt = document.getElementById('reportText').value;
     if(!txt) return showToast("Please write an issue first!");
@@ -1207,7 +1224,7 @@ function toggleSaveTest(testId, el, event) {
     setSafeData('savedTests', JSON.stringify(savedTests));
 }
 
-// --- NEW NOTEBOOK LOGIC & PRACTICE MODE ---
+// --- NEW NOTEBOOK LOGIC WITH MATHJAX LAZY LOAD ---
 function switchNotebook(type, resetFilters = false) {
     currentNbType = type;
     document.getElementById('nbTab-bookmarks').classList.remove('active');
@@ -1328,7 +1345,10 @@ function renderNotebook(type = 'bookmarks') {
     }
     
     container.innerHTML = html;
-    if(window.MathJax) { MathJax.typesetPromise([container]); }
+    // 🔥 MATHJAX LAZY LOADING 🔥
+    if(window.MathJax && (html.includes('$') || html.includes('\\(') || html.includes('&#36;'))) { 
+        MathJax.typesetPromise([container]).catch(e => console.log("MathJax error", e)); 
+    }
 }
 
 function toggleNbSolution(id, btn) {
@@ -1352,18 +1372,50 @@ function removeNotebookItem(key, type) {
         renderNotebook(type);
     }
 }
-// ------------------------------------------
 
 function reattemptTest(testId, fullUrlQuery) {
-    // Native confirm() removed because TWA blocks it. Using smooth Toast instead.
     showToast("Starting fresh attempt... 🔄");
-    
     setTimeout(() => {
         removeSafeData("dsssb_cbt_rank_v2_" + testId); 
         removeSafeData("dsssb_cbt_rank_v2_" + testId + "_final"); 
         window.location.href = `cbt.html?${fullUrlQuery}`;
-    }, 800); // 0.8 seconds ka delay taaki user toast padh sake
+    }, 800);
 }
+
+// --- 🔥 DATE FILTER LOGIC 🔥 ---
+function toggleDateFilter() {
+    let status = document.getElementById('examStatusFilter').value;
+    let dateFilter = document.getElementById('examDateFilter');
+    if (status === 'attempted') {
+        dateFilter.style.display = 'block';
+    } else {
+        dateFilter.style.display = 'none';
+        dateFilter.value = 'all'; // Reset
+    }
+}
+
+function populateDateFilter() {
+    let dateSelect = document.getElementById('examDateFilter');
+    let attemptedDates = new Set();
+
+    attemptedTestIds.forEach((timestamp, testId) => {
+        let d = new Date(isNaN(timestamp) ? timestamp : Number(timestamp));
+        if (!isNaN(d.getTime())) {
+            let monthYear = d.toLocaleString('en-IN', { month: 'long', year: 'numeric' });
+            attemptedDates.add(monthYear);
+        }
+    });
+
+    let html = '<option value="all">📅 All Months</option>';
+    Array.from(attemptedDates).sort((a,b) => new Date(b) - new Date(a)).forEach(dateStr => {
+        html += `<option value="${dateStr}">${dateStr}</option>`;
+    });
+
+    let currentVal = dateSelect.value;
+    dateSelect.innerHTML = html;
+    if(Array.from(attemptedDates).includes(currentVal)) dateSelect.value = currentVal;
+}
+
 /* 9. MAIN DATA FETCHING */
 async function fetchData(user) {
     try {
@@ -1373,12 +1425,11 @@ async function fetchData(user) {
             userRef.onDisconnect().update({ state: 'offline', lastActive: firebase.database.ServerValue.TIMESTAMP });
         }
         
-        // NAYA CODE: Isme videosSnap aur dsssb_videos_db add kiya hai
         const [testsSnap, proSnap, notesSnap, videosSnap] = await Promise.all([ 
             db.ref("dsssb_tests_db").once("value"), 
             db.ref("dsssb_pro_users").once("value"), 
             db.ref("dsssb_notes_db").once("value"),
-            db.ref("dsssb_videos_db").once("value") // 🔥 Videos Yahan Se Aayenge
+            db.ref("dsssb_videos_db").once("value")
         ]).catch(e => {
             console.error("Promise.all error:", e);
             return [{exists:()=>false, val:()=>null}, {exists:()=>false, val:()=>null}, {exists:()=>false, val:()=>null}, {exists:()=>false, val:()=>null}];
@@ -1414,14 +1465,14 @@ async function fetchData(user) {
         }
 
         allNotes = Object.values(notesSnap.val() || {}).reverse(); 
-        let allVideos = Object.values(videosSnap.val() || {}).reverse(); // 🔥 DB se videos array banaya
+        let allVideos = Object.values(videosSnap.val() || {}).reverse();
         searchNotes(''); 
-        renderVideos(allVideos); // 🔥 Un videos ko screen par bheja
-       const testData = testsSnap.val() || {}; 
+        renderVideos(allVideos); 
+
+        const testData = testsSnap.val() || {}; 
         allTests = Object.keys(testData).map(key => ({ dbKey: key, ...testData[key] }));
         filterTests('all', document.querySelector('.filter-pill.active'));
 
-        // 🔥 Dynamic Folder System Call
         fetchDynamicFolders();
 
         if(document.getElementById('loader')) document.getElementById('loader').style.display = 'none'; 
@@ -1431,7 +1482,6 @@ async function fetchData(user) {
         db.ref("dsssb_results_live").once("value").then(resultsSnap => {
             const res = resultsSnap.val() || {};
             
-            // 🔥 NEW: Add offline/unsynced tests so they show instantly in "Attempted"
             let unsynced = JSON.parse(getSafeData('dsssb_unsynced_results') || '[]');
             unsynced.forEach((uRes, i) => { res['unsynced_' + i] = uRes; });
             
@@ -1455,6 +1505,9 @@ async function fetchData(user) {
                     if(matchedCat) subScores[matchedCat].push(percent); else subScores['GK'].push(percent); 
                 }
             });
+            
+            // 🔥 POPULATE MONTH/DATE DROPDOWN NOW 🔥
+            populateDateFilter();
 
             document.getElementById('valTests').innerText = myTestCount;
             let lb = Object.keys(userMap).map(k=>({name: k, avg: userMap[k].s / userMap[k].c, isMe: userMap[k].isMe})).sort((a,b) => b.avg - a.avg);
@@ -1471,7 +1524,7 @@ async function fetchData(user) {
            renderCharts(chartAverages);
             filterTests('all', document.querySelector('.filter-pill.active')); 
 
-            // --- AI SMART RECOMMENDATION LOGIC ---
+            // AI SMART RECOMMENDATION
             if (myTestCount > 0) {
                 let subjects = ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'];
                 let weakSubject = '';
@@ -1491,7 +1544,6 @@ async function fetchData(user) {
                     document.getElementById('aiRecommendBtn').onclick = () => openExamFolder(weakSubject, true);
                 }
             }
-            // -------------------------------------
 
           if (myTestCount > 0) {
                 let goalCard = document.getElementById('dailyGoalCard');
@@ -1499,7 +1551,6 @@ async function fetchData(user) {
                     goalCard.classList.add('completed');
                     document.getElementById('dgStatus').innerText = 'Completed ✅';
                     
-                    // 🎉 CONFETTI CELEBRATION (Sirf din me ek baar) 🎉
                     if(!sessionStorage.getItem('dailyGoalCelebrated')) {
                         setTimeout(() => {
                             if(window.confetti) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, zIndex: 99999 });
@@ -1510,12 +1561,10 @@ async function fetchData(user) {
                 }
             }
 
-            // 🔥 UPDATE FOLDER PROGRESS BARS AFTER RESULTS ARE LOADED 🔥
             if(Object.keys(dynamicFolders).length > 0) {
                 renderDynamicFolders();
             }
 
-            // 🔥 SHARED LINK SECURITY CHECK 🔥
             const urlParams = new URLSearchParams(window.location.search);
             const openTestId = urlParams.get('openTest');
             if (openTestId) {
@@ -1524,11 +1573,9 @@ async function fetchData(user) {
                     let isTestLocked = targetTest.type === 'pro' && !isPro;
                     
                     if (isTestLocked) {
-                        // Agar Test PRO hai aur User FREE hai
                         showToast("🔒 This is a Premium Challenge. Upgrade to PRO!");
                         setTimeout(() => { document.getElementById('paymentModal').style.display = 'flex'; }, 1000);
                     } else {
-                        // Agar Test FREE hai ya User PRO hai
                         showToast("⚔️ Challenge Accepted! Redirecting...");
                         let pm = targetTest.pm !== undefined ? parseFloat(targetTest.pm) : 1;
                         let nm = targetTest.nm !== undefined ? parseFloat(targetTest.nm) : 0.25;
@@ -1538,10 +1585,8 @@ async function fetchData(user) {
                         setTimeout(() => { window.location.href = `cbt.html?${urlQuery}&mode=exam`; }, 1500);
                     }
                 }
-                // URL से ID हटा दें ताकि Refresh करने पर बार-बार टेस्ट ना खुले
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
-            // ----------------------------------------
 
         }).catch(e => console.error("Leaderboard fetch error:", e));
 
@@ -1555,7 +1600,6 @@ async function fetchData(user) {
 const debouncedTestSearch = debounce((val) => searchTests(val), 300);
 const debouncedNoteSearch = debounce((val) => searchNotes(val), 300);
 
-// Fallback for existing calls inside the app
 function filterTests(cat, el, searchQuery = "") { applyModernFilters(); }
 function searchTests(query) { applyModernFilters(); }
 
@@ -1563,6 +1607,7 @@ function applyModernFilters() {
     const searchQuery = document.getElementById('testSearch').value.toLowerCase().trim();
     const categoryFilter = document.getElementById('examCategoryFilter').value.toLowerCase();
     const statusFilter = document.getElementById('examStatusFilter').value.toLowerCase();
+    const dateFilter = document.getElementById('examDateFilter').value;
 
     let list = [...allTests].reverse().filter(t => t.dbKey !== 'auto_qod');
     let savedTests = JSON.parse(getSafeData('savedTests') || '[]');
@@ -1595,16 +1640,29 @@ function applyModernFilters() {
         });
     }
 
-    // 3. Apply Status Filter (Live, Attempted, Saved)
+    // 3. Apply Status Filter (Live, Attempted, Saved) AND DATE Filter
     if (statusFilter !== 'all') {
         if (statusFilter === 'saved') {
             list = list.filter(t => savedTests.includes(t.dbKey));
         } else if (statusFilter === 'attempted') {
-            list = list.filter(t => attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id));
+            list = list.filter(t => {
+                let isAttempted = attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id);
+                if (!isAttempted) return false;
+
+                // Month Filter Check
+                if (dateFilter !== 'all') {
+                    let timestamp = attemptedTestIds.get(t.dbKey) || attemptedTestIds.get(t.id);
+                    let d = new Date(isNaN(timestamp) ? timestamp : Number(timestamp));
+                    if (isNaN(d.getTime())) return false;
+                    let monthYear = d.toLocaleString('en-IN', { month: 'long', year: 'numeric' });
+                    if (monthYear !== dateFilter) return false;
+                }
+                return true;
+            });
         } else if (statusFilter === 'live') {
             list = list.filter(t => 
                 (t.isLive && t.isLive.toString() === 'true') || 
-                (t.scheduledTime && Date.now() >= t.scheduledTime) ||
+                (t.scheduledTime && Date.now() >= t.scheduledTime && (!t.expiryTime || Date.now() < t.expiryTime)) ||
                 (t.category && t.category.toLowerCase().includes('live')) ||
                 (t.tags && t.tags.toLowerCase().includes('live'))
             );
@@ -1614,30 +1672,78 @@ function applyModernFilters() {
     renderTestCards(list);
 }
 
+// 🔥 LIVE REVERSE COUNTDOWN TIMER 🔥
+function startLiveCountdowns() {
+    clearInterval(liveCountdownInterval);
+    liveCountdownInterval = setInterval(() => {
+        let timers = document.querySelectorAll('.live-timer');
+        timers.forEach(timer => {
+            let expiry = parseInt(timer.getAttribute('data-expiry'));
+            let now = Date.now();
+            let diff = expiry - now;
+
+            if (diff <= 0) {
+                // EXPIRED
+                timer.innerHTML = "EXPIRED";
+                timer.classList.remove('live-badge', 'live-timer');
+                timer.classList.add('expired-badge');
+                
+                let card = timer.closest('.test-card');
+                if (card) {
+                    let startBtn = card.querySelector('.start-btn');
+                    if (startBtn && !startBtn.innerHTML.includes('Retake') && !startBtn.innerHTML.includes('Solutions')) {
+                        startBtn.disabled = true;
+                        startBtn.innerHTML = "Time Over ⏳";
+                        startBtn.classList.add('btn-expired');
+                    }
+                }
+            } else {
+                // TICKING
+                let h = Math.floor(diff / (1000 * 60 * 60));
+                let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                let s = Math.floor((diff % (1000 * 60)) / 1000);
+                timer.innerHTML = `🔴 Ends in ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            }
+        });
+    }, 1000);
+}
+
 function renderTestCards(filteredList) {
     let html = "";
     let savedTests = JSON.parse(getSafeData('savedTests') || '[]');
 
     filteredList.forEach(t => {
-let locked = t.type === 'pro' && !isPro;
+        let locked = t.type === 'pro' && !isPro;
         let isAttempted = attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id);
-       let attemptTime = attemptedTestIds.get(t.dbKey) || attemptedTestIds.get(t.id);
-let attemptDateStr = '';
-if (attemptTime) {
-    let parsedDate = new Date(isNaN(attemptTime) ? attemptTime : Number(attemptTime));
-    if (!isNaN(parsedDate.getTime())) {
-        attemptDateStr = parsedDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-    }
-}
+        let attemptTime = attemptedTestIds.get(t.dbKey) || attemptedTestIds.get(t.id);
+        let attemptDateStr = '';
+        if (attemptTime) {
+            let parsedDate = new Date(isNaN(attemptTime) ? attemptTime : Number(attemptTime));
+            if (!isNaN(parsedDate.getTime())) {
+                attemptDateStr = parsedDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+            }
+        }
         let attemptLabel = isAttempted && attemptDateStr ? `<div style="font-size: 11px; color: var(--success); font-weight: 800; margin-bottom: 5px; text-align: center; background: var(--bg-body); padding: 4px; border-radius: 6px;"><i class="fas fa-calendar-check"></i> Attempted on: ${attemptDateStr}</div>` : '';
         let isSaved = savedTests.includes(t.dbKey);
+        
         let isActuallyLive = (t.isLive && t.isLive.toString() === 'true') || 
                              (t.scheduledTime && Date.now() >= t.scheduledTime) ||
                              (t.category && t.category.toLowerCase().includes('live')) ||
                              (t.tag && t.tag.toLowerCase().includes('live')) ||
                              (t.tags && t.tags.toLowerCase().includes('live'));
                              
-        let liveHTML = isActuallyLive ? '<div class="live-badge">🔴 LIVE NOW</div>' : '';
+        let isExpired = t.expiryTime && Date.now() >= t.expiryTime;
+        
+        let liveHTML = '';
+        if (isActuallyLive && !isAttempted) {
+            if (isExpired) {
+                liveHTML = '<div class="expired-badge">EXPIRED</div>';
+            } else if (t.expiryTime) {
+                liveHTML = `<div class="live-badge live-timer" data-expiry="${t.expiryTime}">🔴 Ends in --:--:--</div>`;
+            } else {
+                liveHTML = '<div class="live-badge">🔴 LIVE NOW</div>';
+            }
+        }
         
         let pm = t.pm !== undefined ? parseFloat(t.pm) : 1;
         let nm = t.nm !== undefined ? parseFloat(t.nm) : 0.25;
@@ -1654,9 +1760,13 @@ if (attemptTime) {
             </div>` : 
             `<button class="start-btn" onclick="window.location.href='cbt.html?${urlQuery}&mode=exam'">Start Mock Test ➔</button>`;
         
+        // Final override if expired and not attempted
+        if (isExpired && !isAttempted && !locked) {
+            buttonHTML = `<button class="start-btn btn-expired" disabled>Time Over ⏳</button>`;
+        }
+
         let viewRankBtn = `<button class="start-btn" style="background:var(--primary-light); color:var(--primary-dark); border:1px solid var(--primary); padding: 8px; font-size:13px; margin-top:8px; width:100%; box-shadow:none;" onclick="openTestLeaderboard('${t.dbKey}', '${(t.title||'').replace(/'/g, "\\'")}')">🏆 View Leaderboard</button>`;
 
-        // 🔥 SMART TAGS LOGIC 🔥
         let tagStr = t.tags || t.tag || "";
         let tagsHTML = "";
         if(tagStr) {
@@ -1664,9 +1774,9 @@ if (attemptTime) {
             tagStr.split(',').forEach(tag => {
                 let cleanTag = tag.trim().toLowerCase();
                 let bg = "var(--primary-light)", color = "var(--primary-dark)";
-                if(cleanTag.includes('pyq')) { bg = "#fef08a"; color = "#854d0e"; } // Yellow
-                else if(cleanTag.includes('hard')) { bg = "#fee2e2"; color = "#991b1b"; } // Red
-                else if(cleanTag.includes('new')) { bg = "#dcfce7"; color = "#166534"; } // Green
+                if(cleanTag.includes('pyq')) { bg = "#fef08a"; color = "#854d0e"; } 
+                else if(cleanTag.includes('hard')) { bg = "#fee2e2"; color = "#991b1b"; } 
+                else if(cleanTag.includes('new')) { bg = "#dcfce7"; color = "#166534"; } 
                 
                 tagsHTML += `<span style="background:${bg}; color:${color}; font-size:9px; padding:3px 8px; border-radius:6px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">${tag.trim()}</span>`;
             });
@@ -1696,6 +1806,8 @@ if (attemptTime) {
     });
 
     document.getElementById('testListContainer').innerHTML = html || "<div style='text-align:center; color:var(--text-muted); padding:40px;'><i class='fas fa-box-open fa-3x' style='opacity:0.3; margin-bottom:10px;'></i><br>No tests found matching your filters.</div>";
+
+    startLiveCountdowns(); // Call Timer Engine
 }
 
 function searchNotes(query) {
@@ -1723,10 +1835,8 @@ function renderVideos(videoList = []) {
     let html = ""; 
     
     videoList.forEach(v => { 
-        // Pro check (Agar admin ne true kiya hai)
         let locked = (v.type === 'pro' || v.pro === true || v.pro === 'true') && !isPro; 
         
-        // 🔥 SMART THUMBNAIL GENERATOR: Agar photo nahi hai toh YT link se nikal lega
         let thumb = v.thumb || "https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg";
         if (!v.thumb && v.url && v.url.includes("youtu")) {
             let ytId = v.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
@@ -1746,7 +1856,6 @@ function renderVideos(videoList = []) {
                 </div>`; 
     });
     
-    // Agar Firebase mein 0 videos hain toh ye dikhayega
     document.getElementById('videoListContainer').innerHTML = html || "<div style='text-align:center; color:var(--text-muted); padding:40px;'><i class='fas fa-video fa-3x' style='opacity:0.3; margin-bottom:10px;'></i><br>No new video classes available right now.</div>";
 }
 
@@ -1823,13 +1932,12 @@ function renderLeaderboard(data) {
         <p style='font-size:13px; font-weight:600;'>Attempt your first mock test to unlock your global rank.</p>
     </div>`;
 }
-// --- SPECIFIC TEST LEADERBOARD (TOP 5 + MY RANK) ---
+
 function openTestLeaderboard(testId, testTitle) {
     document.getElementById('rankModalTitle').innerText = "🏆 " + testTitle;
     document.getElementById('testRankModal').style.display = 'flex';
     document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Fetching Ranks... ⏳</td></tr>';
 
-    // Fetching from your live results database
     db.ref("dsssb_results_live").once("value").then(snap => {
         let userBest = {}; 
         
@@ -1837,7 +1945,7 @@ function openTestLeaderboard(testId, testTitle) {
             snap.forEach(child => {
                 let d = child.val();
                 if(d.testId === testId) {
-                    let uid = d.userId || d.name; // Unique ID taki name repeat na ho
+                    let uid = d.userId || d.name; 
                     let score = parseFloat(d.score) || 0;
                     
                     if(!userBest[uid] || userBest[uid].score < score) {
@@ -1853,13 +1961,11 @@ function openTestLeaderboard(testId, testTitle) {
         
         let ranks = Object.values(userBest);
         
-        // Agar kisi ne test nahi diya hai
         if(ranks.length === 0) {
             document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 25px 10px; color:var(--text-muted);"><i class="fas fa-rocket fa-2x" style="margin-bottom:10px;"></i><br>Be the first to attempt and rank #1! 🚀</td></tr>';
             return;
         }
 
-        // Highest se Lowest sort karein
         ranks.sort((a,b) => b.score - a.score);
         
         let myRankIndex = -1;
@@ -1867,16 +1973,15 @@ function openTestLeaderboard(testId, testTitle) {
         
         ranks.forEach((r, index) => {
             if(r.isMe) {
-                myRankIndex = index + 1; // 1-based ranking
+                myRankIndex = index + 1; 
                 myData = r;
             }
         });
 
         let html = "";
-        let top5 = ranks.slice(0, 5); // Sirf Top 5 nikal rahe hain
+        let top5 = ranks.slice(0, 5); 
         let amIInTop5 = false;
 
-        // 1. Render Top 5 Students
         top5.forEach((r, i) => {
             let rankNum = i + 1;
             if(r.isMe) amIInTop5 = true;
@@ -1896,7 +2001,6 @@ function openTestLeaderboard(testId, testTitle) {
                     </tr>`;
         });
 
-        // 2. Render Current User (Agar Top 5 me nahi hai toh)
         if (myData && !amIInTop5) {
             html += `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:8px; font-size:18px; letter-spacing:3px;">•••</td></tr>`;
             html += `<tr style="background:var(--primary-light); border-top:2px solid var(--primary);">
@@ -1905,7 +2009,6 @@ function openTestLeaderboard(testId, testTitle) {
                         <td style="color:var(--primary); font-weight:900;">${myData.score} Pts</td>
                     </tr>`;
         } 
-        // 3. Agar User ne Test attempt hi nahi kiya hai
         else if (!myData) {
             html += `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:8px; font-size:18px; letter-spacing:3px;">•••</td></tr>`;
             html += `<tr>
@@ -1921,8 +2024,6 @@ function openTestLeaderboard(testId, testTitle) {
         document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; color:red;">Error fetching rank. Please try again.</td></tr>';
     });
 }
-// --- 🔥 NEW DYNAMIC 3D FOLDER ENGINE 🔥 ---
-let dynamicFolders = {};
 
 function fetchDynamicFolders() {
     db.ref('dsssb_folders_tree').on('value', snap => {
@@ -1963,7 +2064,7 @@ function renderDynamicFolders() {
         });
 
         let treeHtml = defaultTools;
-        let isFirstBoard = true; // 🔥 NEW: Pehle folder ko open rakhne ke liye
+        let isFirstBoard = true; 
 
         for (let board in groupedByBoard) {
             let folderCount = groupedByBoard[board].length;
@@ -1999,17 +2100,13 @@ function renderDynamicFolders() {
                     else if(f.colorClass.includes('pink') || f.colorClass.includes('eng')) themeClass = "ic-pink";
                 }
 
-                // 🔥 REAL FIREBASE PROGRESS & COUNT LOGIC 🔥
                 let examKey = f.examKey ? f.examKey.toLowerCase() : "";
                 
-                // 1. Find Total Tests
                 let categoryTests = allTests.filter(t => t.dbKey !== 'auto_qod' && ((t.category||"").toLowerCase().includes(examKey) || (t.title||"").toLowerCase().includes(examKey)));
                 let totalTests = categoryTests.length;
                 
-                // 2. Find Attempted Tests
                 let attemptedInCat = categoryTests.filter(t => attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id)).length;
                 
-                // 3. Calculate Percentage
                 let realProgress = totalTests > 0 ? Math.round((attemptedInCat / totalTests) * 100) : 0;
 
                 treeHtml += `
@@ -2078,92 +2175,9 @@ function filterDynamicTests(examKey, subFilterKey, pillEl) {
                 });
             }
 
-    let html = "";
-    let savedTests = JSON.parse(getSafeData('savedTests') || '[]');
-
-    list.forEach(t => {
-      let locked = t.type === 'pro' && !isPro;
-        let isAttempted = attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id);
-       let attemptTime = attemptedTestIds.get(t.dbKey) || attemptedTestIds.get(t.id);
-let attemptDateStr = '';
-if (attemptTime) {
-    let parsedDate = new Date(isNaN(attemptTime) ? attemptTime : Number(attemptTime));
-    if (!isNaN(parsedDate.getTime())) {
-        attemptDateStr = parsedDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-    }
-}
-        let attemptLabel = isAttempted && attemptDateStr ? `<div style="font-size: 11px; color: var(--success); font-weight: 800; margin-bottom: 5px; text-align: center; background: var(--bg-body); padding: 4px; border-radius: 6px;"><i class="fas fa-calendar-check"></i> Attempted on: ${attemptDateStr}</div>` : '';
-        let isSaved = savedTests.includes(t.dbKey);
-        
-        // 🔥 LIVE BADGE FIX DYNAMIC
-        let isActuallyLive = (t.isLive && t.isLive.toString() === 'true') || 
-                             (t.scheduledTime && Date.now() >= t.scheduledTime) ||
-                             (t.category && t.category.toLowerCase().includes('live')) ||
-                             (t.tag && t.tag.toLowerCase().includes('live')) ||
-                             (t.tags && t.tags.toLowerCase().includes('live'));
-                             
-        let liveHTML = isActuallyLive ? '<div class="live-badge">🔴 LIVE NOW</div>' : '';
-        
-        let pm = t.pm !== undefined ? parseFloat(t.pm) : 1;
-        let nm = t.nm !== undefined ? parseFloat(t.nm) : 0.25;
-        let isLocked = (t.lock === false || t.lock === "false") ? false : true;
-        let urlQuery = `testid=${t.dbKey}&title=${encodeURIComponent(t.title)}&time=${t.time||120}&pm=${pm}&nm=${nm}&lock=${isLocked}`;
-        
-        let buttonHTML = locked ? 
-            `<button class="start-btn locked" onclick="document.getElementById('paymentModal').style.display='flex'">Unlock Premium</button>` : 
-           isAttempted ? 
-            `${attemptLabel}<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-top:5px;">
-                <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); border:1px solid var(--border); padding: 8px; font-size:12px;" onclick="reattemptTest('${t.dbKey}', '${urlQuery}&mode=exam')">🔄 Retake</button>
-                <button class="start-btn" style="background:var(--warning); color:#fff; border:none; padding: 8px; font-size:12px;" onclick="window.location.href='cbt.html?${urlQuery}&mode=quiz'">⚡ Quiz Mode</button>
-                <button class="start-btn" style="padding: 8px; background:#10b981; font-size:12px;" onclick="window.location.href='cbt.html?${urlQuery}&mode=solution'">👁️ Solutions</button>
-            </div>` : 
-            `<button class="start-btn" onclick="window.location.href='cbt.html?${urlQuery}&mode=exam'">Start Mock Test ➔</button>`;
-        
-       let viewRankBtn = `<button class="start-btn" style="background:var(--primary-light); color:var(--primary-dark); border:1px solid var(--primary); padding: 8px; font-size:13px; margin-top:8px; width:100%; box-shadow:none;" onclick="openTestLeaderboard('${t.dbKey}', '${(t.title||'').replace(/'/g, "\\'")}')">🏆 View Leaderboard</button>`;
-
-        // 🔥 SMART TAGS LOGIC 🔥
-        let tagStr = t.tags || t.tag || "";
-        let tagsHTML = "";
-        if(tagStr) {
-            tagsHTML = `<div style="display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap; padding-right:70px;">`;
-            tagStr.split(',').forEach(tag => {
-                let cleanTag = tag.trim().toLowerCase();
-                let bg = "var(--primary-light)", color = "var(--primary-dark)";
-                if(cleanTag.includes('pyq')) { bg = "#fef08a"; color = "#854d0e"; } // Yellow
-                else if(cleanTag.includes('hard')) { bg = "#fee2e2"; color = "#991b1b"; } // Red
-                else if(cleanTag.includes('new')) { bg = "#dcfce7"; color = "#166534"; } // Green
-                
-                tagsHTML += `<span style="background:${bg}; color:${color}; font-size:9px; padding:3px 8px; border-radius:6px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">${tag.trim()}</span>`;
-            });
-            tagsHTML += `</div>`;
-        }
-
-        html += `<div class="test-card ${locked?'locked':''}">
-                    ${liveHTML}
-                    <div style="position:absolute; top:15px; right:15px; display:flex; gap:8px; z-index:10;">
-                        <button class="save-btn" style="position:relative; top:0; right:0; background:var(--bg-body); color:var(--text-main);" onclick="shareMockTest('${t.dbKey}', '${(t.title||'').replace(/'/g, "\\'")}', event)">
-                            <i class="fas fa-share-alt"></i>
-                        </button>
-                        <button class="save-btn ${isSaved?'saved':''}" style="position:relative; top:0; right:0;" onclick="toggleSaveTest('${t.dbKey}', this, event)">
-                            ${isSaved?'<i class="fas fa-star"></i>':'<i class="far fa-star"></i>'}
-                        </button>
-                    </div>
-                    ${tagsHTML}
-                    <div class="t-title">${t.title || 'PYQ Mock Test'}</div>
-                    <div class="t-info">
-                        <span><i class="fas fa-list-ol"></i> ${t.qs || '20'} Qs</span>
-                        <span><i class="far fa-clock"></i> ${t.time || '15'} Mins</span>
-                        <span><i class="fas fa-check-circle"></i> ${t.marks || t.qs || '20'} Marks</span>
-                    </div>
-                    ${buttonHTML}
-                    ${viewRankBtn}
-                </div>`;
-    });
-
-    document.getElementById('testListContainer').innerHTML = html || "<div style='text-align:center; color:var(--text-muted); padding:40px;'><i class='fas fa-box-open fa-3x' style='opacity:0.3; margin-bottom:10px;'></i><br>No tests found in this category.</div>";
+    renderTestCards(list);
 }
 
-// 🔥 MOUSE DRAG TO SCROLL (LIKE MOBILE SWIPE ON PC FOR MULTIPLE SECTIONS) 🔥
 document.addEventListener('DOMContentLoaded', () => {
     const sliders = [document.getElementById('catBox'), document.getElementById('mockFiltersRow')];
     
@@ -2190,7 +2204,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(!isDown) return;
             e.preventDefault();
             const x = e.pageX - slider.offsetLeft;
-            const walk = (x - startX) * 2; // Scroll fast
+            const walk = (x - startX) * 2; 
             slider.scrollLeft = scrollLeft - walk;
         });
     });
@@ -2202,7 +2216,6 @@ document.addEventListener('keydown', function(e) {
     if (e.ctrlKey && ['U', 'u', 'C', 'c'].includes(e.key)) { e.preventDefault(); return false; }
 });
 
-// --- 🔥 CHALLENGE FRIEND FUNCTION 🔥 ---
 function shareMockTest(testId, title, event) {
     event.stopPropagation();
     const shareText = `🎯 I challenge you in this Mock Test: *${title}*\n\n🔥 Let's see who gets the better rank! Attempt here:\n`;
@@ -2216,6 +2229,7 @@ function shareMockTest(testId, title, event) {
         showToast("Challenge Link Copied! Send to your friends. 🏆");
     }
 }
+
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js')
@@ -2224,7 +2238,6 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// 🔥 Mobile Browser Full Screen Auto-Trigger (On First Tap)
 document.addEventListener('click', function goFullScreen() {
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         let doc = window.document;
@@ -2234,14 +2247,13 @@ document.addEventListener('click', function goFullScreen() {
             requestFullScreen.call(docEl).catch(err => console.log("Fullscreen auto-trigger ignored by browser"));
         }
     }
-    document.removeEventListener('click', goFullScreen); // Sirf pehli baar chalega
+    document.removeEventListener('click', goFullScreen); 
 });
   
 </script>
 
-  <script>
+<script>
 (function() {
-    // Check if Firebase is loaded, otherwise init
     const trackerConfig = { 
         apiKey: "AIzaSyDGolcXv0efZxRdOvBthfeT72mkNLLbAwI", 
         authDomain: "dsssbexamportal.firebaseapp.com", 
@@ -2262,25 +2274,22 @@ document.addEventListener('click', function goFullScreen() {
             localStorage.setItem('dsssb_user_id', trackUid);
         }
 
-        // Determine current page activity
         let loc = window.location.pathname.split('/').pop() || 'index.html';
         if(loc.includes('cbt.html')) loc = 'Giving Mock Test 📝';
         else if(loc.includes('index.html') || loc === '') loc = 'On Dashboard 🏠';
         else loc = 'Exploring Portal 🔍';
 
-        // 1. Update Total/Weekly Users
         trackDb.ref('dsssb_analytics/users/' + trackUid).update({
             name: trackUname,
             last_active: firebase.database.ServerValue.TIMESTAMP
         });
 
-        // 2. Update Live Presence
         const connRef = trackDb.ref('.info/connected');
         const presRef = trackDb.ref('dsssb_analytics/presence/' + trackUid);
 
         connRef.on('value', (snap) => {
             if (snap.val() === true) {
-                presRef.onDisconnect().remove(); // Tab close hote hi offline
+                presRef.onDisconnect().remove(); 
                 presRef.set({ 
                     name: trackUname, 
                     activity: loc, 
