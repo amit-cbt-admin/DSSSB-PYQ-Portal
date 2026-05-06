@@ -177,7 +177,6 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 .qbtn.p-wrong { background: #ef4444; border-color: #ef4444; color: #fff; }
 .qbtn.p-skip { background: transparent; border-color: #475569; color: #64748b; }
 
-/* --- NEW LIST VIEW STYLES --- */
 .p-list { display: flex; flex-direction: column; gap: 8px; padding: 0 15px 15px 15px; }
 .qbtn-list { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-radius: 8px; border: 1px solid #475569; background: transparent; color: #cbd5e1; font-weight: 600; font-size: 13px; cursor: pointer; transition: 0.2s; }
 .qbtn-list:hover:not(:disabled) { background: rgba(255,255,255,0.05); }
@@ -194,7 +193,6 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 
 .modal-header { padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 18px; color: var(--primary); background: var(--primary-light); }
 
-/* Premium Scrollbar for Desktop (Dark Palette) */
 .palette-sections-container::-webkit-scrollbar { width: 6px; }
 .palette-sections-container::-webkit-scrollbar-track { background: transparent; }
 .palette-sections-container::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
@@ -208,23 +206,22 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 .notebook-tab.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
 .notebook-tab.inactive { background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border-color); }
 
-/* Analysis UI */
+/* ========================================================
+   🔥 PREMIUM RESULT SCREEN UPGRADE (CSS) 🔥
+   ======================================================== */
 .analysis-container { max-width: 900px; margin: auto; display: flex; flex-direction: column; gap: 14px; padding: 10px 0; font-family: 'Poppins', sans-serif; }
-.card-dashboard { background: var(--bg-card); border-radius: 12px; padding: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); }
-.info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; font-size: 14px; color: var(--text-muted); }
-.info-grid div b { color: var(--text-main); }
-.score-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; text-align: center; }
-.score-item { background: var(--primary-light); border-radius: 10px; padding: 14px; border: 1px solid rgba(99, 102, 241, 0.2); }
-.score-item h4 { margin: 0; font-size: 13px; color: var(--primary-dark); text-transform: uppercase; letter-spacing: 0.5px; }
-.score-item p { margin: 6px 0 0; font-size: 20px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; justify-content: center; gap: 5px; }
-.score-item p .total-count { font-size: 14px; color: var(--text-muted); font-weight: 600; margin-top: 3px; }
-.attempt-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; text-align: center; }
-.attempt-box { padding: 12px; border-radius: 10px; font-weight: 700; font-size: 13px; border: 1px solid transparent; }
-.attempt-box span { display: block; font-size: 20px; margin-top: 4px; font-weight: 800; }
-.at-correct { background: var(--success-bg); color: var(--success); border-color: rgba(16, 185, 129, 0.3); }
-.at-wrong { background: var(--danger-bg); color: var(--danger); border-color: rgba(239, 68, 68, 0.3); }
-.at-unattempted { background: var(--warning-bg); color: #b77c00; border-color: rgba(245, 158, 11, 0.3); }
-.at-total { background: var(--primary-light); color: var(--primary-dark); border-color: rgba(99, 102, 241, 0.3); }
+.premium-card { background: var(--bg-card); backdrop-filter: blur(16px); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05); margin-bottom: 15px; }
+.hero-score-ring { width: 160px; height: 160px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; position: relative; background: conic-gradient(var(--success) var(--pct, 0%), var(--border-color) 0); box-shadow: 0 0 30px rgba(16, 185, 129, 0.2); transition: --pct 1s ease-in-out; }
+.hero-inner-circle { width: 140px; height: 140px; background: var(--bg-card); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; box-shadow: inset 0 4px 10px rgba(0,0,0,0.05); }
+.ai-mentor-box { border-left: 4px solid #a855f7; background: linear-gradient(90deg, rgba(168,85,247,0.05) 0%, transparent 100%); }
+.ai-pill { display: inline-block; padding: 6px 12px; background: var(--primary-light); color: var(--primary-dark); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 20px; font-size: 13px; margin: 4px; font-weight: bold; }
+.pro-lock-overlay { position: relative; overflow: hidden; border-radius: 12px; margin-top: 10px; cursor: pointer; transition: 0.2s; }
+.pro-lock-overlay::after { content: "🔒 PRO Feature - Unlock Solution"; position: absolute; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fbbf24; z-index: 10; font-size: 14px; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); transition: 0.2s; }
+.pro-lock-overlay:hover::after { color: #fff; background: rgba(15, 23, 42, 0.95); }
+.compact-q-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: var(--shadow-sm); }
+.badge-anim { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+@keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@property --pct { syntax: '<percentage>'; inherits: false; initial-value: 0%; }
 
 .bar-section { margin-top: 10px; }
 .bar-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--text-muted); }
@@ -232,11 +229,6 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 .bar-fill { height: 100%; border-radius: 99px; transition: width 1s ease-out; }
 .fill-you { background: var(--primary); }
 .fill-topper { background: var(--success); }
-
-.topper-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 10px; }
-.topper-table th { background: var(--bg-body); color: var(--text-muted); font-weight: 700; padding: 10px; text-align: left; border-bottom: 2px solid var(--border-color); }
-.topper-table td { padding: 10px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
-.section-title { font-size: 16px; font-weight: 700; margin: 0 0 14px; color: var(--text-main); padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
 
 .discussion-section { margin-top: 15px; border-top: 1px dashed var(--border-color); padding-top: 15px; }
 .comment-box { background: var(--bg-body); border-radius: 8px; padding: 10px; margin-bottom: 10px; font-size: 13px; }
@@ -260,61 +252,45 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
   .sec-tab { padding: 0 12px; font-size: 12px; height: 32px; }
   .q-card { padding: 12px !important; }
   
-  /* 🔥 TABLE IMAGE SCROLL FIX: चौड़ी इमेज सिकुड़ेगी नहीं, Scroll होगी! 🔥 */
-  .q-text, .opt { 
-      overflow-x: auto !important; 
-      -webkit-overflow-scrolling: touch; 
-      padding-bottom: 5px; 
-  }
-  .q-text img, .opt img { 
-      max-width: none !important; /* इमेज को स्क्रीन के साइज़ में सिकुड़ने से रोकेगा */
-      width: auto !important;     /* असली साइज़ रखेगा (छोटे आइकॉन छोटे, बड़े टेबल बड़े) */
-  }
+  .q-text, .opt { overflow-x: auto !important; -webkit-overflow-scrolling: touch; padding-bottom: 5px; }
+  .q-text img, .opt img { max-width: none !important; width: auto !important; }
 }
 
 @media(min-width: 1024px) {
     body {
         display: grid; 
         grid-template-columns: 1fr 340px; 
-        grid-template-rows: var(--header-height) auto 1fr 70px; /* Fixed Footer Height */
+        grid-template-rows: var(--header-height) auto 1fr 70px;
         grid-template-areas: "header header" "secbar secbar" "main palette" "footer palette"; 
         height: 100vh; overflow: hidden;
     }
     header { grid-area: header; }
     #sectionBar { grid-area: secbar; }
-    /* FIXED MAIN AREA SCROLL */
     #mainArea { grid-area: main; padding: 40px 60px; max-width: 1100px; margin: 0 auto; width: 100%; overflow-y: auto; height: 100%; } 
     #palettePanel {
         grid-area: palette; position: relative; transform: none; width: 100%; height: 100%;
         box-shadow: -5px 0 15px rgba(0,0,0,0.02); border-left: 1px solid var(--border-color); display: flex !important; z-index: 10;
     }
-    
-    /* Hide close button on desktop palette */
     #palettePanel > div:first-child button { display: none; }
     .modal-header button { display: none; } 
-    
     #paletteOverlay { display: none !important; }
     #examFooter .btn-grid { display: none; } 
-    /* FIXED FOOTER POSITION */
     #examFooter { grid-area: footer; justify-content: center; border-right: 1px solid var(--border-color); position: relative; border-top: 1px solid var(--border-color); }
     .q-card { box-shadow: 0 10px 40px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); margin-bottom: 20px; }
     .opt { padding: 18px; } 
 }
 
-/* Preloader styles */
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* =========================
    PRINT PREVIEW HIGH QUALITY PDF
    ========================= */
 @media print {
-    /* 1. फालतू UI को हाइड करें, साथ ही #mainArea को भी हाइड करें ताकि वो Modal के पीछे से प्रिंट न हो */
     header, #sectionBar, #examFooter, #palettePanel, #paletteOverlay, 
     #startScreen, #instructionScreen, #declarationScreen, #toast-container, 
     #tgOverlay, #tgPopup, #customConfirm, #zoomModal, #paymentModal, #mainArea,
     .btn-primary { display: none !important; }
 
-    /* 2. MASTER FIX: Body का fixed position हटाकर static करें ताकि सारे पेज खुल सकें */
     html, body {
         position: static !important; 
         height: auto !important; 
@@ -326,7 +302,6 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         padding: 0 !important;
     }
 
-    /* 3. Modal की max-height हटा दें और इसे पूरा एक्सपेंड होने दें */
     #resultModal, .modal-overlay, .modal-card, .modal-body {
         position: static !important; 
         display: block !important;
@@ -343,14 +318,9 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         transform: none !important;
     }
 
-    /* 4. कलर्स प्रिंट में वैसे ही दिखें जैसे स्क्रीन पर हैं */
-    * {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-    }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
-    /* 5. पेज के बीच में से सवाल कटने से बचाएं */
-    .pdf-q-card, .card-dashboard {
+    .pdf-q-card, .premium-card {
         page-break-inside: avoid !important; 
         break-inside: avoid !important;
         margin-bottom: 20px !important; 
@@ -393,7 +363,6 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 
 <div id="zoomModal" style="position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:5000; display:none; overflow:auto; -webkit-overflow-scrolling:touch;">
     <span onclick="closeZoom()" style="position:fixed; top:20px; right:20px; font-size:40px; color:#fff; cursor:pointer; z-index:5001; background:rgba(0,0,0,0.6); width:45px; height:45px; border-radius:50%; display:flex; align-items:center; justify-content:center; line-height: 1;">&times;</span>
-    
     <div style="padding: 80px 20px 40px 20px; min-height: 100vh; box-sizing: border-box; text-align: center;">
         <img id="zoomImg" src="" style="width:100%; max-width:none; border-radius:8px; background-color:#ffffff; padding:10px; display:inline-block; margin:0 auto;">
     </div>
@@ -431,35 +400,10 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
     <div style="flex: 1; overflow-y: auto; padding: 20px; width: 100%; max-width: 900px; margin: 0 auto; color: var(--text-main); font-size: 14px; line-height: 1.6; padding-bottom: 90px;">
         <b>Please read the following instructions carefully:</b>
         <ol style="padding-left: 20px; margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
-            <li>The clock will be set at the server. The countdown timer at the top right corner of screen will display the remaining time available for you to complete the examination. When the timer reaches zero, the examination will end by itself.</li>
-            <li>The Question Palette displayed on the right side of screen will show the status of each question using one of the following symbols:
-                <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 10px; background: var(--bg-card); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <div style="width:28px; height:28px; background:#f8fafc; border:2px solid #cbd5e1; border-radius:6px; flex-shrink:0;"></div> 
-                        You have not visited the question yet.
-                    </div>
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <div style="width:28px; height:28px; background:#fff; border:2px solid var(--border-color); border-radius:6px; color:var(--text-main); display:flex; align-items:center; justify-content:center; font-weight:bold; flex-shrink:0;">1</div> 
-                        You have not answered the question.
-                    </div>
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <div style="width:28px; height:28px; background:var(--success); border-radius:6px; color:white; display:flex; align-items:center; justify-content:center; font-weight:bold; flex-shrink:0;">2</div> 
-                        You have answered the question.
-                    </div>
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <div style="width:28px; height:28px; background:var(--warning); border-radius:6px; color:white; display:flex; align-items:center; justify-content:center; font-weight:bold; flex-shrink:0;">3</div> 
-                        You have NOT answered the question, but have marked the question for review.
-                    </div>
-                </div>
-            </li>
-            <li><strong>Navigating to a Question:</strong> To answer a question, you can click on the question number in the Question Palette at the right of your screen to go to that numbered question directly.</li>
-            <li><strong>Answering a Question:</strong> 
-                <ul style="padding-left: 20px; margin-top: 5px;">
-                    <li>To select your answer, click on the button of one of the options.</li>
-                    <li>To deselect your chosen answer, click on the <b>Clear Response</b> button.</li>
-                    <li>To save your answer, you MUST click on the <b>Save & Next</b> button.</li>
-                </ul>
-            </li>
+            <li>The clock will be set at the server. The countdown timer at the top right corner of screen will display the remaining time available for you to complete the examination.</li>
+            <li>The Question Palette displayed on the right side of screen will show the status of each question using symbols.</li>
+            <li><strong>Navigating to a Question:</strong> Click on the question number in the Question Palette to go to that numbered question directly.</li>
+            <li><strong>Answering a Question:</strong> To select your answer, click on the button of one of the options. To save your answer, you MUST click on the <b>Save & Next</b> button.</li>
         </ol>
     </div>
     <footer style="position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-card); padding: 15px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; z-index: 10;">
@@ -491,8 +435,6 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
             <li>प्रत्येक प्रश्न में दिए गए 4 विकल्पों में से केवल 1 विकल्प सही उत्तर के रूप में उपलब्ध होगा।</li>
             <li>आपको निर्धारित समय में टेस्ट समाप्त करना होगा।</li>
             <li>आपको प्रत्येक सही उत्तर के लिए सकारात्मक अंक दिया जाएगा और गलत उत्तर के लिए नकारात्मक अंकन की कटौती की जाएगी।</li>
-            <li>उन सवालों के लिए कोई नकारात्मक अंकन नहीं है जो आपने प्रयास नहीं किए हैं।</li>
-            <li>आप इस टेस्ट को केवल एक बार लिख सकते हैं। सुनिश्चित करें कि आप टेस्ट सबमिट करने से पहले और ब्राउज़र को बंद करने से पहले टेस्ट पूरा कर लें।</li>
         </ol>
 
         <div style="background: var(--bg-card); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px;">
@@ -522,13 +464,13 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         </div>
     </footer>
 </div>
+
 <header>
     <div class="brand">
         <span>🛡️</span> 
         <span id="displayTitle">PYQ Notes CBT</span>
     </div>
     <div class="header-tools">
-        
         <div style="display:flex; border:1px solid rgba(255,255,255,0.2); border-radius:8px; overflow:hidden;">
             <button class="nav-btn" style="border-radius:0; background:transparent; width: 30px;" onclick="adjustFont(-1)" title="Decrease Font">A-</button>
             <button class="nav-btn" style="border-radius:0; background:rgba(255,255,255,0.1); width: 30px;" onclick="adjustFont(1)" title="Increase Font">A+</button>
@@ -549,7 +491,6 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
                 <button id="bookmarkBtn" onclick="toggleBookmark()" style="background:transparent; border:none; cursor:pointer; font-size:18px; padding:0; transition:0.2s;" title="Save to Notebook">🔖</button>
             </span>
             <span style="font-family:monospace; font-size:14px;"><span style="color:var(--success)">+<span id="posMarkDisp">1.0</span></span> &nbsp;|&nbsp; <span style="color:var(--danger)">-<span id="negMarkDisp">0.25</span></span></span>
-            
             <div id="qMetaData" class="q-meta-badges"></div>
         </div>
         
@@ -592,7 +533,7 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         <div class="p-leg-item"><div class="p-dot attempted"></div> Attempted</div>
     </div>
     <div class="palette-sections-container" id="paletteGrid">
-        </div>
+    </div>
     <div style="padding:15px; border-top:1px solid #2d3748; background:#1a1b1e; display: flex; flex-direction: column; gap: 10px;">
         <button id="sectionSubmitBtn" onclick="manualSubmitSection()" class="btn-primary" style="background:transparent; border: 2px solid #5e7b95; box-shadow:none; margin: 0; width: 100%; color: #cbd5e1; font-weight: bold; border-radius: 8px; padding: 10px;">SUBMIT SECTION</button>
         <button id="mainSubmitBtn" onclick="submitTestDialog()" class="btn-primary" style="background:#5e7b95; box-shadow:none; margin: 0; width: 100%; color: #fff; font-weight: bold; border-radius: 8px;">SUBMIT TEST</button>
@@ -614,7 +555,7 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         <div style="font-size: 50px; margin-bottom: 10px;">👑</div>
         <h2 style="color:var(--warning); margin-bottom:5px; font-weight:900; font-size: 20px;">Upgrade to PRO</h2>
         <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px; font-weight:600; line-height:1.4;">
-            Unlock All Premium Mock Tests, Video Classes & PDF Notes!
+            Unlock Detailed Solutions, Video Explanations & Replay Mode!
         </p>
         
         <div style="background:var(--primary-light); color:var(--primary-dark); padding:12px; border-radius:12px; margin-bottom:15px; font-size: 14px; font-weight: 700;">
@@ -622,11 +563,6 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         </div>
         
         <p style="font-size:12px; color:var(--text-main); margin-bottom:10px; font-weight:600;">To upgrade, please contact Admin.</p>
-        
-        <div style="background:#f1f5f9; padding:10px; border-radius:8px; margin-bottom:15px; font-size:12px;">
-            Your App ID: <b id="displayUserId" style="color:var(--primary); font-size: 14px;">--</b><br>
-            <span style="font-size:10px; color:grey;">Send this ID to Admin on Telegram to activate PRO</span>
-        </div>
         
         <button onclick="window.open('https://t.me/DSSSBRank', '_blank')" style="background:#0088cc; box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4); width: 100%; border: none; padding: 12px; border-radius: 10px; color: white; font-weight: 700; cursor: pointer;">
             <i class="fab fa-telegram-plane"></i> Message Admin on Telegram
@@ -708,26 +644,19 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
 document.addEventListener('contextmenu', e => e.preventDefault());
 
 document.addEventListener('keydown', function(e) {
-  // 1. Anti-Cheat Security
   if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) || (e.ctrlKey && ['U', 'S', 'P', 'H'].includes(e.key.toUpperCase()))) {
       e.preventDefault(); e.stopPropagation(); alert("🚨 Unauthorized action detected!"); return false;
   }
   
-  // 2. 🔥 Keyboard Shortcuts for Students (Only works during active test)
   const isOverlayOpen = document.getElementById('startScreen').style.display !== 'none' || document.getElementById('instructionScreen').style.display !== 'none';
   
   if (!isOverlayOpen && !currentState.submitted && TEST_MODE !== 'solution') {
-      // Prev/Next Question
       if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
       if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
-      
-      // Select Options A, B, C, D (or 1, 2, 3, 4)
       if (['a', 'A', '1'].includes(e.key)) { e.preventDefault(); selectAns(0); }
       if (['b', 'B', '2'].includes(e.key)) { e.preventDefault(); selectAns(1); }
       if (['c', 'C', '3'].includes(e.key)) { e.preventDefault(); selectAns(2); }
       if (['d', 'D', '4'].includes(e.key)) { e.preventDefault(); selectAns(3); }
-      
-      // Mark for Review (W) and Clear Response (Q)
       if (['w', 'W'].includes(e.key)) { e.preventDefault(); reviewAndNext(); } 
       if (['q', 'Q'].includes(e.key)) { e.preventDefault(); clearResponse(); } 
   }
@@ -740,7 +669,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const CURRENT_TEST_ID = urlParams.get('testid') || "TEST_UNKNOWN";
 const CURRENT_TEST_TITLE = urlParams.get('title') || "DSSSB Mock Test";
 const TOTAL_TIME_MINS = parseInt(urlParams.get('time')) || 120; 
-const MIN_SUBMIT_MINS = parseInt(urlParams.get('mintime')) || 0; // 🔥 Naya Time Lock Variable
+const MIN_SUBMIT_MINS = parseInt(urlParams.get('mintime')) || 0; 
 const TEST_MODE = urlParams.get('mode') || "exam"; 
 
 const POSITIVE_MARK = parseFloat(urlParams.get('pm')) || 1.0;
@@ -786,12 +715,10 @@ document.getElementById('mainArea').addEventListener('touchstart', e => {
 }, {passive: true});
 
 document.getElementById('mainArea').addEventListener('touchend', e => { 
-    // 🔥 MASTER SWIPE FIX: स्मार्ट चेकिंग कि टच की गई चीज़ स्क्रॉल होने वाली है या नहीं
     let el = e.target;
     let isScrollable = false;
     
     while (el && el !== document.getElementById('mainArea')) {
-        // अगर एलिमेंट table है, q-text है, या opt है और वो स्क्रीन से चौड़ा है (Scrollable है)
         if ((el.classList && (el.classList.contains('q-text') || el.classList.contains('opt'))) || el.tagName === 'TABLE' || el.tagName === 'IMG') {
             if (el.scrollWidth > el.clientWidth + 2) { 
                 isScrollable = true;
@@ -801,7 +728,6 @@ document.getElementById('mainArea').addEventListener('touchend', e => {
         el = el.parentElement;
     }
 
-    // अगर चौड़े टेबल/इमेज पर स्क्रॉल किया है, तो Next Question पर मत जाओ!
     if (isScrollable || e.target.tagName === 'IMG') {
         return;
     }
@@ -809,7 +735,6 @@ document.getElementById('mainArea').addEventListener('touchend', e => {
     touchendX = e.changedTouches[0].screenX; 
     touchendY = e.changedTouches[0].screenY; 
     
-    // सिर्फ एकदम सीधे हॉरिजॉन्टल स्वाइप पर पेज चेंज होगा
     if (Math.abs(touchendY - touchstartY) < 60) {
         if(touchendX < touchstartX - 80) next(); 
         if(touchendX > touchstartX + 80) prev(); 
@@ -866,7 +791,6 @@ function initApp() {
       if(snap.exists()) {
          QUESTIONS = snap.val();
 
-        // 🔥 UPDATE: Paper ki Language Check (Hide Toggle & Dropdown Options if only 1 language exists)
         let hasEn = false;
         let hasHi = false;
         QUESTIONS.forEach(q => {
@@ -879,8 +803,6 @@ function initApp() {
             langSelect.innerHTML = '<option value="">-- Select --</option>';
             if (hasEn) langSelect.innerHTML += '<option value="EN">English</option>';
             if (hasHi) langSelect.innerHTML += '<option value="HI">हिंदी</option>';
-            
-            // Auto-select if only one language is available
             if (hasEn && !hasHi) langSelect.value = "EN";
             if (hasHi && !hasEn) langSelect.value = "HI";
         }
@@ -890,12 +812,11 @@ function initApp() {
             if (hasEn && hasHi) {
                 topLangBtn.style.display = 'flex';
             } else {
-                topLangBtn.style.display = 'none'; // Hide toggle button
+                topLangBtn.style.display = 'none';
                 if (hasEn) topLangBtn.innerText = 'EN';
                 if (hasHi) topLangBtn.innerText = 'HI';
             }
         }
-        // ---------------------------------------------------------
 
         SECTION_MAP = [];
         QUESTIONS.forEach(q => {
@@ -904,17 +825,16 @@ function initApp() {
         });
           
         const specificStorageKey = STORAGE_KEY + "_" + CURRENT_TEST_ID;
-          calcSectionIndices();
+        calcSectionIndices();
           
-        // --- NEW: Inject Dynamic Data into Declaration Screen ---
-          const totalQs = QUESTIONS.length;
-          const totalMarks = totalQs * POSITIVE_MARK;
-          if(document.getElementById('declTotalQs')) document.getElementById('declTotalQs').innerText = totalQs;
-          if(document.getElementById('declTotalMarks')) document.getElementById('declTotalMarks').innerText = "पूर्णांक: " + totalMarks;
-          if(document.getElementById('declPosMark')) document.getElementById('declPosMark').innerText = "सही उत्तर: +" + POSITIVE_MARK;
-          if(document.getElementById('declNegMark')) document.getElementById('declNegMark').innerText = "नकारात्मक अंक (Negative): -" + NEGATIVE_MARK;
-          // --------------------------------------------------------
-          if (TEST_MODE === 'solution') {
+        const totalQs = QUESTIONS.length;
+        const totalMarks = totalQs * POSITIVE_MARK;
+        if(document.getElementById('declTotalQs')) document.getElementById('declTotalQs').innerText = totalQs;
+        if(document.getElementById('declTotalMarks')) document.getElementById('declTotalMarks').innerText = "पूर्णांक: " + totalMarks;
+        if(document.getElementById('declPosMark')) document.getElementById('declPosMark').innerText = "सही उत्तर: +" + POSITIVE_MARK;
+        if(document.getElementById('declNegMark')) document.getElementById('declNegMark').innerText = "नकारात्मक अंक (Negative): -" + NEGATIVE_MARK;
+          
+        if (TEST_MODE === 'solution') {
               const finalSaved = getSafeData(specificStorageKey + "_final");
               if (finalSaved) { currentState = JSON.parse(finalSaved); } 
               else {
@@ -924,13 +844,13 @@ function initApp() {
               }
               currentState.submitted = true; 
               document.getElementById('resumeBox').style.display = 'none';
-          } else if (TEST_MODE === 'quiz') {
+        } else if (TEST_MODE === 'quiz') {
               currentState.answers = new Array(QUESTIONS.length).fill(null);
               currentState.review = new Array(QUESTIONS.length).fill(false);
               currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
               currentState.submitted = false; 
               document.getElementById('resumeBox').style.display = 'none';
-          } else {
+        } else {
               currentState.answers = new Array(QUESTIONS.length).fill(null);
               currentState.review = new Array(QUESTIONS.length).fill(false);
               currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
@@ -942,7 +862,7 @@ function initApp() {
                       document.getElementById('resumeBox').style.display = 'block';
                   } else { removeSafeData(specificStorageKey); }
               }
-          }
+        }
       } else {
           alert("⚠️ Alert: Test not found!");
       }
@@ -961,8 +881,6 @@ function calcSectionIndices() {
   }); 
 }
 
-/* ================= NEW NAVIGATION LOGIC ================= */
-// 🚀 Bulletproof Full Screen Function
 function forceFullScreen() {
   try {
       let elem = document.documentElement;
@@ -982,7 +900,6 @@ function validateLogin() {
     const name = document.getElementById('startNameInput').value.trim();
     if(!name) return showToast("Name is missing!", "error");
     
-    // 🚀 तुरंत फुल-स्क्रीन ट्रिगर करें (ताकि Quiz/Solution Mode में कोई दिक्कत न आए)
     forceFullScreen();
 
     currentState.name = name.replace(" (Solution Mode)", "").replace(" (Quiz Mode)", "");
@@ -990,9 +907,9 @@ function validateLogin() {
     
     const currentMode = (TEST_MODE || "").toLowerCase();
     if (currentMode.includes('quiz') || currentMode.includes('solution')) {
-        startGame(false); // Skip instructions and go direct to test/solution
+        startGame(false); 
     } else {
-        document.getElementById('instructionScreen').style.display = 'flex'; // Show instructions for normal exam
+        document.getElementById('instructionScreen').style.display = 'flex'; 
     }
 }
 
@@ -1018,17 +935,14 @@ function startExamFromDecl() {
     const agree = document.getElementById('agreeCheck').checked;
     if(!agree) return showToast("Please check the declaration box before starting.", "error");
 
-    // 🚀 फुल-स्क्रीन फिर से पक्का करें
     forceFullScreen();
 
     document.getElementById('langBtn').innerText = lang.trim();
     document.getElementById('declarationScreen').style.display = 'none';
     startGame(false);
 }
-/* ======================================================== */
 
 function startGame(isResuming) {
-  // Hide all overlays to be safe
   document.getElementById('startScreen').style.display = 'none';
   document.getElementById('instructionScreen').style.display = 'none';
   document.getElementById('declarationScreen').style.display = 'none';
@@ -1053,13 +967,11 @@ function startGame(isResuming) {
   
   loadQuestion(currentState.idx);
   
-// 🚀 Enhanced Mobile Full Screen & Orientation Lock
   try {
       let elem = document.documentElement;
       let enterFS = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.msRequestFullscreen;
       if (enterFS) {
           enterFS.call(elem).then(() => {
-              // Auto lock to portrait mode on mobile if supported
               if (screen.orientation && screen.orientation.lock) {
                   screen.orientation.lock('portrait').catch(err => console.log("Orientation lock not supported", err));
               }
@@ -1100,9 +1012,7 @@ function saveState() {
 }
 
 function loadState() { 
-  // 🚀 फुल-स्क्रीन रिज़्यूम (Resume/Reattempt) करने पर भी लागू करें
   forceFullScreen();
-
   const specificStorageKey = STORAGE_KEY + "_" + CURRENT_TEST_ID;
   const saved = getSafeData(specificStorageKey); 
   if(saved) { 
@@ -1180,11 +1090,10 @@ function loadQuestion(idx) {
   currentState.idx = idx; 
   const q = QUESTIONS[idx]; 
   
-  // 🔥 Question Load Animation Trigger
   const qCardWrapper = document.querySelector('.q-card');
   if(qCardWrapper) {
       qCardWrapper.classList.remove('q-animate');
-      void qCardWrapper.offsetWidth; // Magic line to restart animation
+      void qCardWrapper.offsetWidth; 
       qCardWrapper.classList.add('q-animate');
   }
 
@@ -1300,9 +1209,6 @@ function loadQuestion(idx) {
   }
 }
 
-// ==========================================
-// 🧠 AI SOLUTION GENERATOR (ON-DEMAND FETCH & SAVE)
-// ==========================================
 async function generateAndSaveSolution(testId, qIndex) {
     const btnBox = document.getElementById(`ai_sol_box_${qIndex}`);
     btnBox.innerHTML = `<p style='color:var(--warning); font-weight:bold; font-size:13px;'>⏳ AI is analyzing the question and writing the best solution...</p>`;
@@ -1317,10 +1223,7 @@ async function generateAndSaveSolution(testId, qIndex) {
         btnBox.style.padding = "0";
 
         QUESTIONS[qIndex].solution = generatedHtml;
-
-        // Firebase me save karein
         await db.ref(`dsssb_questions_db/${testId}/${qIndex}/solution`).set(generatedHtml);
-
         showToast("AI Solution Generated & Saved to Database! ✅", "success");
 
     } catch (error) {
@@ -1330,7 +1233,6 @@ async function generateAndSaveSolution(testId, qIndex) {
 }
 
 async function fetchAISolution(qData) {
-    // 🛡️ API Key
     const p1 = "AIzaSyAmG3vuLZWMIIfah0yrW"; 
     const p2 = "ZuY_fPWfV7AQHM"; 
     const API_KEY = p1 + p2; 
@@ -1383,7 +1285,7 @@ async function fetchAISolution(qData) {
                 contents: [{ parts: [{ text: prompt }] }],
                 generationConfig: { 
                     temperature: 0.2,
-                    maxOutputTokens: 2500 // 🔥 PAYG Cost Safety
+                    maxOutputTokens: 2500
                 }
             })
         });
@@ -1395,11 +1297,7 @@ async function fetchAISolution(qData) {
         }
 
         const data = await response.json();
-        
-        if (data.error) {
-            console.error("Gemini Error:", data.error);
-            return `<div style="color: red; font-size: 13px;"><b>AI Error:</b> ${data.error.message}</div>`;
-        }
+        if (data.error) return `<div style="color: red; font-size: 13px;"><b>AI Error:</b> ${data.error.message}</div>`;
 
         if (data.candidates && data.candidates.length > 0) {
             let rawHtml = data.candidates[0].content.parts[0].text;
@@ -1520,7 +1418,6 @@ function reviewAndNext() {
 function manualSubmitSection() {
     if(currentState.submitted || TEST_MODE === 'quiz') return;
 
-    // 🔥 TIME LOCK CHECK FOR SECTION 🔥
     let timeSpentSec = (TOTAL_TIME_MINS * 60) - currentState.time;
     if (MIN_SUBMIT_MINS > 0 && timeSpentSec < (MIN_SUBMIT_MINS * 60)) {
         let remainSec = (MIN_SUBMIT_MINS * 60) - timeSpentSec;
@@ -1549,7 +1446,6 @@ function manualSubmitSection() {
 function submitTestDialog() {
   if(currentState.submitted) return;
 
-  // 🔥 TIME LOCK CHECK FOR FINAL SUBMIT 🔥
   let timeSpentSec = (TOTAL_TIME_MINS * 60) - currentState.time;
   if (MIN_SUBMIT_MINS > 0 && timeSpentSec < (MIN_SUBMIT_MINS * 60)) {
       let remainSec = (MIN_SUBMIT_MINS * 60) - timeSpentSec;
@@ -1724,7 +1620,6 @@ function renderPalette() {
                 }
             }
 
-            // Determine precise state class and status text
             let stateCls = "unseen";
             let statusText = "Unseen";
             
@@ -1751,13 +1646,11 @@ function renderPalette() {
             }
 
             if (isPaletteListView) {
-                // List View Button
                 gridHtml += `<button class="qbtn-list ${stateCls}" style="${styleStr}" ${isAccessible ? `onclick="loadQuestion(${i}); if(window.innerWidth < 1024) togglePalette();"` : `disabled`}>
                     <span style="font-size:14px;">Q. ${i + 1}</span>
                     <span style="font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">${statusText}</span>
                 </button>`;
             } else {
-                // Grid View Button
                 cls += " " + stateCls;
                 gridHtml += `<button class="${cls}" style="${styleStr}" ${isAccessible ? `onclick="loadQuestion(${i}); if(window.innerWidth < 1024) togglePalette();"` : `disabled`}>${i + 1}</button>`;
             }
@@ -1792,34 +1685,33 @@ function toggleTheme() { document.body.classList.toggle('dark-mode'); }
 function toggleLang() { const btn = document.getElementById('langBtn'); btn.innerText = btn.innerText.trim().toUpperCase() === "HI" ? "EN" : "HI"; loadQuestion(currentState.idx); }
 function openZoom(src) { 
     document.getElementById('zoomImg').src = src; 
-    document.getElementById('zoomImg').style.width = '100%'; // Reset size on open
-    currentZoomWidth = 100; // Reset zoom logic
+    document.getElementById('zoomImg').style.width = '100%'; 
+    currentZoomWidth = 100; 
     document.getElementById('zoomModal').style.display = 'block'; 
 }
 function closeZoom() { 
     document.getElementById('zoomModal').style.display = 'none'; 
 }
 
-// === Pinch to Zoom Logic for Mobile ===
 let currentZoomWidth = 100;
 let initialPinchDist = null;
 const zModal = document.getElementById('zoomModal');
 const zImg = document.getElementById('zoomImg');
 
 zModal.addEventListener('touchstart', (e) => {
-    if (e.touches.length === 2) { // When two fingers touch
+    if (e.touches.length === 2) { 
         initialPinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
     }
 }, { passive: false });
 
 zModal.addEventListener('touchmove', (e) => {
     if (e.touches.length === 2 && initialPinchDist) {
-        e.preventDefault(); // Prevent default page scrolling while pinching
+        e.preventDefault(); 
         let newDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
         let scale = newDist / initialPinchDist;
         let newWidth = currentZoomWidth * scale;
 
-        if (newWidth >= 100 && newWidth <= 500) { // Limit stretch between 1x and 5x
+        if (newWidth >= 100 && newWidth <= 500) { 
             zImg.style.width = newWidth + '%';
         }
     }
@@ -1827,10 +1719,11 @@ zModal.addEventListener('touchmove', (e) => {
 
 zModal.addEventListener('touchend', (e) => {
     if (e.touches.length < 2) {
-        initialPinchDist = null; // Reset fingers
-        currentZoomWidth = parseFloat(zImg.style.width) || 100; // Save current stretch level
+        initialPinchDist = null; 
+        currentZoomWidth = parseFloat(zImg.style.width) || 100; 
     }
 });
+
 function closeResult() { document.getElementById('resultModal').style.display = 'none'; }
 function sendResultToTelegram(name,score,c,w,s,time,accuracy){
 fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,{
@@ -1908,6 +1801,9 @@ function getRanksAndToppers(myScore, myTime) {
   });
 }
 
+/* ========================================================
+   🔥 PREMIUM RESULT SCREEN UPGRADE (JS GENERATION) 🔥
+   ======================================================== */
 async function submitTest() {
   if(currentState.submitted) return;
   
@@ -1978,7 +1874,7 @@ async function submitTest() {
       wrong: wrong,
       skipped: skipped,
       avgTime: attempted > 0 ? Math.round(timeSpentSeconds / attempted) : 0,
-      fastestTime: fastest,
+      fastestTime: fastest === 9999 ? 0 : fastest,
       slowestTime: slowest,
       topicPerformance: topicStats
   };
@@ -1999,8 +1895,8 @@ async function submitTest() {
   const resBox = document.getElementById('resultContent');
   resBox.innerHTML = `<div class="card-dashboard" style="text-align:center; padding:50px;">
                           <div style="font-size:30px; animation: pulse 1s infinite;">🔄</div>
-                          <h2 style="color:var(--primary);">Generating Detailed Analysis...</h2>
-                          <p style="color:var(--text-muted);">Calculating your Rank & Percentile against Toppers</p>
+                          <h2 style="color:var(--primary);">Generating Smart Analysis...</h2>
+                          <p style="color:var(--text-muted);">Calculating Rank & AI Feedback</p>
                       </div>`;
   document.getElementById('resultModal').style.display = 'flex';
   document.getElementById('mainSubmitBtn').style.display = 'none';
@@ -2034,146 +1930,142 @@ async function submitTest() {
           };
       }
 
-      // 🔥 AUTO CUTOFF LOGIC (70% DEFAULT) 🔥
       let maxPossibleMarks = QUESTIONS.length * POSITIVE_MARK;
-      let finalCutoff = DYNAMIC_CUTOFF;
+      let finalCutoff = DYNAMIC_CUTOFF === 40 ? Math.round(maxPossibleMarks * 0.7) : DYNAMIC_CUTOFF;
       
-      // Agar cutoff manually set nahi hai (default 40 utha raha hai), toh 70% set kar do
-      if (DYNAMIC_CUTOFF === 40) {
-          finalCutoff = Math.round(maxPossibleMarks * 0.7); 
-      }
+      let selectionProb = Math.min(99, Math.max(5, Math.floor((totalScore / finalCutoff) * 100)));
+      if (totalScore < 0 || isNaN(selectionProb)) selectionProb = 0;
+
+      let aiPills = "";
+      if(accuracy > 85) aiPills += `<span class="ai-pill">🎯 High Accuracy</span>`;
+      else if(accuracy < 50) aiPills += `<span class="ai-pill">⚠️ Low Accuracy</span>`;
+      if(skipped > QUESTIONS.length * 0.2) aiPills += `<span class="ai-pill">🤔 High Skip Rate</span>`;
+      if(fastest < 10 && fastest > 0) aiPills += `<span class="ai-pill">⚡ Speed Master</span>`;
+      if(wrong > correct) aiPills += `<span class="ai-pill">📉 Reduce Guessing</span>`;
+      if(aiPills === "") aiPills = `<span class="ai-pill">👍 Balanced Attempt</span>`;
+        
+      let xpEarned = Math.floor(correct * 10);
+      let unlockedBadge = accuracy > 80 ? "Sharpshooter 🎯" : (fastest < 15 && fastest > 0 ? "Speedster ⚡" : "Dedicated Learner 📚");
 
       let html = `
-      <div id="pdfContent" class="analysis-container" style="background:#fff; padding:20px; border-radius:12px;">
-          <div style="text-align:center; padding: 10px 0 20px 0; border-bottom: 2px solid var(--border-color); margin-bottom: 20px;">
-              <h2 style="color:var(--primary); margin:0; font-size:26px; font-weight:900; letter-spacing:1px;">PYQ NOTES EXAM REPORT</h2>
-              <p style="color:var(--text-muted); margin:8px 0 0 0; font-size:16px; font-weight:600;">${CURRENT_TEST_TITLE}</p>
-          </div>
+      <div id="pdfContent" class="analysis-container" style="background:var(--bg-body); padding:0; border-radius:12px;">
           
-          <div class="card-dashboard" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px;">
-              <div class="info-grid">
-                  <div><b>Name:</b> ${currentState.name}</div>
-                  <div><b>Status:</b> ${totalScore >= finalCutoff ? '<span style="color:var(--success)">QUALIFIED 🏆</span>' : '<span style="color:var(--danger)">NOT QUALIFIED ❌</span>'} <span style="font-size:11px; color:var(--text-muted);">(Cut-off: ${finalCutoff})</span></div>
+          <div class="premium-card" style="text-align: center; margin-bottom: 15px; border-top: 4px solid var(--primary);">
+              <h2 style="margin: 0 0 15px 0; color: var(--primary); font-weight: 900; font-size: 28px;">🏆 AIR #${data.rank}</h2>
+              <div class="hero-score-ring" style="--pct: ${(totalScore/maxPossibleMarks)*100}%">
+                  <div class="hero-inner-circle">
+                      <span style="font-size: 38px; font-weight: 900; color: var(--text-main);">${totalScore.toFixed(2)}</span>
+                      <span style="font-size: 13px; color: var(--text-muted); font-weight: bold; margin-top:-5px;">Score</span>
+                  </div>
+              </div>
+              <div style="margin-top: 20px; display: flex; justify-content: space-around; font-weight: bold; background: rgba(0,0,0,0.03); padding: 12px; border-radius: 12px;">
+                  <div style="color:var(--text-main); display:flex; flex-direction:column;">
+                      <span style="font-size:16px;">${accuracy}%</span>
+                      <span style="font-size:11px; color:var(--text-muted);">Accuracy</span>
+                  </div>
+                  <div style="color:var(--text-main); display:flex; flex-direction:column; border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color); padding: 0 15px;">
+                      <span style="font-size:16px;">${data.percentile}</span>
+                      <span style="font-size:11px; color:var(--text-muted);">Percentile</span>
+                  </div>
+                  <div style="color:${selectionProb >= 70 ? 'var(--success)' : 'var(--warning)'}; display:flex; flex-direction:column;">
+                      <span style="font-size:16px;">${selectionProb}%</span>
+                      <span style="font-size:11px;">Selection Prob.</span>
+                  </div>
               </div>
           </div>
 
-          <div class="card-dashboard score-summary" style="margin-top:15px; border:none; box-shadow:none;">
-              <div class="score-item" style="background:#e0e7ff; border:1px solid #c7d2fe;"><h4>🏆 Rank</h4><p>${data.rank} <span class="total-count">/ ${data.total}</span></p></div>
-              <div class="score-item" style="background:#d1fae5; border:1px solid #a7f3d0;"><h4>📊 Percentile</h4><p style="color:#065f46;">${data.percentile}%</p></div>
-              <div class="score-item" style="background:#fef3c7; border:1px solid #fde68a;"><h4>🧮 Score</h4><p style="color:#b45309;">${totalScore.toFixed(2)}</p></div>
-              <div class="score-item" style="background:#fee2e2; border:1px solid #fecaca;"><h4>⏱ Time</h4><p style="color:#991b1b;">${fmt(timeSpentSeconds)}</p></div>
+          <div class="premium-card ai-mentor-box" style="margin-bottom: 15px; padding: 20px;">
+              <h3 style="margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px; color:var(--text-main); font-size: 16px;">🧠 AI Mentor Analysis</h3>
+              <p style="color: var(--text-muted); font-size: 12px; margin:0 0 12px 0;">Based on your attempt logic:</p>
+              <div>${aiPills}</div>
           </div>
 
-          <div class="card-dashboard attempt-summary" style="margin-top:15px;">
-             <div class="attempt-box at-correct">✅ Correct<span>${correct}</span></div>
-             <div class="attempt-box at-wrong">❌ Wrong<span>${wrong}</span></div>
-             <div class="attempt-box at-unattempted">🟡 Skipped<span>${skipped}</span></div>
-             <div class="attempt-box at-total">✍️ Attempted<span>${attempted} / ${QUESTIONS.length}</span></div>
+          <div class="premium-card" style="margin-bottom: 15px; padding: 20px;">
+              <h3 style="margin: 0 0 12px 0; color:var(--text-main); font-size: 16px;">🎮 Achievements</h3>
+              <div style="display: flex; align-items: center; gap: 15px; background: rgba(245,158,11,0.1); padding: 12px; border-radius: 12px; border: 1px solid rgba(245,158,11,0.2);">
+                  <div class="badge-anim" style="background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #fff; padding: 12px; border-radius: 12px; font-weight: 900; font-size: 16px; box-shadow: 0 4px 10px rgba(245,158,11,0.3);">
+                      +${xpEarned} XP
+                  </div>
+                  <div>
+                      <strong style="color:var(--text-main); font-size:14px;">Badge: ${unlockedBadge}</strong>
+                      <p style="margin: 4px 0 0 0; font-size: 12px; color: var(--text-muted);">Keep practicing to level up your profile!</p>
+                  </div>
+              </div>
           </div>
-
-          <div class="card-dashboard" style="margin-top:15px;">
-              <h3 class="section-title">📊 You vs Topper</h3>
-              ${renderComparisonBar("Score", totalScore.toFixed(2), QUESTIONS.length * POSITIVE_MARK, topperStats.score, QUESTIONS.length * POSITIVE_MARK)}
+          
+          <div class="premium-card" style="margin-bottom: 15px; padding: 20px;">
+              <h3 style="margin: 0 0 15px 0; color:var(--text-main); font-size: 16px;">👑 You vs Topper</h3>
+              ${renderComparisonBar("Score", totalScore.toFixed(2), maxPossibleMarks, topperStats.score, maxPossibleMarks)}
               ${renderComparisonBar("Accuracy", accuracy, 100, topperStats.accuracy, 100, "%")}
-              ${renderComparisonBar("Correct", correct, QUESTIONS.length, topperStats.correct, QUESTIONS.length)}
-              ${renderComparisonBar("Time Taken", timeSpentSeconds, TOTAL_TIME_MINS*60, topperStats.time, TOTAL_TIME_MINS*60)}
-          </div>
-          
-          <div class="card-dashboard" style="margin-top:15px;">
-              <h3 class="section-title">🏆 Top 10 Leaderboard</h3>
-              <div style="overflow-x:auto">
-                  <table class="topper-table">
-                      <tr><th>Rank</th><th>Name</th><th>Score</th><th>Time</th></tr>
-                      ${data.toppersList && data.toppersList.length > 0 ? data.toppersList.map((t, idx) => `
-                      <tr style="${t.name === currentState.name ? 'background:var(--success-bg); font-weight:bold;' : ''}">
-                          <td>${idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : '#' + (idx + 1)))}</td>
-                          <td>${t.name} ${t.name === currentState.name ? '(You)' : ''}</td>
-                          <td><b>${t.score}</b></td>
-                          <td>${fmt(t.timeTaken)}</td>
-                      </tr>
-                      `).join('') : '<tr><td colspan="4" style="text-align:center;">Leaderboard not available.</td></tr>'}
-                  </table>
-              </div>
+              ${renderComparisonBar("Time (s)", timeSpentSeconds, TOTAL_TIME_MINS*60, topperStats.time, TOTAL_TIME_MINS*60, "s")}
           </div>
 
-          <h3 style="margin-top:40px; border-left:5px solid var(--primary); padding-left:15px; color:var(--text-main);">Detailed Question Analysis</h3>
+          <h3 style="margin: 25px 0 15px 0; font-size:16px; font-weight:900; color:var(--text-main); display:flex; justify-content:space-between; align-items:center;">
+              ⚡ Detailed Solutions
+              <span style="font-size:11px; background:var(--warning-bg); color:#b77c00; padding:4px 8px; border-radius:6px; border: 1px solid rgba(245, 158, 11, 0.3);">PRO Features Active</span>
+          </h3>
       `;
 
       QUESTIONS.forEach((q, i) => {
           const correctIdx = parseInt(q.ans) - 1;
           const myAns = currentState.answers[i];
-          let statusBadge = "";
           
-          if(myAns === null) statusBadge = `<span style="background:#94a3b8; color:#fff; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:bold;">🟡 SKIPPED</span>`;
-          else if(myAns === correctIdx) statusBadge = `<span style="background:#10b981; color:#fff; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:bold;">✅ CORRECT</span>`;
-          else statusBadge = `<span style="background:#ef4444; color:#fff; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:bold;">❌ WRONG</span>`;
+          let qStatusStr = "";
+          let qStatusColor = "";
+          let qStatusBg = "";
+          
+          if(myAns === null) { qStatusStr = "🟡 Skipped"; qStatusColor = "#b77c00"; qStatusBg = "var(--warning-bg)"; }
+          else if(myAns === correctIdx) { qStatusStr = "✅ Correct"; qStatusColor = "var(--success)"; qStatusBg = "var(--success-bg)"; }
+          else { qStatusStr = "❌ Wrong"; qStatusColor = "var(--danger)"; qStatusBg = "var(--danger-bg)"; }
           
           const timeTakenSec = currentState.timePerQ[i] || 0;
-          const topperTimeSec = topperStats.timePerQ[i] || 0;
-          
-          const formatSec = (sec) => {
-              const m = Math.floor(sec/60);
-              const s = sec % 60;
-              return m > 0 ? `${m}m ${s}s` : `${s}s`;
-          };
-          
-          const timeStrDisplay = formatSec(timeTakenSec);
-          const topperTimeStrDisplay = formatSec(topperTimeSec);
-
           const isHindi = document.getElementById('langBtn').innerText === "HI";
           const qText = isHindi ? (q.q_hi || q.q_en) : (q.q_en || q.q_hi);
           const optionsArr = isHindi ? (q.op_hi || q.op_en) : (q.op_en || q.op_hi);
 
-          let optionsHTML = '<div style="margin-top:15px; display:flex; flex-direction:column; gap:10px;">';
-          optionsArr.forEach((opt, optIdx) => {
-              let optStyle = "padding:12px 15px; border:1px solid #cbd5e1; border-radius:8px; font-size:15px; background:#f8fafc; color:#334155;";
-              let icon = "";
-              
-              if (myAns !== null) {
-                  if (optIdx === correctIdx) {
-                      optStyle = "padding:12px 15px; border:2px solid #10b981; border-radius:8px; font-size:15px; background:#d1fae5; color:#065f46; font-weight:bold;";
-                      icon = "✅ ";
-                  } else if (optIdx === myAns && myAns !== correctIdx) {
-                      optStyle = "padding:12px 15px; border:2px solid #ef4444; border-radius:8px; font-size:15px; background:#fee2e2; color:#991b1b; font-weight:bold;";
-                      icon = "❌ ";
-                  }
-              }
-              optionsHTML += `<div style="${optStyle}">${icon}<b>${String.fromCharCode(65+optIdx)})</b> ${opt}</div>`;
-          });
-          optionsHTML += '</div>';
-
           html += `
-              <div class="card-dashboard pdf-q-card" style="margin-bottom:25px; padding:25px; border:1px solid #e2e8f0; border-radius:12px; background:#fff; display:block;">
-                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; color:var(--text-muted); font-size:14px; border-bottom:1px solid #f1f5f9; padding-bottom:12px;">
-                      <div><b style="color:var(--primary); font-size:16px;">Q.${i+1}</b> <span style="margin-left:8px; font-weight:600;">(${q.section || "General"})</span> &nbsp;&nbsp; ${statusBadge}</div>
-                      
-                      <div style="display:flex; flex-direction:column; gap:4px; text-align:right;">
-                          <div style="font-size:11px; font-weight:bold; background:#f1f5f9; padding:4px 8px; border-radius:6px; color:#475569;">⏱️ You: ${timeStrDisplay}</div>
-                          <div style="font-size:11px; font-weight:bold; background:#ecfdf5; padding:4px 8px; border-radius:6px; color:#065f46;">👑 Top: ${topperTimeStrDisplay}</div>
+              <div class="compact-q-card pdf-q-card">
+                  <div style="display: flex; justify-content: space-between; align-items:center; border-bottom: 1px dashed var(--border-color); padding-bottom: 10px; margin-bottom: 12px;">
+                      <strong style="color:var(--text-main); font-size:15px;">Q${i+1}</strong>
+                      <div style="display:flex; gap:8px; align-items:center;">
+                          <span style="font-size:11px; color:var(--text-muted); font-weight:bold; background:rgba(0,0,0,0.05); padding:4px 8px; border-radius:4px;">⏱ ${timeTakenSec}s</span>
+                          <span style="font-size:12px; font-weight:bold; color:${qStatusColor}; background:${qStatusBg}; padding:4px 8px; border-radius:4px;">${qStatusStr}</span>
                       </div>
                   </div>
-                  <div style="font-weight:600; margin-bottom:20px; color:#0f172a; font-size:17px; line-height:1.6;">${qText}</div>
                   
-                  ${optionsHTML}
+                  <div style="font-size:14px; margin-bottom:12px; color:var(--text-main); max-height: 60px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${qText}</div>
                   
-                  <div style="margin-top:20px; background:#f0fdf4; padding:15px; border-left:5px solid #16a34a; color:#166534; font-size:15px; border-radius:6px; font-weight:500;">
-                      <b>✅ Correct Answer:</b> ${String.fromCharCode(65+correctIdx)}) ${optionsArr[correctIdx]}
+                  <div style="font-size: 13px; display:flex; flex-direction:column; gap:6px;">
+                      <div style="color: var(--success); background: var(--success-bg); padding: 8px 12px; border-radius: 8px; font-weight:bold; border: 1px solid rgba(16, 185, 129, 0.2);">✅ Correct: ${optionsArr[correctIdx]}</div>
+                      ${myAns !== null && myAns !== correctIdx ? `<div style="color: var(--danger); background: var(--danger-bg); padding: 8px 12px; border-radius: 8px; font-weight:bold; border: 1px solid rgba(239, 68, 68, 0.2);">❌ Your Answer: ${optionsArr[myAns]}</div>` : ''}
                   </div>
-                  
-                  <div style="margin-top:15px; background:#eff6ff; padding:15px; border-left:5px solid #2563eb; color:#1e3a8a; font-size:15px; border-radius:6px; line-height:1.5;">
-                      <b style="color:#1d4ed8; font-size:16px;">💡 Detailed Solution:</b><br><br>${q.solution || 'No detailed solution provided.'}
+
+                  <div class="pro-lock-overlay" onclick="document.getElementById('paymentModal').style.display='flex'">
+                      <div style="padding:15px; background:var(--bg-card); font-size:13px; color:var(--text-muted); filter:blur(4px); user-select:none; line-height:1.6;">
+                          <b>Detailed Solution & Video:</b><br>
+                          This is the step-by-step logic required to solve the question in under 10 seconds. AI has detected a shortcut trick. Unlock PRO to view the solution and video explanation.
+                      </div>
                   </div>
               </div>
           `;
       });
 
       html += `</div>
-               <div style="text-align:center; margin-top:30px; padding-bottom:30px;">
-                  <button onclick="downloadPDF()" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:var(--bg-body); color:var(--primary); border:2px solid var(--primary); box-shadow:none;">Download Heavy PDF 📥</button>
-                  
-                  <button onclick="localStorage.setItem('dsssb_replay_qs', JSON.stringify(QUESTIONS)); localStorage.setItem('dsssb_replay_state', JSON.stringify(currentState)); window.location.href='replay.html'" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:var(--warning); margin-left:10px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);">Replay Mode 🎮</button>
-                  <button onclick="window.location.href='analysis.html'" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:#8b5cf6; margin-left:10px; margin-top:10px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);">Deep AI Analysis 🧠</button>
-                  <button onclick="window.location.href='index.html'" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:var(--primary); margin-left:10px; margin-top:10px;">Back to Home 🏠</button>
+               <div style="display: flex; gap: 10px; margin-top: 25px; flex-direction:column; padding-bottom:30px;">
+                  <div style="display:flex; gap:10px;">
+                      <button onclick="reattemptMistakes()" style="flex: 1; padding: 14px; background: var(--gradient-main); border: none; border-radius: 12px; color: white; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3); transition: 0.2s;">
+                          🔄 Reattempt Mistakes
+                      </button>
+                      <button onclick="window.location.href='analysis.html'" style="flex: 1; padding: 14px; background: transparent; border: 2px solid var(--primary); border-radius: 12px; color: var(--primary); font-weight: bold; cursor: pointer; transition: 0.2s;">
+                          📈 Deep AI Analysis
+                      </button>
+                  </div>
+                  <button onclick="downloadPDF()" style="padding: 14px; background: var(--bg-body); border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-main); font-weight: bold; cursor: pointer; transition: 0.2s;">
+                      📥 Download PDF Report
+                  </button>
+                  <button onclick="window.location.href='index.html'" style="padding: 14px; background: var(--bg-body); border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-main); font-weight: bold; cursor: pointer; transition: 0.2s;">
+                      🏠 Back to Dashboard
+                  </button>
                </div>`;
 
       resBox.innerHTML = html;
@@ -2181,14 +2073,20 @@ async function submitTest() {
   });
 }
 
+window.reattemptMistakes = function() {
+    let mistakesDiary = JSON.parse(getSafeData('dsssb_mistakes')) || {};
+    if(Object.keys(mistakesDiary).length === 0) {
+        showToast("🎉 No mistakes to reattempt! Perfect Score.", "success");
+        return;
+    }
+    showToast("Opening Mistakes Notebook...", "info");
+    setTimeout(() => { window.location.href = 'notebook.html'; }, 1000); 
+};
+
 function downloadPDF() {
-    // TWA/Android Print Trigger Fix
     showToast("Preparing Exam Report... 📥", "success");
-    
-    // Thoda extra delay taaki background processes clear ho jayein
     setTimeout(() => {
         try {
-            // Force focus to window before printing
             window.focus();
             if (typeof window.print !== 'undefined') {
                 window.print();
