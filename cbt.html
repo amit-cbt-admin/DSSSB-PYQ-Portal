@@ -473,7 +473,7 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
                     </div>
                 </div>
             </li>
-            <li><strong>Navigating to a Question:</strong> To answer a question, you can click on the question number in the Question Palette at the right of your screen to go to that numbered question directly.</li>
+            <li><strong>Navigating to a Question:</strong> To answer a question, you can click on the question number in the Question Palette at the right of screen to go to that numbered question directly.</li>
             <li><strong>Answering a Question:</strong> 
                 <ul style="padding-left: 20px; margin-top: 5px;">
                     <li>To select your answer, click on the button of one of the options.</li>
@@ -711,8 +711,6 @@ try {
 const DB_REF_NAME = "dsssb_results_live";
 const DB_DISCUSS_REF = "dsssb_discussions"; 
 
-// 🔥 FIX: Developer Tools / Anti-Cheat blocks have been removed as they caused hanging.
-
 window.addEventListener('resize', function() {
     console.log("Window resized."); 
 });
@@ -721,30 +719,24 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
 document.addEventListener('contextmenu', e => e.preventDefault());
 
 document.addEventListener('keydown', function(e) {
-  // 1. Anti-Cheat Security
   if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) || (e.ctrlKey && ['U', 'S', 'P', 'H'].includes(e.key.toUpperCase()))) {
       e.preventDefault(); e.stopPropagation(); alert("🚨 Unauthorized action detected!"); return false;
   }
   
-  // 2. 🔥 Keyboard Shortcuts for Students (Only works during active test)
   const isOverlayOpen = document.getElementById('startScreen').style.display !== 'none' || document.getElementById('instructionScreen').style.display !== 'none';
   
   if (!isOverlayOpen && !currentState.submitted && TEST_MODE !== 'solution') {
-      // Prev/Next Question
       if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
       if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
-      
-      // Select Options A, B, C, D (or 1, 2, 3, 4)
       if (['a', 'A', '1'].includes(e.key)) { e.preventDefault(); selectAns(0); }
       if (['b', 'B', '2'].includes(e.key)) { e.preventDefault(); selectAns(1); }
       if (['c', 'C', '3'].includes(e.key)) { e.preventDefault(); selectAns(2); }
       if (['d', 'D', '4'].includes(e.key)) { e.preventDefault(); selectAns(3); }
-      
-      // Mark for Review (W) and Clear Response (Q)
       if (['w', 'W'].includes(e.key)) { e.preventDefault(); reviewAndNext(); } 
       if (['q', 'Q'].includes(e.key)) { e.preventDefault(); clearResponse(); } 
   }
 });
+
 document.addEventListener('selectstart', e => e.preventDefault());
 document.addEventListener('dragstart', e => e.preventDefault());
 document.addEventListener('copy', e => { e.preventDefault(); e.clipboardData.setData('text/plain', 'Cheating is not allowed in PYQ Notes Portal!'); });
@@ -776,7 +768,6 @@ let isProUser = false;
 
 window.addEventListener('online', syncOfflineResults);
 
-// 🔥 FIX: Safe JSON Parsing to prevent stuck preloader if localstorage is corrupted
 function syncOfflineResults() {
   try {
       const savedData = getSafeData('dsssb_unsynced_results');
@@ -796,7 +787,7 @@ function syncOfflineResults() {
           });
       }
   } catch(e) {
-      removeSafeData('dsssb_unsynced_results'); // Wipe corrupt data
+      removeSafeData('dsssb_unsynced_results');
   }
 }
 
@@ -837,8 +828,6 @@ document.getElementById('mainArea').addEventListener('touchend', e => {
     }
 }, {passive: true});
 
-
-// 🔥 FIX: 10 Sec Fallback to hide Preloader if Network/Firebase hangs
 setTimeout(() => {
     const pl = document.getElementById('preloader');
     if(pl && pl.style.display !== 'none') {
@@ -862,7 +851,6 @@ function initApp() {
       let tName = "Student";
       let tId = "guest";
 
-      // 🔥 FIX: Safe Telegram WebApp check
       if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
           let u = window.Telegram.WebApp.initDataUnsafe.user;
           tName = u.first_name + (u.last_name ? " " + u.last_name : "");
@@ -875,6 +863,7 @@ function initApp() {
           if(savedName) { tName = savedName; tId = savedId || "guest"; }
       }
 
+      // 🔥 FIX: PRO USER LOGIC UPDATED 🔥
       db.ref("dsssb_pro_users").once("value").then(proSnap => {
           if(proSnap.exists()) {
               let myId = String(tId).trim();
@@ -885,17 +874,20 @@ function initApp() {
                   let dbKey = String(child.key).toLowerCase().trim().replace("@", "");
                   if (!dbVal) return;
                   
-                  let v = typeof dbVal === 'object' ? (dbVal.username || dbVal.id || "") : dbVal;
-                  v = String(v).toLowerCase().trim().replace("@", "");
+                  let checkVal = typeof dbVal === 'object' ? String(dbVal.id || dbVal.username || "").toLowerCase().trim() : String(dbVal).toLowerCase().trim();
                   
-                  if (v !== "") { 
-                      if ((myName && (v === myName || dbKey === myName)) || (myId && (v === myId || dbKey === myId))) isProUser = true; 
-                  } else if (dbKey !== "") { 
-                      if ((myName && dbKey === myName) || (myId && dbKey === myId)) isProUser = true; 
+                  if (checkVal === myId || checkVal === myName || dbKey === myId || dbKey === myName) {
+                      isProUser = true; 
                   }
               });
+              
+              // Cache it so it works smoothly later
+              if(isProUser) setSafeData('dsssb_is_pro', 'true');
           }
-      }).catch(e => console.log(e));
+      }).catch(e => {
+          // Fallback checking in Local Storage
+          if(getSafeData('dsssb_is_pro') === 'true') isProUser = true;
+      });
 
       if (TEST_MODE === 'solution') {
           document.getElementById('startNameInput').value = tName + " (Solution Mode)";
@@ -921,7 +913,6 @@ function initApp() {
           if(snap.exists()) {
               let snapData = snap.val();
               
-              // 🔥 FIX: Firebase sometimes returns empty-indexed arrays as JSON Objects, which breaks code later
               if (!Array.isArray(snapData)) {
                   QUESTIONS = Object.values(snapData).filter(q => q !== null && typeof q === 'object');
               } else {
@@ -1374,6 +1365,20 @@ function loadQuestion(idx) {
       }
   }
 }
+
+// 🔥 FIX: VIDEO SOLUTION PREMIUM LINK 🔥
+window.playVideo = function(qIndex) {
+    if (isProUser || getSafeData('dsssb_is_pro') === 'true') {
+        showToast("Premium Video loading... 🎬", "success");
+        // यहाँ आप वीडियो प्लेयर का लॉजिक लगा सकते हैं।
+    } else {
+        let currentUserId = getSafeData('dsssb_user_id') || 'guest';
+        if(document.getElementById('displayUserId')) {
+            document.getElementById('displayUserId').innerText = currentUserId;
+        }
+        document.getElementById('paymentModal').style.display = 'flex';
+    }
+};
 
 async function generateAndSaveSolution(testId, qIndex) {
     const btnBox = document.getElementById(`ai_sol_box_${qIndex}`);
@@ -1902,14 +1907,20 @@ zModal.addEventListener('touchend', (e) => {
     }
 });
 
+// 🔥 FIX: REATTEMPT MODE UPDATED 🔥
 function handleReattemptClick() {
-    if (isProUser) {
+    if (isProUser || getSafeData('dsssb_is_pro') === 'true') {
         let mistakes = JSON.parse(getSafeData('dsssb_mistakes')) || {};
         if (Object.keys(mistakes).length === 0) {
             showToast("Wow! You have no mistakes to reattempt. 🎯", "success");
             return;
         }
         showToast("Starting Reattempt Mode... 🚀", "success");
+        
+        // Timeout added for animation/toast to display before jump
+        setTimeout(() => {
+            window.location.href = 'reattempt.html';
+        }, 1000);
     } else {
         let currentUserId = getSafeData('dsssb_user_id') || 'guest';
         if(document.getElementById('displayUserId')) {
@@ -2278,7 +2289,7 @@ async function submitTest() {
                   <div class="compact-sol">
                       <b style="color:var(--primary); font-size:14px;">💡 Detailed Solution:</b><br><br>
                       ${q.solution || 'No detailed solution available.'}
-                      <button class="video-sol-btn" onclick="alert('Premium Feature: Video solutions unlock with PRO version!')">▶ Watch 2-Min Video Solution</button>
+                      <button class="video-sol-btn" onclick="playVideo(${i})">▶ Watch 2-Min Video Solution</button>
                   </div>
               </div>
           `;
