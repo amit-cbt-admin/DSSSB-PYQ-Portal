@@ -796,7 +796,7 @@ let timerInt;
 let secIndices = [];
 let fontOffset = 0;
 let currentDiscussionRef = null; 
-
+let isProUser = false; // 🔥 PRO User status check from Firebase
 window.addEventListener('online', syncOfflineResults);
 
 function syncOfflineResults() {
@@ -878,6 +878,31 @@ function initApp() {
       let savedId = getSafeData('dsssb_user_id');
       if(savedName) { tName = savedName; tId = savedId || "guest"; }
   }
+
+  // 🔥 NEW: DIRECT FIREBASE CHECK FOR PRO USER 🔥
+  db.ref("dsssb_pro_users").once("value").then(proSnap => {
+      if(proSnap.exists()) {
+          let myId = String(tId).trim();
+          let myName = String(tName).toLowerCase().trim().replace("@", "");
+          
+          proSnap.forEach(child => {
+              let dbVal = child.val();
+              let dbKey = String(child.key).toLowerCase().trim().replace("@", "");
+              if (!dbVal) return;
+              
+              let v = typeof dbVal === 'object' ? (dbVal.username || dbVal.id || "") : dbVal;
+              v = String(v).toLowerCase().trim().replace("@", "");
+              
+              if (v !== "") { 
+                  if ((myName && (v === myName || dbKey === myName)) || (myId && (v === myId || dbKey === myId))) isProUser = true; 
+              } else if (dbKey !== "") { 
+                  if ((myName && dbKey === myName) || (myId && dbKey === myId)) isProUser = true; 
+              }
+          });
+      }
+  });
+
+  db.ref('dsssb_tests_meta/' + CURRENT_TEST_ID + '/cutoff').once('value').then(snap => {
   
   if (TEST_MODE === 'solution') {
       document.getElementById('startNameInput').value = tName + " (Solution Mode)";
@@ -1892,6 +1917,24 @@ zModal.addEventListener('touchend', (e) => {
         currentZoomWidth = parseFloat(zImg.style.width) || 100; // Save current stretch level
     }
 });
+function handleReattemptClick() {
+    if (isProUser) {
+        let mistakes = JSON.parse(getSafeData('dsssb_mistakes')) || {};
+        if (Object.keys(mistakes).length === 0) {
+            showToast("Wow! You have no mistakes to reattempt. 🎯", "success");
+            return;
+        }
+        showToast("Starting Reattempt Mode... 🚀", "success");
+        // window.location.href = 'reattempt.html'; // इसे अपने री-अटेम्प्ट पेज के लिंक से बदलें
+    } else {
+        let currentUserId = getSafeData('dsssb_user_id') || 'guest';
+        if(document.getElementById('displayUserId')) {
+            document.getElementById('displayUserId').innerText = currentUserId;
+        }
+        document.getElementById('paymentModal').style.display = 'flex';
+    }
+}
+
 function closeResult() { document.getElementById('resultModal').style.display = 'none'; }
 function sendResultToTelegram(name,score,c,w,s,time,accuracy){
 fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,{
@@ -2263,8 +2306,8 @@ async function submitTest() {
 
       html += `</div>
                <div class="action-row" style="max-width: 900px; margin: 20px auto 30px auto; padding: 0 10px;">
-                  <button class="btn-glow btn-reattempt" onclick="alert('Reattempting mistakes is available in PRO mode!')">🔄 Reattempt Mistakes</button>
-                  <button class="btn-glow btn-share" onclick="alert('Result link copied to clipboard! Ready to share.')">🚀 Share Result</button>
+<button class="btn-glow btn-reattempt" onclick="handleReattemptClick()">🔄 Reattempt Mistakes</button>
+<button class="btn-glow btn-share" onclick="alert('Result link copied to clipboard! Ready to share.')">🚀 Share Result</button>
                </div>
                <div style="text-align:center; padding-bottom:30px;">
                   <button onclick="downloadPDF()" class="btn-primary" style="width:auto; padding:12px 25px; font-size:14px; background:var(--bg-body); color:var(--primary); border:2px solid var(--primary); box-shadow:none;">Download PDF 📥</button>
