@@ -629,7 +629,7 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         <div class="p-leg-item"><div class="p-dot attempted"></div> Attempted</div>
     </div>
     <div class="palette-sections-container" id="paletteGrid">
-        </div>
+    </div>
     <div style="padding:15px; border-top:1px solid #2d3748; background:#1a1b1e; display: flex; flex-direction: column; gap: 10px;">
         <button id="sectionSubmitBtn" onclick="manualSubmitSection()" class="btn-primary" style="background:transparent; border: 2px solid #5e7b95; box-shadow:none; margin: 0; width: 100%; color: #cbd5e1; font-weight: bold; border-radius: 8px; padding: 10px;">SUBMIT SECTION</button>
         <button id="mainSubmitBtn" onclick="submitTestDialog()" class="btn-primary" style="background:#5e7b95; box-shadow:none; margin: 0; width: 100%; color: #fff; font-weight: bold; border-radius: 8px;">SUBMIT TEST</button>
@@ -902,8 +902,6 @@ function initApp() {
       }
   });
 
-  db.ref('dsssb_tests_meta/' + CURRENT_TEST_ID + '/cutoff').once('value').then(snap => {
-  
   if (TEST_MODE === 'solution') {
       document.getElementById('startNameInput').value = tName + " (Solution Mode)";
       document.getElementById('startExamBtn').innerText = "VIEW SOLUTIONS ➔";
@@ -926,7 +924,7 @@ function initApp() {
       if (preloader) preloader.style.display = 'none';
       
       if(snap.exists()) {
-         QUESTIONS = snap.val();
+          QUESTIONS = snap.val();
 
         // 🔥 UPDATE: Paper ki Language Check (Hide Toggle & Dropdown Options if only 1 language exists)
         let hasEn = false;
@@ -1489,7 +1487,8 @@ Generate the shortest possible correct HTML list now.`;
 
         if (data.candidates && data.candidates.length > 0) {
             let rawHtml = data.candidates[0].content.parts[0].text;
-            return rawHtml.split('```html').join('').split('```').join('').trim();
+            return rawHtml.split('
+```html').join('').split('```').join('').trim();
         } else {
             return "<b>Error:</b> समाधान जनरेट नहीं हो पाया।";
         }
@@ -1917,6 +1916,7 @@ zModal.addEventListener('touchend', (e) => {
         currentZoomWidth = parseFloat(zImg.style.width) || 100; // Save current stretch level
     }
 });
+
 function handleReattemptClick() {
     if (isProUser) {
         let mistakes = JSON.parse(getSafeData('dsssb_mistakes')) || {};
@@ -2073,7 +2073,7 @@ async function submitTest() {
   setSafeData('dsssb_mistakes', JSON.stringify(mistakesDiary));
 
   const attempted = correct + wrong;
-  const accuracy = attempted > 0 ? ((correct/attempted)*100).toFixed(1) : 0;
+  const accuracy = attempted > 0 ? parseFloat(((correct/attempted)*100).toFixed(1)) : 0;
   const timeSpentSeconds = (TOTAL_TIME_MINS * 60) - currentState.time;
   const timeStr = `${Math.floor(timeSpentSeconds/60)}m ${timeSpentSeconds%60}s`;
   
@@ -2147,7 +2147,7 @@ async function submitTest() {
 
       // CALCULATIONS FOR HERO SCORE & GAMIFICATION
       let scorePct = Math.max(0, (totalScore / maxPossibleMarks) * 100).toFixed(1);
-      let selProb = Math.min(99, Math.max(5, (data.percentile * 0.8) + (accuracy * 0.2))).toFixed(1);
+      let selProb = Math.min(99, Math.max(5, (parseFloat(data.percentile) * 0.8) + (accuracy * 0.2))).toFixed(1);
       let xpEarned = Math.max(0, Math.floor(totalScore * 10));
       
       let badges = [];
