@@ -296,15 +296,15 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
   .sec-tab { padding: 0 12px; font-size: 12px; height: 32px; }
   .q-card { padding: 12px !important; }
   
-  /* 🔥 TABLE IMAGE SCROLL FIX: चौड़ी इमेज सिकुड़ेगी नहीं, Scroll होगी! 🔥 */
+  /* 🔥 TABLE IMAGE SCROLL FIX */
   .q-text, .opt { 
       overflow-x: auto !important; 
       -webkit-overflow-scrolling: touch; 
       padding-bottom: 5px; 
   }
   .q-text img, .opt img { 
-      max-width: none !important; /* इमेज को स्क्रीन के साइज़ में सिकुड़ने से रोकेगा */
-      width: auto !important;     /* असली साइज़ रखेगा (छोटे आइकॉन छोटे, बड़े टेबल बड़े) */
+      max-width: none !important; 
+      width: auto !important;     
   }
 }
 
@@ -312,45 +312,34 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
     body {
         display: grid; 
         grid-template-columns: 1fr 340px; 
-        grid-template-rows: var(--header-height) auto 1fr 70px; /* Fixed Footer Height */
+        grid-template-rows: var(--header-height) auto 1fr 70px;
         grid-template-areas: "header header" "secbar secbar" "main palette" "footer palette"; 
         height: 100vh; overflow: hidden;
     }
     header { grid-area: header; }
     #sectionBar { grid-area: secbar; }
-    /* FIXED MAIN AREA SCROLL */
     #mainArea { grid-area: main; padding: 40px 60px; max-width: 1100px; margin: 0 auto; width: 100%; overflow-y: auto; height: 100%; } 
     #palettePanel {
         grid-area: palette; position: relative; transform: none; width: 100%; height: 100%;
         box-shadow: -5px 0 15px rgba(0,0,0,0.02); border-left: 1px solid var(--border-color); display: flex !important; z-index: 10;
     }
-    
-    /* Hide close button on desktop palette */
     #palettePanel > div:first-child button { display: none; }
     .modal-header button { display: none; } 
-    
     #paletteOverlay { display: none !important; }
     #examFooter .btn-grid { display: none; } 
-    /* FIXED FOOTER POSITION */
     #examFooter { grid-area: footer; justify-content: center; border-right: 1px solid var(--border-color); position: relative; border-top: 1px solid var(--border-color); }
     .q-card { box-shadow: 0 10px 40px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); margin-bottom: 20px; }
     .opt { padding: 18px; } 
 }
 
-/* Preloader styles */
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* =========================
-   PRINT PREVIEW HIGH QUALITY PDF
-   ========================= */
 @media print {
-    /* 1. फालतू UI को हाइड करें, साथ ही #mainArea को भी हाइड करें ताकि वो Modal के पीछे से प्रिंट न हो */
     header, #sectionBar, #examFooter, #palettePanel, #paletteOverlay, 
     #startScreen, #instructionScreen, #declarationScreen, #toast-container, 
     #tgOverlay, #tgPopup, #customConfirm, #zoomModal, #paymentModal, #mainArea,
     .btn-primary { display: none !important; }
 
-    /* 2. MASTER FIX: Body का fixed position हटाकर static करें ताकि सारे पेज खुल सकें */
     html, body {
         position: static !important; 
         height: auto !important; 
@@ -362,7 +351,6 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         padding: 0 !important;
     }
 
-    /* 3. Modal की max-height हटा दें और इसे पूरा एक्सपेंड होने दें */
     #resultModal, .modal-overlay, .modal-card, .modal-body {
         position: static !important; 
         display: block !important;
@@ -379,13 +367,11 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         transform: none !important;
     }
 
-    /* 4. कलर्स प्रिंट में वैसे ही दिखें जैसे स्क्रीन पर हैं */
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
 
-    /* 5. पेज के बीच में से सवाल कटने से बचाएं */
     .pdf-q-card, .card-dashboard, .compact-q {
         page-break-inside: avoid !important; 
         break-inside: avoid !important;
@@ -429,7 +415,6 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 
 <div id="zoomModal" style="position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:5000; display:none; overflow:auto; -webkit-overflow-scrolling:touch;">
     <span onclick="closeZoom()" style="position:fixed; top:20px; right:20px; font-size:40px; color:#fff; cursor:pointer; z-index:5001; background:rgba(0,0,0,0.6); width:45px; height:45px; border-radius:50%; display:flex; align-items:center; justify-content:center; line-height: 1;">&times;</span>
-    
     <div style="padding: 80px 20px 40px 20px; min-height: 100vh; box-sizing: border-box; text-align: center;">
         <img id="zoomImg" src="" style="width:100%; max-width:none; border-radius:8px; background-color:#ffffff; padding:10px; display:inline-block; margin:0 auto;">
     </div>
@@ -558,6 +543,7 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         </div>
     </footer>
 </div>
+
 <header>
     <div class="brand">
         <span>🛡️</span> 
@@ -725,17 +711,7 @@ try {
 const DB_REF_NAME = "dsssb_results_live";
 const DB_DISCUSS_REF = "dsssb_discussions"; 
 
-Object.keys(console).forEach(function(key) { console[key] = function() {}; });
-
-setInterval(function() {
-  const before = new Date().getTime();
-  (function() { return false; }['constructor']('debugger')());
-  const after = new Date().getTime();
-  if (after - before > 100) {
-      document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20%'>🚨 SECURE BROWSER VIOLATION 🚨<br>Developer Tools Detected.</h1>";
-      window.location.replace("about:blank"); 
-  }
-}, 1000);
+// 🔥 FIX: Developer Tools / Anti-Cheat blocks have been removed as they caused hanging.
 
 window.addEventListener('resize', function() {
     console.log("Window resized."); 
@@ -777,7 +753,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const CURRENT_TEST_ID = urlParams.get('testid') || "TEST_UNKNOWN";
 const CURRENT_TEST_TITLE = urlParams.get('title') || "DSSSB Mock Test";
 const TOTAL_TIME_MINS = parseInt(urlParams.get('time')) || 120; 
-const MIN_SUBMIT_MINS = parseInt(urlParams.get('mintime')) || 0; // 🔥 Naya Time Lock Variable
+const MIN_SUBMIT_MINS = parseInt(urlParams.get('mintime')) || 0; 
 const TEST_MODE = urlParams.get('mode') || "exam"; 
 
 const POSITIVE_MARK = parseFloat(urlParams.get('pm')) || 1.0;
@@ -796,19 +772,31 @@ let timerInt;
 let secIndices = [];
 let fontOffset = 0;
 let currentDiscussionRef = null; 
-let isProUser = false; // 🔥 PRO User status check from Firebase
+let isProUser = false; 
+
 window.addEventListener('online', syncOfflineResults);
 
+// 🔥 FIX: Safe JSON Parsing to prevent stuck preloader if localstorage is corrupted
 function syncOfflineResults() {
-  const unsynced = JSON.parse(getSafeData('dsssb_unsynced_results') || '[]');
-  if (unsynced.length > 0 && navigator.onLine) {
-      unsynced.forEach((res, index) => {
-          db.ref(DB_REF_NAME).push(res).then(() => {
-              let updated = JSON.parse(getSafeData('dsssb_unsynced_results') || '[]');
-              updated = updated.filter(u => u.timestamp !== res.timestamp);
-              setSafeData('dsssb_unsynced_results', JSON.stringify(updated));
+  try {
+      const savedData = getSafeData('dsssb_unsynced_results');
+      if (!savedData) return;
+      const unsynced = JSON.parse(savedData);
+      if (Array.isArray(unsynced) && unsynced.length > 0 && navigator.onLine) {
+          unsynced.forEach((res) => {
+              db.ref(DB_REF_NAME).push(res).then(() => {
+                  try {
+                      let updated = JSON.parse(getSafeData('dsssb_unsynced_results') || '[]');
+                      if(Array.isArray(updated)) {
+                          updated = updated.filter(u => u.timestamp !== res.timestamp);
+                          setSafeData('dsssb_unsynced_results', JSON.stringify(updated));
+                      }
+                  } catch(e) {}
+              });
           });
-      });
+      }
+  } catch(e) {
+      removeSafeData('dsssb_unsynced_results'); // Wipe corrupt data
   }
 }
 
@@ -823,12 +811,10 @@ document.getElementById('mainArea').addEventListener('touchstart', e => {
 }, {passive: true});
 
 document.getElementById('mainArea').addEventListener('touchend', e => { 
-    // 🔥 MASTER SWIPE FIX: स्मार्ट चेकिंग कि टच की गई चीज़ स्क्रॉल होने वाली है या नहीं
     let el = e.target;
     let isScrollable = false;
     
     while (el && el !== document.getElementById('mainArea')) {
-        // अगर एलिमेंट table है, q-text है, या opt है और वो स्क्रीन से चौड़ा है (Scrollable है)
         if ((el.classList && (el.classList.contains('q-text') || el.classList.contains('opt'))) || el.tagName === 'TABLE' || el.tagName === 'IMG') {
             if (el.scrollWidth > el.clientWidth + 2) { 
                 isScrollable = true;
@@ -838,7 +824,6 @@ document.getElementById('mainArea').addEventListener('touchend', e => {
         el = el.parentElement;
     }
 
-    // अगर चौड़े टेबल/इमेज पर स्क्रॉल किया है, तो Next Question पर मत जाओ!
     if (isScrollable || e.target.tagName === 'IMG') {
         return;
     }
@@ -846,171 +831,196 @@ document.getElementById('mainArea').addEventListener('touchend', e => {
     touchendX = e.changedTouches[0].screenX; 
     touchendY = e.changedTouches[0].screenY; 
     
-    // सिर्फ एकदम सीधे हॉरिजॉन्टल स्वाइप पर पेज चेंज होगा
     if (Math.abs(touchendY - touchstartY) < 60) {
         if(touchendX < touchstartX - 80) next(); 
         if(touchendX > touchstartX + 80) prev(); 
     }
 }, {passive: true});
 
+
+// 🔥 FIX: 10 Sec Fallback to hide Preloader if Network/Firebase hangs
+setTimeout(() => {
+    const pl = document.getElementById('preloader');
+    if(pl && pl.style.display !== 'none') {
+        pl.style.display = 'none';
+        showToast("Network is very slow. Loading took longer than usual.", "warning");
+    }
+}, 10000);
+
 function initApp() {
-  document.getElementById('displayTitle').innerText = CURRENT_TEST_TITLE;
-  document.title = CURRENT_TEST_TITLE;
-  document.getElementById('declHeaderTitle').innerText = CURRENT_TEST_TITLE;
-  document.getElementById('declTimeStr').innerText = `समय: ${TOTAL_TIME_MINS} मिनट`;
+  try {
+      document.getElementById('displayTitle').innerText = CURRENT_TEST_TITLE;
+      document.title = CURRENT_TEST_TITLE;
+      document.getElementById('declHeaderTitle').innerText = CURRENT_TEST_TITLE;
+      document.getElementById('declTimeStr').innerText = `समय: ${TOTAL_TIME_MINS} मिनट`;
 
-  syncOfflineResults(); 
+      syncOfflineResults(); 
 
-  document.getElementById('posMarkDisp').innerText = POSITIVE_MARK;
-  document.getElementById('negMarkDisp').innerText = NEGATIVE_MARK;
+      document.getElementById('posMarkDisp').innerText = POSITIVE_MARK;
+      document.getElementById('negMarkDisp').innerText = NEGATIVE_MARK;
 
-  let tName = "Student";
-  let tId = "guest";
+      let tName = "Student";
+      let tId = "guest";
 
-  if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe.user) {
-      let u = window.Telegram.WebApp.initDataUnsafe.user;
-      tName = u.first_name + (u.last_name ? " " + u.last_name : "");
-      tId = u.id.toString();
-      setSafeData('dsssb_user_name', tName);
-      setSafeData('dsssb_user_id', tId);
-  } else {
-      let savedName = getSafeData('dsssb_user_name');
-      let savedId = getSafeData('dsssb_user_id');
-      if(savedName) { tName = savedName; tId = savedId || "guest"; }
-  }
-
-  // 🔥 NEW: DIRECT FIREBASE CHECK FOR PRO USER 🔥
-  db.ref("dsssb_pro_users").once("value").then(proSnap => {
-      if(proSnap.exists()) {
-          let myId = String(tId).trim();
-          let myName = String(tName).toLowerCase().trim().replace("@", "");
-          
-          proSnap.forEach(child => {
-              let dbVal = child.val();
-              let dbKey = String(child.key).toLowerCase().trim().replace("@", "");
-              if (!dbVal) return;
-              
-              let v = typeof dbVal === 'object' ? (dbVal.username || dbVal.id || "") : dbVal;
-              v = String(v).toLowerCase().trim().replace("@", "");
-              
-              if (v !== "") { 
-                  if ((myName && (v === myName || dbKey === myName)) || (myId && (v === myId || dbKey === myId))) isProUser = true; 
-              } else if (dbKey !== "") { 
-                  if ((myName && dbKey === myName) || (myId && dbKey === myId)) isProUser = true; 
-              }
-          });
+      // 🔥 FIX: Safe Telegram WebApp check
+      if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+          let u = window.Telegram.WebApp.initDataUnsafe.user;
+          tName = u.first_name + (u.last_name ? " " + u.last_name : "");
+          tId = u.id.toString();
+          setSafeData('dsssb_user_name', tName);
+          setSafeData('dsssb_user_id', tId);
+      } else {
+          let savedName = getSafeData('dsssb_user_name');
+          let savedId = getSafeData('dsssb_user_id');
+          if(savedName) { tName = savedName; tId = savedId || "guest"; }
       }
-  });
 
-  if (TEST_MODE === 'solution') {
-      document.getElementById('startNameInput').value = tName + " (Solution Mode)";
-      document.getElementById('startExamBtn').innerText = "VIEW SOLUTIONS ➔";
-      document.getElementById('timer').style.display = 'none'; 
-  } else if (TEST_MODE === 'quiz') {
-      document.getElementById('startNameInput').value = tName + " (Quiz Mode)";
-      document.getElementById('startExamBtn').innerText = "START QUIZ ⚡";
-      document.getElementById('timer').style.display = 'none'; 
-  } else {
-      document.getElementById('startNameInput').value = tName;
-  }
+      db.ref("dsssb_pro_users").once("value").then(proSnap => {
+          if(proSnap.exists()) {
+              let myId = String(tId).trim();
+              let myName = String(tName).toLowerCase().trim().replace("@", "");
+              
+              proSnap.forEach(child => {
+                  let dbVal = child.val();
+                  let dbKey = String(child.key).toLowerCase().trim().replace("@", "");
+                  if (!dbVal) return;
+                  
+                  let v = typeof dbVal === 'object' ? (dbVal.username || dbVal.id || "") : dbVal;
+                  v = String(v).toLowerCase().trim().replace("@", "");
+                  
+                  if (v !== "") { 
+                      if ((myName && (v === myName || dbKey === myName)) || (myId && (v === myId || dbKey === myId))) isProUser = true; 
+                  } else if (dbKey !== "") { 
+                      if ((myName && dbKey === myName) || (myId && dbKey === myId)) isProUser = true; 
+                  }
+              });
+          }
+      }).catch(e => console.log(e));
 
-  db.ref('dsssb_tests_meta/' + CURRENT_TEST_ID + '/cutoff').once('value').then(snap => {
-      if(snap.exists()) DYNAMIC_CUTOFF = parseFloat(snap.val());
-      else DYNAMIC_CUTOFF = 40; 
-  });
+      if (TEST_MODE === 'solution') {
+          document.getElementById('startNameInput').value = tName + " (Solution Mode)";
+          document.getElementById('startExamBtn').innerText = "VIEW SOLUTIONS ➔";
+          document.getElementById('timer').style.display = 'none'; 
+      } else if (TEST_MODE === 'quiz') {
+          document.getElementById('startNameInput').value = tName + " (Quiz Mode)";
+          document.getElementById('startExamBtn').innerText = "START QUIZ ⚡";
+          document.getElementById('timer').style.display = 'none'; 
+      } else {
+          document.getElementById('startNameInput').value = tName;
+      }
 
-  db.ref('dsssb_questions_db/' + CURRENT_TEST_ID).once('value').then(snap => {
-      const preloader = document.getElementById('preloader');
-      if (preloader) preloader.style.display = 'none';
-      
-      if(snap.exists()) {
-          QUESTIONS = snap.val();
+      db.ref('dsssb_tests_meta/' + CURRENT_TEST_ID + '/cutoff').once('value').then(snap => {
+          if(snap.exists()) DYNAMIC_CUTOFF = parseFloat(snap.val());
+          else DYNAMIC_CUTOFF = 40; 
+      }).catch(e => { DYNAMIC_CUTOFF = 40; });
 
-        // 🔥 UPDATE: Paper ki Language Check (Hide Toggle & Dropdown Options if only 1 language exists)
-        let hasEn = false;
-        let hasHi = false;
-        QUESTIONS.forEach(q => {
-            if (q.q_en && String(q.q_en).trim() !== "") hasEn = true;
-            if (q.q_hi && String(q.q_hi).trim() !== "") hasHi = true;
-        });
+      db.ref('dsssb_questions_db/' + CURRENT_TEST_ID).once('value').then(snap => {
+          const preloader = document.getElementById('preloader');
+          if (preloader) preloader.style.display = 'none';
+          
+          if(snap.exists()) {
+              let snapData = snap.val();
+              
+              // 🔥 FIX: Firebase sometimes returns empty-indexed arrays as JSON Objects, which breaks code later
+              if (!Array.isArray(snapData)) {
+                  QUESTIONS = Object.values(snapData).filter(q => q !== null && typeof q === 'object');
+              } else {
+                  QUESTIONS = snapData.filter(q => q !== null && typeof q === 'object');
+              }
 
-        const langSelect = document.getElementById('defaultLangSelect');
-        if (langSelect) {
-            langSelect.innerHTML = '<option value="">-- Select --</option>';
-            if (hasEn) langSelect.innerHTML += '<option value="EN">English</option>';
-            if (hasHi) langSelect.innerHTML += '<option value="HI">हिंदी</option>';
-            
-            // Auto-select if only one language is available
-            if (hasEn && !hasHi) langSelect.value = "EN";
-            if (hasHi && !hasEn) langSelect.value = "HI";
-        }
+              if(QUESTIONS.length === 0) {
+                  alert("⚠️ No questions found in this test!");
+                  return;
+              }
 
-        const topLangBtn = document.getElementById('langBtn');
-        if (topLangBtn) {
-            if (hasEn && hasHi) {
-                topLangBtn.style.display = 'flex';
-            } else {
-                topLangBtn.style.display = 'none'; // Hide toggle button
-                if (hasEn) topLangBtn.innerText = 'EN';
-                if (hasHi) topLangBtn.innerText = 'HI';
+            let hasEn = false;
+            let hasHi = false;
+            QUESTIONS.forEach(q => {
+                if (q.q_en && String(q.q_en).trim() !== "") hasEn = true;
+                if (q.q_hi && String(q.q_hi).trim() !== "") hasHi = true;
+            });
+
+            const langSelect = document.getElementById('defaultLangSelect');
+            if (langSelect) {
+                langSelect.innerHTML = '<option value="">-- Select --</option>';
+                if (hasEn) langSelect.innerHTML += '<option value="EN">English</option>';
+                if (hasHi) langSelect.innerHTML += '<option value="HI">हिंदी</option>';
+                
+                if (hasEn && !hasHi) langSelect.value = "EN";
+                if (hasHi && !hasEn) langSelect.value = "HI";
             }
-        }
-        // ---------------------------------------------------------
 
-        SECTION_MAP = [];
-        QUESTIONS.forEach(q => {
-            let secName = q.section || "General";
-            if (!SECTION_MAP.includes(secName)) SECTION_MAP.push(secName);
-        });
-          
-        const specificStorageKey = STORAGE_KEY + "_" + CURRENT_TEST_ID;
-          calcSectionIndices();
-          
-        // --- NEW: Inject Dynamic Data into Declaration Screen ---
-          const totalQs = QUESTIONS.length;
-          const totalMarks = totalQs * POSITIVE_MARK;
-          if(document.getElementById('declTotalQs')) document.getElementById('declTotalQs').innerText = totalQs;
-          if(document.getElementById('declTotalMarks')) document.getElementById('declTotalMarks').innerText = "पूर्णांक: " + totalMarks;
-          if(document.getElementById('declPosMark')) document.getElementById('declPosMark').innerText = "सही उत्तर: +" + POSITIVE_MARK;
-          if(document.getElementById('declNegMark')) document.getElementById('declNegMark').innerText = "नकारात्मक अंक (Negative): -" + NEGATIVE_MARK;
-          // --------------------------------------------------------
-          if (TEST_MODE === 'solution') {
-              const finalSaved = getSafeData(specificStorageKey + "_final");
-              if (finalSaved) { currentState = JSON.parse(finalSaved); } 
-              else {
+            const topLangBtn = document.getElementById('langBtn');
+            if (topLangBtn) {
+                if (hasEn && hasHi) {
+                    topLangBtn.style.display = 'flex';
+                } else {
+                    topLangBtn.style.display = 'none';
+                    if (hasEn) topLangBtn.innerText = 'EN';
+                    if (hasHi) topLangBtn.innerText = 'HI';
+                }
+            }
+
+            SECTION_MAP = [];
+            QUESTIONS.forEach(q => {
+                let secName = q.section || "General";
+                if (!SECTION_MAP.includes(secName)) SECTION_MAP.push(secName);
+            });
+              
+            const specificStorageKey = STORAGE_KEY + "_" + CURRENT_TEST_ID;
+            calcSectionIndices();
+              
+            const totalQs = QUESTIONS.length;
+            const totalMarks = totalQs * POSITIVE_MARK;
+            if(document.getElementById('declTotalQs')) document.getElementById('declTotalQs').innerText = totalQs;
+            if(document.getElementById('declTotalMarks')) document.getElementById('declTotalMarks').innerText = "पूर्णांक: " + totalMarks;
+            if(document.getElementById('declPosMark')) document.getElementById('declPosMark').innerText = "सही उत्तर: +" + POSITIVE_MARK;
+            if(document.getElementById('declNegMark')) document.getElementById('declNegMark').innerText = "नकारात्मक अंक (Negative): -" + NEGATIVE_MARK;
+            
+            if (TEST_MODE === 'solution') {
+                  const finalSaved = getSafeData(specificStorageKey + "_final");
+                  if (finalSaved) { currentState = JSON.parse(finalSaved); } 
+                  else {
+                      currentState.answers = new Array(QUESTIONS.length).fill(null);
+                      currentState.review = new Array(QUESTIONS.length).fill(false);
+                      currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
+                  }
+                  currentState.submitted = true; 
+                  document.getElementById('resumeBox').style.display = 'none';
+              } else if (TEST_MODE === 'quiz') {
                   currentState.answers = new Array(QUESTIONS.length).fill(null);
                   currentState.review = new Array(QUESTIONS.length).fill(false);
                   currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
+                  currentState.submitted = false; 
+                  document.getElementById('resumeBox').style.display = 'none';
+              } else {
+                  currentState.answers = new Array(QUESTIONS.length).fill(null);
+                  currentState.review = new Array(QUESTIONS.length).fill(false);
+                  currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
+                  
+                  const saved = getSafeData(specificStorageKey);
+                  if(saved) {
+                      let savedState = JSON.parse(saved);
+                      if(savedState.answers && savedState.answers.length === QUESTIONS.length) {
+                          document.getElementById('resumeBox').style.display = 'block';
+                      } else { removeSafeData(specificStorageKey); }
+                  }
               }
-              currentState.submitted = true; 
-              document.getElementById('resumeBox').style.display = 'none';
-          } else if (TEST_MODE === 'quiz') {
-              currentState.answers = new Array(QUESTIONS.length).fill(null);
-              currentState.review = new Array(QUESTIONS.length).fill(false);
-              currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
-              currentState.submitted = false; 
-              document.getElementById('resumeBox').style.display = 'none';
           } else {
-              currentState.answers = new Array(QUESTIONS.length).fill(null);
-              currentState.review = new Array(QUESTIONS.length).fill(false);
-              currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
-              
-              const saved = getSafeData(specificStorageKey);
-              if(saved) {
-                  let savedState = JSON.parse(saved);
-                  if(savedState.answers && savedState.answers.length === QUESTIONS.length) {
-                      document.getElementById('resumeBox').style.display = 'block';
-                  } else { removeSafeData(specificStorageKey); }
-              }
+              alert("⚠️ Alert: Test not found in Database!");
           }
-      } else {
-          alert("⚠️ Alert: Test not found!");
-      }
-  }).catch(err => { 
+      }).catch(err => { 
+          const preloader = document.getElementById('preloader');
+          if (preloader) preloader.style.display = 'none';
+          alert("Error loading test data: " + err.message); 
+      });
+
+  } catch(err) {
+      console.error(err);
       const preloader = document.getElementById('preloader');
       if (preloader) preloader.style.display = 'none';
-      alert("Error loading test data: " + err.message); 
-  });
+      alert("App Initialization Error!");
+  }
 }
 
 function calcSectionIndices() { 
@@ -1021,8 +1031,6 @@ function calcSectionIndices() {
   }); 
 }
 
-/* ================= NEW NAVIGATION LOGIC ================= */
-// 🚀 Bulletproof Full Screen Function
 function forceFullScreen() {
   try {
       let elem = document.documentElement;
@@ -1038,11 +1046,10 @@ function forceFullScreen() {
 }
 
 function validateLogin() {
-    if(QUESTIONS.length === 0) return showToast("Loading test data, please wait...", "warning");
+    if(!QUESTIONS || QUESTIONS.length === 0) return showToast("Loading test data, please wait...", "warning");
     const name = document.getElementById('startNameInput').value.trim();
     if(!name) return showToast("Name is missing!", "error");
     
-    // 🚀 तुरंत फुल-स्क्रीन ट्रिगर करें (ताकि Quiz/Solution Mode में कोई दिक्कत न आए)
     forceFullScreen();
 
     currentState.name = name.replace(" (Solution Mode)", "").replace(" (Quiz Mode)", "");
@@ -1050,9 +1057,9 @@ function validateLogin() {
     
     const currentMode = (TEST_MODE || "").toLowerCase();
     if (currentMode.includes('quiz') || currentMode.includes('solution')) {
-        startGame(false); // Skip instructions and go direct to test/solution
+        startGame(false); 
     } else {
-        document.getElementById('instructionScreen').style.display = 'flex'; // Show instructions for normal exam
+        document.getElementById('instructionScreen').style.display = 'flex'; 
     }
 }
 
@@ -1078,17 +1085,14 @@ function startExamFromDecl() {
     const agree = document.getElementById('agreeCheck').checked;
     if(!agree) return showToast("Please check the declaration box before starting.", "error");
 
-    // 🚀 फुल-स्क्रीन फिर से पक्का करें
     forceFullScreen();
 
     document.getElementById('langBtn').innerText = lang.trim();
     document.getElementById('declarationScreen').style.display = 'none';
     startGame(false);
 }
-/* ======================================================== */
 
 function startGame(isResuming) {
-  // Hide all overlays to be safe
   document.getElementById('startScreen').style.display = 'none';
   document.getElementById('instructionScreen').style.display = 'none';
   document.getElementById('declarationScreen').style.display = 'none';
@@ -1113,19 +1117,18 @@ function startGame(isResuming) {
   
   loadQuestion(currentState.idx);
   
-// 🚀 Enhanced Mobile Full Screen & Orientation Lock
   try {
       let elem = document.documentElement;
       let enterFS = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.msRequestFullscreen;
       if (enterFS) {
           enterFS.call(elem).then(() => {
-              // Auto lock to portrait mode on mobile if supported
               if (screen.orientation && screen.orientation.lock) {
                   screen.orientation.lock('portrait').catch(err => console.log("Orientation lock not supported", err));
               }
           }).catch(err => console.log("FS error", err));
       }
   } catch(e) { console.log("Fullscreen catch block:", e); }
+  
   if (TEST_MODE === 'solution') {
       document.getElementById('mainSubmitBtn').style.display = 'none'; 
       if(document.getElementById('sectionSubmitBtn')) document.getElementById('sectionSubmitBtn').style.display = 'none';
@@ -1160,9 +1163,7 @@ function saveState() {
 }
 
 function loadState() { 
-  // 🚀 फुल-स्क्रीन रिज़्यूम (Resume/Reattempt) करने पर भी लागू करें
   forceFullScreen();
-
   const specificStorageKey = STORAGE_KEY + "_" + CURRENT_TEST_ID;
   const saved = getSafeData(specificStorageKey); 
   if(saved) { 
@@ -1237,10 +1238,7 @@ window.toggleAppSolution = function(btn) {
 };
 
 function reportQuestion() {
-    const qKey = CURRENT_TEST_ID + "_Q" + currentState.idx;
     const qNum = currentState.idx + 1;
-    
-    // Show a small confirmation or directly send
     db.ref('dsssb_reports/' + CURRENT_TEST_ID).push({
         qIndex: currentState.idx,
         qNum: qNum,
@@ -1258,11 +1256,10 @@ function loadQuestion(idx) {
   currentState.idx = idx; 
   const q = QUESTIONS[idx]; 
   
-  // 🔥 Question Load Animation Trigger
   const qCardWrapper = document.querySelector('.q-card');
   if(qCardWrapper) {
       qCardWrapper.classList.remove('q-animate');
-      void qCardWrapper.offsetWidth; // Magic line to restart animation
+      void qCardWrapper.offsetWidth; 
       qCardWrapper.classList.add('q-animate');
   }
 
@@ -1378,9 +1375,6 @@ function loadQuestion(idx) {
   }
 }
 
-// ==========================================
-// 🧠 AI SOLUTION GENERATOR (ON-DEMAND FETCH & SAVE)
-// ==========================================
 async function generateAndSaveSolution(testId, qIndex) {
     const btnBox = document.getElementById(`ai_sol_box_${qIndex}`);
     btnBox.innerHTML = `<p style='color:var(--warning); font-weight:bold; font-size:13px;'>⏳ AI is analyzing the question and writing the best solution...</p>`;
@@ -1396,7 +1390,6 @@ async function generateAndSaveSolution(testId, qIndex) {
 
         QUESTIONS[qIndex].solution = generatedHtml;
 
-        // Firebase me save karein
         await db.ref(`dsssb_questions_db/${testId}/${qIndex}/solution`).set(generatedHtml);
 
         showToast("AI Solution Generated & Saved to Database! ✅", "success");
@@ -1408,7 +1401,6 @@ async function generateAndSaveSolution(testId, qIndex) {
 }
 
 async function fetchAISolution(qData) {
-    // 🛡️ API Key
     const p1 = "AIzaSyAmG3vuLZWMIIfah0yrW"; 
     const p2 = "ZuY_fPWfV7AQHM"; 
     const API_KEY = p1 + p2; 
@@ -1467,7 +1459,7 @@ Generate the shortest possible correct HTML list now.`;
                 contents: [{ parts: [{ text: prompt }] }],
                 generationConfig: { 
                     temperature: 0.2,
-                    maxOutputTokens: 2500 // 🔥 PAYG Cost Safety
+                    maxOutputTokens: 2500 
                 }
             })
         });
@@ -1487,8 +1479,7 @@ Generate the shortest possible correct HTML list now.`;
 
         if (data.candidates && data.candidates.length > 0) {
             let rawHtml = data.candidates[0].content.parts[0].text;
-            return rawHtml.split('
-```html').join('').split('```').join('').trim();
+            return rawHtml.split('```html').join('').split('```').join('').trim();
         } else {
             return "<b>Error:</b> समाधान जनरेट नहीं हो पाया।";
         }
@@ -1605,7 +1596,6 @@ function reviewAndNext() {
 function manualSubmitSection() {
     if(currentState.submitted || TEST_MODE === 'quiz') return;
 
-    // 🔥 TIME LOCK CHECK FOR SECTION 🔥
     let timeSpentSec = (TOTAL_TIME_MINS * 60) - currentState.time;
     if (MIN_SUBMIT_MINS > 0 && timeSpentSec < (MIN_SUBMIT_MINS * 60)) {
         let remainSec = (MIN_SUBMIT_MINS * 60) - timeSpentSec;
@@ -1634,7 +1624,6 @@ function manualSubmitSection() {
 function submitTestDialog() {
   if(currentState.submitted) return;
 
-  // 🔥 TIME LOCK CHECK FOR FINAL SUBMIT 🔥
   let timeSpentSec = (TOTAL_TIME_MINS * 60) - currentState.time;
   if (MIN_SUBMIT_MINS > 0 && timeSpentSec < (MIN_SUBMIT_MINS * 60)) {
       let remainSec = (MIN_SUBMIT_MINS * 60) - timeSpentSec;
@@ -1809,7 +1798,6 @@ function renderPalette() {
                 }
             }
 
-            // Determine precise state class and status text
             let stateCls = "unseen";
             let statusText = "Unseen";
             
@@ -1836,13 +1824,11 @@ function renderPalette() {
             }
 
             if (isPaletteListView) {
-                // List View Button
                 gridHtml += `<button class="qbtn-list ${stateCls}" style="${styleStr}" ${isAccessible ? `onclick="loadQuestion(${i}); if(window.innerWidth < 1024) togglePalette();"` : `disabled`}>
                     <span style="font-size:14px;">Q. ${i + 1}</span>
                     <span style="font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">${statusText}</span>
                 </button>`;
             } else {
-                // Grid View Button
                 cls += " " + stateCls;
                 gridHtml += `<button class="${cls}" style="${styleStr}" ${isAccessible ? `onclick="loadQuestion(${i}); if(window.innerWidth < 1024) togglePalette();"` : `disabled`}>${i + 1}</button>`;
             }
@@ -1877,34 +1863,33 @@ function toggleTheme() { document.body.classList.toggle('dark-mode'); }
 function toggleLang() { const btn = document.getElementById('langBtn'); btn.innerText = btn.innerText.trim().toUpperCase() === "HI" ? "EN" : "HI"; loadQuestion(currentState.idx); }
 function openZoom(src) { 
     document.getElementById('zoomImg').src = src; 
-    document.getElementById('zoomImg').style.width = '100%'; // Reset size on open
-    currentZoomWidth = 100; // Reset zoom logic
+    document.getElementById('zoomImg').style.width = '100%'; 
+    currentZoomWidth = 100; 
     document.getElementById('zoomModal').style.display = 'block'; 
 }
 function closeZoom() { 
     document.getElementById('zoomModal').style.display = 'none'; 
 }
 
-// === Pinch to Zoom Logic for Mobile ===
 let currentZoomWidth = 100;
 let initialPinchDist = null;
 const zModal = document.getElementById('zoomModal');
 const zImg = document.getElementById('zoomImg');
 
 zModal.addEventListener('touchstart', (e) => {
-    if (e.touches.length === 2) { // When two fingers touch
+    if (e.touches.length === 2) { 
         initialPinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
     }
 }, { passive: false });
 
 zModal.addEventListener('touchmove', (e) => {
     if (e.touches.length === 2 && initialPinchDist) {
-        e.preventDefault(); // Prevent default page scrolling while pinching
+        e.preventDefault(); 
         let newDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
         let scale = newDist / initialPinchDist;
         let newWidth = currentZoomWidth * scale;
 
-        if (newWidth >= 100 && newWidth <= 500) { // Limit stretch between 1x and 5x
+        if (newWidth >= 100 && newWidth <= 500) { 
             zImg.style.width = newWidth + '%';
         }
     }
@@ -1912,8 +1897,8 @@ zModal.addEventListener('touchmove', (e) => {
 
 zModal.addEventListener('touchend', (e) => {
     if (e.touches.length < 2) {
-        initialPinchDist = null; // Reset fingers
-        currentZoomWidth = parseFloat(zImg.style.width) || 100; // Save current stretch level
+        initialPinchDist = null; 
+        currentZoomWidth = parseFloat(zImg.style.width) || 100; 
     }
 });
 
@@ -1925,7 +1910,6 @@ function handleReattemptClick() {
             return;
         }
         showToast("Starting Reattempt Mode... 🚀", "success");
-        // window.location.href = 'reattempt.html'; // इसे अपने री-अटेम्प्ट पेज के लिंक से बदलें
     } else {
         let currentUserId = getSafeData('dsssb_user_id') || 'guest';
         if(document.getElementById('displayUserId')) {
@@ -2138,14 +2122,12 @@ async function submitTest() {
           };
       }
 
-      // 🔥 AUTO CUTOFF LOGIC (70% DEFAULT) 🔥
       let maxPossibleMarks = QUESTIONS.length * POSITIVE_MARK;
       let finalCutoff = DYNAMIC_CUTOFF;
       if (DYNAMIC_CUTOFF === 40) {
           finalCutoff = Math.round(maxPossibleMarks * 0.7); 
       }
 
-      // CALCULATIONS FOR HERO SCORE & GAMIFICATION
       let scorePct = Math.max(0, (totalScore / maxPossibleMarks) * 100).toFixed(1);
       let selProb = Math.min(99, Math.max(5, (parseFloat(data.percentile) * 0.8) + (accuracy * 0.2))).toFixed(1);
       let xpEarned = Math.max(0, Math.floor(totalScore * 10));
@@ -2155,7 +2137,6 @@ async function submitTest() {
       if (fastest < 30) badges.push("⚡ Fast Solver");
       if (totalScore >= finalCutoff) badges.push("🏅 Qualified");
       
-      // AI MENTOR LOGIC
       let weakTopics = [];
       Object.keys(topicStats).forEach(t => {
           let ts = topicStats[t];
@@ -2170,7 +2151,6 @@ async function submitTest() {
       if (fastest < 10 && wrong > correct) aiText += `<li>⚡ <b>Careless Mistakes:</b> Rushing through questions. Slow down.</li>`;
       aiText += `</ul>`;
 
-      // HEATMAP GENERATION
       let heatmapHtml = `<div class="heatmap-box"><h3 style="margin:0 0 15px 0; font-size:16px;">📊 Subject Heatmap</h3>`;
       Object.keys(topicStats).forEach(t => {
           let ts = topicStats[t];
@@ -2321,13 +2301,10 @@ async function submitTest() {
 }
 
 function downloadPDF() {
-    // TWA/Android Print Trigger Fix
     showToast("Preparing Exam Report... 📥", "success");
     
-    // Thoda extra delay taaki background processes clear ho jayein
     setTimeout(() => {
         try {
-            // Force focus to window before printing
             window.focus();
             if (typeof window.print !== 'undefined') {
                 window.print();
