@@ -251,42 +251,6 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 .toggle-discuss-btn { background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; margin-top: 10px; transition: 0.2s; }
 .toggle-discuss-btn:hover { background: var(--primary-light); }
 
-/* 🔥 PREMIUM RESULT MASTER UI 🔥 */
-.premium-result-container { font-family: 'Poppins', sans-serif; max-width: 900px; margin: auto; padding: 10px; }
-.hero-score-box { background: linear-gradient(135deg, #1e1b4b, #312e81); color: white; padding: 30px; border-radius: 24px; text-align: center; position: relative; overflow: hidden; box-shadow: 0 20px 50px rgba(49, 46, 129, 0.4); margin-bottom: 20px; }
-.score-ring { width: 160px; height: 160px; border-radius: 50%; margin: 0 auto 15px auto; background: conic-gradient(#10b981 var(--pct), #374151 0deg); display: flex; align-items: center; justify-content: center; position: relative; animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-.score-ring::before { content: ""; position: absolute; inset: 12px; background: #1e1b4b; border-radius: 50%; box-shadow: inset 0 4px 10px rgba(0,0,0,0.5); }
-.score-ring-content { position: relative; z-index: 10; display: flex; flex-direction: column; }
-.score-ring-val { font-size: 32px; font-weight: 900; line-height: 1; text-shadow: 0 0 20px rgba(16,185,129,0.6); }
-.score-ring-lbl { font-size: 12px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; }
-@keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-.cert-header { display: flex; justify-content: space-between; font-size: 11px; color: #9ca3af; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
-.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
-.stat-badge { background: rgba(255,255,255,0.1); padding: 12px; border-radius: 12px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; justify-content: center; align-items: center;}
-.ai-mentor { background: var(--bg-card); border-radius: 16px; padding: 20px; margin-top: 20px; border: 1px solid var(--border-color); border-left: 5px solid #8b5cf6; box-shadow: var(--shadow-sm); text-align: left; }
-.ai-mentor h3 { margin: 0 0 10px 0; color: #8b5cf6; font-size: 16px; display: flex; align-items: center; gap: 8px; }
-.ai-mentor ul { margin: 0; padding-left: 20px; font-size: 14px; color: var(--text-main); line-height: 1.6; }
-.heatmap-box { background: var(--bg-card); border-radius: 16px; padding: 20px; margin-top: 15px; border: 1px solid var(--border-color); text-align: left; }
-.hm-row { margin-bottom: 12px; }
-.hm-lbl { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--text-main); }
-.hm-bar { height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden; }
-.hm-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #6366f1, #8b5cf6); transition: width 1s ease-in-out; }
-.gami-box { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; justify-content: center; }
-.badge { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3); }
-.xp-badge { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
-.compact-q { background: var(--bg-card); border-radius: 12px; padding: 15px; margin-bottom: 12px; border: 1px solid var(--border-color); font-size: 14px; text-align: left; }
-.compact-q-head { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 8px; font-size: 13px; color: var(--text-muted); }
-.compact-sol { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-color); font-size: 13px; color: var(--text-muted); }
-.action-row { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
-.btn-glow { flex: 1; padding: 14px; text-align: center; font-weight: bold; border-radius: 12px; color: white; cursor: pointer; border: none; font-size: 14px; transition: 0.2s; min-width: 150px; }
-.btn-reattempt { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
-.btn-share { background: linear-gradient(135deg, #3b82f6, #2563eb); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); }
-.video-sol-btn { background: linear-gradient(135deg, #a855f7, #7e22ce); color: white; padding: 8px 15px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; font-size: 12px; box-shadow: 0 4px 10px rgba(168, 85, 247, 0.3); display: block; margin: 10px auto 0 auto; width: 100%; text-align: center; }
-
-@media(max-width: 768px) {
-  .modal-card { margin-top: auto; border-radius: 24px 24px 0 0; min-height: 80vh; max-height: 95vh; }
-}
-
 @media(max-width: 480px) {
   #palettePanel { width: 85%; } 
   .brand span:nth-child(2) { font-size: 15px; }
@@ -296,15 +260,15 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
   .sec-tab { padding: 0 12px; font-size: 12px; height: 32px; }
   .q-card { padding: 12px !important; }
   
-  /* 🔥 TABLE IMAGE SCROLL FIX */
+  /* 🔥 TABLE IMAGE SCROLL FIX: चौड़ी इमेज सिकुड़ेगी नहीं, Scroll होगी! 🔥 */
   .q-text, .opt { 
       overflow-x: auto !important; 
       -webkit-overflow-scrolling: touch; 
       padding-bottom: 5px; 
   }
   .q-text img, .opt img { 
-      max-width: none !important; 
-      width: auto !important;     
+      max-width: none !important; /* इमेज को स्क्रीन के साइज़ में सिकुड़ने से रोकेगा */
+      width: auto !important;     /* असली साइज़ रखेगा (छोटे आइकॉन छोटे, बड़े टेबल बड़े) */
   }
 }
 
@@ -312,34 +276,45 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
     body {
         display: grid; 
         grid-template-columns: 1fr 340px; 
-        grid-template-rows: var(--header-height) auto 1fr 70px;
+        grid-template-rows: var(--header-height) auto 1fr 70px; /* Fixed Footer Height */
         grid-template-areas: "header header" "secbar secbar" "main palette" "footer palette"; 
         height: 100vh; overflow: hidden;
     }
     header { grid-area: header; }
     #sectionBar { grid-area: secbar; }
+    /* FIXED MAIN AREA SCROLL */
     #mainArea { grid-area: main; padding: 40px 60px; max-width: 1100px; margin: 0 auto; width: 100%; overflow-y: auto; height: 100%; } 
     #palettePanel {
         grid-area: palette; position: relative; transform: none; width: 100%; height: 100%;
         box-shadow: -5px 0 15px rgba(0,0,0,0.02); border-left: 1px solid var(--border-color); display: flex !important; z-index: 10;
     }
+    
+    /* Hide close button on desktop palette */
     #palettePanel > div:first-child button { display: none; }
     .modal-header button { display: none; } 
+    
     #paletteOverlay { display: none !important; }
     #examFooter .btn-grid { display: none; } 
+    /* FIXED FOOTER POSITION */
     #examFooter { grid-area: footer; justify-content: center; border-right: 1px solid var(--border-color); position: relative; border-top: 1px solid var(--border-color); }
     .q-card { box-shadow: 0 10px 40px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); margin-bottom: 20px; }
     .opt { padding: 18px; } 
 }
 
+/* Preloader styles */
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* =========================
+   PRINT PREVIEW HIGH QUALITY PDF
+   ========================= */
 @media print {
+    /* 1. फालतू UI को हाइड करें, साथ ही #mainArea को भी हाइड करें ताकि वो Modal के पीछे से प्रिंट न हो */
     header, #sectionBar, #examFooter, #palettePanel, #paletteOverlay, 
     #startScreen, #instructionScreen, #declarationScreen, #toast-container, 
     #tgOverlay, #tgPopup, #customConfirm, #zoomModal, #paymentModal, #mainArea,
     .btn-primary { display: none !important; }
 
+    /* 2. MASTER FIX: Body का fixed position हटाकर static करें ताकि सारे पेज खुल सकें */
     html, body {
         position: static !important; 
         height: auto !important; 
@@ -351,6 +326,7 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         padding: 0 !important;
     }
 
+    /* 3. Modal की max-height हटा दें और इसे पूरा एक्सपेंड होने दें */
     #resultModal, .modal-overlay, .modal-card, .modal-body {
         position: static !important; 
         display: block !important;
@@ -367,12 +343,14 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         transform: none !important;
     }
 
+    /* 4. कलर्स प्रिंट में वैसे ही दिखें जैसे स्क्रीन पर हैं */
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
 
-    .pdf-q-card, .card-dashboard, .compact-q {
+    /* 5. पेज के बीच में से सवाल कटने से बचाएं */
+    .pdf-q-card, .card-dashboard {
         page-break-inside: avoid !important; 
         break-inside: avoid !important;
         margin-bottom: 20px !important; 
@@ -415,6 +393,7 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 
 <div id="zoomModal" style="position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:5000; display:none; overflow:auto; -webkit-overflow-scrolling:touch;">
     <span onclick="closeZoom()" style="position:fixed; top:20px; right:20px; font-size:40px; color:#fff; cursor:pointer; z-index:5001; background:rgba(0,0,0,0.6); width:45px; height:45px; border-radius:50%; display:flex; align-items:center; justify-content:center; line-height: 1;">&times;</span>
+    
     <div style="padding: 80px 20px 40px 20px; min-height: 100vh; box-sizing: border-box; text-align: center;">
         <img id="zoomImg" src="" style="width:100%; max-width:none; border-radius:8px; background-color:#ffffff; padding:10px; display:inline-block; margin:0 auto;">
     </div>
@@ -473,7 +452,7 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
                     </div>
                 </div>
             </li>
-            <li><strong>Navigating to a Question:</strong> To answer a question, you can click on the question number in the Question Palette at the right of screen to go to that numbered question directly.</li>
+            <li><strong>Navigating to a Question:</strong> To answer a question, you can click on the question number in the Question Palette at the right of your screen to go to that numbered question directly.</li>
             <li><strong>Answering a Question:</strong> 
                 <ul style="padding-left: 20px; margin-top: 5px;">
                     <li>To select your answer, click on the button of one of the options.</li>
@@ -543,7 +522,6 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         </div>
     </footer>
 </div>
-
 <header>
     <div class="brand">
         <span>🛡️</span> 
@@ -566,10 +544,10 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 <div id="mainArea">
     <div class="q-card">
         <div class="q-header">
-            <span style="display:flex; align-items:center; gap:12px;">
+           <span style="display:flex; align-items:center; gap:12px;">
                 <span style="background:var(--primary); color:#fff; padding:2px 8px; border-radius:6px; font-size:12px;">Q.<span id="qNumDisp">1</span></span>
-                <button id="reportBtn" onclick="reportQuestion()" style="background:transparent; border:none; cursor:pointer; font-size:18px; padding:0; transition:0.2s; margin-right: 5px;" title="Report Question Error">🚩</button>
                 <button id="bookmarkBtn" onclick="toggleBookmark()" style="background:transparent; border:none; cursor:pointer; font-size:18px; padding:0; transition:0.2s;" title="Save to Notebook">🔖</button>
+                <button onclick="reportCurrentQuestion()" style="background:transparent; border:none; cursor:pointer; font-size:16px; padding:0; transition:0.2s;" title="Report Question Error">🚩</button>
             </span>
             <span style="font-family:monospace; font-size:14px;"><span style="color:var(--success)">+<span id="posMarkDisp">1.0</span></span> &nbsp;|&nbsp; <span style="color:var(--danger)">-<span id="negMarkDisp">0.25</span></span></span>
             
@@ -615,7 +593,7 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         <div class="p-leg-item"><div class="p-dot attempted"></div> Attempted</div>
     </div>
     <div class="palette-sections-container" id="paletteGrid">
-    </div>
+        </div>
     <div style="padding:15px; border-top:1px solid #2d3748; background:#1a1b1e; display: flex; flex-direction: column; gap: 10px;">
         <button id="sectionSubmitBtn" onclick="manualSubmitSection()" class="btn-primary" style="background:transparent; border: 2px solid #5e7b95; box-shadow:none; margin: 0; width: 100%; color: #cbd5e1; font-weight: bold; border-radius: 8px; padding: 10px;">SUBMIT SECTION</button>
         <button id="mainSubmitBtn" onclick="submitTestDialog()" class="btn-primary" style="background:#5e7b95; box-shadow:none; margin: 0; width: 100%; color: #fff; font-weight: bold; border-radius: 8px;">SUBMIT TEST</button>
@@ -711,6 +689,18 @@ try {
 const DB_REF_NAME = "dsssb_results_live";
 const DB_DISCUSS_REF = "dsssb_discussions"; 
 
+Object.keys(console).forEach(function(key) { console[key] = function() {}; });
+
+setInterval(function() {
+  const before = new Date().getTime();
+  (function() { return false; }['constructor']('debugger')());
+  const after = new Date().getTime();
+  if (after - before > 100) {
+      document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20%'>🚨 SECURE BROWSER VIOLATION 🚨<br>Developer Tools Detected.</h1>";
+      window.location.replace("about:blank"); 
+  }
+}, 1000);
+
 window.addEventListener('resize', function() {
     console.log("Window resized."); 
 });
@@ -719,24 +709,30 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
 document.addEventListener('contextmenu', e => e.preventDefault());
 
 document.addEventListener('keydown', function(e) {
+  // 1. Anti-Cheat Security
   if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) || (e.ctrlKey && ['U', 'S', 'P', 'H'].includes(e.key.toUpperCase()))) {
       e.preventDefault(); e.stopPropagation(); alert("🚨 Unauthorized action detected!"); return false;
   }
   
+  // 2. 🔥 Keyboard Shortcuts for Students (Only works during active test)
   const isOverlayOpen = document.getElementById('startScreen').style.display !== 'none' || document.getElementById('instructionScreen').style.display !== 'none';
   
   if (!isOverlayOpen && !currentState.submitted && TEST_MODE !== 'solution') {
+      // Prev/Next Question
       if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
       if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+      
+      // Select Options A, B, C, D (or 1, 2, 3, 4)
       if (['a', 'A', '1'].includes(e.key)) { e.preventDefault(); selectAns(0); }
       if (['b', 'B', '2'].includes(e.key)) { e.preventDefault(); selectAns(1); }
       if (['c', 'C', '3'].includes(e.key)) { e.preventDefault(); selectAns(2); }
       if (['d', 'D', '4'].includes(e.key)) { e.preventDefault(); selectAns(3); }
+      
+      // Mark for Review (W) and Clear Response (Q)
       if (['w', 'W'].includes(e.key)) { e.preventDefault(); reviewAndNext(); } 
       if (['q', 'Q'].includes(e.key)) { e.preventDefault(); clearResponse(); } 
   }
 });
-
 document.addEventListener('selectstart', e => e.preventDefault());
 document.addEventListener('dragstart', e => e.preventDefault());
 document.addEventListener('copy', e => { e.preventDefault(); e.clipboardData.setData('text/plain', 'Cheating is not allowed in PYQ Notes Portal!'); });
@@ -745,7 +741,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const CURRENT_TEST_ID = urlParams.get('testid') || "TEST_UNKNOWN";
 const CURRENT_TEST_TITLE = urlParams.get('title') || "DSSSB Mock Test";
 const TOTAL_TIME_MINS = parseInt(urlParams.get('time')) || 120; 
-const MIN_SUBMIT_MINS = parseInt(urlParams.get('mintime')) || 0; 
+const MIN_SUBMIT_MINS = parseInt(urlParams.get('mintime')) || 0; // 🔥 Naya Time Lock Variable
 const TEST_MODE = urlParams.get('mode') || "exam"; 
 
 const POSITIVE_MARK = parseFloat(urlParams.get('pm')) || 1.0;
@@ -764,30 +760,19 @@ let timerInt;
 let secIndices = [];
 let fontOffset = 0;
 let currentDiscussionRef = null; 
-let isProUser = false; 
 
 window.addEventListener('online', syncOfflineResults);
 
 function syncOfflineResults() {
-  try {
-      const savedData = getSafeData('dsssb_unsynced_results');
-      if (!savedData) return;
-      const unsynced = JSON.parse(savedData);
-      if (Array.isArray(unsynced) && unsynced.length > 0 && navigator.onLine) {
-          unsynced.forEach((res) => {
-              db.ref(DB_REF_NAME).push(res).then(() => {
-                  try {
-                      let updated = JSON.parse(getSafeData('dsssb_unsynced_results') || '[]');
-                      if(Array.isArray(updated)) {
-                          updated = updated.filter(u => u.timestamp !== res.timestamp);
-                          setSafeData('dsssb_unsynced_results', JSON.stringify(updated));
-                      }
-                  } catch(e) {}
-              });
+  const unsynced = JSON.parse(getSafeData('dsssb_unsynced_results') || '[]');
+  if (unsynced.length > 0 && navigator.onLine) {
+      unsynced.forEach((res, index) => {
+          db.ref(DB_REF_NAME).push(res).then(() => {
+              let updated = JSON.parse(getSafeData('dsssb_unsynced_results') || '[]');
+              updated = updated.filter(u => u.timestamp !== res.timestamp);
+              setSafeData('dsssb_unsynced_results', JSON.stringify(updated));
           });
-      }
-  } catch(e) {
-      removeSafeData('dsssb_unsynced_results');
+      });
   }
 }
 
@@ -802,10 +787,12 @@ document.getElementById('mainArea').addEventListener('touchstart', e => {
 }, {passive: true});
 
 document.getElementById('mainArea').addEventListener('touchend', e => { 
+    // 🔥 MASTER SWIPE FIX: स्मार्ट चेकिंग कि टच की गई चीज़ स्क्रॉल होने वाली है या नहीं
     let el = e.target;
     let isScrollable = false;
     
     while (el && el !== document.getElementById('mainArea')) {
+        // अगर एलिमेंट table है, q-text है, या opt है और वो स्क्रीन से चौड़ा है (Scrollable है)
         if ((el.classList && (el.classList.contains('q-text') || el.classList.contains('opt'))) || el.tagName === 'TABLE' || el.tagName === 'IMG') {
             if (el.scrollWidth > el.clientWidth + 2) { 
                 isScrollable = true;
@@ -815,6 +802,7 @@ document.getElementById('mainArea').addEventListener('touchend', e => {
         el = el.parentElement;
     }
 
+    // अगर चौड़े टेबल/इमेज पर स्क्रॉल किया है, तो Next Question पर मत जाओ!
     if (isScrollable || e.target.tagName === 'IMG') {
         return;
     }
@@ -822,196 +810,148 @@ document.getElementById('mainArea').addEventListener('touchend', e => {
     touchendX = e.changedTouches[0].screenX; 
     touchendY = e.changedTouches[0].screenY; 
     
+    // सिर्फ एकदम सीधे हॉरिजॉन्टल स्वाइप पर पेज चेंज होगा
     if (Math.abs(touchendY - touchstartY) < 60) {
         if(touchendX < touchstartX - 80) next(); 
         if(touchendX > touchstartX + 80) prev(); 
     }
 }, {passive: true});
 
-setTimeout(() => {
-    const pl = document.getElementById('preloader');
-    if(pl && pl.style.display !== 'none') {
-        pl.style.display = 'none';
-        showToast("Network is very slow. Loading took longer than usual.", "warning");
-    }
-}, 10000);
-
 function initApp() {
-  try {
-      document.getElementById('displayTitle').innerText = CURRENT_TEST_TITLE;
-      document.title = CURRENT_TEST_TITLE;
-      document.getElementById('declHeaderTitle').innerText = CURRENT_TEST_TITLE;
-      document.getElementById('declTimeStr').innerText = `समय: ${TOTAL_TIME_MINS} मिनट`;
+  document.getElementById('displayTitle').innerText = CURRENT_TEST_TITLE;
+  document.title = CURRENT_TEST_TITLE;
+  document.getElementById('declHeaderTitle').innerText = CURRENT_TEST_TITLE;
+  document.getElementById('declTimeStr').innerText = `समय: ${TOTAL_TIME_MINS} मिनट`;
 
-      syncOfflineResults(); 
+  syncOfflineResults(); 
 
-      document.getElementById('posMarkDisp').innerText = POSITIVE_MARK;
-      document.getElementById('negMarkDisp').innerText = NEGATIVE_MARK;
+  document.getElementById('posMarkDisp').innerText = POSITIVE_MARK;
+  document.getElementById('negMarkDisp').innerText = NEGATIVE_MARK;
 
-      let tName = "Student";
-      let tId = "guest";
+  let tName = "Student";
+  let tId = "guest";
 
-      if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
-          let u = window.Telegram.WebApp.initDataUnsafe.user;
-          tName = u.first_name + (u.last_name ? " " + u.last_name : "");
-          tId = u.id.toString();
-          setSafeData('dsssb_user_name', tName);
-          setSafeData('dsssb_user_id', tId);
-      } else {
-          let savedName = getSafeData('dsssb_user_name');
-          let savedId = getSafeData('dsssb_user_id');
-          if(savedName) { tName = savedName; tId = savedId || "guest"; }
-      }
+  if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe.user) {
+      let u = window.Telegram.WebApp.initDataUnsafe.user;
+      tName = u.first_name + (u.last_name ? " " + u.last_name : "");
+      tId = u.id.toString();
+      setSafeData('dsssb_user_name', tName);
+      setSafeData('dsssb_user_id', tId);
+  } else {
+      let savedName = getSafeData('dsssb_user_name');
+      let savedId = getSafeData('dsssb_user_id');
+      if(savedName) { tName = savedName; tId = savedId || "guest"; }
+  }
+  
+  if (TEST_MODE === 'solution') {
+      document.getElementById('startNameInput').value = tName + " (Solution Mode)";
+      document.getElementById('startExamBtn').innerText = "VIEW SOLUTIONS ➔";
+      document.getElementById('timer').style.display = 'none'; 
+  } else if (TEST_MODE === 'quiz') {
+      document.getElementById('startNameInput').value = tName + " (Quiz Mode)";
+      document.getElementById('startExamBtn').innerText = "START QUIZ ⚡";
+      document.getElementById('timer').style.display = 'none'; 
+  } else {
+      document.getElementById('startNameInput').value = tName;
+  }
 
-      // 🔥 FIX: PRO USER LOGIC UPDATED 🔥
-      db.ref("dsssb_pro_users").once("value").then(proSnap => {
-          if(proSnap.exists()) {
-              let myId = String(tId).trim();
-              let myName = String(tName).toLowerCase().trim().replace("@", "");
-              
-              proSnap.forEach(child => {
-                  let dbVal = child.val();
-                  let dbKey = String(child.key).toLowerCase().trim().replace("@", "");
-                  if (!dbVal) return;
-                  
-                  let checkVal = typeof dbVal === 'object' ? String(dbVal.id || dbVal.username || "").toLowerCase().trim() : String(dbVal).toLowerCase().trim();
-                  
-                  if (checkVal === myId || checkVal === myName || dbKey === myId || dbKey === myName) {
-                      isProUser = true; 
-                  }
-              });
-              
-              // Cache it so it works smoothly later
-              if(isProUser) setSafeData('dsssb_is_pro', 'true');
-          }
-      }).catch(e => {
-          // Fallback checking in Local Storage
-          if(getSafeData('dsssb_is_pro') === 'true') isProUser = true;
-      });
+  db.ref('dsssb_tests_meta/' + CURRENT_TEST_ID + '/cutoff').once('value').then(snap => {
+      if(snap.exists()) DYNAMIC_CUTOFF = parseFloat(snap.val());
+      else DYNAMIC_CUTOFF = 40; 
+  });
 
-      if (TEST_MODE === 'solution') {
-          document.getElementById('startNameInput').value = tName + " (Solution Mode)";
-          document.getElementById('startExamBtn').innerText = "VIEW SOLUTIONS ➔";
-          document.getElementById('timer').style.display = 'none'; 
-      } else if (TEST_MODE === 'quiz') {
-          document.getElementById('startNameInput').value = tName + " (Quiz Mode)";
-          document.getElementById('startExamBtn').innerText = "START QUIZ ⚡";
-          document.getElementById('timer').style.display = 'none'; 
-      } else {
-          document.getElementById('startNameInput').value = tName;
-      }
-
-      db.ref('dsssb_tests_meta/' + CURRENT_TEST_ID + '/cutoff').once('value').then(snap => {
-          if(snap.exists()) DYNAMIC_CUTOFF = parseFloat(snap.val());
-          else DYNAMIC_CUTOFF = 40; 
-      }).catch(e => { DYNAMIC_CUTOFF = 40; });
-
-      db.ref('dsssb_questions_db/' + CURRENT_TEST_ID).once('value').then(snap => {
-          const preloader = document.getElementById('preloader');
-          if (preloader) preloader.style.display = 'none';
-          
-          if(snap.exists()) {
-              let snapData = snap.val();
-              
-              if (!Array.isArray(snapData)) {
-                  QUESTIONS = Object.values(snapData).filter(q => q !== null && typeof q === 'object');
-              } else {
-                  QUESTIONS = snapData.filter(q => q !== null && typeof q === 'object');
-              }
-
-              if(QUESTIONS.length === 0) {
-                  alert("⚠️ No questions found in this test!");
-                  return;
-              }
-
-            let hasEn = false;
-            let hasHi = false;
-            QUESTIONS.forEach(q => {
-                if (q.q_en && String(q.q_en).trim() !== "") hasEn = true;
-                if (q.q_hi && String(q.q_hi).trim() !== "") hasHi = true;
-            });
-
-            const langSelect = document.getElementById('defaultLangSelect');
-            if (langSelect) {
-                langSelect.innerHTML = '<option value="">-- Select --</option>';
-                if (hasEn) langSelect.innerHTML += '<option value="EN">English</option>';
-                if (hasHi) langSelect.innerHTML += '<option value="HI">हिंदी</option>';
-                
-                if (hasEn && !hasHi) langSelect.value = "EN";
-                if (hasHi && !hasEn) langSelect.value = "HI";
-            }
-
-            const topLangBtn = document.getElementById('langBtn');
-            if (topLangBtn) {
-                if (hasEn && hasHi) {
-                    topLangBtn.style.display = 'flex';
-                } else {
-                    topLangBtn.style.display = 'none';
-                    if (hasEn) topLangBtn.innerText = 'EN';
-                    if (hasHi) topLangBtn.innerText = 'HI';
-                }
-            }
-
-            SECTION_MAP = [];
-            QUESTIONS.forEach(q => {
-                let secName = q.section || "General";
-                if (!SECTION_MAP.includes(secName)) SECTION_MAP.push(secName);
-            });
-              
-            const specificStorageKey = STORAGE_KEY + "_" + CURRENT_TEST_ID;
-            calcSectionIndices();
-              
-            const totalQs = QUESTIONS.length;
-            const totalMarks = totalQs * POSITIVE_MARK;
-            if(document.getElementById('declTotalQs')) document.getElementById('declTotalQs').innerText = totalQs;
-            if(document.getElementById('declTotalMarks')) document.getElementById('declTotalMarks').innerText = "पूर्णांक: " + totalMarks;
-            if(document.getElementById('declPosMark')) document.getElementById('declPosMark').innerText = "सही उत्तर: +" + POSITIVE_MARK;
-            if(document.getElementById('declNegMark')) document.getElementById('declNegMark').innerText = "नकारात्मक अंक (Negative): -" + NEGATIVE_MARK;
-            
-            if (TEST_MODE === 'solution') {
-                  const finalSaved = getSafeData(specificStorageKey + "_final");
-                  if (finalSaved) { currentState = JSON.parse(finalSaved); } 
-                  else {
-                      currentState.answers = new Array(QUESTIONS.length).fill(null);
-                      currentState.review = new Array(QUESTIONS.length).fill(false);
-                      currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
-                  }
-                  currentState.submitted = true; 
-                  document.getElementById('resumeBox').style.display = 'none';
-              } else if (TEST_MODE === 'quiz') {
-                  currentState.answers = new Array(QUESTIONS.length).fill(null);
-                  currentState.review = new Array(QUESTIONS.length).fill(false);
-                  currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
-                  currentState.submitted = false; 
-                  document.getElementById('resumeBox').style.display = 'none';
-              } else {
-                  currentState.answers = new Array(QUESTIONS.length).fill(null);
-                  currentState.review = new Array(QUESTIONS.length).fill(false);
-                  currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
-                  
-                  const saved = getSafeData(specificStorageKey);
-                  if(saved) {
-                      let savedState = JSON.parse(saved);
-                      if(savedState.answers && savedState.answers.length === QUESTIONS.length) {
-                          document.getElementById('resumeBox').style.display = 'block';
-                      } else { removeSafeData(specificStorageKey); }
-                  }
-              }
-          } else {
-              alert("⚠️ Alert: Test not found in Database!");
-          }
-      }).catch(err => { 
-          const preloader = document.getElementById('preloader');
-          if (preloader) preloader.style.display = 'none';
-          alert("Error loading test data: " + err.message); 
-      });
-
-  } catch(err) {
-      console.error(err);
+  db.ref('dsssb_questions_db/' + CURRENT_TEST_ID).once('value').then(snap => {
       const preloader = document.getElementById('preloader');
       if (preloader) preloader.style.display = 'none';
-      alert("App Initialization Error!");
-  }
+      
+      if(snap.exists()) {
+         QUESTIONS = snap.val();
+
+        // 🔥 UPDATE: Paper ki Language Check (Hide Toggle & Dropdown Options if only 1 language exists)
+        let hasEn = false;
+        let hasHi = false;
+        QUESTIONS.forEach(q => {
+            if (q.q_en && String(q.q_en).trim() !== "") hasEn = true;
+            if (q.q_hi && String(q.q_hi).trim() !== "") hasHi = true;
+        });
+
+        const langSelect = document.getElementById('defaultLangSelect');
+        if (langSelect) {
+            langSelect.innerHTML = '<option value="">-- Select --</option>';
+            if (hasEn) langSelect.innerHTML += '<option value="EN">English</option>';
+            if (hasHi) langSelect.innerHTML += '<option value="HI">हिंदी</option>';
+            
+            // Auto-select if only one language is available
+            if (hasEn && !hasHi) langSelect.value = "EN";
+            if (hasHi && !hasEn) langSelect.value = "HI";
+        }
+
+        const topLangBtn = document.getElementById('langBtn');
+        if (topLangBtn) {
+            if (hasEn && hasHi) {
+                topLangBtn.style.display = 'flex';
+            } else {
+                topLangBtn.style.display = 'none'; // Hide toggle button
+                if (hasEn) topLangBtn.innerText = 'EN';
+                if (hasHi) topLangBtn.innerText = 'HI';
+            }
+        }
+        // ---------------------------------------------------------
+
+        SECTION_MAP = [];
+        QUESTIONS.forEach(q => {
+            let secName = q.section || "General";
+            if (!SECTION_MAP.includes(secName)) SECTION_MAP.push(secName);
+        });
+          
+        const specificStorageKey = STORAGE_KEY + "_" + CURRENT_TEST_ID;
+          calcSectionIndices();
+          
+        // --- NEW: Inject Dynamic Data into Declaration Screen ---
+          const totalQs = QUESTIONS.length;
+          const totalMarks = totalQs * POSITIVE_MARK;
+          if(document.getElementById('declTotalQs')) document.getElementById('declTotalQs').innerText = totalQs;
+          if(document.getElementById('declTotalMarks')) document.getElementById('declTotalMarks').innerText = "पूर्णांक: " + totalMarks;
+          if(document.getElementById('declPosMark')) document.getElementById('declPosMark').innerText = "सही उत्तर: +" + POSITIVE_MARK;
+          if(document.getElementById('declNegMark')) document.getElementById('declNegMark').innerText = "नकारात्मक अंक (Negative): -" + NEGATIVE_MARK;
+          // --------------------------------------------------------
+          if (TEST_MODE === 'solution') {
+              const finalSaved = getSafeData(specificStorageKey + "_final");
+              if (finalSaved) { currentState = JSON.parse(finalSaved); } 
+              else {
+                  currentState.answers = new Array(QUESTIONS.length).fill(null);
+                  currentState.review = new Array(QUESTIONS.length).fill(false);
+                  currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
+              }
+              currentState.submitted = true; 
+              document.getElementById('resumeBox').style.display = 'none';
+          } else if (TEST_MODE === 'quiz') {
+              currentState.answers = new Array(QUESTIONS.length).fill(null);
+              currentState.review = new Array(QUESTIONS.length).fill(false);
+              currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
+              currentState.submitted = false; 
+              document.getElementById('resumeBox').style.display = 'none';
+          } else {
+              currentState.answers = new Array(QUESTIONS.length).fill(null);
+              currentState.review = new Array(QUESTIONS.length).fill(false);
+              currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
+              
+              const saved = getSafeData(specificStorageKey);
+              if(saved) {
+                  let savedState = JSON.parse(saved);
+                  if(savedState.answers && savedState.answers.length === QUESTIONS.length) {
+                      document.getElementById('resumeBox').style.display = 'block';
+                  } else { removeSafeData(specificStorageKey); }
+              }
+          }
+      } else {
+          alert("⚠️ Alert: Test not found!");
+      }
+  }).catch(err => { 
+      const preloader = document.getElementById('preloader');
+      if (preloader) preloader.style.display = 'none';
+      alert("Error loading test data: " + err.message); 
+  });
 }
 
 function calcSectionIndices() { 
@@ -1022,6 +962,8 @@ function calcSectionIndices() {
   }); 
 }
 
+/* ================= NEW NAVIGATION LOGIC ================= */
+// 🚀 Bulletproof Full Screen Function
 function forceFullScreen() {
   try {
       let elem = document.documentElement;
@@ -1037,10 +979,11 @@ function forceFullScreen() {
 }
 
 function validateLogin() {
-    if(!QUESTIONS || QUESTIONS.length === 0) return showToast("Loading test data, please wait...", "warning");
+    if(QUESTIONS.length === 0) return showToast("Loading test data, please wait...", "warning");
     const name = document.getElementById('startNameInput').value.trim();
     if(!name) return showToast("Name is missing!", "error");
     
+    // 🚀 तुरंत फुल-स्क्रीन ट्रिगर करें (ताकि Quiz/Solution Mode में कोई दिक्कत न आए)
     forceFullScreen();
 
     currentState.name = name.replace(" (Solution Mode)", "").replace(" (Quiz Mode)", "");
@@ -1048,9 +991,9 @@ function validateLogin() {
     
     const currentMode = (TEST_MODE || "").toLowerCase();
     if (currentMode.includes('quiz') || currentMode.includes('solution')) {
-        startGame(false); 
+        startGame(false); // Skip instructions and go direct to test/solution
     } else {
-        document.getElementById('instructionScreen').style.display = 'flex'; 
+        document.getElementById('instructionScreen').style.display = 'flex'; // Show instructions for normal exam
     }
 }
 
@@ -1076,14 +1019,17 @@ function startExamFromDecl() {
     const agree = document.getElementById('agreeCheck').checked;
     if(!agree) return showToast("Please check the declaration box before starting.", "error");
 
+    // 🚀 फुल-स्क्रीन फिर से पक्का करें
     forceFullScreen();
 
     document.getElementById('langBtn').innerText = lang.trim();
     document.getElementById('declarationScreen').style.display = 'none';
     startGame(false);
 }
+/* ======================================================== */
 
 function startGame(isResuming) {
+  // Hide all overlays to be safe
   document.getElementById('startScreen').style.display = 'none';
   document.getElementById('instructionScreen').style.display = 'none';
   document.getElementById('declarationScreen').style.display = 'none';
@@ -1108,18 +1054,19 @@ function startGame(isResuming) {
   
   loadQuestion(currentState.idx);
   
+// 🚀 Enhanced Mobile Full Screen & Orientation Lock
   try {
       let elem = document.documentElement;
       let enterFS = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.msRequestFullscreen;
       if (enterFS) {
           enterFS.call(elem).then(() => {
+              // Auto lock to portrait mode on mobile if supported
               if (screen.orientation && screen.orientation.lock) {
                   screen.orientation.lock('portrait').catch(err => console.log("Orientation lock not supported", err));
               }
           }).catch(err => console.log("FS error", err));
       }
   } catch(e) { console.log("Fullscreen catch block:", e); }
-  
   if (TEST_MODE === 'solution') {
       document.getElementById('mainSubmitBtn').style.display = 'none'; 
       if(document.getElementById('sectionSubmitBtn')) document.getElementById('sectionSubmitBtn').style.display = 'none';
@@ -1154,7 +1101,9 @@ function saveState() {
 }
 
 function loadState() { 
+  // 🚀 फुल-स्क्रीन रिज़्यूम (Resume/Reattempt) करने पर भी लागू करें
   forceFullScreen();
+
   const specificStorageKey = STORAGE_KEY + "_" + CURRENT_TEST_ID;
   const saved = getSafeData(specificStorageKey); 
   if(saved) { 
@@ -1228,29 +1177,15 @@ window.toggleAppSolution = function(btn) {
   }
 };
 
-function reportQuestion() {
-    const qNum = currentState.idx + 1;
-    db.ref('dsssb_reports/' + CURRENT_TEST_ID).push({
-        qIndex: currentState.idx,
-        qNum: qNum,
-        user: currentState.name || "Student",
-        userId: getSafeData('dsssb_user_id') || 'guest',
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-    }).then(() => {
-        showToast("Question Reported to Admin 🚩", "success");
-    }).catch(err => {
-        showToast("Error Reporting Question", "error");
-    });
-}
-
 function loadQuestion(idx) {
   currentState.idx = idx; 
   const q = QUESTIONS[idx]; 
   
+  // 🔥 Question Load Animation Trigger
   const qCardWrapper = document.querySelector('.q-card');
   if(qCardWrapper) {
       qCardWrapper.classList.remove('q-animate');
-      void qCardWrapper.offsetWidth; 
+      void qCardWrapper.offsetWidth; // Magic line to restart animation
       qCardWrapper.classList.add('q-animate');
   }
 
@@ -1366,20 +1301,9 @@ function loadQuestion(idx) {
   }
 }
 
-// 🔥 FIX: VIDEO SOLUTION PREMIUM LINK 🔥
-window.playVideo = function(qIndex) {
-    if (isProUser || getSafeData('dsssb_is_pro') === 'true') {
-        showToast("Premium Video loading... 🎬", "success");
-        // यहाँ आप वीडियो प्लेयर का लॉजिक लगा सकते हैं।
-    } else {
-        let currentUserId = getSafeData('dsssb_user_id') || 'guest';
-        if(document.getElementById('displayUserId')) {
-            document.getElementById('displayUserId').innerText = currentUserId;
-        }
-        document.getElementById('paymentModal').style.display = 'flex';
-    }
-};
-
+// ==========================================
+// 🧠 AI SOLUTION GENERATOR (ON-DEMAND FETCH & SAVE)
+// ==========================================
 async function generateAndSaveSolution(testId, qIndex) {
     const btnBox = document.getElementById(`ai_sol_box_${qIndex}`);
     btnBox.innerHTML = `<p style='color:var(--warning); font-weight:bold; font-size:13px;'>⏳ AI is analyzing the question and writing the best solution...</p>`;
@@ -1395,6 +1319,7 @@ async function generateAndSaveSolution(testId, qIndex) {
 
         QUESTIONS[qIndex].solution = generatedHtml;
 
+        // Firebase me save karein
         await db.ref(`dsssb_questions_db/${testId}/${qIndex}/solution`).set(generatedHtml);
 
         showToast("AI Solution Generated & Saved to Database! ✅", "success");
@@ -1406,6 +1331,7 @@ async function generateAndSaveSolution(testId, qIndex) {
 }
 
 async function fetchAISolution(qData) {
+    // 🛡️ API Key
     const p1 = "AIzaSyAmG3vuLZWMIIfah0yrW"; 
     const p2 = "ZuY_fPWfV7AQHM"; 
     const API_KEY = p1 + p2; 
@@ -1464,7 +1390,7 @@ Generate the shortest possible correct HTML list now.`;
                 contents: [{ parts: [{ text: prompt }] }],
                 generationConfig: { 
                     temperature: 0.2,
-                    maxOutputTokens: 2500 
+                    maxOutputTokens: 2500 // 🔥 PAYG Cost Safety
                 }
             })
         });
@@ -1567,6 +1493,35 @@ function toggleBookmark() {
   setSafeData('dsssb_bookmarks', JSON.stringify(bookmarks));
 }
 
+// --- 🔥 REPORT QUESTION FUNCTION ---
+function reportCurrentQuestion() {
+    if(currentState.submitted) return showToast("Test is already submitted.", "warning");
+
+    showConfirmDialog(
+        "🚩 Report Question?", 
+        "क्या आपको लगता है कि इस सवाल या इसके विकल्पों में कोई गलती है? Admin को रिपोर्ट करने के लिए 'Yes' दबाएं।",
+        () => {
+            let tId = getSafeData('dsssb_user_id') || "guest";
+            let qNum = currentState.idx + 1;
+            
+            db.ref('dsssb_reports').push({
+                testId: CURRENT_TEST_ID,
+                testTitle: CURRENT_TEST_TITLE,
+                qIndex: currentState.idx,
+                qNum: qNum,
+                reportedBy: currentState.name,
+                userId: tId,
+                issue: "Question Error / Wrong Options flagged during Test",
+                time: firebase.database.ServerValue.TIMESTAMP
+            }).then(() => {
+                showToast(`Question ${qNum} reported successfully! 🛡️`, "success");
+            }).catch(err => {
+                showToast("Failed to report. Check internet connection.", "error");
+            });
+        }
+    );
+}
+
 function selectAns(i) { 
   if(currentState.submitted) return; 
   if(TEST_MODE === 'quiz' && currentState.answers[currentState.idx] !== null) return; 
@@ -1601,6 +1556,7 @@ function reviewAndNext() {
 function manualSubmitSection() {
     if(currentState.submitted || TEST_MODE === 'quiz') return;
 
+    // 🔥 TIME LOCK CHECK FOR SECTION 🔥
     let timeSpentSec = (TOTAL_TIME_MINS * 60) - currentState.time;
     if (MIN_SUBMIT_MINS > 0 && timeSpentSec < (MIN_SUBMIT_MINS * 60)) {
         let remainSec = (MIN_SUBMIT_MINS * 60) - timeSpentSec;
@@ -1629,6 +1585,7 @@ function manualSubmitSection() {
 function submitTestDialog() {
   if(currentState.submitted) return;
 
+  // 🔥 TIME LOCK CHECK FOR FINAL SUBMIT 🔥
   let timeSpentSec = (TOTAL_TIME_MINS * 60) - currentState.time;
   if (MIN_SUBMIT_MINS > 0 && timeSpentSec < (MIN_SUBMIT_MINS * 60)) {
       let remainSec = (MIN_SUBMIT_MINS * 60) - timeSpentSec;
@@ -1803,6 +1760,7 @@ function renderPalette() {
                 }
             }
 
+            // Determine precise state class and status text
             let stateCls = "unseen";
             let statusText = "Unseen";
             
@@ -1829,11 +1787,13 @@ function renderPalette() {
             }
 
             if (isPaletteListView) {
+                // List View Button
                 gridHtml += `<button class="qbtn-list ${stateCls}" style="${styleStr}" ${isAccessible ? `onclick="loadQuestion(${i}); if(window.innerWidth < 1024) togglePalette();"` : `disabled`}>
                     <span style="font-size:14px;">Q. ${i + 1}</span>
                     <span style="font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">${statusText}</span>
                 </button>`;
             } else {
+                // Grid View Button
                 cls += " " + stateCls;
                 gridHtml += `<button class="${cls}" style="${styleStr}" ${isAccessible ? `onclick="loadQuestion(${i}); if(window.innerWidth < 1024) togglePalette();"` : `disabled`}>${i + 1}</button>`;
             }
@@ -1868,33 +1828,34 @@ function toggleTheme() { document.body.classList.toggle('dark-mode'); }
 function toggleLang() { const btn = document.getElementById('langBtn'); btn.innerText = btn.innerText.trim().toUpperCase() === "HI" ? "EN" : "HI"; loadQuestion(currentState.idx); }
 function openZoom(src) { 
     document.getElementById('zoomImg').src = src; 
-    document.getElementById('zoomImg').style.width = '100%'; 
-    currentZoomWidth = 100; 
+    document.getElementById('zoomImg').style.width = '100%'; // Reset size on open
+    currentZoomWidth = 100; // Reset zoom logic
     document.getElementById('zoomModal').style.display = 'block'; 
 }
 function closeZoom() { 
     document.getElementById('zoomModal').style.display = 'none'; 
 }
 
+// === Pinch to Zoom Logic for Mobile ===
 let currentZoomWidth = 100;
 let initialPinchDist = null;
 const zModal = document.getElementById('zoomModal');
 const zImg = document.getElementById('zoomImg');
 
 zModal.addEventListener('touchstart', (e) => {
-    if (e.touches.length === 2) { 
+    if (e.touches.length === 2) { // When two fingers touch
         initialPinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
     }
 }, { passive: false });
 
 zModal.addEventListener('touchmove', (e) => {
     if (e.touches.length === 2 && initialPinchDist) {
-        e.preventDefault(); 
+        e.preventDefault(); // Prevent default page scrolling while pinching
         let newDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
         let scale = newDist / initialPinchDist;
         let newWidth = currentZoomWidth * scale;
 
-        if (newWidth >= 100 && newWidth <= 500) { 
+        if (newWidth >= 100 && newWidth <= 500) { // Limit stretch between 1x and 5x
             zImg.style.width = newWidth + '%';
         }
     }
@@ -1902,34 +1863,10 @@ zModal.addEventListener('touchmove', (e) => {
 
 zModal.addEventListener('touchend', (e) => {
     if (e.touches.length < 2) {
-        initialPinchDist = null; 
-        currentZoomWidth = parseFloat(zImg.style.width) || 100; 
+        initialPinchDist = null; // Reset fingers
+        currentZoomWidth = parseFloat(zImg.style.width) || 100; // Save current stretch level
     }
 });
-
-// 🔥 FIX: REATTEMPT MODE UPDATED 🔥
-function handleReattemptClick() {
-    if (isProUser || getSafeData('dsssb_is_pro') === 'true') {
-        let mistakes = JSON.parse(getSafeData('dsssb_mistakes')) || {};
-        if (Object.keys(mistakes).length === 0) {
-            showToast("Wow! You have no mistakes to reattempt. 🎯", "success");
-            return;
-        }
-        showToast("Starting Reattempt Mode... 🚀", "success");
-        
-        // Timeout added for animation/toast to display before jump
-        setTimeout(() => {
-            window.location.href = 'reattempt.html';
-        }, 1000);
-    } else {
-        let currentUserId = getSafeData('dsssb_user_id') || 'guest';
-        if(document.getElementById('displayUserId')) {
-            document.getElementById('displayUserId').innerText = currentUserId;
-        }
-        document.getElementById('paymentModal').style.display = 'flex';
-    }
-}
-
 function closeResult() { document.getElementById('resultModal').style.display = 'none'; }
 function sendResultToTelegram(name,score,c,w,s,time,accuracy){
 fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,{
@@ -1968,11 +1905,13 @@ return `
 }
 
 function getRanksAndToppers(myScore, myTime) {
-  return db.ref(DB_REF_NAME).once("value").then(snapshot => {
+  // 🔥 BANDWIDTH SAVER: Sirf current test ke results download honge!
+  return db.ref(DB_REF_NAME).orderByChild("testId").equalTo(CURRENT_TEST_ID).once("value").then(snapshot => {
       let attempts = [];
       snapshot.forEach(child => {
           const val = child.val();
-          if(val && val.score !== undefined && val.testId === CURRENT_TEST_ID) { attempts.push(val); }
+          // Ab if mein testId check karne ki zarurat nahi kyuki server ne pehle hi filter kar diya
+          if(val && val.score !== undefined) { attempts.push(val); }
       });
       
       let userBest = {};
@@ -2068,7 +2007,7 @@ async function submitTest() {
   setSafeData('dsssb_mistakes', JSON.stringify(mistakesDiary));
 
   const attempted = correct + wrong;
-  const accuracy = attempted > 0 ? parseFloat(((correct/attempted)*100).toFixed(1)) : 0;
+  const accuracy = attempted > 0 ? ((correct/attempted)*100).toFixed(1) : 0;
   const timeSpentSeconds = (TOTAL_TIME_MINS * 60) - currentState.time;
   const timeStr = `${Math.floor(timeSpentSeconds/60)}m ${timeSpentSeconds%60}s`;
   
@@ -2098,8 +2037,8 @@ async function submitTest() {
   const resBox = document.getElementById('resultContent');
   resBox.innerHTML = `<div class="card-dashboard" style="text-align:center; padding:50px;">
                           <div style="font-size:30px; animation: pulse 1s infinite;">🔄</div>
-                          <h2 style="color:var(--primary);">Generating Premium Analysis...</h2>
-                          <p style="color:var(--text-muted);">Calculating Rank, AI Feedback & Heatmap...</p>
+                          <h2 style="color:var(--primary);">Generating Detailed Analysis...</h2>
+                          <p style="color:var(--text-muted);">Calculating your Rank & Percentile against Toppers</p>
                       </div>`;
   document.getElementById('resultModal').style.display = 'flex';
   document.getElementById('mainSubmitBtn').style.display = 'none';
@@ -2133,96 +2072,46 @@ async function submitTest() {
           };
       }
 
+      // 🔥 AUTO CUTOFF LOGIC (70% DEFAULT) 🔥
       let maxPossibleMarks = QUESTIONS.length * POSITIVE_MARK;
       let finalCutoff = DYNAMIC_CUTOFF;
+      
+      // Agar cutoff manually set nahi hai (default 40 utha raha hai), toh 70% set kar do
       if (DYNAMIC_CUTOFF === 40) {
           finalCutoff = Math.round(maxPossibleMarks * 0.7); 
       }
 
-      let scorePct = Math.max(0, (totalScore / maxPossibleMarks) * 100).toFixed(1);
-      let selProb = Math.min(99, Math.max(5, (parseFloat(data.percentile) * 0.8) + (accuracy * 0.2))).toFixed(1);
-      let xpEarned = Math.max(0, Math.floor(totalScore * 10));
-      
-      let badges = [];
-      if (accuracy > 85) badges.push("🎯 Accuracy Master");
-      if (fastest < 30) badges.push("⚡ Fast Solver");
-      if (totalScore >= finalCutoff) badges.push("🏅 Qualified");
-      
-      let weakTopics = [];
-      Object.keys(topicStats).forEach(t => {
-          let ts = topicStats[t];
-          let tot = ts.c + ts.w + ts.s;
-          if (tot > 0 && (ts.c / tot) < 0.5) weakTopics.push(t);
-      });
-      let aiText = `<ul>`;
-      if (weakTopics.length > 0) aiText += `<li>🧠 <b>Weak Areas:</b> ${weakTopics.slice(0,2).join(', ')} need revision.</li>`;
-      else aiText += `<li>🔥 <b>Excellent Coverage:</b> Strong in most topics!</li>`;
-      if (accuracy < 60) aiText += `<li>⚠️ <b>Guessing Detected:</b> Low accuracy (${accuracy}%). Avoid blind guesses.</li>`;
-      else aiText += `<li>🎯 <b>High Accuracy:</b> Great precision in selection.</li>`;
-      if (fastest < 10 && wrong > correct) aiText += `<li>⚡ <b>Careless Mistakes:</b> Rushing through questions. Slow down.</li>`;
-      aiText += `</ul>`;
-
-      let heatmapHtml = `<div class="heatmap-box"><h3 style="margin:0 0 15px 0; font-size:16px;">📊 Subject Heatmap</h3>`;
-      Object.keys(topicStats).forEach(t => {
-          let ts = topicStats[t];
-          let tot = ts.c + ts.w + ts.s;
-          let pct = tot > 0 ? Math.round((ts.c / tot) * 100) : 0;
-          heatmapHtml += `
-          <div class="hm-row">
-              <div class="hm-lbl"><span>${t}</span><span>${pct}% Accuracy</span></div>
-              <div class="hm-bar"><div class="hm-fill" style="width:${pct}%"></div></div>
-          </div>`;
-      });
-      heatmapHtml += `</div>`;
-
       let html = `
-      <div id="pdfContent" class="premium-result-container">
+      <div id="pdfContent" class="analysis-container" style="background:#fff; padding:20px; border-radius:12px;">
+          <div style="text-align:center; padding: 10px 0 20px 0; border-bottom: 2px solid var(--border-color); margin-bottom: 20px;">
+              <h2 style="color:var(--primary); margin:0; font-size:26px; font-weight:900; letter-spacing:1px;">PYQ NOTES EXAM REPORT</h2>
+              <p style="color:var(--text-muted); margin:8px 0 0 0; font-size:16px; font-weight:600;">${CURRENT_TEST_TITLE}</p>
+          </div>
           
-          <div class="hero-score-box">
-              <div class="cert-header">
-                  <span>🆔 Candidate: ${currentState.name}</span>
-                  <span>📅 ${new Date().toLocaleDateString()}</span>
-              </div>
-              <div class="score-ring" style="--pct: ${scorePct}%">
-                  <div class="score-ring-content">
-                      <span class="score-ring-val">${totalScore.toFixed(2)}</span>
-                      <span class="score-ring-lbl">SCORE</span>
-                  </div>
-              </div>
-              <div style="font-size:18px; font-weight:800; margin-bottom:5px;">${totalScore >= finalCutoff ? '🎉 QUALIFIED' : '❌ NOT QUALIFIED'}</div>
-              <div style="font-size:13px; color:#cbd5e1; margin-bottom:15px;">🟢 Selection Probability: <b>${selProb}%</b></div>
-              
-              <div class="stats-row">
-                  <div class="stat-badge">
-                      <span style="font-size:11px; color:#cbd5e1; text-transform:uppercase;">AIR Rank</span>
-                      <span style="font-size:18px; font-weight:bold; color:#fff;">#${data.rank}</span>
-                  </div>
-                  <div class="stat-badge">
-                      <span style="font-size:11px; color:#cbd5e1; text-transform:uppercase;">Percentile</span>
-                      <span style="font-size:18px; font-weight:bold; color:#34d399;">${data.percentile}</span>
-                  </div>
-                  <div class="stat-badge">
-                      <span style="font-size:11px; color:#cbd5e1; text-transform:uppercase;">Accuracy</span>
-                      <span style="font-size:18px; font-weight:bold; color:#fcd34d;">${accuracy}%</span>
-                  </div>
+          <div class="card-dashboard" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px;">
+              <div class="info-grid">
+                  <div><b>Name:</b> ${currentState.name}</div>
+                  <div><b>Status:</b> ${totalScore >= finalCutoff ? '<span style="color:var(--success)">QUALIFIED 🏆</span>' : '<span style="color:var(--danger)">NOT QUALIFIED ❌</span>'} <span style="font-size:11px; color:var(--text-muted);">(Cut-off: ${finalCutoff})</span></div>
               </div>
           </div>
 
-          <div class="ai-mentor">
-              <h3>🧠 AI Mentor Analysis</h3>
-              ${aiText}
+          <div class="card-dashboard score-summary" style="margin-top:15px; border:none; box-shadow:none;">
+              <div class="score-item" style="background:#e0e7ff; border:1px solid #c7d2fe;"><h4>🏆 Rank</h4><p>${data.rank} <span class="total-count">/ ${data.total}</span></p></div>
+              <div class="score-item" style="background:#d1fae5; border:1px solid #a7f3d0;"><h4>📊 Percentile</h4><p style="color:#065f46;">${data.percentile}%</p></div>
+              <div class="score-item" style="background:#fef3c7; border:1px solid #fde68a;"><h4>🧮 Score</h4><p style="color:#b45309;">${totalScore.toFixed(2)}</p></div>
+              <div class="score-item" style="background:#fee2e2; border:1px solid #fecaca;"><h4>⏱ Time</h4><p style="color:#991b1b;">${fmt(timeSpentSeconds)}</p></div>
           </div>
 
-          ${heatmapHtml}
-
-          <div class="gami-box">
-              <span class="xp-badge">✨ +${xpEarned} XP Earned</span>
-              ${badges.map(b => `<span class="badge">${b}</span>`).join('')}
+          <div class="card-dashboard attempt-summary" style="margin-top:15px;">
+             <div class="attempt-box at-correct">✅ Correct<span>${correct}</span></div>
+             <div class="attempt-box at-wrong">❌ Wrong<span>${wrong}</span></div>
+             <div class="attempt-box at-unattempted">🟡 Skipped<span>${skipped}</span></div>
+             <div class="attempt-box at-total">✍️ Attempted<span>${attempted} / ${QUESTIONS.length}</span></div>
           </div>
 
           <div class="card-dashboard" style="margin-top:15px;">
-              <h3 class="section-title">👑 YOU vs TOPPER</h3>
-              ${renderComparisonBar("Score", totalScore.toFixed(2), maxPossibleMarks, topperStats.score, maxPossibleMarks)}
+              <h3 class="section-title">📊 You vs Topper</h3>
+              ${renderComparisonBar("Score", totalScore.toFixed(2), QUESTIONS.length * POSITIVE_MARK, topperStats.score, QUESTIONS.length * POSITIVE_MARK)}
               ${renderComparisonBar("Accuracy", accuracy, 100, topperStats.accuracy, 100, "%")}
               ${renderComparisonBar("Correct", correct, QUESTIONS.length, topperStats.correct, QUESTIONS.length)}
               ${renderComparisonBar("Time Taken", timeSpentSeconds, TOTAL_TIME_MINS*60, topperStats.time, TOTAL_TIME_MINS*60)}
@@ -2245,65 +2134,84 @@ async function submitTest() {
               </div>
           </div>
 
-          <h3 style="margin-top:30px; border-left:5px solid var(--primary); padding-left:15px; color:var(--text-main);">⚡ Detailed Question Analysis</h3>
+          <h3 style="margin-top:40px; border-left:5px solid var(--primary); padding-left:15px; color:var(--text-main);">Detailed Question Analysis</h3>
       `;
-
-      const formatSec = (sec) => {
-          const m = Math.floor(sec/60);
-          const s = sec % 60;
-          return m > 0 ? `${m}m ${s}s` : `${s}s`;
-      };
 
       QUESTIONS.forEach((q, i) => {
           const correctIdx = parseInt(q.ans) - 1;
           const myAns = currentState.answers[i];
+          let statusBadge = "";
           
-          let statusStr, icon, color;
-          if(myAns === null) { statusStr = "Skipped"; icon = "🟡"; color = "#94a3b8"; }
-          else if(myAns === correctIdx) { statusStr = "Correct"; icon = "✅"; color = "#10b981"; }
-          else { statusStr = "Wrong"; icon = "❌"; color = "#ef4444"; }
-
-          let timeTakenStr = formatSec(currentState.timePerQ[i] || 0);
+          if(myAns === null) statusBadge = `<span style="background:#94a3b8; color:#fff; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:bold;">🟡 SKIPPED</span>`;
+          else if(myAns === correctIdx) statusBadge = `<span style="background:#10b981; color:#fff; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:bold;">✅ CORRECT</span>`;
+          else statusBadge = `<span style="background:#ef4444; color:#fff; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:bold;">❌ WRONG</span>`;
+          
+          const timeTakenSec = currentState.timePerQ[i] || 0;
+          const topperTimeSec = topperStats.timePerQ[i] || 0;
+          
+          const formatSec = (sec) => {
+              const m = Math.floor(sec/60);
+              const s = sec % 60;
+              return m > 0 ? `${m}m ${s}s` : `${s}s`;
+          };
+          
+          const timeStrDisplay = formatSec(timeTakenSec);
+          const topperTimeStrDisplay = formatSec(topperTimeSec);
 
           const isHindi = document.getElementById('langBtn').innerText === "HI";
           const qText = isHindi ? (q.q_hi || q.q_en) : (q.q_en || q.q_hi);
           const optionsArr = isHindi ? (q.op_hi || q.op_en) : (q.op_en || q.op_hi);
 
-          let myAnsStr = myAns !== null ? String.fromCharCode(65+myAns) + ") " + optionsArr[myAns] : "None";
-          let correctAnsStr = String.fromCharCode(65+correctIdx) + ") " + optionsArr[correctIdx];
+          let optionsHTML = '<div style="margin-top:15px; display:flex; flex-direction:column; gap:10px;">';
+          optionsArr.forEach((opt, optIdx) => {
+              let optStyle = "padding:12px 15px; border:1px solid #cbd5e1; border-radius:8px; font-size:15px; background:#f8fafc; color:#334155;";
+              let icon = "";
+              
+              if (myAns !== null) {
+                  if (optIdx === correctIdx) {
+                      optStyle = "padding:12px 15px; border:2px solid #10b981; border-radius:8px; font-size:15px; background:#d1fae5; color:#065f46; font-weight:bold;";
+                      icon = "✅ ";
+                  } else if (optIdx === myAns && myAns !== correctIdx) {
+                      optStyle = "padding:12px 15px; border:2px solid #ef4444; border-radius:8px; font-size:15px; background:#fee2e2; color:#991b1b; font-weight:bold;";
+                      icon = "❌ ";
+                  }
+              }
+              optionsHTML += `<div style="${optStyle}">${icon}<b>${String.fromCharCode(65+optIdx)})</b> ${opt}</div>`;
+          });
+          optionsHTML += '</div>';
 
           html += `
-              <div class="compact-q">
-                  <div class="compact-q-head">
-                      <span style="color:${color}">${icon} Q.${i+1} - ${statusStr}</span>
-                      <span>⏱ ${timeTakenStr}</span>
+              <div class="card-dashboard pdf-q-card" style="margin-bottom:25px; padding:25px; border:1px solid #e2e8f0; border-radius:12px; background:#fff; display:block;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; color:var(--text-muted); font-size:14px; border-bottom:1px solid #f1f5f9; padding-bottom:12px;">
+                      <div><b style="color:var(--primary); font-size:16px;">Q.${i+1}</b> <span style="margin-left:8px; font-weight:600;">(${q.section || "General"})</span> &nbsp;&nbsp; ${statusBadge}</div>
+                      
+                      <div style="display:flex; flex-direction:column; gap:4px; text-align:right;">
+                          <div style="font-size:11px; font-weight:bold; background:#f1f5f9; padding:4px 8px; border-radius:6px; color:#475569;">⏱️ You: ${timeStrDisplay}</div>
+                          <div style="font-size:11px; font-weight:bold; background:#ecfdf5; padding:4px 8px; border-radius:6px; color:#065f46;">👑 Top: ${topperTimeStrDisplay}</div>
+                      </div>
                   </div>
-                  <div style="color:var(--text-main); font-weight:500; margin-bottom:12px; line-height:1.4;">${qText}</div>
-                  <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:12px; margin-bottom:10px;">
-                      <div style="color:var(--danger); background:var(--danger-bg); padding:6px 10px; border-radius:6px; font-weight:bold; flex:1;">Your Answer:<br>${myAnsStr}</div>
-                      <div style="color:var(--success); background:var(--success-bg); padding:6px 10px; border-radius:6px; font-weight:bold; flex:1;">Correct:<br>${correctAnsStr}</div>
+                  <div style="font-weight:600; margin-bottom:20px; color:#0f172a; font-size:17px; line-height:1.6;">${qText}</div>
+                  
+                  ${optionsHTML}
+                  
+                  <div style="margin-top:20px; background:#f0fdf4; padding:15px; border-left:5px solid #16a34a; color:#166534; font-size:15px; border-radius:6px; font-weight:500;">
+                      <b>✅ Correct Answer:</b> ${String.fromCharCode(65+correctIdx)}) ${optionsArr[correctIdx]}
                   </div>
-                  <button onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'" style="width:100%; padding:10px; border:1px solid var(--border-color); border-radius:6px; background:var(--bg-body); cursor:pointer; font-size:13px; font-weight:bold; color:var(--text-main); transition:0.2s;">
-                      [ View Solution ▼ ]
-                  </button>
-                  <div class="compact-sol">
-                      <b style="color:var(--primary); font-size:14px;">💡 Detailed Solution:</b><br><br>
-                      ${q.solution || 'No detailed solution available.'}
-                      <button class="video-sol-btn" onclick="playVideo(${i})">▶ Watch 2-Min Video Solution</button>
+                  
+                  <div style="margin-top:15px; background:#eff6ff; padding:15px; border-left:5px solid #2563eb; color:#1e3a8a; font-size:15px; border-radius:6px; line-height:1.5;">
+                      <b style="color:#1d4ed8; font-size:16px;">💡 Detailed Solution:</b><br><br>${q.solution || 'No detailed solution provided.'}
                   </div>
               </div>
           `;
       });
 
       html += `</div>
-               <div class="action-row" style="max-width: 900px; margin: 20px auto 30px auto; padding: 0 10px;">
-<button class="btn-glow btn-reattempt" onclick="handleReattemptClick()">🔄 Reattempt Mistakes</button>
-<button class="btn-glow btn-share" onclick="alert('Result link copied to clipboard! Ready to share.')">🚀 Share Result</button>
-               </div>
-               <div style="text-align:center; padding-bottom:30px;">
-                  <button onclick="downloadPDF()" class="btn-primary" style="width:auto; padding:12px 25px; font-size:14px; background:var(--bg-body); color:var(--primary); border:2px solid var(--primary); box-shadow:none;">Download PDF 📥</button>
-                  <button onclick="localStorage.setItem('dsssb_replay_qs', JSON.stringify(QUESTIONS)); localStorage.setItem('dsssb_replay_state', JSON.stringify(currentState)); window.location.href='replay.html'" class="btn-primary" style="width:auto; padding:12px 25px; font-size:14px; background:var(--warning); margin-left:10px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);">Replay Mode 🎮</button>
-                  <button onclick="window.location.href='index.html'" class="btn-primary" style="width:auto; padding:12px 25px; font-size:14px; background:var(--primary); margin-left:10px; margin-top:10px;">Back to Home 🏠</button>
+               <div style="text-align:center; margin-top:30px; padding-bottom:30px;">
+                  <button onclick="downloadPDF()" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:var(--bg-body); color:var(--primary); border:2px solid var(--primary); box-shadow:none;">Download Heavy PDF 📥</button>
+                  
+                  <button onclick="localStorage.setItem('dsssb_replay_qs', JSON.stringify(QUESTIONS)); localStorage.setItem('dsssb_replay_state', JSON.stringify(currentState)); window.location.href='replay.html'" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:var(--warning); margin-left:10px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);">Replay Mode 🎮</button>
+                  <button onclick="window.location.href='analysis.html'" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:#8b5cf6; margin-left:10px; margin-top:10px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);">Deep AI Analysis 🧠</button>
+                  <button onclick="window.location.href='index.html'" class="btn-primary" style="width:auto; padding:14px 35px; font-size:16px; background:var(--primary); margin-left:10px; margin-top:10px;">Back to Home 🏠</button>
                </div>`;
 
       resBox.innerHTML = html;
@@ -2312,10 +2220,13 @@ async function submitTest() {
 }
 
 function downloadPDF() {
+    // TWA/Android Print Trigger Fix
     showToast("Preparing Exam Report... 📥", "success");
     
+    // Thoda extra delay taaki background processes clear ho jayein
     setTimeout(() => {
         try {
+            // Force focus to window before printing
             window.focus();
             if (typeof window.print !== 'undefined') {
                 window.print();
