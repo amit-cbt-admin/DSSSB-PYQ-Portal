@@ -211,6 +211,27 @@ body { display: block; background: var(--bg-body); color: var(--text-main); padd
 .nav-item.active { color: var(--primary); opacity: 1; transform: translateY(-4px); }
 .nav-item.active i { transform: scale(1.15); filter: drop-shadow(0 4px 6px rgba(79,70,229,0.3));}
 
+/* 🔥 NAYA: FAB SUPPORT BUTTON CSS */
+.fab-support {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    background: var(--primary);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+    cursor: pointer;
+    z-index: 100;
+    transition: 0.3s;
+}
+.fab-support:active { transform: scale(0.9); }
+
 .chart-box { background: var(--bg-card); padding: 18px; border-radius: 18px; border: 1px solid var(--border); margin: 0 20px 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); flex: 1;}
 .rank-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 600; }
 
@@ -676,6 +697,10 @@ textarea { height: 120px; resize: none; }
 
 </div>
 
+<div class="fab-support" onclick="document.getElementById('supportModal').style.display='flex'">
+    <i class="fas fa-headset"></i>
+</div>
+
 <div id="alertModal" class="modal">
     <div class="modal-content" style="text-align:center;">
         <i class="fas fa-bell fa-3x" style="color:var(--primary); margin-bottom:15px; animation: pulse 2s infinite;"></i>
@@ -695,7 +720,7 @@ textarea { height: 120px; resize: none; }
             Special Offer: ₹99 <span style="font-size:12px; text-decoration:line-through; color:grey;">₹499</span>
         </div>
         
-        <p style="font-size:12px; color:var(--text-main); margin-bottom:10px; font-weight:600;">To upgrade, please contact Admin Send Hi on Whatsapp 8587961053.</p>
+        <p style="font-size:12px; color:var(--text-main); margin-bottom:10px; font-weight:600;">To upgrade, please contact Admin on Telegram.</p>
         
         <div style="background:#f1f5f9; padding:10px; border-radius:8px; margin-bottom:15px; font-size:12px;">
             Your App ID: <b id="displayUserId" style="color:var(--primary); font-size: 14px;">--</b><br>
@@ -719,6 +744,19 @@ textarea { height: 120px; resize: none; }
         </div>
     </div>
 </div>
+
+<div id="supportModal" class="modal">
+    <div class="modal-content">
+        <h2 style="margin-bottom:5px; font-weight:900;">💬 Contact Support</h2>
+        <p style="font-size:12px; color:var(--text-muted); font-weight:600;">Have a query or payment issue? Send a direct message to Admin.</p>
+        <textarea id="supportText" placeholder="Write your message here..."></textarea>
+        <div style="display:flex; gap:12px;">
+            <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); box-shadow:none;" onclick="document.getElementById('supportModal').style.display='none'">Cancel</button>
+            <button class="start-btn" onclick="submitSupportTicket()">Send Message</button>
+        </div>
+    </div>
+</div>
+
 <div id="testRankModal" class="modal">
     <div class="modal-content" style="max-width: 400px; max-height: 80vh; display: flex; flex-direction: column; padding: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -988,7 +1026,7 @@ function switchStudy(type, el) {
     document.getElementById('videosSection').style.display = (type === 'videos') ? 'block' : 'none'; 
 }
 
-function showToast(msg) { 
+function showToast(msg, type="info") { 
     const toast = document.getElementById('toast'); 
     toast.innerText = msg; 
     toast.style.display = 'block'; 
@@ -1188,6 +1226,34 @@ function submitReport() {
     showToast("Report Sent Successfully! 🛡️"); 
     document.getElementById('reportModal').style.display='none'; 
     document.getElementById('reportText').value='';
+}
+
+// 🔥 NAYA: SUBMIT SUPPORT TICKET FUNCTION
+function submitSupportTicket() {
+    const txt = document.getElementById('supportText').value.trim();
+    if(!txt) return showToast("Please write a message first!", "warning");
+    
+    const btn = event.currentTarget;
+    const origText = btn.innerHTML;
+    btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Sending..."; 
+    btn.disabled = true;
+
+    db.ref('dsssb_support_tickets').push({ 
+        user: currentUser, 
+        userId: currentUserId, 
+        message: txt, 
+        time: firebase.database.ServerValue.TIMESTAMP,
+        status: "Pending"
+    }).then(() => {
+        showToast("Message Sent to Admin! 🚀", "success"); 
+        document.getElementById('supportModal').style.display='none'; 
+        document.getElementById('supportText').value='';
+    }).catch(err => {
+        showToast("Error: " + err.message, "error");
+    }).finally(() => {
+        btn.innerHTML = origText; 
+        btn.disabled = false;
+    });
 }
 
 function toggleSaveTest(testId, el, event) {
@@ -1591,7 +1657,8 @@ function applyModernFilters() {
             if(categoryFilter === 'gk') return title.includes('gk') || cat.includes('gk') || tags.includes('gk') || title.includes('general');
             if(categoryFilter === 'computer') return title.includes('comp') || cat.includes('comp') || tags.includes('comp');
             
-            return cat.includes(categoryFilter) || title.includes(categoryFilter);
+            // 🔥 FIX: Check in tags too
+            return cat.includes(categoryFilter) || title.includes(categoryFilter) || tags.includes(categoryFilter);
         });
     }
 
@@ -2063,7 +2130,8 @@ function filterDynamicTests(examKey, subFilterKey, pillEl) {
     }
 
    if (subFilterKey && subFilterKey !== 'all') {
-                let targetSub = subFilterKey.toLowerCase().trim();
+                // 🔥 FIX: Underscore ko space se replace kiya taaki Tags perfectly match hon
+                let targetSub = subFilterKey.toLowerCase().trim().replace(/_/g, ' ');
                 list = list.filter(t => {
                     let cat = (t.category||"").toLowerCase();
                     let title = (t.title||"").toLowerCase();
