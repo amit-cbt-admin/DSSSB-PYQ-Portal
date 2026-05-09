@@ -696,7 +696,10 @@ let db = {
             once: function(){ return Promise.resolve({exists:()=>false, val:()=>null, forEach:()=>{} }); }, 
             set: function(){ return Promise.resolve(); }, 
             push: function(){ return Promise.resolve(); },
-            remove: function(){ return Promise.resolve(); }
+            remove: function(){ return Promise.resolve(); },
+            orderByChild: function(){ return this; },
+            equalTo: function(){ return this; },
+            limitToLast: function(){ return this; }
         }; 
     } 
 };
@@ -803,7 +806,12 @@ let fontOffset = 0;
 let currentDiscussionRef = null; 
 
 // --- 🔥 GEMINI API INTEGRATION 🔥 ---
-const apiKey = ""; // Runtime will inject the key here
+// 👇👇👇 APNI PAY-AS-YOU-GO GEMINI API KEY YAHAN DALEIN 👇👇👇
+// Jab aap is code ko live karenge, toh niche wali line ko apni key ke saath update karein:
+// const apiKey = "AIzaSyAmG3vuLZWMIIfah0yrWZuY_fPWfV7AQHM";
+const apiKey = "AIzaSyAmG3vuLZWMIIfah0yrWZuY_fPWfV7AQHM"; // Runtime will inject the key here inside Canvas. Bahar use karne ke liye ise apni key se replace karein.
+// 👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆
+
 async function callGemini(promptText, isJson = false) {
     try {
         let payload = {
