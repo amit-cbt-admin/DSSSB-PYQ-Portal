@@ -144,6 +144,15 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 .p-tab { flex: 1; text-align: center; padding: 12px; font-size: 14px; font-weight: 600; color: #a0aec0; cursor: pointer; border-bottom: 2px solid transparent; }
 .p-tab.active { color: #fff; border-bottom-color: #cbd5e1; background: #1a1b1e; }
 
+/* 🔥 NEW PALETTE FILTERS 🔥 */
+.palette-filters { display: flex; gap: 8px; padding: 12px 15px; background: #1a1b1e; border-bottom: 1px solid #2d3748; overflow-x: auto; scrollbar-width: none; }
+.palette-filters::-webkit-scrollbar { display: none; }
+.p-filt-btn { padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; border: 1px solid #475569; background: transparent; color: #cbd5e1; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+.p-filt-btn.active { background: #475569; color: #fff; border-color: #cbd5e1; }
+.p-filt-btn.f-correct.active { background: rgba(16, 185, 129, 0.2); color: #10b981; border-color: #10b981; }
+.p-filt-btn.f-wrong.active { background: rgba(239, 68, 68, 0.2); color: #ef4444; border-color: #ef4444; }
+.p-filt-btn.f-skip.active { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border-color: #f59e0b; }
+
 .palette-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; font-size: 12px; border-bottom: 1px solid #2d3748; color: #cbd5e1; }
 .p-leg-item { display: flex; align-items: center; gap: 8px; font-weight: 500; }
 .p-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; }
@@ -173,8 +182,8 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 .qbtn.review { background: transparent; border: 1px solid #ef4444; color: #fff; position: relative; overflow: hidden; }
 .qbtn.review::before { content: '★'; position: absolute; color: #ef4444; font-size: 12px; top: -2px; right: -2px; }
 
-.qbtn.p-correct { background: #10b981; border-color: #10b981; color: #fff; }
-.qbtn.p-wrong { background: #ef4444; border-color: #ef4444; color: #fff; }
+.qbtn.p-correct { background: rgba(16, 185, 129, 0.15); border-color: #10b981; color: #34d399; }
+.qbtn.p-wrong { background: rgba(239, 68, 68, 0.15); border-color: #ef4444; color: #f87171; }
 .qbtn.p-skip { background: transparent; border-color: #475569; color: #64748b; }
 
 /* --- NEW LIST VIEW STYLES --- */
@@ -686,6 +695,32 @@ function getSafeData(key) { try { return localStorage.getItem(key); } catch(e) {
 function setSafeData(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
 function removeSafeData(key) { try { localStorage.removeItem(key); } catch(e) {} }
 
+// --- GLOBAL CONFIGURATION (Initialized first to avoid ReferenceErrors) ---
+const urlParams = new URLSearchParams(window.location.search);
+const CURRENT_TEST_ID = urlParams.get('testid') || "TEST_UNKNOWN";
+const CURRENT_TEST_TITLE = urlParams.get('title') || "DSSSB Mock Test";
+const TOTAL_TIME_MINS = parseInt(urlParams.get('time')) || 120; 
+const MIN_SUBMIT_MINS = parseInt(urlParams.get('mintime')) || 0; 
+const TEST_MODE = urlParams.get('mode') || "exam"; 
+
+const POSITIVE_MARK = parseFloat(urlParams.get('pm')) || 1.0;
+const NEGATIVE_MARK = parseFloat(urlParams.get('nm')) || 0.25;
+const SECTION_LOCK = urlParams.get('lock') === 'false' ? false : true;
+
+const STORAGE_KEY = "dsssb_cbt_rank_v2";
+const TELEGRAM_BOT_TOKEN="8486464606:AAFT_Bd0P2HYqKNPjCm3s7TGgfM4HWmOYvs";
+const TELEGRAM_CHAT_ID="@dsssbcbtresult";
+
+let DYNAMIC_CUTOFF = 0; 
+let QUESTIONS = [];
+let SECTION_MAP = [];
+let currentState = { idx: 0, answers: [], review: [], time: TOTAL_TIME_MINS * 60, secIdx: 0, submitted: false, name: "", timePerQ: [] };
+let timerInt;
+let secIndices = [];
+let fontOffset = 0;
+let currentDiscussionRef = null; 
+let currentPaletteFilter = 'all'; // New Variable for Palette Filter
+
 /* =========================
    FIREBASE CONFIG & SAFE INIT
    ========================= */
@@ -728,88 +763,9 @@ const DB_DISCUSS_REF = "dsssb_discussions";
 
 Object.keys(console).forEach(function(key) { console[key] = function() {}; });
 
-// Modified Anti-Cheat Interval (graceful failure instead of location.replace)
-setInterval(function() {
-  /*
-  const before = new Date().getTime();
-  (function() { return false; }['constructor']('debugger')());
-  const after = new Date().getTime();
-  if (after - before > 100) {
-      document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20%'>🚨 SECURE BROWSER VIOLATION 🚨<br>Developer Tools Detected.</h1>";
-  }
-  */
-}, 1000);
-
-window.addEventListener('resize', function() {
-    console.log("Window resized."); 
-});
-
-try {
-    if (window.top !== window.self) { 
-        // window.top.location = window.self.location; // Temporarily disabled for sandbox preview 
-    }
-} catch (e) {}
-
-document.addEventListener('contextmenu', e => e.preventDefault());
-
-document.addEventListener('keydown', function(e) {
-  // 1. Anti-Cheat Security
-  if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) || (e.ctrlKey && ['U', 'S', 'P', 'H'].includes(e.key.toUpperCase()))) {
-      e.preventDefault(); e.stopPropagation(); alert("🚨 Unauthorized action detected!"); return false;
-  }
-  
-  // 2. 🔥 Keyboard Shortcuts for Students (Only works during active test)
-  const isOverlayOpen = document.getElementById('startScreen').style.display !== 'none' || document.getElementById('instructionScreen').style.display !== 'none';
-  
-  if (!isOverlayOpen && !currentState.submitted && TEST_MODE !== 'solution') {
-      // Prev/Next Question
-      if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
-      if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
-      
-      // Select Options A, B, C, D (or 1, 2, 3, 4)
-      if (['a', 'A', '1'].includes(e.key)) { e.preventDefault(); selectAns(0); }
-      if (['b', 'B', '2'].includes(e.key)) { e.preventDefault(); selectAns(1); }
-      if (['c', 'C', '3'].includes(e.key)) { e.preventDefault(); selectAns(2); }
-      if (['d', 'D', '4'].includes(e.key)) { e.preventDefault(); selectAns(3); }
-      
-      // Mark for Review (W) and Clear Response (Q)
-      if (['w', 'W'].includes(e.key)) { e.preventDefault(); reviewAndNext(); } 
-      if (['q', 'Q'].includes(e.key)) { e.preventDefault(); clearResponse(); } 
-  }
-});
-document.addEventListener('selectstart', e => e.preventDefault());
-document.addEventListener('dragstart', e => e.preventDefault());
-document.addEventListener('copy', e => { e.preventDefault(); e.clipboardData.setData('text/plain', 'Cheating is not allowed in PYQ Notes Portal!'); });
-
-const urlParams = new URLSearchParams(window.location.search);
-const CURRENT_TEST_ID = urlParams.get('testid') || "TEST_UNKNOWN";
-const CURRENT_TEST_TITLE = urlParams.get('title') || "DSSSB Mock Test";
-const TOTAL_TIME_MINS = parseInt(urlParams.get('time')) || 120; 
-const MIN_SUBMIT_MINS = parseInt(urlParams.get('mintime')) || 0; // 🔥 Naya Time Lock Variable
-const TEST_MODE = urlParams.get('mode') || "exam"; 
-
-const POSITIVE_MARK = parseFloat(urlParams.get('pm')) || 1.0;
-const NEGATIVE_MARK = parseFloat(urlParams.get('nm')) || 0.25;
-const SECTION_LOCK = urlParams.get('lock') === 'false' ? false : true;
-
-const STORAGE_KEY = "dsssb_cbt_rank_v2";
-const TELEGRAM_BOT_TOKEN="8486464606:AAFT_Bd0P2HYqKNPjCm3s7TGgfM4HWmOYvs";
-const TELEGRAM_CHAT_ID="@dsssbcbtresult";
-
-let DYNAMIC_CUTOFF = 0; 
-let QUESTIONS = [];
-let SECTION_MAP = [];
-let currentState = { idx: 0, answers: [], review: [], time: TOTAL_TIME_MINS * 60, secIdx: 0, submitted: false, name: "", timePerQ: [] };
-let timerInt;
-let secIndices = [];
-let fontOffset = 0;
-let currentDiscussionRef = null; 
-
 // --- 🔥 GEMINI API INTEGRATION 🔥 ---
 // 👇👇👇 APNI PAY-AS-YOU-GO GEMINI API KEY YAHAN DALEIN 👇👇👇
-// Jab aap is code ko live karenge, toh niche wali line ko apni key ke saath update karein:
-// const apiKey = "AIzaSyAmG3vuLZWMIIfah0yrWZuY_fPWfV7AQHM";
-const apiKey = "AIzaSyAmG3vuLZWMIIfah0yrWZuY_fPWfV7AQHM"; // Runtime will inject the key here inside Canvas. Bahar use karne ke liye ise apni key se replace karein.
+const apiKey = "AIzaSyAmG3vuLZWMIIfah0yrWZuY_fPWfV7AQHM"; // Runtime injects this. Replace with real key for external use.
 // 👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆
 
 async function callGemini(promptText, isJson = false) {
@@ -822,10 +778,9 @@ async function callGemini(promptText, isJson = false) {
             payload.generationConfig = { responseMimeType: "application/json" };
         }
         
-        // Setup retry mechanism for exponential backoff as per instructions
         let retries = 5;
         let delay = 1000;
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
         
         for (let i = 0; i < retries; i++) {
             try {
@@ -867,53 +822,33 @@ async function askAITutor(idx) {
     const isHindi = document.getElementById('langBtn').innerText === "HI";
     const qText = isHindi ? (q.q_hi || q.q_en) : (q.q_en || q.q_hi);
     const optsArr = isHindi ? (q.op_hi || q.op_en) : (q.op_en || q.op_hi);
-    const correctIdx = parseInt(q.ans) - 1;
     
     const prompt = `Context Question: ${qText}
     Options: 1) ${optsArr[0]} 2) ${optsArr[1]} 3) ${optsArr[2]} 4) ${optsArr[3]}
     Correct Answer: Option ${q.ans}
     Existing Solution: ${q.solution || 'None'}
-    
     Student's Doubt: "${query}"
-    
     Answer the student's doubt directly based on the context. Explain clearly. Be very concise (max 50-60 words). Reply in Hinglish (Latin script).`;
     
     const ans = await callGemini(prompt);
     respEl.innerHTML = `<b><i class="fas fa-robot"></i> AI Tutor:</b><br>${ans.replace(/\n/g, '<br>')}`;
-    
-    inputEl.disabled = false;
-    btnEl.disabled = false;
-    btnEl.innerHTML = `<i class="fas fa-paper-plane"></i>`;
-    inputEl.value = "";
-    
+    inputEl.disabled = false; btnEl.disabled = false; btnEl.innerHTML = `<i class="fas fa-paper-plane"></i>`; inputEl.value = "";
     if(window.MathJax) MathJax.typesetPromise([respEl]);
 }
 
 async function generateDeepAIAnalysis() {
     const btn = document.getElementById('btnDeepAi');
     const container = document.getElementById('aiAnalysisContainer');
-    
-    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Analyzing Performance...`;
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Analyzing...`;
     btn.disabled = true;
     container.style.display = 'block';
-    container.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Gemini AI is analyzing your weak areas and calculating strategies...`;
-
+    container.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> AI is analyzing your performance...`;
     const analysisData = JSON.parse(getSafeData('dsssb_analysis_data') || '{}');
-    let perfStr = `Total Correct: ${analysisData.correct}, Wrong: ${analysisData.wrong}, Skipped: ${analysisData.skipped}. `;
-    perfStr += `Topic Performance: ${JSON.stringify(analysisData.topicPerformance)}. `;
-    
-    const prompt = `Student took a test named "${CURRENT_TEST_TITLE}". 
-    Performance Data: ${perfStr}. 
-    Provide a highly personalized, encouraging 3-point improvement strategy. 
-    Identify their weakest topic/section and tell them exactly how to improve it.
-    Keep it strictly under 100 words. Always respond in Hinglish (Latin script) with emojis.`;
-
+    let perfStr = `Correct: ${analysisData.correct}, Wrong: ${analysisData.wrong}, Skipped: ${analysisData.skipped}. Topic Performance: ${JSON.stringify(analysisData.topicPerformance)}.`;
+    const prompt = `Student took "${CURRENT_TEST_TITLE}". Perf: ${perfStr}. Provide personalized Hinglish advice under 100 words.`;
     const aiResponse = await callGemini(prompt);
     container.innerHTML = `<b><i class="fas fa-brain"></i> AI Mentor's Advice:</b><br><br>${aiResponse.replace(/\n/g, '<br>')}`;
-    
     btn.innerHTML = `<i class="fas fa-check"></i> Analysis Complete`;
-    btn.classList.remove('btn-ai-glow');
-    if(window.MathJax) MathJax.typesetPromise([container]);
 }
 
 window.addEventListener('online', syncOfflineResults);
@@ -931,73 +866,24 @@ function syncOfflineResults() {
   }
 }
 
-let touchstartX = 0;
-let touchstartY = 0;
-let touchendX = 0;
-let touchendY = 0;
-
-document.getElementById('mainArea').addEventListener('touchstart', e => { 
-    touchstartX = e.changedTouches[0].screenX; 
-    touchstartY = e.changedTouches[0].screenY; 
-}, {passive: true});
-
-document.getElementById('mainArea').addEventListener('touchend', e => { 
-    // 🔥 MASTER SWIPE FIX: स्मार्ट चेकिंग कि टच की गई चीज़ स्क्रॉल होने वाली है या नहीं
-    let el = e.target;
-    let isScrollable = false;
-    
-    while (el && el !== document.getElementById('mainArea')) {
-        // अगर एलिमेंट table है, q-text है, या opt है और वो स्क्रीन से चौड़ा है (Scrollable है)
-        if ((el.classList && (el.classList.contains('q-text') || el.classList.contains('opt'))) || el.tagName === 'TABLE' || el.tagName === 'IMG') {
-            if (el.scrollWidth > el.clientWidth + 2) { 
-                isScrollable = true;
-                break;
-            }
-        }
-        el = el.parentElement;
-    }
-
-    // अगर चौड़े टेबल/इमेज पर स्क्रॉल किया है, तो Next Question पर मत जाओ!
-    if (isScrollable || e.target.tagName === 'IMG') {
-        return;
-    }
-
-    touchendX = e.changedTouches[0].screenX; 
-    touchendY = e.changedTouches[0].screenY; 
-    
-    // सिर्फ एकदम सीधे हॉरिजॉन्टल स्वाइप पर पेज चेंज होगा
-    if (Math.abs(touchendY - touchstartY) < 60) {
-        if(touchendX < touchstartX - 80) next(); 
-        if(touchendX > touchstartX + 80) prev(); 
-    }
-}, {passive: true});
-
 function initApp() {
   document.getElementById('displayTitle').innerText = CURRENT_TEST_TITLE;
   document.title = CURRENT_TEST_TITLE;
   document.getElementById('declHeaderTitle').innerText = CURRENT_TEST_TITLE;
   document.getElementById('declTimeStr').innerText = `समय: ${TOTAL_TIME_MINS} मिनट`;
-
   syncOfflineResults(); 
-
   document.getElementById('posMarkDisp').innerText = POSITIVE_MARK;
   document.getElementById('negMarkDisp').innerText = NEGATIVE_MARK;
-
-  let tName = "Student";
-  let tId = "guest";
-
+  let tName = "Student"; let tId = "guest";
   if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe.user) {
       let u = window.Telegram.WebApp.initDataUnsafe.user;
       tName = u.first_name + (u.last_name ? " " + u.last_name : "");
       tId = u.id.toString();
-      setSafeData('dsssb_user_name', tName);
-      setSafeData('dsssb_user_id', tId);
+      setSafeData('dsssb_user_name', tName); setSafeData('dsssb_user_id', tId);
   } else {
-      let savedName = getSafeData('dsssb_user_name');
-      let savedId = getSafeData('dsssb_user_id');
+      let savedName = getSafeData('dsssb_user_name'); let savedId = getSafeData('dsssb_user_id');
       if(savedName) { tName = savedName; tId = savedId || "guest"; }
   }
-  
   if (TEST_MODE === 'solution') {
       document.getElementById('startNameInput').value = tName + " (Solution Mode)";
       document.getElementById('startExamBtn').innerText = "VIEW SOLUTIONS ➔";
@@ -1006,107 +892,60 @@ function initApp() {
       document.getElementById('startNameInput').value = tName + " (Quiz Mode)";
       document.getElementById('startExamBtn').innerText = "START QUIZ ⚡";
       document.getElementById('timer').style.display = 'none'; 
-  } else {
-      document.getElementById('startNameInput').value = tName;
-  }
-
+  } else { document.getElementById('startNameInput').value = tName; }
   db.ref('dsssb_tests_meta/' + CURRENT_TEST_ID + '/cutoff').once('value').then(snap => {
-      if(snap.exists()) DYNAMIC_CUTOFF = parseFloat(snap.val());
-      else DYNAMIC_CUTOFF = 40; 
+      DYNAMIC_CUTOFF = snap.exists() ? parseFloat(snap.val()) : 40; 
   });
-
   db.ref('dsssb_questions_db/' + CURRENT_TEST_ID).once('value').then(snap => {
       const preloader = document.getElementById('preloader');
       if (preloader) preloader.style.display = 'none';
-      
       if(snap.exists()) {
          QUESTIONS = snap.val();
-
-        // 🔥 UPDATE: Paper ki Language Check (Hide Toggle & Dropdown Options if only 1 language exists)
-        let hasEn = false;
-        let hasHi = false;
-        QUESTIONS.forEach(q => {
+         let hasEn = false, hasHi = false;
+         QUESTIONS.forEach(q => {
             if (q.q_en && String(q.q_en).trim() !== "") hasEn = true;
             if (q.q_hi && String(q.q_hi).trim() !== "") hasHi = true;
-        });
-
-        const langSelect = document.getElementById('defaultLangSelect');
-        if (langSelect) {
+         });
+         const langSelect = document.getElementById('defaultLangSelect');
+         if (langSelect) {
             langSelect.innerHTML = '<option value="">-- Select --</option>';
             if (hasEn) langSelect.innerHTML += '<option value="EN">English</option>';
             if (hasHi) langSelect.innerHTML += '<option value="HI">हिंदी</option>';
-            
-            // Auto-select if only one language is available
-            if (hasEn && !hasHi) langSelect.value = "EN";
-            if (hasHi && !hasEn) langSelect.value = "HI";
-        }
-
-        const topLangBtn = document.getElementById('langBtn');
-        if (topLangBtn) {
-            if (hasEn && hasHi) {
-                topLangBtn.style.display = 'flex';
-            } else {
-                topLangBtn.style.display = 'none'; // Hide toggle button
-                if (hasEn) topLangBtn.innerText = 'EN';
-                if (hasHi) topLangBtn.innerText = 'HI';
-            }
-        }
-        // ---------------------------------------------------------
-
-        SECTION_MAP = [];
-        QUESTIONS.forEach(q => {
-            let secName = q.section || "General";
-            if (!SECTION_MAP.includes(secName)) SECTION_MAP.push(secName);
-        });
-          
-        const specificStorageKey = STORAGE_KEY + "_" + CURRENT_TEST_ID;
-          calcSectionIndices();
-          
-        // --- NEW: Inject Dynamic Data into Declaration Screen ---
-          const totalQs = QUESTIONS.length;
-          const totalMarks = totalQs * POSITIVE_MARK;
-          if(document.getElementById('declTotalQs')) document.getElementById('declTotalQs').innerText = totalQs;
-          if(document.getElementById('declTotalMarks')) document.getElementById('declTotalMarks').innerText = "पूर्णांक: " + totalMarks;
-          if(document.getElementById('declPosMark')) document.getElementById('declPosMark').innerText = "सही उत्तर: +" + POSITIVE_MARK;
-          if(document.getElementById('declNegMark')) document.getElementById('declNegMark').innerText = "नकारात्मक अंक (Negative): -" + NEGATIVE_MARK;
-          // --------------------------------------------------------
-          if (TEST_MODE === 'solution') {
+            if (hasEn && !hasHi) langSelect.value = "EN"; if (hasHi && !hasEn) langSelect.value = "HI";
+         }
+         const topLangBtn = document.getElementById('langBtn');
+         if (topLangBtn) {
+            if (hasEn && hasHi) { topLangBtn.style.display = 'flex'; } 
+            else { topLangBtn.style.display = 'none'; if (hasEn) topLangBtn.innerText = 'EN'; if (hasHi) topLangBtn.innerText = 'HI'; }
+         }
+         SECTION_MAP = []; QUESTIONS.forEach(q => {
+            let secName = q.section || "General"; if (!SECTION_MAP.includes(secName)) SECTION_MAP.push(secName);
+         });
+         const specificStorageKey = STORAGE_KEY + "_" + CURRENT_TEST_ID;
+         calcSectionIndices();
+         const totalQs = QUESTIONS.length; const totalMarks = totalQs * POSITIVE_MARK;
+         if(document.getElementById('declTotalQs')) document.getElementById('declTotalQs').innerText = totalQs;
+         if(document.getElementById('declTotalMarks')) document.getElementById('declTotalMarks').innerText = "पूर्णांक: " + totalMarks;
+         if(document.getElementById('declPosMark')) document.getElementById('declPosMark').innerText = "सही उत्तर: +" + POSITIVE_MARK;
+         if(document.getElementById('declNegMark')) document.getElementById('declNegMark').innerText = "नकारात्मक अंक (Negative): -" + NEGATIVE_MARK;
+         if (TEST_MODE === 'solution') {
               const finalSaved = getSafeData(specificStorageKey + "_final");
               if (finalSaved) { currentState = JSON.parse(finalSaved); } 
-              else {
-                  currentState.answers = new Array(QUESTIONS.length).fill(null);
-                  currentState.review = new Array(QUESTIONS.length).fill(false);
-                  currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
-              }
-              currentState.submitted = true; 
-              document.getElementById('resumeBox').style.display = 'none';
-          } else if (TEST_MODE === 'quiz') {
-              currentState.answers = new Array(QUESTIONS.length).fill(null);
-              currentState.review = new Array(QUESTIONS.length).fill(false);
-              currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
-              currentState.submitted = false; 
-              document.getElementById('resumeBox').style.display = 'none';
-          } else {
-              currentState.answers = new Array(QUESTIONS.length).fill(null);
-              currentState.review = new Array(QUESTIONS.length).fill(false);
-              currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
-              
+              else { currentState.answers = new Array(QUESTIONS.length).fill(null); currentState.review = new Array(QUESTIONS.length).fill(false); currentState.timePerQ = new Array(QUESTIONS.length).fill(0); }
+              currentState.submitted = true; document.getElementById('resumeBox').style.display = 'none';
+         } else if (TEST_MODE === 'quiz') {
+              currentState.answers = new Array(QUESTIONS.length).fill(null); currentState.review = new Array(QUESTIONS.length).fill(false); currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
+              currentState.submitted = false; document.getElementById('resumeBox').style.display = 'none';
+         } else {
+              currentState.answers = new Array(QUESTIONS.length).fill(null); currentState.review = new Array(QUESTIONS.length).fill(false); currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
               const saved = getSafeData(specificStorageKey);
               if(saved) {
                   let savedState = JSON.parse(saved);
-                  if(savedState.answers && savedState.answers.length === QUESTIONS.length) {
-                      document.getElementById('resumeBox').style.display = 'block';
-                  } else { removeSafeData(specificStorageKey); }
+                  if(savedState.answers && savedState.answers.length === QUESTIONS.length) { document.getElementById('resumeBox').style.display = 'block'; } else { removeSafeData(specificStorageKey); }
               }
-          }
-      } else {
-          alert("⚠️ Alert: Test not found!");
-      }
-  }).catch(err => { 
-      const preloader = document.getElementById('preloader');
-      if (preloader) preloader.style.display = 'none';
-      alert("Error loading test data: " + err.message); 
-  });
+         }
+      } else { alert("⚠️ Alert: Test not found!"); }
+  }).catch(err => { if(document.getElementById('preloader')) document.getElementById('preloader').style.display = 'none'; alert("Error: " + err.message); });
 }
 
 function calcSectionIndices() { 
@@ -1117,729 +956,209 @@ function calcSectionIndices() {
   }); 
 }
 
-/* ================= NEW NAVIGATION LOGIC ================= */
-// 🚀 Bulletproof Full Screen Function
-function forceFullScreen() {
-  try {
-      let elem = document.documentElement;
-      let enterFS = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.msRequestFullscreen;
-      if (enterFS) {
-          enterFS.call(elem).then(() => {
-              if (screen.orientation && screen.orientation.lock) {
-                  screen.orientation.lock('portrait').catch(e => console.log("Orientation lock failed", e));
-              }
-          }).catch(err => console.log("FS error", err));
-      }
-  } catch(e) { console.log(e); }
-}
-
 function validateLogin() {
     if(QUESTIONS.length === 0) return showToast("Loading test data, please wait...", "warning");
     const name = document.getElementById('startNameInput').value.trim();
     if(!name) return showToast("Name is missing!", "error");
-    
-    // 🚀 तुरंत फुल-स्क्रीन ट्रिगर करें (ताकि Quiz/Solution Mode में कोई दिक्कत न आए)
     forceFullScreen();
-
     currentState.name = name.replace(" (Solution Mode)", "").replace(" (Quiz Mode)", "");
     document.getElementById('startScreen').style.display = 'none';
-    
-    const currentMode = (TEST_MODE || "").toLowerCase();
-    if (currentMode.includes('quiz') || currentMode.includes('solution')) {
-        startGame(false); // Skip instructions and go direct to test/solution
-    } else {
-        document.getElementById('instructionScreen').style.display = 'flex'; // Show instructions for normal exam
-    }
+    if ((TEST_MODE||"").toLowerCase().includes('quiz') || (TEST_MODE||"").toLowerCase().includes('solution')) { startGame(false); } 
+    else { document.getElementById('instructionScreen').style.display = 'flex'; }
 }
 
-function backToLogin() {
-    document.getElementById('instructionScreen').style.display = 'none';
-    document.getElementById('startScreen').style.display = 'flex';
-}
-
-function showDeclaration() {
-    document.getElementById('instructionScreen').style.display = 'none';
-    document.getElementById('declarationScreen').style.display = 'flex';
-}
-
-function backToInstructions() {
-    document.getElementById('declarationScreen').style.display = 'none';
-    document.getElementById('instructionScreen').style.display = 'flex';
-}
-
+function backToLogin() { document.getElementById('instructionScreen').style.display = 'none'; document.getElementById('startScreen').style.display = 'flex'; }
+function showDeclaration() { document.getElementById('instructionScreen').style.display = 'none'; document.getElementById('declarationScreen').style.display = 'flex'; }
+function backToInstructions() { document.getElementById('declarationScreen').style.display = 'none'; document.getElementById('instructionScreen').style.display = 'flex'; }
 function startExamFromDecl() {
     const lang = document.getElementById('defaultLangSelect').value;
-    if(!lang) return showToast("Please select your default language! (डिफ़ॉल्ट भाषा चुनें)", "error");
-
-    const agree = document.getElementById('agreeCheck').checked;
-    if(!agree) return showToast("Please check the declaration box before starting.", "error");
-
-    // 🚀 फुल-स्क्रीन फिर से पक्का करें
-    forceFullScreen();
-
-    document.getElementById('langBtn').innerText = lang.trim();
-    document.getElementById('declarationScreen').style.display = 'none';
-    startGame(false);
+    if(!lang) return showToast("Please select your default language!", "error");
+    if(!document.getElementById('agreeCheck').checked) return showToast("Please check the declaration box.", "error");
+    forceFullScreen(); document.getElementById('langBtn').innerText = lang.trim(); document.getElementById('declarationScreen').style.display = 'none'; startGame(false);
 }
-/* ======================================================== */
 
 function startGame(isResuming) {
-  // Hide all overlays to be safe
-  document.getElementById('startScreen').style.display = 'none';
-  document.getElementById('instructionScreen').style.display = 'none';
-  document.getElementById('declarationScreen').style.display = 'none';
-
-  document.querySelector('header').style.display = 'flex';
-  document.getElementById('mainArea').style.display = 'block';
-  document.getElementById('examFooter').style.display = 'flex';
-  
-  if(!isResuming) {
-      currentState.idx = secIndices[0] || 0;
-      currentState.secIdx = 0;
-  }
-  
-  if(TEST_MODE === 'solution' || TEST_MODE === 'quiz') {
-      currentState.idx = 0;
-      currentState.secIdx = 0;
-  }
-  
-  renderSectionTabs();
-  
-  if(!currentState.timePerQ) currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
-  
-  loadQuestion(currentState.idx);
-  
-// 🚀 Enhanced Mobile Full Screen & Orientation Lock
-  try {
-      let elem = document.documentElement;
-      let enterFS = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.msRequestFullscreen;
-      if (enterFS) {
-          enterFS.call(elem).then(() => {
-              // Auto lock to portrait mode on mobile if supported
-              if (screen.orientation && screen.orientation.lock) {
-                  screen.orientation.lock('portrait').catch(err => console.log("Orientation lock not supported", err));
-              }
-          }).catch(err => console.log("FS error", err));
-      }
-  } catch(e) { console.log("Fullscreen catch block:", e); }
-  if (TEST_MODE === 'solution') {
-      document.getElementById('mainSubmitBtn').style.display = 'none'; 
-      if(document.getElementById('sectionSubmitBtn')) document.getElementById('sectionSubmitBtn').style.display = 'none';
-      document.getElementById('paletteStatsBox').style.display = 'none'; 
-      showToast(`Showing Solutions...`, "success");
-  } else if (TEST_MODE === 'quiz') {
-      document.getElementById('mainSubmitBtn').style.display = 'none'; 
-      if(document.getElementById('sectionSubmitBtn')) document.getElementById('sectionSubmitBtn').style.display = 'none';
-      document.getElementById('paletteStatsBox').style.display = 'none'; 
-      showToast(`Quiz Mode Started ⚡`, "success");
-  } else {
-      startTimer();
-      setInterval(saveState, 5000); 
-      showToast(`Welcome, ${currentState.name} 🚀`, "success");
-      if(!isResuming && window.innerWidth < 1024) {
-          document.getElementById('tgPopup').style.display = "block";
-          if(document.getElementById('tgOverlay')) document.getElementById('tgOverlay').style.display = "block";
-      }
-  }
+  document.getElementById('startScreen').style.display = 'none'; document.getElementById('instructionScreen').style.display = 'none'; document.getElementById('declarationScreen').style.display = 'none';
+  document.querySelector('header').style.display = 'flex'; document.getElementById('mainArea').style.display = 'block'; document.getElementById('examFooter').style.display = 'flex';
+  if(!isResuming) { currentState.idx = secIndices[0] || 0; currentState.secIdx = 0; }
+  if(TEST_MODE === 'solution' || TEST_MODE === 'quiz') { currentState.idx = 0; currentState.secIdx = 0; }
+  renderSectionTabs(); if(!currentState.timePerQ) currentState.timePerQ = new Array(QUESTIONS.length).fill(0); loadQuestion(currentState.idx);
+  if (TEST_MODE === 'solution') { document.getElementById('mainSubmitBtn').style.display = 'none'; if(document.getElementById('sectionSubmitBtn')) document.getElementById('sectionSubmitBtn').style.display = 'none'; document.getElementById('paletteStatsBox').style.display = 'none'; } 
+  else if (TEST_MODE === 'quiz') { document.getElementById('mainSubmitBtn').style.display = 'none'; if(document.getElementById('sectionSubmitBtn')) document.getElementById('sectionSubmitBtn').style.display = 'none'; document.getElementById('paletteStatsBox').style.display = 'none'; } 
+  else { startTimer(); setInterval(saveState, 5000); if(!isResuming && window.innerWidth < 1024) { document.getElementById('tgPopup').style.display = "block"; if(document.getElementById('tgOverlay')) document.getElementById('tgOverlay').style.display = "block"; } }
 }
 
-function closeTg(){ 
-    document.getElementById('tgPopup').style.display = "none"; 
-    if(document.getElementById('tgOverlay')) document.getElementById('tgOverlay').style.display = "none";
-}
-
-function saveState() {
-  if (TEST_MODE === 'solution' || TEST_MODE === 'quiz') return; 
-  const specificStorageKey = STORAGE_KEY + "_" + CURRENT_TEST_ID;
-  if(currentState.submitted) { removeSafeData(specificStorageKey); return; }
-  setSafeData(specificStorageKey, JSON.stringify(currentState));
-}
-
-function loadState() { 
-  // 🚀 फुल-स्क्रीन रिज़्यूम (Resume/Reattempt) करने पर भी लागू करें
-  forceFullScreen();
-
-  const specificStorageKey = STORAGE_KEY + "_" + CURRENT_TEST_ID;
-  const saved = getSafeData(specificStorageKey); 
-  if(saved) { 
-      currentState = JSON.parse(saved); 
-      if(!currentState.timePerQ) currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
-      startGame(true); 
-  } 
-}
-function clearState() { 
-  const specificStorageKey = STORAGE_KEY + "_" + CURRENT_TEST_ID;
-  removeSafeData(specificStorageKey); 
-  document.getElementById('resumeBox').style.display = 'none'; 
-  showToast("Session Cleared", "info"); 
-}
-
+function closeTg(){ document.getElementById('tgPopup').style.display = "none"; if(document.getElementById('tgOverlay')) document.getElementById('tgOverlay').style.display = "none"; }
 function renderSectionTabs() {
   const bar = document.getElementById('sectionBar'); let html = "";
   SECTION_MAP.forEach((sec, i) => {
       let cls = "sec-tab"; let icon = "🔒";
-      if (currentState.submitted || TEST_MODE === 'quiz') {
-          cls += " done"; icon = "🔓";
-          if (i === currentState.secIdx) { cls += " active"; icon = "👁️"; }
-      } else if (!SECTION_LOCK) {
-          cls += " done"; icon = "📁";
-          if (i === currentState.secIdx) { cls += " active"; icon = "🟢"; }
-      } else {
-          if(i === currentState.secIdx) { cls += " active"; icon = "🟢"; }
-          else if(i < currentState.secIdx) { cls += " done"; icon = "✅"; }
-      }
+      if (currentState.submitted || TEST_MODE === 'quiz') { cls += " done"; icon = "🔓"; if (i === currentState.secIdx) { cls += " active"; icon = "👁️"; } } 
+      else if (!SECTION_LOCK) { cls += " done"; icon = "📁"; if (i === currentState.secIdx) { cls += " active"; icon = "🟢"; } } 
+      else { if(i === currentState.secIdx) { cls += " active"; icon = "🟢"; } else if(i < currentState.secIdx) { cls += " done"; icon = "✅"; } }
       html += `<div class="${cls}" onclick="jumpSection(${i})">${icon} ${sec}</div>`;
   });
   bar.innerHTML = html;
 }
-
-function jumpSection(secIndex) {
-  if(currentState.submitted || TEST_MODE === 'quiz' || !SECTION_LOCK) {
-      currentState.secIdx = secIndex;
-      loadQuestion(secIndices[secIndex]);
-      renderSectionTabs();
-  } else {
-      if(secIndex !== currentState.secIdx) showToast("Sections are locked in this exam!", "warning");
-  }
-}
-
-function adjustFont(step) {
-  fontOffset += step;
-  if(fontOffset > 6) fontOffset = 6;
-  if(fontOffset < -2) fontOffset = -2;
-  applyFont();
-}
-
-function applyFont() {
-  const qContent = document.getElementById('qContent');
-  if(qContent) qContent.style.fontSize = (17 + fontOffset) + 'px';
-  document.querySelectorAll('.opt').forEach(el => el.style.fontSize = (15 + fontOffset) + 'px');
-}
+function jumpSection(secIndex) { if(currentState.submitted || TEST_MODE === 'quiz' || !SECTION_LOCK) { currentState.secIdx = secIndex; loadQuestion(secIndices[secIndex]); renderSectionTabs(); } else { if(secIndex !== currentState.secIdx) showToast("Sections are locked!", "warning"); } }
+function adjustFont(step) { fontOffset = Math.max(-2, Math.min(6, fontOffset + step)); applyFont(); }
+function applyFont() { const qContent = document.getElementById('qContent'); if(qContent) qContent.style.fontSize = (17 + fontOffset) + 'px'; document.querySelectorAll('.opt').forEach(el => el.style.fontSize = (15 + fontOffset) + 'px'); }
 
 window.toggleAppSolution = function(btn) {
-  const content = btn.nextElementSibling;
-  const icon = btn.querySelector('.toggle-icon');
-  if (content.style.display === 'none') {
-      content.style.display = 'block';
-      icon.innerText = '▲';
-      btn.style.background = 'var(--primary)';
-      btn.style.color = '#fff';
-  } else {
-      content.style.display = 'none';
-      icon.innerText = '▼';
-      btn.style.background = 'var(--primary-light)';
-      btn.style.color = 'var(--primary-dark)';
-  }
+  const content = btn.nextElementSibling; const icon = btn.querySelector('.toggle-icon');
+  if (content.style.display === 'none') { content.style.display = 'block'; icon.innerText = '▲'; btn.style.background = 'var(--primary)'; btn.style.color = '#fff'; } 
+  else { content.style.display = 'none'; icon.innerText = '▼'; btn.style.background = 'var(--primary-light)'; btn.style.color = 'var(--primary-dark)'; }
 };
 
 function loadQuestion(idx) {
-  currentState.idx = idx; 
-  const q = QUESTIONS[idx]; 
-  
-  // 🔥 Question Load Animation Trigger
+  currentState.idx = idx; const q = QUESTIONS[idx]; 
   const qCardWrapper = document.querySelector('.q-card');
-  if(qCardWrapper) {
-      qCardWrapper.classList.remove('q-animate');
-      void qCardWrapper.offsetWidth; // Magic line to restart animation
-      qCardWrapper.classList.add('q-animate');
-  }
-
-  const currentLangBtnText = document.getElementById('langBtn').innerText.trim().toUpperCase();
-  const isHindi = currentLangBtnText === "HI";
-  
-  const qSecIdx = SECTION_MAP.indexOf(q.section || "General");
-  if(qSecIdx !== -1 && qSecIdx !== currentState.secIdx) {
-      currentState.secIdx = qSecIdx;
-      renderSectionTabs();
-  }
-
+  if(qCardWrapper) { qCardWrapper.classList.remove('q-animate'); void qCardWrapper.offsetWidth; qCardWrapper.classList.add('q-animate'); }
+  const isHindi = document.getElementById('langBtn').innerText.trim().toUpperCase() === "HI";
+  const qSecIdx = SECTION_MAP.indexOf(q.section || "General"); if(qSecIdx !== -1 && qSecIdx !== currentState.secIdx) { currentState.secIdx = qSecIdx; renderSectionTabs(); }
   document.getElementById('qNumDisp').innerText = idx + 1;
-  
-  const metaContainer = document.getElementById('qMetaData');
-  let metaHtml = "";
-  if (q.topic) {
-      metaHtml += `<span class="badge-topic">🏷️ ${q.topic}</span>`;
-  }
+  const metaContainer = document.getElementById('qMetaData'); let metaHtml = "";
+  if (q.topic) metaHtml += `<span class="badge-topic">🏷️ ${q.topic}</span>`;
   if (q.difficulty) {
-      let dL = q.difficulty.toLowerCase();
-      let diffLabel = dL.charAt(0).toUpperCase() + dL.slice(1);
+      let dL = q.difficulty.toLowerCase(); let diffLabel = dL.charAt(0).toUpperCase() + dL.slice(1);
       if (dL === 'easy') metaHtml += `<span class="badge-diff easy">🟢 ${diffLabel}</span>`;
       else if (dL === 'medium') metaHtml += `<span class="badge-diff medium">🟡 ${diffLabel}</span>`;
       else if (dL === 'hard') metaHtml += `<span class="badge-diff hard">🔴 ${diffLabel}</span>`;
   }
   metaContainer.innerHTML = metaHtml;
-
-  const contentDiv = document.getElementById('qContent');
-  contentDiv.innerHTML = isHindi ? (q.q_hi || q.q_en) : (q.q_en || q.q_hi);
-  contentDiv.querySelectorAll('img').forEach(img => { img.onclick = () => openZoom(img.src); });
-
-  let optsHtml = ""; 
-  const correctIdx = parseInt(q.ans) - 1;
-  const optsArr = isHindi ? (q.op_hi || q.op_en) : (q.op_en || q.op_hi);
-  
+  document.getElementById('qContent').innerHTML = isHindi ? (q.q_hi || q.q_en) : (q.q_en || q.q_hi);
+  document.getElementById('qContent').querySelectorAll('img').forEach(img => { img.onclick = () => openZoom(img.src); });
+  let optsHtml = ""; const correctIdx = parseInt(q.ans) - 1; const optsArr = isHindi ? (q.op_hi || q.op_en) : (q.op_en || q.op_hi);
   let isQuizAnswered = (TEST_MODE === 'quiz' && currentState.answers[idx] !== null);
-  
   optsArr.forEach((opt, i) => {
-      let cls = "opt"; 
-      const myAns = currentState.answers[idx];
-      
-      if ((currentState.submitted || isQuizAnswered) && myAns !== null) {
-          if (i === correctIdx) cls += " correct-ans";
-          else if (i === myAns && i !== correctIdx) cls += " wrong-ans";
-      } else if (currentState.submitted && myAns === null && i === correctIdx) {
-          cls += " correct-ans"; 
-      } else {
-          if(myAns === i) cls += " sel"; 
-      }
-
+      let cls = "opt"; const myAns = currentState.answers[idx];
+      if ((currentState.submitted || isQuizAnswered) && myAns !== null) { if (i === correctIdx) cls += " correct-ans"; else if (i === myAns && i !== correctIdx) cls += " wrong-ans"; } 
+      else if (currentState.submitted && myAns === null && i === correctIdx) { cls += " correct-ans"; } 
+      else { if(myAns === i) cls += " sel"; }
       optsHtml += `<div class="${cls}" onclick="selectAns(${i})"><div class="opt-badge">${String.fromCharCode(65+i)}</div><div style="width:100%">${opt}</div></div>`;
   });
-  
-  const optsContainer = document.getElementById('opts');
-  optsContainer.innerHTML = optsHtml;
-  optsContainer.querySelectorAll('img').forEach(img => { img.onclick = (e) => { e.stopPropagation(); openZoom(img.src); }; });
+  document.getElementById('opts').innerHTML = optsHtml;
+  document.getElementById('opts').querySelectorAll('img').forEach(img => { img.onclick = (e) => { e.stopPropagation(); openZoom(img.src); }; });
 
   const solBox = document.getElementById('solutionDisplay');
-  const actionBtns = document.getElementById('actionButtons');
-  const discussArea = document.getElementById('discussionArea');
-
- if(currentState.submitted || isQuizAnswered) {
-      let solutionContent = "";
-      if (q.solution && q.solution.trim() !== "") {
-          solutionContent = `<b>💡 Explanation:</b><br>${q.solution}`;
-      } else {
-          // Instead of redirecting/failing, use callGemini logic if it was dynamic
-          solutionContent = `
-              <div id="ai_sol_box_${idx}" style="margin-top: 10px; padding: 10px; background: rgba(99, 102, 241, 0.05); border-radius: 8px; border: 1px dashed var(--primary-light);">
-                  <p style="color:var(--text-muted); font-size:13px; margin-bottom:10px;">💡 No solution available in database.</p>
-                  <button onclick="generateAndSaveSolution('${CURRENT_TEST_ID}', ${idx})" style="background:var(--gradient-main); color:white; border:none; padding:8px 15px; border-radius:6px; cursor:pointer; font-weight:bold; font-size:13px; box-shadow: 0 4px 10px rgba(99,102,241,0.2);">
-                      🤖 Generate Smart Solution (AI)
-                  </button>
-              </div>
-          `;
-      }
-
-      // 🔥 AI Doubt Solver Feature injected here
-      let aiDoubtSection = `
-          <div style="margin-top:15px; padding:12px; background:var(--bg-body); border-radius:8px; border:1px solid var(--border-color);">
-              <div style="font-size:13px; font-weight:bold; color:var(--primary); margin-bottom:8px;"><i class="fas fa-robot"></i> Still have a doubt? Ask AI!</div>
-              <div style="display:flex; gap:8px;">
-                  <input type="text" id="aiDoubtInput_${idx}" placeholder="e.g. Can you explain step 2?" style="flex:1; padding:8px 12px; border:1px solid var(--border-color); border-radius:6px; font-size:13px; background:var(--bg-card); color:var(--text-main); outline:none;">
-                  <button onclick="askAITutor(${idx})" id="aiDoubtBtn_${idx}" style="background:var(--primary); color:#fff; border:none; padding:8px 15px; border-radius:6px; cursor:pointer; font-weight:bold; font-size:13px; transition:0.2s;"><i class="fas fa-paper-plane"></i></button>
-              </div>
-              <div id="aiDoubtResponse_${idx}" style="margin-top:10px; font-size:13px; padding:10px; background:var(--primary-light); color:var(--text-main); border-radius:6px; border:1px dashed var(--primary); display:none; line-height:1.5;"></div>
-          </div>
-      `;
-
-      solBox.innerHTML = `
-          <button onclick="toggleAppSolution(this)" style="width:100%; padding:12px 15px; background:var(--primary-light); color:var(--primary-dark); border:1px solid var(--primary); border-radius:8px; font-weight:bold; cursor:pointer; margin-bottom:10px; font-size:14px; display:flex; justify-content:space-between; align-items:center; transition:0.3s;">
-              <span>👁️ View Detailed Solution</span>
-              <span class="toggle-icon">▼</span>
-          </button>
-          <div class="sol-content" style="display:none; background:var(--bg-body); padding:15px; border-left:4px solid var(--primary); font-size:14px; border-radius:8px; border:1px solid var(--border-color); line-height:1.6;">
-              <b>✅ Correct Answer:</b> <span style="color:var(--success); font-weight:bold;">${optsArr[correctIdx]}</span><br><br>
-              ${solutionContent}
-              ${aiDoubtSection}
-          </div>
-      `;
-      solBox.style.display = 'block';
-      if(actionBtns) actionBtns.style.display = 'none'; 
-      
-      discussArea.style.display = 'block';
-      document.getElementById('discussionContainer').style.display = 'none'; 
-      loadComments(idx); 
-  } else {
-      solBox.style.display = 'none';
-      discussArea.style.display = 'none';
-      if(actionBtns) actionBtns.style.display = 'flex';
-  }
-
-  let bms = JSON.parse(getSafeData('dsssb_bookmarks')) || {};
-  let qk = CURRENT_TEST_ID + "_Q" + idx;
-  document.getElementById('bookmarkBtn').innerText = bms[qk] ? "⭐" : "🔖";
-
-  updateNavButtons(); 
-  renderPalette(); 
-  applyFont(); 
-  
-  if(window.MathJax) {
-      const fullContent = contentDiv.innerHTML + optsContainer.innerHTML + (currentState.submitted || isQuizAnswered ? solBox.innerHTML : "");
-      if (fullContent.includes('$') || fullContent.includes('\\(')) {
-          MathJax.typesetPromise([contentDiv, optsContainer, solBox]).catch(err => console.log(err));
-      }
-  }
+  if(currentState.submitted || isQuizAnswered) {
+      let solutionContent = q.solution && q.solution.trim() !== "" ? `<b>💡 Explanation:</b><br>${q.solution}` : `<div id="ai_sol_box_${idx}" style="margin-top: 10px; padding: 10px; background: rgba(99, 102, 241, 0.05); border-radius: 8px; border: 1px dashed var(--primary-light);"><p style="color:var(--text-muted); font-size:13px; margin-bottom:10px;">💡 No solution available.</p><button onclick="generateAndSaveSolution('${CURRENT_TEST_ID}', ${idx})" style="background:var(--gradient-main); color:white; border:none; padding:8px 15px; border-radius:6px; cursor:pointer; font-weight:bold; font-size:13px;">🤖 Generate AI Solution</button></div>`;
+      let aiDoubtSection = `<div style="margin-top:15px; padding:12px; background:var(--bg-body); border-radius:8px; border:1px solid var(--border-color);"><div style="font-size:13px; font-weight:bold; color:var(--primary); margin-bottom:8px;"><i class="fas fa-robot"></i> Ask AI Tutor!</div><div style="display:flex; gap:8px;"><input type="text" id="aiDoubtInput_${idx}" placeholder="e.g. Can you explain step 2?" style="flex:1; padding:8px 12px; border:1px solid var(--border-color); border-radius:6px; font-size:13px; background:var(--bg-card); color:var(--text-main); outline:none;"><button onclick="askAITutor(${idx})" id="aiDoubtBtn_${idx}" style="background:var(--primary); color:#fff; border:none; padding:8px 15px; border-radius:6px; cursor:pointer;"><i class="fas fa-paper-plane"></i></button></div><div id="aiDoubtResponse_${idx}" style="margin-top:10px; font-size:13px; padding:10px; background:var(--primary-light); color:var(--text-main); border-radius:6px; border:1px dashed var(--primary); display:none; line-height:1.5;"></div></div>`;
+      solBox.innerHTML = `<button onclick="toggleAppSolution(this)" style="width:100%; padding:12px 15px; background:var(--primary-light); color:var(--primary-dark); border:1px solid var(--primary); border-radius:8px; font-weight:bold; cursor:pointer; margin-bottom:10px; font-size:14px; display:flex; justify-content:space-between; align-items:center;"><span>👁️ View Detailed Solution</span><span class="toggle-icon">▼</span></button><div class="sol-content" style="display:none; background:var(--bg-body); padding:15px; border-left:4px solid var(--primary); font-size:14px; border-radius:8px; border:1px solid var(--border-color); line-height:1.6;"><b>✅ Correct Answer:</b> <span style="color:var(--success); font-weight:bold;">${optsArr[correctIdx]}</span><br><br>${solutionContent}${aiDoubtSection}</div>`;
+      solBox.style.display = 'block'; if(document.getElementById('actionButtons')) document.getElementById('actionButtons').style.display = 'none'; document.getElementById('discussionArea').style.display = 'block'; loadComments(idx); 
+  } else { solBox.style.display = 'none'; document.getElementById('discussionArea').style.display = 'none'; if(document.getElementById('actionButtons')) document.getElementById('actionButtons').style.display = 'flex'; }
+  let bms = JSON.parse(getSafeData('dsssb_bookmarks')) || {}; document.getElementById('bookmarkBtn').innerText = bms[CURRENT_TEST_ID + "_Q" + idx] ? "⭐" : "🔖";
+  updateNavButtons(); renderPalette(); applyFont(); if(window.MathJax) MathJax.typesetPromise([document.getElementById('qContent'), document.getElementById('opts'), solBox]).catch(e => {});
 }
 
-// ==========================================
-// 🧠 AI SOLUTION GENERATOR (ON-DEMAND FETCH & SAVE)
-// ==========================================
 async function generateAndSaveSolution(testId, qIndex) {
-    const btnBox = document.getElementById(`ai_sol_box_${qIndex}`);
-    btnBox.innerHTML = `<p style='color:var(--warning); font-weight:bold; font-size:13px;'>⏳ AI is analyzing the question and writing the best solution...</p>`;
-
+    const btnBox = document.getElementById(`ai_sol_box_${qIndex}`); btnBox.innerHTML = `<p style='color:var(--warning); font-weight:bold; font-size:13px;'>⏳ AI is writing solution...</p>`;
     try {
-        const qData = QUESTIONS[qIndex];
-        const generatedHtml = await fetchAISolution(qData);
-
+        const qData = QUESTIONS[qIndex]; const generatedHtml = await fetchAISolution(qData);
         btnBox.innerHTML = `<b>💡 AI Explanation:</b><br><div style="margin-top:8px;">${generatedHtml}</div>`;
-        btnBox.style.border = "none";
-        btnBox.style.background = "transparent";
-        btnBox.style.padding = "0";
-
-        QUESTIONS[qIndex].solution = generatedHtml;
-
-        // Firebase me save karein
-        await db.ref(`dsssb_questions_db/${testId}/${qIndex}/solution`).set(generatedHtml);
-
-        showToast("AI Solution Generated & Saved to Database! ✅", "success");
-
-    } catch (error) {
-        btnBox.innerHTML = `<p style="color:var(--danger); font-size:13px;">❌ Error: ${error.message}</p>
-        <button onclick="generateAndSaveSolution('${testId}', ${qIndex})" style="padding:6px 12px; border-radius:6px; cursor:pointer;">Retry</button>`;
-    }
+        btnBox.style.border = "none"; btnBox.style.background = "transparent"; btnBox.style.padding = "0";
+        QUESTIONS[qIndex].solution = generatedHtml; await db.ref(`dsssb_questions_db/${testId}/${qIndex}/solution`).set(generatedHtml);
+    } catch (error) { btnBox.innerHTML = `<p style="color:var(--danger); font-size:13px;">❌ Error: ${error.message}</p><button onclick="generateAndSaveSolution('${testId}', ${qIndex})">Retry</button>`; }
 }
 
 async function fetchAISolution(qData) {
     const isHindi = document.getElementById('langBtn').innerText === "HI";
     const qText = isHindi ? (qData.q_hi || qData.q_en) : (qData.q_en || qData.q_hi);
     const optsArr = isHindi ? (qData.op_hi || qData.op_en) : (qData.op_en || qData.op_hi);
-    
-    const correctAnsOption = qData.ans;
-    const correctAnsText = optsArr[parseInt(qData.ans) - 1];
-
-    const prompt = `You are a strict exam solution generator.
-    QUESTION: ${qText}
-    OPTIONS: 
-    1) ${optsArr[0]} 
-    2) ${optsArr[1]} 
-    3) ${optsArr[2]} 
-    4) ${optsArr[3]}
-
-    OFFICIAL CORRECT ANSWER: Option ${correctAnsOption} (${correctAnsText})
-
-    INSTRUCTIONS (STRICT - NO DEVIATION):
-    1. OUTPUT FORMAT: Return ONLY clean HTML (no markdown, no extra text, do not wrap in \`\`\`html). MUST start with <ul> and end with </ul>. Inside <ul>, give EXACTLY 2 (max 3) <li> points.
-    2. EXTREME BREVITY: Each <li> MUST BE EXTREMELY SHORT.
-    3. LANGUAGE RULE: Explain in Hinglish (Hindi in Latin script).
-    4. MATH RULE: NO LaTeX. Use &times;, &divide;, <sup>2</sup>, &radic;, &#36;
-    Generate the shortest possible correct HTML list now.`;
-
+    const prompt = `You are a strict exam solution generator. QUESTION: ${qText}. OPTIONS: 1) ${optsArr[0]} 2) ${optsArr[1]} 3) ${optsArr[2]} 4) ${optsArr[3]}. OFFICIAL CORRECT ANSWER: Option ${qData.ans}. Return ONLY clean HTML <ul><li>points</li></ul>. Brief Hinglish. NO LaTeX. Use HTML entities.`;
     const rawHtml = await callGemini(prompt);
     return rawHtml.split('```html').join('').split('```').join('').trim();
 }
 
-function toggleDiscussion() {
-  const container = document.getElementById('discussionContainer');
-  container.style.display = container.style.display === 'none' ? 'block' : 'none';
-}
-
 function loadComments(qIndex) {
-  const qKey = CURRENT_TEST_ID + "_Q" + qIndex;
-  const listDiv = document.getElementById('commentsList');
-  
-  if(currentDiscussionRef) { currentDiscussionRef.off(); }
-  
-  currentDiscussionRef = db.ref(`${DB_DISCUSS_REF}/${qKey}`);
-  
+  const qKey = CURRENT_TEST_ID + "_Q" + qIndex; const listDiv = document.getElementById('commentsList');
+  if(currentDiscussionRef) currentDiscussionRef.off(); currentDiscussionRef = db.ref(`${DB_DISCUSS_REF}/${qKey}`);
   currentDiscussionRef.on('value', (snapshot) => {
-      listDiv.innerHTML = "";
-      if(!snapshot.exists()) {
-          listDiv.innerHTML = "<div style='text-align:center; color:var(--text-muted); font-size:12px; padding:10px;'>No discussions yet. Be the first to ask!</div>";
-          return;
-      }
-      
+      listDiv.innerHTML = snapshot.exists() ? "" : "<div style='text-align:center; color:var(--text-muted); font-size:12px; padding:10px;'>No discussions yet.</div>";
       snapshot.forEach(child => {
-          const data = child.val();
-          const date = new Date(data.timestamp);
-          const timeStr = date.toLocaleDateString() + " " + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-          
-          listDiv.innerHTML += `
-              <div class="comment-box">
-                  <div class="comment-header">
-                      <span class="comment-author">${data.name}</span>
-                      <span class="comment-time">${timeStr}</span>
-                  </div>
-                  <div style="color:var(--text-main);">${data.text}</div>
-              </div>
-          `;
+          const data = child.val(); const date = new Date(data.timestamp);
+          listDiv.innerHTML += `<div class="comment-box"><div class="comment-header"><span class="comment-author">${data.name}</span><span class="comment-time">${date.toLocaleDateString()}</span></div><div style="color:var(--text-main);">${data.text}</div></div>`;
       });
       listDiv.scrollTop = listDiv.scrollHeight;
   });
 }
 
 function postComment() {
-  const input = document.getElementById('newCommentInput');
-  const text = input.value.trim();
-  if(!text) return showToast("Please write something first!", "warning");
-  
-  const qKey = CURRENT_TEST_ID + "_Q" + currentState.idx;
-  
-  db.ref(`${DB_DISCUSS_REF}/${qKey}`).push({
-      name: currentState.name || "Student",
-      text: text,
-      timestamp: firebase.database.ServerValue.TIMESTAMP
-  }).then(() => {
-      input.value = "";
-      showToast("Comment posted!", "success");
-  }).catch(err => {
-      showToast("Error posting comment. Try again.", "error");
-  });
+  const input = document.getElementById('newCommentInput'); const text = input.value.trim(); if(!text) return;
+  db.ref(`${DB_DISCUSS_REF}/${CURRENT_TEST_ID + "_Q" + currentState.idx}`).push({ name: currentState.name || "Student", text: text, timestamp: firebase.database.ServerValue.TIMESTAMP }).then(() => { input.value = ""; });
 }
 
 function toggleBookmark() {
-  let bookmarks = JSON.parse(getSafeData('dsssb_bookmarks')) || {};
-  let qKey = CURRENT_TEST_ID + "_Q" + currentState.idx;
-  if(bookmarks[qKey]) {
-      delete bookmarks[qKey];
-      showToast("Bookmark Removed", "info");
-      document.getElementById('bookmarkBtn').innerText = "🔖";
-  } else {
-      bookmarks[qKey] = QUESTIONS[currentState.idx];
-      showToast("Question Bookmarked ⭐", "success");
-      document.getElementById('bookmarkBtn').innerText = "⭐";
-  }
+  let bookmarks = JSON.parse(getSafeData('dsssb_bookmarks')) || {}; let qKey = CURRENT_TEST_ID + "_Q" + currentState.idx;
+  if(bookmarks[qKey]) { delete bookmarks[qKey]; document.getElementById('bookmarkBtn').innerText = "🔖"; } 
+  else { bookmarks[qKey] = QUESTIONS[currentState.idx]; document.getElementById('bookmarkBtn').innerText = "⭐"; }
   setSafeData('dsssb_bookmarks', JSON.stringify(bookmarks));
 }
 
-// --- 🔥 REPORT QUESTION FUNCTION ---
 function reportCurrentQuestion() {
-    if(currentState.submitted) return showToast("Test is already submitted.", "warning");
-
-    showConfirmDialog(
-        "🚩 Report Question?", 
-        "क्या आपको लगता है कि इस सवाल या इसके विकल्पों में कोई गलती है? Admin को रिपोर्ट करने के लिए 'Yes' दबाएं।",
-        () => {
-            let tId = getSafeData('dsssb_user_id') || "guest";
-            let qNum = currentState.idx + 1;
-            
-            db.ref('dsssb_reports').push({
-                testId: CURRENT_TEST_ID,
-                testTitle: CURRENT_TEST_TITLE,
-                qIndex: currentState.idx,
-                qNum: qNum,
-                reportedBy: currentState.name,
-                userId: tId,
-                issue: "Question Error / Wrong Options flagged during Test",
-                time: firebase.database.ServerValue.TIMESTAMP
-            }).then(() => {
-                showToast(`Question ${qNum} reported successfully! 🛡️`, "success");
-            }).catch(err => {
-                showToast("Failed to report. Check internet connection.", "error");
-            });
-        }
-    );
+    if(currentState.submitted) return;
+    showConfirmDialog("🚩 Report Question?", "Kaya aapko error lag raha hai?", () => {
+        db.ref('dsssb_reports').push({ testId: CURRENT_TEST_ID, testTitle: CURRENT_TEST_TITLE, qIndex: currentState.idx, qNum: currentState.idx + 1, reportedBy: currentState.name, userId: getSafeData('dsssb_user_id') || "guest", issue: "Flagged during Test", time: firebase.database.ServerValue.TIMESTAMP }).then(() => showToast("Reported! 🛡️", "success"));
+    });
 }
 
-function selectAns(i) { 
-  if(currentState.submitted) return; 
-  if(TEST_MODE === 'quiz' && currentState.answers[currentState.idx] !== null) return; 
-  
-  currentState.answers[currentState.idx] = i; 
-  saveState(); 
-  loadQuestion(currentState.idx); 
-}
-
-function showConfirmDialog(title, desc, onProceed) {
-  document.getElementById('confirmTitle').innerText = title;
-  document.getElementById('confirmDesc').innerText = desc;
-  document.getElementById('customConfirm').style.display = 'flex';
-  
-  const proceedBtn = document.getElementById('confirmProceedBtn');
-  const newBtn = proceedBtn.cloneNode(true);
-  proceedBtn.parentNode.replaceChild(newBtn, proceedBtn);
-  
-  newBtn.addEventListener('click', () => {
-      closeConfirm();
-      if(onProceed) onProceed();
-  });
-}
+function selectAns(i) { if(currentState.submitted || (TEST_MODE === 'quiz' && currentState.answers[currentState.idx] !== null)) return; currentState.answers[currentState.idx] = i; saveState(); loadQuestion(currentState.idx); }
+function showConfirmDialog(title, desc, onProceed) { document.getElementById('confirmTitle').innerText = title; document.getElementById('confirmDesc').innerText = desc; document.getElementById('customConfirm').style.display = 'flex'; const proceedBtn = document.getElementById('confirmProceedBtn'); const newBtn = proceedBtn.cloneNode(true); proceedBtn.parentNode.replaceChild(newBtn, proceedBtn); newBtn.addEventListener('click', () => { closeConfirm(); if(onProceed) onProceed(); }); }
 function closeConfirm() { document.getElementById('customConfirm').style.display = 'none'; }
-
-function reviewAndNext() {
-  if(currentState.submitted) return;
-  currentState.review[currentState.idx] = true;
-  next();
-}
+function reviewAndNext() { if(currentState.submitted) return; currentState.review[currentState.idx] = true; next(); }
 
 function manualSubmitSection() {
     if(currentState.submitted || TEST_MODE === 'quiz') return;
-
-    // 🔥 TIME LOCK CHECK FOR SECTION 🔥
     let timeSpentSec = (TOTAL_TIME_MINS * 60) - currentState.time;
-    if (MIN_SUBMIT_MINS > 0 && timeSpentSec < (MIN_SUBMIT_MINS * 60)) {
-        let remainSec = (MIN_SUBMIT_MINS * 60) - timeSpentSec;
-        let m = Math.floor(remainSec / 60);
-        let s = remainSec % 60;
-        return showToast(`कृपया सबमिट करने के लिए ${m} मिनट ${s} सेकंड और प्रतीक्षा करें!`, "warning");
-    }
-
-    if (currentState.secIdx < SECTION_MAP.length - 1) {
-        const currentSecName = SECTION_MAP[currentState.secIdx];
-        showConfirmDialog(
-            "Submit Section?", 
-            `Are you sure you want to submit the '${currentSecName}' section? You cannot modify answers in this section later.`,
-            () => {
-                currentState.secIdx++; 
-                renderSectionTabs(); 
-                loadQuestion(secIndices[currentState.secIdx]);
-                if(window.innerWidth < 1024) togglePalette();
-            }
-        );
-    } else {
-        submitTestDialog();
-    }
+    if (MIN_SUBMIT_MINS > 0 && timeSpentSec < (MIN_SUBMIT_MINS * 60)) return showToast(`Wait ${Math.floor(((MIN_SUBMIT_MINS*60)-timeSpentSec)/60)}m!`, "warning");
+    if (currentState.secIdx < SECTION_MAP.length - 1) { showConfirmDialog("Submit Section?", `Finish '${SECTION_MAP[currentState.secIdx]}'?`, () => { currentState.secIdx++; renderSectionTabs(); loadQuestion(secIndices[currentState.secIdx]); if(window.innerWidth < 1024) togglePalette(); }); } 
+    else { submitTestDialog(); }
 }
 
 function submitTestDialog() {
   if(currentState.submitted) return;
-
-  // 🔥 TIME LOCK CHECK FOR FINAL SUBMIT 🔥
   let timeSpentSec = (TOTAL_TIME_MINS * 60) - currentState.time;
-  if (MIN_SUBMIT_MINS > 0 && timeSpentSec < (MIN_SUBMIT_MINS * 60)) {
-      let remainSec = (MIN_SUBMIT_MINS * 60) - timeSpentSec;
-      let m = Math.floor(remainSec / 60);
-      let s = remainSec % 60;
-      return showToast(`टेस्ट सबमिट करने के लिए ${m} मिनट ${s} सेकंड और प्रतीक्षा करें!`, "warning");
-  }
-
-  showConfirmDialog(
-      "Final Submit?", 
-      "Are you absolutely sure you want to submit the entire Mock Test? You will not be able to change your answers.",
-      () => submitTest()
-  );
+  if (MIN_SUBMIT_MINS > 0 && timeSpentSec < (MIN_SUBMIT_MINS * 60)) return showToast("Wait!", "warning");
+  showConfirmDialog("Final Submit?", "Submit Mock Test?", () => submitTest());
 }
 
 function next() {
   if(currentState.idx < QUESTIONS.length - 1) {
-      if (currentState.submitted || TEST_MODE === 'quiz') {
-          loadQuestion(currentState.idx + 1);
-          return;
-      }
-
-      const nextQ = QUESTIONS[currentState.idx + 1]; 
-      const currQ = QUESTIONS[currentState.idx];
+      if (currentState.submitted || TEST_MODE === 'quiz') { loadQuestion(currentState.idx + 1); return; }
+      const nextQ = QUESTIONS[currentState.idx + 1]; const currQ = QUESTIONS[currentState.idx];
       if((nextQ.section || "General") !== (currQ.section || "General")) {
-          if (SECTION_LOCK) {
-              showConfirmDialog(
-                  "Submit Section?", 
-                  `Are you sure you want to finish the ${currQ.section || "General"} section? You cannot modify answers in this section later.`,
-                  () => {
-                      currentState.secIdx++; 
-                      renderSectionTabs(); 
-                      loadQuestion(currentState.idx + 1);
-                  }
-              );
-          } else {
-              currentState.secIdx++; 
-              renderSectionTabs(); 
-              loadQuestion(currentState.idx + 1);
-          }
-      } else { 
-          loadQuestion(currentState.idx + 1); 
-      }
-  } else { 
-      if(TEST_MODE === 'quiz') {
-          showToast("Quiz Completed! Returning home...", "success");
-          setTimeout(() => { window.location.href = "index.html"; }, 1500);
-      } else if(!currentState.submitted) {
-          submitTestDialog();
-      } else {
-          showToast("End of Questions. Redirecting to Dashboard...", "info");
-          setTimeout(() => { window.location.href = "index.html"; }, 1500);
-      }
-  }
+          if (SECTION_LOCK) { showConfirmDialog("Submit Section?", `Finish ${currQ.section || "General"}?`, () => { currentState.secIdx++; renderSectionTabs(); loadQuestion(currentState.idx + 1); }); } 
+          else { currentState.secIdx++; renderSectionTabs(); loadQuestion(currentState.idx + 1); }
+      } else { loadQuestion(currentState.idx + 1); }
+  } else { if(TEST_MODE === 'quiz') setTimeout(() => { window.location.href = "index.html"; }, 1500); else if(!currentState.submitted) submitTestDialog(); else setTimeout(() => { window.location.href = "index.html"; }, 1500); }
 }
 
 function prev() {
-  if (currentState.submitted || TEST_MODE === 'quiz') {
-      if(currentState.idx > 0) loadQuestion(currentState.idx - 1);
-      return;
-  }
-  const currQ = QUESTIONS[currentState.idx];
+  if (currentState.submitted || TEST_MODE === 'quiz') { if(currentState.idx > 0) loadQuestion(currentState.idx - 1); return; }
   if(currentState.idx > 0) {
-      const prevQ = QUESTIONS[currentState.idx - 1];
-      if((prevQ.section || "General") === (currQ.section || "General")) { 
-          loadQuestion(currentState.idx - 1); 
-      } 
-      else { 
-          if(SECTION_LOCK) {
-              showToast("You are in a locked section flow! Cannot go back.", "warning"); 
-          } else {
-              currentState.secIdx--;
-              renderSectionTabs();
-              loadQuestion(currentState.idx - 1);
-          }
-      }
+      const prevQ = QUESTIONS[currentState.idx - 1]; const currQ = QUESTIONS[currentState.idx];
+      if((prevQ.section || "General") === (currQ.section || "General")) { loadQuestion(currentState.idx - 1); } 
+      else { if(SECTION_LOCK) showToast("Locked Section!", "warning"); else { currentState.secIdx--; renderSectionTabs(); loadQuestion(currentState.idx - 1); } }
   }
 }
 
 function updateNavButtons() {
-  const btn = document.getElementById('nextBtn');
-  const revBtn = document.getElementById('reviewNextBtn');
-  const prevBtn = document.getElementById('prevBtn');
-  
-  btn.style.display = "flex";
-  prevBtn.style.display = "flex";
-  
-  if (currentState.submitted || TEST_MODE === 'quiz') {
-      revBtn.style.display = "none";
-      if(currentState.idx === QUESTIONS.length - 1) {
-          btn.innerHTML = TEST_MODE === 'quiz' ? "Finish Quiz 🏁" : "End Review 🏁";
-          btn.style.background = "var(--danger)";
-      } else {
-          btn.innerHTML = "Next ▶";
-          btn.style.background = "var(--primary)";
-      }
-  } else {
-      if(currentState.idx === QUESTIONS.length - 1) { 
-          btn.innerHTML = "Finish Exam"; 
-          btn.style.background = "var(--danger)"; 
-          revBtn.style.display = "none";
-      } else { 
-          btn.innerHTML = "Save & Next ▶"; 
-          btn.style.background = "var(--gradient-main)"; 
-          revBtn.style.display = "flex";
-      }
-  }
+  const btn = document.getElementById('nextBtn'); const revBtn = document.getElementById('reviewNextBtn');
+  btn.style.display = "flex"; document.getElementById('prevBtn').style.display = "flex";
+  if (currentState.submitted || TEST_MODE === 'quiz') { revBtn.style.display = "none"; if(currentState.idx === QUESTIONS.length - 1) { btn.innerHTML = "End Review 🏁"; btn.style.background = "var(--danger)"; } else { btn.innerHTML = "Next ▶"; btn.style.background = "var(--primary)"; } } 
+  else { if(currentState.idx === QUESTIONS.length - 1) { btn.innerHTML = "Finish Exam"; btn.style.background = "var(--danger)"; revBtn.style.display = "none"; } else { btn.innerHTML = "Save & Next ▶"; btn.style.background = "var(--gradient-main)"; revBtn.style.display = "flex"; } }
 }
 
-function startTimer() {
-  clearInterval(timerInt);
-  timerInt = setInterval(() => {
-      if(currentState.submitted) return;
-      
-      if (TEST_MODE !== 'solution' && TEST_MODE !== 'quiz' && currentState.idx !== undefined) {
-          currentState.timePerQ[currentState.idx] = (currentState.timePerQ[currentState.idx] || 0) + 1;
-      }
+function startTimer() { clearInterval(timerInt); timerInt = setInterval(() => { if(currentState.submitted) return; if (currentState.idx !== undefined) currentState.timePerQ[currentState.idx] = (currentState.timePerQ[currentState.idx] || 0) + 1; if(currentState.time <= 0) { submitTest(); return; } currentState.time--; const el = document.getElementById('timer'); el.innerText = `${Math.floor(currentState.time / 60).toString().padStart(2,'0')}:${(currentState.time % 60).toString().padStart(2,'0')}`; if(currentState.time < 300) el.classList.add('low'); }, 1000); }
+function togglePalette() { if(window.innerWidth >= 1024) return; const p = document.getElementById('palettePanel'); const o = document.getElementById('paletteOverlay'); if(p.classList.contains('show')) { p.classList.remove('show'); o.style.display = 'none'; } else { p.classList.add('show'); o.style.display = 'block'; } }
 
-      if(currentState.time <= 0) { submitTest(); return; }
-      currentState.time--;
-      const m = Math.floor(currentState.time / 60).toString().padStart(2,'0');
-      const s = (currentState.time % 60).toString().padStart(2,'0');
-      const el = document.getElementById('timer');
-      el.innerText = `${m}:${s}`;
-      if(currentState.time < 300) el.classList.add('low');
-  }, 1000);
-}
+function setPaletteView(type) { isPaletteListView = (type === 'list'); document.getElementById('tabGrid').classList.toggle('active', !isPaletteListView); document.getElementById('tabList').classList.toggle('active', isPaletteListView); renderPalette(); }
+function openZoom(src) { document.getElementById('zoomImg').src = src; document.getElementById('zoomModal').style.display = 'block'; }
+function closeZoom() { document.getElementById('zoomModal').style.display = 'none'; }
 
-function showToast(msg, type="info") {
-  const container = document.getElementById('toast-container'); const t = document.createElement('div'); t.className = `toast ${type}`;
-  let icon = "ℹ️"; if(type==="success") icon = "✅"; if(type==="error") icon = "❌"; if(type==="warning") icon = "⚠️";
-  t.innerHTML = `<span>${icon}</span> <span>${msg}</span>`; container.appendChild(t); setTimeout(() => t.remove(), 3000);
-}
-
-function togglePalette() { 
-  if(window.innerWidth >= 1024) return;
-  const p = document.getElementById('palettePanel'); const o = document.getElementById('paletteOverlay');
-  if(p.classList.contains('show')) { p.classList.remove('show'); o.style.display = 'none'; } else { p.classList.add('show'); o.style.display = 'block'; }
-}
-
-let isPaletteListView = false;
-
-function setPaletteView(type) {
-    isPaletteListView = (type === 'list');
-    document.getElementById('tabGrid').classList.toggle('active', !isPaletteListView);
-    document.getElementById('tabList').classList.toggle('active', isPaletteListView);
+// --- SET PALETTE FILTER LOGIC ---
+function setPaletteFilter(filter) {
+    currentPaletteFilter = filter;
     renderPalette();
 }
 
@@ -1847,12 +1166,37 @@ function renderPalette() {
     const container = document.getElementById('paletteGrid'); 
     container.innerHTML = "";
     
+    // --- DYNAMIC FILTERS UI ---
+    const statsBox = document.getElementById('paletteStatsBox');
+    if (currentState.submitted || TEST_MODE === 'quiz') {
+        statsBox.innerHTML = `
+            <div class="palette-filters">
+                <button class="p-filt-btn ${currentPaletteFilter==='all'?'active':''}" onclick="setPaletteFilter('all')">All</button>
+                <button class="p-filt-btn f-correct ${currentPaletteFilter==='correct'?'active':''}" onclick="setPaletteFilter('correct')">✅ Correct</button>
+                <button class="p-filt-btn f-wrong ${currentPaletteFilter==='wrong'?'active':''}" onclick="setPaletteFilter('wrong')">❌ Wrong</button>
+                <button class="p-filt-btn f-skip ${currentPaletteFilter==='skip'?'active':''}" onclick="setPaletteFilter('skip')">🟡 Skipped</button>
+            </div>
+        `;
+        statsBox.style.padding = "0";
+        statsBox.style.display = "block";
+    } else {
+        statsBox.innerHTML = `
+            <div class="p-leg-item"><div class="p-dot review">★</div> Marked for Review</div>
+            <div class="p-leg-item"><div class="p-dot unattempted"></div> Unattempted</div>
+            <div class="p-leg-item"><div class="p-dot unseen"></div> Unseen</div>
+            <div class="p-leg-item"><div class="p-dot attempted"></div> Attempted</div>
+        `;
+        statsBox.style.padding = "15px";
+        statsBox.style.display = "grid";
+    }
+
     SECTION_MAP.forEach((sec, secIndex) => {
         let startIdx = secIndices[secIndex];
         let endIdx = (secIndex === SECTION_MAP.length - 1) ? QUESTIONS.length : secIndices[secIndex + 1];
         
-        let secStats = { ans: 0, unans: 0, rev: 0, unseen: 0 };
+        let secStats = { ans: 0, unans: 0, rev: 0, unseen: 0, correct: 0, wrong: 0, skip: 0 };
         let gridHtml = `<div class="${isPaletteListView ? 'p-list' : 'p-grid'}">`;
+        let visibleInSec = 0;
         
         for(let i = startIdx; i < endIdx; i++) {
             const myAns = currentState.answers[i]; 
@@ -1868,15 +1212,14 @@ function renderPalette() {
                 }
             }
 
-            // Determine precise state class and status text
             let stateCls = "unseen";
             let statusText = "Unseen";
             
             if (currentState.submitted || isQuizAnswered) {
                 const correctIdx = parseInt(QUESTIONS[i].ans) - 1;
-                if (myAns === correctIdx) { stateCls = "p-correct"; statusText = "Correct ✅"; }
-                else if (myAns !== null && myAns !== correctIdx) { stateCls = "p-wrong"; statusText = "Wrong ❌"; }
-                else { stateCls = "p-skip"; statusText = "Skipped 🟡"; }
+                if (myAns === correctIdx) { stateCls = "p-correct"; statusText = "Correct ✅"; secStats.correct++; }
+                else if (myAns !== null && myAns !== correctIdx) { stateCls = "p-wrong"; statusText = "Wrong ❌"; secStats.wrong++; }
+                else { stateCls = "p-skip"; statusText = "Skipped 🟡"; secStats.skip++; }
                 if(currentState.review[i]) { stateCls += " review"; statusText += " (Review)"; }
             } else {
                 if(myAns !== null) { stateCls = "attempted"; statusText = "Attempted"; secStats.ans++; }
@@ -1887,23 +1230,32 @@ function renderPalette() {
                 if(i === currentState.idx) { stateCls += " current"; statusText = "Current 🟢"; }
             }
 
+            let showQ = true;
+            if (currentState.submitted || isQuizAnswered) {
+                if (currentPaletteFilter === 'correct' && stateCls !== 'p-correct') showQ = false;
+                if (currentPaletteFilter === 'wrong' && stateCls !== 'p-wrong') showQ = false;
+                if (currentPaletteFilter === 'skip' && stateCls !== 'p-skip') showQ = false;
+            }
+
+            if (showQ) visibleInSec++;
+
             let styleStr = "";
             if(!isAccessible) {
                 styleStr = 'opacity: 0.3; cursor: not-allowed; border-color: #334155;';
             } else {
                 styleStr = 'cursor: pointer;';
             }
+            
+            let displayStyle = showQ ? '' : 'display: none;';
 
             if (isPaletteListView) {
-                // List View Button
-                gridHtml += `<button class="qbtn-list ${stateCls}" style="${styleStr}" ${isAccessible ? `onclick="loadQuestion(${i}); if(window.innerWidth < 1024) togglePalette();"` : `disabled`}>
+                gridHtml += `<button class="qbtn-list ${stateCls}" style="${styleStr} ${displayStyle}" ${isAccessible ? `onclick="loadQuestion(${i}); if(window.innerWidth < 1024) togglePalette();"` : `disabled`}>
                     <span style="font-size:14px;">Q. ${i + 1}</span>
                     <span style="font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">${statusText}</span>
                 </button>`;
             } else {
-                // Grid View Button
                 cls += " " + stateCls;
-                gridHtml += `<button class="${cls}" style="${styleStr}" ${isAccessible ? `onclick="loadQuestion(${i}); if(window.innerWidth < 1024) togglePalette();"` : `disabled`}>${i + 1}</button>`;
+                gridHtml += `<button class="${cls}" style="${styleStr} ${displayStyle}" ${isAccessible ? `onclick="loadQuestion(${i}); if(window.innerWidth < 1024) togglePalette();"` : `disabled`}>${i + 1}</button>`;
             }
         }
         gridHtml += `</div>`;
@@ -1911,17 +1263,32 @@ function renderPalette() {
         let isCollapsed = (secIndex !== currentState.secIdx); 
         if(currentState.submitted || TEST_MODE === 'quiz') isCollapsed = false;
 
+        let statsHtml = '';
+        if (currentState.submitted || TEST_MODE === 'quiz') {
+            statsHtml = `
+                <span style="color:#10b981">✅ ${secStats.correct}</span>
+                <span style="color:#ef4444">❌ ${secStats.wrong}</span>
+                <span style="color:#f59e0b">🟡 ${secStats.skip}</span>
+            `;
+        } else {
+            statsHtml = `
+                <span style="color:#ef4444">★ ${secStats.rev}</span>
+                <span style="color:#3b82f6">● ${secStats.ans}</span>
+                <span style="color:#64748b">● ${secStats.unans}</span>
+                <span style="color:#64748b; font-size:10px;">○ ${secStats.unseen}</span>
+            `;
+        }
+
+        let secWrapperStyle = (visibleInSec === 0 && (currentState.submitted || TEST_MODE === 'quiz')) ? 'display: none;' : '';
+
         let secHtml = `
-        <div class="p-sec-wrapper">
+        <div class="p-sec-wrapper" style="${secWrapperStyle}">
             <div class="p-sec-header ${isCollapsed ? 'collapsed' : ''}" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">
                 ${sec}
             </div>
             <div class="p-sec-body ${isCollapsed ? 'collapsed' : ''}">
                 <div class="p-sec-stats">
-                    <span style="color:#ef4444">★ ${secStats.rev}</span>
-                    <span style="color:#3b82f6">● ${secStats.ans}</span>
-                    <span style="color:#64748b">● ${secStats.unans}</span>
-                    <span style="color:#64748b; font-size:10px;">○ ${secStats.unseen}</span>
+                    ${statsHtml}
                 </div>
                 ${gridHtml}
             </div>
@@ -1931,466 +1298,58 @@ function renderPalette() {
     });
 }
 
-function clearResponse() { currentState.answers[currentState.idx] = null; currentState.review[currentState.idx] = false; loadQuestion(currentState.idx); }
-function toggleTheme() { document.body.classList.toggle('dark-mode'); }
-function toggleLang() { const btn = document.getElementById('langBtn'); btn.innerText = btn.innerText.trim().toUpperCase() === "HI" ? "EN" : "HI"; loadQuestion(currentState.idx); }
-function openZoom(src) { 
-    document.getElementById('zoomImg').src = src; 
-    document.getElementById('zoomImg').style.width = '100%'; // Reset size on open
-    currentZoomWidth = 100; // Reset zoom logic
-    document.getElementById('zoomModal').style.display = 'block'; 
-}
-function closeZoom() { 
-    document.getElementById('zoomModal').style.display = 'none'; 
-}
-
-// === Pinch to Zoom Logic for Mobile ===
-let currentZoomWidth = 100;
-let initialPinchDist = null;
-const zModal = document.getElementById('zoomModal');
-const zImg = document.getElementById('zoomImg');
-
-zModal.addEventListener('touchstart', (e) => {
-    if (e.touches.length === 2) { // When two fingers touch
-        initialPinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-    }
-}, { passive: false });
-
-zModal.addEventListener('touchmove', (e) => {
-    if (e.touches.length === 2 && initialPinchDist) {
-        e.preventDefault(); // Prevent default page scrolling while pinching
-        let newDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-        let scale = newDist / initialPinchDist;
-        let newWidth = currentZoomWidth * scale;
-
-        if (newWidth >= 100 && newWidth <= 500) { // Limit stretch between 1x and 5x
-            zImg.style.width = newWidth + '%';
-        }
-    }
-}, { passive: false });
-
-zModal.addEventListener('touchend', (e) => {
-    if (e.touches.length < 2) {
-        initialPinchDist = null; // Reset fingers
-        currentZoomWidth = parseFloat(zImg.style.width) || 100; // Save current stretch level
-    }
-});
-function closeResult() { document.getElementById('resultModal').style.display = 'none'; }
-function sendResultToTelegram(name,score,c,w,s,time,accuracy){
-fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,{
-method:"POST", headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
- chat_id:TELEGRAM_CHAT_ID,
- text:`📘 ${CURRENT_TEST_TITLE}\n\n👤 Name: ${name}\n⏱ Time: ${time}\n✅ Correct: ${c}\n❌ Wrong: ${w}\n➖ Skipped: ${s}\n🎯 Score: ${score}\n📊 Accuracy: ${accuracy}%\n\n🔥 PYQ Notes Portal`
-})
-});
-}
-
-function fmt(s){
-s = Math.max(0, s);
-const m = Math.floor(s/60);
-const sec = s%60;
-return `${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
-}
-
-function renderComparisonBar(label, userVal, maxVal, topperVal, maxTopperVal, unit = "") {
-const userPct = (userVal > 0) ? Math.min(100, (userVal / maxVal) * 100) : 0;
-const topperPct = Math.min(100, (topperVal / maxTopperVal) * 100) || 0;
-return `
-<div class="bar-section">
-  <div class="bar-label"><span>${label}</span></div>
-  <div style="display:grid; grid-template-columns: 60px 1fr 80px; gap:10px; align-items:center; margin-bottom:6px;">
-     <span style="font-size:12px; font-weight:700; color:var(--primary);">YOU</span>
-     <div class="bar-track"><div class="bar-fill fill-you" style="width:${userPct}%"></div></div>
-     <span style="font-size:12px; font-weight:700; text-align:right; color:var(--text-main);">${userVal}${unit}</span>
-  </div>
-  <div style="display:grid; grid-template-columns: 60px 1fr 80px; gap:10px; align-items:center;">
-     <span style="font-size:12px; font-weight:700; color:var(--success);">TOPPER</span>
-     <div class="bar-track"><div class="bar-fill fill-topper" style="width:${topperPct}%"></div></div>
-     <span style="font-size:12px; font-weight:700; text-align:right; color:var(--text-main);">${topperVal}${unit}</span>
-  </div>
-</div>`;
-}
-
-function getRanksAndToppers(myScore, myTime) {
-  // 🔥 BANDWIDTH SAVER: Sirf current test ke results download honge!
-  return db.ref(DB_REF_NAME).orderByChild("testId").equalTo(CURRENT_TEST_ID).once("value").then(snapshot => {
-      let attempts = [];
-      snapshot.forEach(child => {
-          const val = child.val();
-          if(val && val.score !== undefined) { attempts.push(val); }
-      });
-      
-      let userBest = {};
-      attempts.forEach(a => {
-          let k = a.userId || a.name;
-          if(!userBest[k]) {
-              userBest[k] = a;
-          } else {
-              if(a.score > userBest[k].score || (a.score === userBest[k].score && a.timeTaken < userBest[k].timeTaken)) {
-                  userBest[k] = a;
-              }
-          }
-      });
-      
-      let uniqueAttempts = Object.values(userBest);
-      
-      uniqueAttempts.sort((a, b) => {
-          if (b.score !== a.score) return b.score - a.score;
-          return a.timeTaken - b.timeTaken;
-      });
-      
-      const total = uniqueAttempts.length;
-      let rank = total + 1; 
-      for (let i = 0; i < uniqueAttempts.length; i++) {
-          if (uniqueAttempts[i].score === myScore && uniqueAttempts[i].timeTaken === myTime) { rank = i + 1; break; }
-      }
-      
-      const below = uniqueAttempts.filter(a => a.score < myScore || (a.score === myScore && a.timeTaken > myTime)).length;
-      const percentile = total ? ((below / total) * 100).toFixed(2) : "0.00";
-      
-      return { rank, percentile, total, toppersList: uniqueAttempts.slice(0, 10) };
-  });
-}
-
 async function submitTest() {
-  if(currentState.submitted) return;
-  
-  currentState.submitted = true; 
-  clearInterval(timerInt); 
-  if(window.innerWidth < 1024) togglePalette(); 
-  
-  const specificStorageKey = STORAGE_KEY + "_" + CURRENT_TEST_ID;
-  setSafeData(specificStorageKey + "_final", JSON.stringify(currentState));
-  removeSafeData(specificStorageKey); 
-  
-  renderPalette();
-  renderSectionTabs();
-
-  let totalScore = 0, correct = 0, wrong = 0, skipped = 0;
-  let sectionScores = {};
-  
-  let topicStats = {};
-  let fastest = 9999;
-  let slowest = 0;
-
-  let mistakesDiary = JSON.parse(getSafeData('dsssb_mistakes')) || {};
-
+  if(currentState.submitted) return; currentState.submitted = true; clearInterval(timerInt); if(window.innerWidth < 1024) togglePalette();
+  const specificStorageKey = STORAGE_KEY + "_" + CURRENT_TEST_ID; setSafeData(specificStorageKey + "_final", JSON.stringify(currentState)); removeSafeData(specificStorageKey);
+  renderPalette(); renderSectionTabs();
+  let totalScore = 0, correct = 0, wrong = 0, skipped = 0; let sectionScores = {}; let topicStats = {};
   QUESTIONS.forEach((q, i) => {
-      const secName = q.section || "General";
-      if(!sectionScores[secName]) sectionScores[secName] = {c:0, w:0, s:0, total:0};
-      sectionScores[secName].total++;
-      
-      let topicName = q.topic || "General";
-      if(!topicStats[topicName]) topicStats[topicName] = {c:0, w:0, s:0};
-      
-      let timeForThisQ = currentState.timePerQ[i] || 0;
-      if(timeForThisQ > slowest) slowest = timeForThisQ;
-      if(timeForThisQ < fastest && timeForThisQ > 0) fastest = timeForThisQ;
-
-      const correctIdx = parseInt(q.ans) - 1;
-      const myAns = currentState.answers[i];
-      let qKey = CURRENT_TEST_ID + "_Q" + i;
-      
-      if(myAns === null) {
-          skipped++; 
-          sectionScores[secName].s++;
-          topicStats[topicName].s++;
-      } else if(myAns === correctIdx) { 
-          correct++; 
-          totalScore += POSITIVE_MARK; 
-          sectionScores[secName].c++; 
-          topicStats[topicName].c++;
-          if(mistakesDiary[qKey]) delete mistakesDiary[qKey];
-      } else { 
-          wrong++; 
-          totalScore -= NEGATIVE_MARK; 
-          sectionScores[secName].w++; 
-          topicStats[topicName].w++;
-          mistakesDiary[qKey] = q;
-      }
+      const secName = q.section || "General"; if(!sectionScores[secName]) sectionScores[secName] = {c:0, w:0, s:0, total:0}; sectionScores[secName].total++;
+      let topicName = q.topic || "General"; if(!topicStats[topicName]) topicStats[topicName] = {c:0, w:0, s:0};
+      const myAns = currentState.answers[i]; const correctIdx = parseInt(q.ans) - 1;
+      if(myAns === null) { skipped++; sectionScores[secName].s++; topicStats[topicName].s++; } 
+      else if(myAns === correctIdx) { correct++; totalScore += POSITIVE_MARK; sectionScores[secName].c++; topicStats[topicName].c++; } 
+      else { wrong++; totalScore -= NEGATIVE_MARK; sectionScores[secName].w++; topicStats[topicName].w++; }
   });
-
-  setSafeData('dsssb_mistakes', JSON.stringify(mistakesDiary));
-
-  const attempted = correct + wrong;
-  const accuracy = attempted > 0 ? ((correct/attempted)*100).toFixed(1) : 0;
   const timeSpentSeconds = (TOTAL_TIME_MINS * 60) - currentState.time;
-  const timeStr = `${Math.floor(timeSpentSeconds/60)}m ${timeSpentSeconds%60}s`;
-  
-  const analysisData = {
-      correct: correct,
-      wrong: wrong,
-      skipped: skipped,
-      avgTime: attempted > 0 ? Math.round(timeSpentSeconds / attempted) : 0,
-      fastestTime: fastest,
-      slowestTime: slowest,
-      topicPerformance: topicStats
-  };
-  setSafeData('dsssb_analysis_data', JSON.stringify(analysisData));
-  
-  setSafeData('dsssb_replay_qs', JSON.stringify(QUESTIONS));
-  setSafeData('dsssb_replay_state', JSON.stringify(currentState));
-
-  let tId = getSafeData('dsssb_user_id') || "guest";
-  
-  const userData = {
-      name: currentState.name, userId: tId, testId: CURRENT_TEST_ID, 
-      score: parseFloat(totalScore.toFixed(2)), timeTaken: timeSpentSeconds,
-      timestamp: firebase.database.ServerValue.TIMESTAMP, correct: correct, wrong: wrong,
-      timePerQ: currentState.timePerQ 
-  };
-  
-  const resBox = document.getElementById('resultContent');
-  resBox.innerHTML = `<div class="card-dashboard" style="text-align:center; padding:50px;">
-                          <div style="font-size:30px; animation: pulse 1s infinite;">🔄</div>
-                          <h2 style="color:var(--primary);">Generating Detailed Analysis...</h2>
-                          <p style="color:var(--text-muted);">Calculating your Rank & Percentile against Toppers</p>
-                      </div>`;
+  setSafeData('dsssb_analysis_data', JSON.stringify({correct, wrong, skipped, topicPerformance: topicStats}));
+  const userData = { name: currentState.name, userId: getSafeData('dsssb_user_id') || "guest", testId: CURRENT_TEST_ID, score: parseFloat(totalScore.toFixed(2)), timeTaken: timeSpentSeconds, timestamp: firebase.database.ServerValue.TIMESTAMP, correct, wrong, timePerQ: currentState.timePerQ };
+  document.getElementById('resultContent').innerHTML = `<div class="card-dashboard" style="text-align:center; padding:50px;"><div style="font-size:30px; animation: pulse 1s infinite;">🔄</div><h2 style="color:var(--primary);">Analyzing...</h2></div>`;
   document.getElementById('resultModal').style.display = 'flex';
-  document.getElementById('mainSubmitBtn').style.display = 'none';
-  if(document.getElementById('sectionSubmitBtn')) document.getElementById('sectionSubmitBtn').style.display = 'none';
-
-  let unsynced = JSON.parse(getSafeData('dsssb_unsynced_results') || '[]');
-  unsynced.push(userData);
-  setSafeData('dsssb_unsynced_results', JSON.stringify(unsynced));
-
-  db.ref(DB_REF_NAME).push(userData).then(() => {
-      let currentUnsynced = JSON.parse(getSafeData('dsssb_unsynced_results') || '[]');
-      currentUnsynced = currentUnsynced.filter(u => u.timestamp !== userData.timestamp);
-      setSafeData('dsssb_unsynced_results', JSON.stringify(currentUnsynced));
-      sendResultToTelegram(currentState.name, totalScore.toFixed(2), correct, wrong, skipped, timeStr, accuracy);
-      return getRanksAndToppers(userData.score, userData.timeTaken);
-  }).catch(err => {
-      showToast("⚠️ Device Offline. Result saved locally.", "warning");
-      return { rank: '--', percentile: '--', total: '--', toppersList: [] };
-  }).then(data => {
+  db.ref(DB_REF_NAME).push(userData).then(() => getRanksAndToppers(userData.score, userData.timeTaken)).then(data => {
       let topperStats = { score: 0, accuracy: 0, correct: 0, wrong: 0, time: 0, timePerQ: [] };
-      if (data.toppersList && data.toppersList.length > 0) {
-          let t = data.toppersList[0];
-          let tAtt = (t.correct || 0) + (t.wrong || 0);
-          topperStats = { 
-              score: t.score, 
-              accuracy: tAtt > 0 ? (((t.correct || 0) / tAtt) * 100).toFixed(1) : 0, 
-              correct: t.correct || 0, 
-              wrong: t.wrong || 0, 
-              time: t.timeTaken,
-            timePerQ: t.timePerQ || []
-          };
-      }
-
-      // 🔥 AUTO CUTOFF LOGIC (70% DEFAULT) 🔥
-      let maxPossibleMarks = QUESTIONS.length * POSITIVE_MARK;
-      let finalCutoff = DYNAMIC_CUTOFF;
-      
-      // Agar cutoff manually set nahi hai (default 40 utha raha hai), toh 70% set kar do
-      if (DYNAMIC_CUTOFF === 40) {
-          finalCutoff = Math.round(maxPossibleMarks * 0.7); 
-      }
-
-      // 🔥 NAYA: Generate Sectional Analysis Table HTML
+      if (data.toppersList && data.toppersList.length > 0) { let t = data.toppersList[0]; topperStats = { score: t.score, accuracy: (((t.correct || 0) / ((t.correct||0)+(t.wrong||0))) * 100).toFixed(1), correct: t.correct || 0, wrong: t.wrong || 0, time: t.timeTaken, timePerQ: t.timePerQ || [] }; }
       let sectionalHtml = `<div style="overflow-x:auto;"><table class="sectional-table"><tr><th>Section</th><th>Att.</th><th>✔️</th><th>❌</th><th>Acc.</th></tr>`;
-      for(let sec in sectionScores) {
-          let s = sectionScores[sec];
-          let att = s.c + s.w;
-          let acc = att > 0 ? ((s.c / att)*100).toFixed(0) + '%' : '0%';
-          sectionalHtml += `<tr><td><b>${sec}</b></td><td>${att}</td><td style="color:var(--success);">${s.c}</td><td style="color:var(--danger);">${s.w}</td><td><b>${acc}</b></td></tr>`;
-      }
+      for(let sec in sectionScores) { let s = sectionScores[sec]; sectionalHtml += `<tr><td><b>${sec}</b></td><td>${s.c+s.w}</td><td style="color:var(--success);">${s.c}</td><td style="color:var(--danger);">${s.w}</td><td><b>${s.c+s.w > 0 ? ((s.c/(s.c+s.w))*100).toFixed(0)+'%' : '0%'}</b></td></tr>`; }
       sectionalHtml += `</table></div>`;
-
-      // 🔥 NAYA: Generate Top 3 Podium HTML
       let podiumHtml = `<div class="podium-container">`;
       let top3 = data.toppersList ? data.toppersList.slice(0, 3) : [];
-      // Rank 2 (Left)
-      if(top3[1]) podiumHtml += `<div class="podium-rank rank-2"><div class="p-avatar">🥈</div><div class="p-name">${top3[1].name}</div><div class="p-score">${top3[1].score} Pts</div></div>`;
-      // Rank 1 (Center)
-      if(top3[0]) podiumHtml += `<div class="podium-rank rank-1"><div class="p-avatar" style="font-size:35px;">👑</div><div class="p-name">${top3[0].name}</div><div class="p-score">${top3[0].score} Pts</div></div>`;
-      // Rank 3 (Right)
-      if(top3[2]) podiumHtml += `<div class="podium-rank rank-3"><div class="p-avatar">🥉</div><div class="p-name">${top3[2].name}</div><div class="p-score">${top3[2].score} Pts</div></div>`;
+      if(top3[1]) podiumHtml += `<div class="podium-rank rank-2"><div class="p-avatar">🥈</div><div class="p-name">${top3[1].name}</div><div class="p-score">${top3[1].score}</div></div>`;
+      if(top3[0]) podiumHtml += `<div class="podium-rank rank-1"><div class="p-avatar" style="font-size:35px;">👑</div><div class="p-name">${top3[0].name}</div><div class="p-score">${top3[0].score}</div></div>`;
+      if(top3[2]) podiumHtml += `<div class="podium-rank rank-3"><div class="p-avatar">🥉</div><div class="p-name">${top3[2].name}</div><div class="p-score">${top3[2].score}</div></div>`;
       podiumHtml += `</div>`;
-
-      let html = `
-      <div id="pdfContent" class="analysis-container">
-          <div style="text-align:center; padding: 10px 0 20px 0; border-bottom: 2px dashed var(--border-color); margin-bottom: 20px;">
-              <h2 style="color:var(--primary); margin:0; font-size:26px; font-weight:900; letter-spacing:1px;">PYQ NOTES EXAM REPORT</h2>
-              <p style="color:var(--text-muted); margin:8px 0 0 0; font-size:16px; font-weight:600;">${CURRENT_TEST_TITLE}</p>
+      document.getElementById('resultContent').innerHTML = `
+      <div class="analysis-container">
+          <div class="card-dashboard" style="text-align:center;"><h2>EXAM REPORT</h2><p>${CURRENT_TEST_TITLE}</p></div>
+          <div class="card-dashboard score-summary" style="padding:0;">
+              <div class="score-item"><h4>🏆 Rank</h4><p>${data.rank}/${data.total}</p></div>
+              <div class="score-item"><h4>📊 Percentile</h4><p>${data.percentile}%</p></div>
+              <div class="score-item"><h4>🧮 Score</h4><p>${totalScore.toFixed(2)}</p></div>
           </div>
-          
-          <div class="card-dashboard" style="background:var(--bg-body-gradient); border-radius:16px;">
-              <div class="info-grid">
-                  <div style="font-size: 16px;"><b>Candidate:</b> ${currentState.name}</div>
-                  <div style="font-size: 16px; text-align: right;"><b>Status:</b> ${totalScore >= finalCutoff ? '<span style="color:var(--success); background: var(--success-bg); padding: 4px 10px; border-radius: 8px;">QUALIFIED 🏆</span>' : '<span style="color:var(--danger); background: var(--danger-bg); padding: 4px 10px; border-radius: 8px;">NOT QUALIFIED ❌</span>'} <br><span style="font-size:11px; color:var(--text-muted);">(Cut-off: ${finalCutoff})</span></div>
-              </div>
+          <div class="card-dashboard">${sectionalHtml}</div>
+          <div class="card-dashboard">${podiumHtml}</div>
+          <div style="display:flex; flex-direction:column; gap:12px; align-items:center;">
+              <button onclick="generateDeepAIAnalysis()" id="btnDeepAi" class="btn-primary btn-ai-glow" style="width:100%; max-width:400px; padding:16px;"><i class="fas fa-brain"></i> Deep AI Analysis ✨</button>
+              <div id="aiAnalysisContainer" style="display:none; width:100%; max-width:400px; padding:15px; background:var(--primary-light); border-radius:12px; font-size:14px;"></div>
+              <button onclick="window.location.href='index.html'" class="btn-primary" style="width:100%; max-width:400px;">Back to Home 🏠</button>
           </div>
-
-          <div class="card-dashboard score-summary" style="margin-top:15px; border:none; box-shadow:none; padding: 0;">
-              <div class="score-item"><h4>🏆 Rank</h4><p style="color: var(--primary);">${data.rank} <span class="total-count">/ ${data.total}</span></p></div>
-              <div class="score-item"><h4>📊 Percentile</h4><p style="color:var(--success);">${data.percentile}%</p></div>
-              <div class="score-item"><h4>🧮 Score</h4><p style="color:var(--warning);">${totalScore.toFixed(2)}</p></div>
-              <div class="score-item"><h4>⏱ Time</h4><p style="color:var(--danger);">${fmt(timeSpentSeconds)}</p></div>
-          </div>
-
-          <div class="card-dashboard attempt-summary" style="margin-top:15px;">
-             <div class="attempt-box at-correct">✅ Correct<span>${correct}</span></div>
-             <div class="attempt-box at-wrong">❌ Wrong<span>${wrong}</span></div>
-             <div class="attempt-box at-unattempted">🟡 Skipped<span>${skipped}</span></div>
-             <div class="attempt-box at-total">✍️ Attempted<span>${attempted} / ${QUESTIONS.length}</span></div>
-          </div>
-
-          <div class="card-dashboard" style="margin-top:15px;">
-              <h3 class="section-title">📈 Section-wise Performance</h3>
-              ${sectionalHtml}
-          </div>
-
-          <div class="card-dashboard" style="margin-top:15px;">
-              <h3 class="section-title">📊 You vs Topper</h3>
-              ${renderComparisonBar("Score", totalScore.toFixed(2), QUESTIONS.length * POSITIVE_MARK, topperStats.score, QUESTIONS.length * POSITIVE_MARK)}
-              ${renderComparisonBar("Accuracy", accuracy, 100, topperStats.accuracy, 100, "%")}
-              ${renderComparisonBar("Correct", correct, QUESTIONS.length, topperStats.correct, QUESTIONS.length)}
-              ${renderComparisonBar("Time Taken", timeSpentSeconds, TOTAL_TIME_MINS*60, topperStats.time, TOTAL_TIME_MINS*60)}
-          </div>
-          
-          <div class="card-dashboard" style="margin-top:15px; overflow:hidden;">
-              <h3 class="section-title" style="text-align:center; border:none; margin-bottom: 0;">🏆 Hall of Fame</h3>
-              ${podiumHtml}
-              <div style="overflow-x:auto">
-                  <table class="topper-table">
-                      <tr><th>Rank</th><th>Name</th><th>Score</th><th>Time</th></tr>
-                      ${data.toppersList && data.toppersList.length > 3 ? data.toppersList.slice(3, 10).map((t, idx) => `
-                      <tr style="${t.name === currentState.name ? 'background:var(--success-bg); font-weight:bold;' : ''}">
-                          <td>#${idx + 4}</td>
-                          <td>${t.name} ${t.name === currentState.name ? '<b style="color:var(--primary); font-size:10px;">(You)</b>' : ''}</td>
-                          <td><b style="color: var(--primary);">${t.score}</b></td>
-                          <td>${fmt(t.timeTaken)}</td>
-                      </tr>
-                      `).join('') : '<tr><td colspan="4" style="text-align:center; padding: 15px; color: var(--text-muted);">More ranks will appear here soon.</td></tr>'}
-                  </table>
-              </div>
-          </div>
-
-          <h3 style="margin-top:40px; border-left:5px solid var(--primary); padding-left:15px; color:var(--text-main);">Detailed Question Analysis</h3>
-      `;
-
-      QUESTIONS.forEach((q, i) => {
-          const correctIdx = parseInt(q.ans) - 1;
-          const myAns = currentState.answers[i];
-          let statusBadge = "";
-          
-          if(myAns === null) statusBadge = `<span style="background:var(--warning); color:#fff; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:800; letter-spacing:0.5px; box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3);">🟡 SKIPPED</span>`;
-          else if(myAns === correctIdx) statusBadge = `<span style="background:var(--success); color:#fff; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:800; letter-spacing:0.5px; box-shadow: 0 2px 5px rgba(16, 185, 129, 0.3);">✅ CORRECT</span>`;
-          else statusBadge = `<span style="background:var(--danger); color:#fff; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:800; letter-spacing:0.5px; box-shadow: 0 2px 5px rgba(239, 68, 68, 0.3);">❌ WRONG</span>`;
-          
-          const timeTakenSec = currentState.timePerQ[i] || 0;
-          const topperTimeSec = topperStats.timePerQ[i] || 0;
-          
-          const formatSec = (sec) => {
-              const m = Math.floor(sec/60);
-              const s = sec % 60;
-              return m > 0 ? `${m}m ${s}s` : `${s}s`;
-          };
-          
-          const timeStrDisplay = formatSec(timeTakenSec);
-          const topperTimeStrDisplay = formatSec(topperTimeSec);
-
-          const isHindi = document.getElementById('langBtn').innerText === "HI";
-          const qText = isHindi ? (q.q_hi || q.q_en) : (q.q_en || q.q_hi);
-          const optionsArr = isHindi ? (q.op_hi || q.op_en) : (q.op_en || q.op_hi);
-
-          let optionsHTML = '<div style="margin-top:15px; display:flex; flex-direction:column; gap:10px;">';
-          optionsArr.forEach((opt, optIdx) => {
-              let optStyle = "padding:12px 15px; border:1px solid var(--border-color); border-radius:8px; font-size:15px; background:var(--bg-body); color:var(--text-main); transition: 0.2s;";
-              let icon = "";
-              
-              if (myAns !== null) {
-                  if (optIdx === correctIdx) {
-                      optStyle = "padding:12px 15px; border:2px solid var(--success); border-radius:8px; font-size:15px; background:var(--success-bg); color:var(--text-main); font-weight:bold;";
-                      icon = "✅ ";
-                  } else if (optIdx === myAns && myAns !== correctIdx) {
-                      optStyle = "padding:12px 15px; border:2px solid var(--danger); border-radius:8px; font-size:15px; background:var(--danger-bg); color:var(--text-main); font-weight:bold;";
-                      icon = "❌ ";
-                  }
-              }
-              optionsHTML += `<div style="${optStyle}">${icon}<b>${String.fromCharCode(65+optIdx)})</b> ${opt}</div>`;
-          });
-          optionsHTML += '</div>';
-
-          html += `
-              <div class="card-dashboard pdf-q-card" style="margin-bottom:25px; padding:25px; border-radius:16px;">
-                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; color:var(--text-muted); font-size:14px; border-bottom:1px solid var(--border-color); padding-bottom:12px;">
-                      <div><b style="color:var(--primary); font-size:16px;">Q.${i+1}</b> <span style="margin-left:8px; font-weight:600;">(${q.section || "General"})</span> &nbsp;&nbsp; ${statusBadge}</div>
-                      
-                      <div style="display:flex; flex-direction:column; gap:4px; text-align:right;">
-                          <div style="font-size:11px; font-weight:bold; background:var(--bg-body); border: 1px solid var(--border-color); padding:4px 8px; border-radius:6px; color:var(--text-main);">⏱️ You: ${timeStrDisplay}</div>
-                          <div style="font-size:11px; font-weight:bold; background:var(--success-bg); border: 1px solid rgba(16, 185, 129, 0.2); padding:4px 8px; border-radius:6px; color:var(--success);">👑 Top: ${topperTimeStrDisplay}</div>
-                      </div>
-                  </div>
-                  <div style="font-weight:600; margin-bottom:20px; color:var(--text-main); font-size:17px; line-height:1.6;">${qText}</div>
-                  
-                  ${optionsHTML}
-                  
-                  <div style="margin-top:20px; background:var(--success-bg); padding:15px; border-left:5px solid var(--success); color:var(--text-main); font-size:15px; border-radius:8px; font-weight:500;">
-                      <b>✅ Correct Answer:</b> ${String.fromCharCode(65+correctIdx)}) ${optionsArr[correctIdx]}
-                  </div>
-                  
-                  <div style="margin-top:15px; background:var(--primary-light); padding:15px; border-left:5px solid var(--primary); color:var(--text-main); font-size:15px; border-radius:8px; line-height:1.5;">
-                      <b style="color:var(--primary); font-size:16px;">💡 Detailed Solution:</b><br><br>${q.solution || 'No detailed solution provided.'}
-                  </div>
-              </div>
-          `;
-      });
-
-      html += `</div>
-               <div style="text-align:center; margin-top:30px; padding-bottom:30px; display: flex; flex-direction: column; gap: 12px; align-items: center;">
-                  <button onclick="downloadPDF()" class="btn-primary" style="width:100%; max-width: 400px; padding:16px; font-size:15px; background:var(--bg-card); color:var(--primary); border:2px solid var(--primary); box-shadow:none; border-radius: 12px;"><i class="fas fa-file-pdf"></i> Download PDF Report</button>
-                  
-                  <button onclick="localStorage.setItem('dsssb_replay_qs', JSON.stringify(QUESTIONS)); localStorage.setItem('dsssb_replay_state', JSON.stringify(currentState)); window.location.href='replay.html'" class="btn-primary" style="width:100%; max-width: 400px; padding:16px; font-size:15px; background:var(--warning); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); border-radius: 12px;"><i class="fas fa-gamepad"></i> Try Replay Mode</button>
-                  
-                  <button onclick="generateDeepAIAnalysis()" id="btnDeepAi" class="btn-primary btn-ai-glow" style="width:100%; max-width: 400px; padding:16px; font-size:15px; border-radius: 12px;"><i class="fas fa-brain"></i> Generate Deep AI Analysis ✨</button>
-                  <div id="aiAnalysisContainer" style="display:none; width:100%; max-width:400px; margin-top:10px; padding:15px; background:var(--primary-light); border-radius:12px; border:1px solid var(--primary); color:var(--text-main); font-size:14px; line-height:1.6; text-align:left;"></div>
-
-                  <button onclick="window.location.href='index.html'" class="btn-primary" style="width:100%; max-width: 400px; padding:16px; font-size:15px; background:var(--bg-body); color:var(--text-muted); border: 2px solid var(--border-color); box-shadow:none; border-radius: 12px;"><i class="fas fa-home"></i> Back to Dashboard</button>
-               </div>`;
-
-      resBox.innerHTML = html;
-
+      </div>`;
   });
 }
 
-function downloadPDF() {
-    // TWA/Android Print Trigger Fix
-    showToast("Preparing Exam Report... 📥", "success");
-    
-    // Thoda extra delay taaki background processes clear ho jayein
-    setTimeout(() => {
-        try {
-            // Force focus to window before printing
-            window.focus();
-            if (typeof window.print !== 'undefined') {
-                window.print();
-            } else {
-                alert("Print feature is not supported in this view. Please open in Chrome.");
-            }
-        } catch (e) {
-            console.error("Print Error:", e);
-            showToast("Device restricted printing. Try in Chrome Browser.", "warning");
-        }
-    }, 1000);
-}
-
-function reviewSolutions() {
-  document.getElementById('resultModal').style.display = 'none';
-  currentState.idx = 0; currentState.secIdx = 0;
-  renderSectionTabs(); loadQuestion(currentState.idx);
-  
-  document.getElementById('examFooter').style.display = 'flex';
-  
-  showToast("Review Mode Activated 👁️", "success");
-}
-
-if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
-  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(err => console.error('Service Worker Error:', err)); });
-}
+function forceFullScreen() { try { let elem = document.documentElement; let enterFS = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.msRequestFullscreen; if (enterFS) enterFS.call(elem); } catch(e) {} }
+function downloadPDF() { window.print(); }
+function closeResult() { document.getElementById('resultModal').style.display = 'none'; }
 </script>
-
 </body>
 </html>
