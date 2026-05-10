@@ -1016,6 +1016,11 @@ function initApp() {
       document.getElementById('startNameInput').value = tName + " (Quiz Mode)";
       document.getElementById('startExamBtn').innerText = "START QUIZ ⚡";
       document.getElementById('timer').style.display = 'none'; 
+  } else if (TEST_MODE === 'result') {
+      // 🔥 NEW: Result/Analysis Mode Text & Logic Setup
+      document.getElementById('startNameInput').value = tName;
+      document.getElementById('startExamBtn').innerText = "VIEW ANALYSIS 📊";
+      document.getElementById('timer').style.display = 'none'; 
   } else {
       document.getElementById('startNameInput').value = tName;
   }
@@ -1070,45 +1075,70 @@ function initApp() {
         });
           
         const specificStorageKey = STORAGE_KEY + "_" + CURRENT_TEST_ID;
-          calcSectionIndices();
+        calcSectionIndices();
           
         // --- NEW: Inject Dynamic Data into Declaration Screen ---
-          const totalQs = QUESTIONS.length;
-          const totalMarks = totalQs * POSITIVE_MARK;
-          if(document.getElementById('declTotalQs')) document.getElementById('declTotalQs').innerText = totalQs;
-          if(document.getElementById('declTotalMarks')) document.getElementById('declTotalMarks').innerText = "पूर्णांक: " + totalMarks;
-          if(document.getElementById('declPosMark')) document.getElementById('declPosMark').innerText = "सही उत्तर: +" + POSITIVE_MARK;
-          if(document.getElementById('declNegMark')) document.getElementById('declNegMark').innerText = "नकारात्मक अंक (Negative): -" + NEGATIVE_MARK;
-          // --------------------------------------------------------
-          if (TEST_MODE === 'solution') {
-              const finalSaved = getSafeData(specificStorageKey + "_final");
-              if (finalSaved) { currentState = JSON.parse(finalSaved); } 
-              else {
-                  currentState.answers = new Array(QUESTIONS.length).fill(null);
-                  currentState.review = new Array(QUESTIONS.length).fill(false);
-                  currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
-              }
-              currentState.submitted = true; 
-              document.getElementById('resumeBox').style.display = 'none';
-          } else if (TEST_MODE === 'quiz') {
-              currentState.answers = new Array(QUESTIONS.length).fill(null);
-              currentState.review = new Array(QUESTIONS.length).fill(false);
-              currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
-              currentState.submitted = false; 
-              document.getElementById('resumeBox').style.display = 'none';
-          } else {
-              currentState.answers = new Array(QUESTIONS.length).fill(null);
-              currentState.review = new Array(QUESTIONS.length).fill(false);
-              currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
-              
-              const saved = getSafeData(specificStorageKey);
-              if(saved) {
-                  let savedState = JSON.parse(saved);
-                  if(savedState.answers && savedState.answers.length === QUESTIONS.length) {
-                      document.getElementById('resumeBox').style.display = 'block';
-                  } else { removeSafeData(specificStorageKey); }
-              }
-          }
+        const totalQs = QUESTIONS.length;
+        const totalMarks = totalQs * POSITIVE_MARK;
+        if(document.getElementById('declTotalQs')) document.getElementById('declTotalQs').innerText = totalQs;
+        if(document.getElementById('declTotalMarks')) document.getElementById('declTotalMarks').innerText = "पूर्णांक: " + totalMarks;
+        if(document.getElementById('declPosMark')) document.getElementById('declPosMark').innerText = "सही उत्तर: +" + POSITIVE_MARK;
+        if(document.getElementById('declNegMark')) document.getElementById('declNegMark').innerText = "नकारात्मक अंक (Negative): -" + NEGATIVE_MARK;
+        
+        // --------------------------------------------------------
+        if (TEST_MODE === 'solution' || TEST_MODE === 'result') {
+            // 🔥 FIX: Check local storage for BOTH solution & result modes to auto-fill answers without resetting
+            const finalSaved = getSafeData(specificStorageKey + "_final");
+            if (finalSaved) { 
+                currentState = JSON.parse(finalSaved); 
+            } else {
+                // Agar final submission nahi hai but normal localstorage bacha hua hai
+                const saved = getSafeData(specificStorageKey);
+                if(saved) {
+                    currentState = JSON.parse(saved);
+                } else {
+                    // Fallback to blank if nothing is found
+                    currentState.answers = new Array(QUESTIONS.length).fill(null);
+                    currentState.review = new Array(QUESTIONS.length).fill(false);
+                    currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
+                }
+            }
+            
+            currentState.submitted = true; 
+            document.getElementById('resumeBox').style.display = 'none';
+            
+            // 🔥 THE BIG FIX: AUTO-SUBMIT IF MODE IS RESULT 🔥
+            // Agar result dekhna hai, toh test start nahi hoga balki directly submitTest call ho jayega!
+            if (TEST_MODE === 'result') {
+                document.getElementById('startScreen').style.display = 'none';
+                document.getElementById('instructionScreen').style.display = 'none';
+                document.getElementById('declarationScreen').style.display = 'none';
+                document.querySelector('header').style.display = 'flex';
+                document.getElementById('mainArea').style.display = 'block';
+                
+                // Directly call the final score/leaderboard rendering function
+                submitTest(); 
+            }
+            
+        } else if (TEST_MODE === 'quiz') {
+            currentState.answers = new Array(QUESTIONS.length).fill(null);
+            currentState.review = new Array(QUESTIONS.length).fill(false);
+            currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
+            currentState.submitted = false; 
+            document.getElementById('resumeBox').style.display = 'none';
+        } else {
+            currentState.answers = new Array(QUESTIONS.length).fill(null);
+            currentState.review = new Array(QUESTIONS.length).fill(false);
+            currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
+            
+            const saved = getSafeData(specificStorageKey);
+            if(saved) {
+                let savedState = JSON.parse(saved);
+                if(savedState.answers && savedState.answers.length === QUESTIONS.length) {
+                    document.getElementById('resumeBox').style.display = 'block';
+                } else { removeSafeData(specificStorageKey); }
+            }
+        }
       } else {
           alert("⚠️ Alert: Test not found!");
       }
