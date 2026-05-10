@@ -227,17 +227,40 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 .at-unattempted { background: var(--warning-bg); color: #b77c00; border-color: rgba(245, 158, 11, 0.3); }
 .at-total { background: var(--primary-light); color: var(--primary-dark); border-color: rgba(99, 102, 241, 0.3); }
 
-/* 🔥 NEW PODIUM UI FOR LEADERBOARD 🔥 */
-.podium-container { display: flex; justify-content: center; align-items: flex-end; gap: 12px; margin: 20px 0; padding-bottom: 15px; border-bottom: 1px dashed var(--border-color); }
-.podium-rank { display: flex; flex-direction: column; align-items: center; background: var(--bg-body); padding: 15px 10px 10px; border-radius: 16px 16px 0 0; width: 30%; position: relative; border: 1px solid var(--border-color); border-bottom: none; transition: 0.3s; }
-.podium-rank:hover { transform: translateY(-5px); }
-.podium-rank.rank-1 { height: 160px; background: linear-gradient(180deg, #fef08a 0%, var(--bg-card) 100%); border-color: #facc15; z-index: 2; box-shadow: 0 -8px 20px rgba(250, 204, 21, 0.3); }
-.podium-rank.rank-2 { height: 130px; background: linear-gradient(180deg, #e2e8f0 0%, var(--bg-card) 100%); border-color: #cbd5e1; }
-.podium-rank.rank-3 { height: 110px; background: linear-gradient(180deg, #ffedd5 0%, var(--bg-card) 100%); border-color: #fdba74; }
-.p-avatar { font-size: 30px; margin-bottom: 5px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
-.p-name { font-size: 12px; font-weight: 800; text-align: center; color: var(--text-main); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; }
-.p-score { font-size: 14px; font-weight: 900; margin-top: auto; }
-.rank-1 .p-score { color: #ca8a04; } .rank-2 .p-score { color: #475569; } .rank-3 .p-score { color: #c2410c; }
+/* 🔥 UPGRADED PREMIUM PODIUM 🔥 */
+.podium-container { display: flex; justify-content: center; align-items: flex-end; gap: 15px; margin: 30px 0 20px 0; padding-bottom: 20px; border-bottom: 1px dashed var(--border-color); }
+.podium-rank { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px 10px; border-radius: 20px 20px 0 0; width: 30%; position: relative; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.podium-rank:hover { transform: translateY(-10px); }
+
+/* Rank 1: Glowing Gold */
+.podium-rank.rank-1 { height: 180px; background: linear-gradient(180deg, #fbbf24 0%, #b45309 100%); border: 2px solid #fde047; z-index: 3; box-shadow: 0 -10px 40px rgba(245, 158, 11, 0.5); }
+.podium-rank.rank-1 .p-name, .podium-rank.rank-1 .p-score { color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+
+/* Rank 2: Silver */
+.podium-rank.rank-2 { height: 140px; background: linear-gradient(180deg, #e2e8f0 0%, #64748b 100%); border: 2px solid #f1f5f9; box-shadow: 0 -5px 20px rgba(100, 116, 139, 0.3); }
+.podium-rank.rank-2 .p-name, .podium-rank.rank-2 .p-score { color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+
+/* Rank 3: Bronze */
+.podium-rank.rank-3 { height: 120px; background: linear-gradient(180deg, #fed7aa 0%, #9a3412 100%); border: 2px solid #ffedd5; box-shadow: 0 -5px 20px rgba(154, 52, 18, 0.3); }
+.podium-rank.rank-3 .p-name, .podium-rank.rank-3 .p-score { color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+
+.p-avatar { font-size: 35px; margin-bottom: 8px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); }
+.p-name { font-size: 13px; font-weight: 800; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; letter-spacing: 0.5px; }
+.p-score { font-size: 16px; font-weight: 900; margin-top: auto; background: rgba(0,0,0,0.2); padding: 4px 12px; border-radius: 20px; }
+
+/* Smart Badges */
+.badge-speed { background: #dbeafe; color: #1e3a8a; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 900; letter-spacing: 0.5px; border: 1px solid #bfdbfe; margin-left: 5px; }
+.badge-acc { background: #dcfce7; color: #166534; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 900; letter-spacing: 0.5px; border: 1px solid #bbf7d0; margin-left: 5px; }
+
+/* Share Card */
+.share-telegram-card { background: linear-gradient(135deg, #0088cc 0%, #005580 100%); padding: 15px 20px; border-radius: 16px; color: white; display: flex; align-items: center; justify-content: space-between; margin-top: 20px; box-shadow: 0 10px 25px rgba(0,136,204,0.4); cursor: pointer; transition: 0.3s; border: 1px solid #33aadd; }
+.share-telegram-card:hover { transform: scale(1.02); box-shadow: 0 15px 35px rgba(0,136,204,0.5); }
+.share-telegram-card h4 { margin: 0; font-size: 16px; font-weight: 900; }
+.share-telegram-card p { margin: 2px 0 0 0; font-size: 12px; opacity: 0.9; }
+
+/* Percentile Tracker */
+.percentile-track { width: 100%; height: 12px; background: var(--bg-body); border-radius: 20px; margin-top: 10px; overflow: hidden; position: relative; border: 1px solid var(--border-color); }
+.percentile-fill { height: 100%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981); border-radius: 20px; transition: 1.5s ease-out; }
 
 /* 🔥 NEW SECTIONAL TABLE UI 🔥 */
 .sectional-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 15px; border-radius: 8px; overflow: hidden; }
@@ -342,13 +365,11 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
    PRINT PREVIEW HIGH QUALITY PDF
    ========================= */
 @media print {
-    /* 1. फालतू UI को हाइड करें, साथ ही #mainArea को भी हाइड करें ताकि वो Modal के पीछे से प्रिंट न हो */
     header, #sectionBar, #examFooter, #palettePanel, #paletteOverlay, 
     #startScreen, #instructionScreen, #declarationScreen, #toast-container, 
     #tgOverlay, #tgPopup, #customConfirm, #zoomModal, #paymentModal, #mainArea,
     .btn-primary { display: none !important; }
 
-    /* 2. MASTER FIX: Body का fixed position हटाकर static करें ताकि सारे पेज खुल सकें */
     html, body {
         position: static !important; 
         height: auto !important; 
@@ -360,7 +381,6 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         padding: 0 !important;
     }
 
-    /* 3. Modal की max-height हटा दें और इसे पूरा एक्सपेंड होने दें */
     #resultModal, .modal-overlay, .modal-card, .modal-body {
         position: static !important; 
         display: block !important;
@@ -377,13 +397,11 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         transform: none !important;
     }
 
-    /* 4. कलर्स प्रिंट में वैसे ही दिखें जैसे स्क्रीन पर हैं */
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
 
-    /* 5. पेज के बीच में से सवाल कटने से बचाएं */
     .pdf-q-card, .card-dashboard {
         page-break-inside: avoid !important; 
         break-inside: avoid !important;
@@ -2114,7 +2132,8 @@ async function submitTest() {
 
   QUESTIONS.forEach((q, i) => {
       const secName = q.section || "General";
-      if(!sectionScores[secName]) sectionScores[secName] = {c:0, w:0, s:0, total:0};
+      // 🔥 NEW: Added 'time' to section tracking
+      if(!sectionScores[secName]) sectionScores[secName] = {c:0, w:0, s:0, total:0, time:0};
       sectionScores[secName].total++;
       
       let topicName = q.topic || "General";
@@ -2123,6 +2142,9 @@ async function submitTest() {
       let timeForThisQ = currentState.timePerQ[i] || 0;
       if(timeForThisQ > slowest) slowest = timeForThisQ;
       if(timeForThisQ < fastest && timeForThisQ > 0) fastest = timeForThisQ;
+
+      // 🔥 NEW: Add time to section
+      sectionScores[secName].time += timeForThisQ;
 
       const correctIdx = parseInt(q.ans) - 1;
       const myAns = currentState.answers[i];
@@ -2218,32 +2240,85 @@ async function submitTest() {
       // 🔥 AUTO CUTOFF LOGIC (70% DEFAULT) 🔥
       let maxPossibleMarks = QUESTIONS.length * POSITIVE_MARK;
       let finalCutoff = DYNAMIC_CUTOFF;
-      
-      // Agar cutoff manually set nahi hai (default 40 utha raha hai), toh 70% set kar do
       if (DYNAMIC_CUTOFF === 40) {
           finalCutoff = Math.round(maxPossibleMarks * 0.7); 
       }
 
-      // 🔥 NAYA: Generate Sectional Analysis Table HTML
-      let sectionalHtml = `<div style="overflow-x:auto;"><table class="sectional-table"><tr><th>Section</th><th>Att.</th><th>✔️</th><th>❌</th><th>Acc.</th></tr>`;
+      // 🔥 UPGRADED: Sectional Analysis Table with Timing & Skipped 🔥
+      let sectionalHtml = `<div style="overflow-x:auto;"><table class="sectional-table" style="text-align:center; min-width: 500px;">
+          <tr>
+              <th style="text-align:left;">Section</th>
+              <th>Total Qs</th>
+              <th>✔️ Right</th>
+              <th>❌ Wrong</th>
+              <th>🟡 Skip</th>
+              <th>⏱️ Time</th>
+              <th>🎯 Acc.</th>
+          </tr>`;
+          
       for(let sec in sectionScores) {
           let s = sectionScores[sec];
           let att = s.c + s.w;
           let acc = att > 0 ? ((s.c / att)*100).toFixed(0) + '%' : '0%';
-          sectionalHtml += `<tr><td><b>${sec}</b></td><td>${att}</td><td style="color:var(--success);">${s.c}</td><td style="color:var(--danger);">${s.w}</td><td><b>${acc}</b></td></tr>`;
+          let secTimeStr = fmt(s.time); // Format section time
+          
+          sectionalHtml += `<tr>
+              <td style="text-align:left; font-size:12px;"><b>${sec}</b></td>
+              <td><b>${s.total}</b></td>
+              <td style="color:var(--success);"><b>${s.c}</b></td>
+              <td style="color:var(--danger);"><b>${s.w}</b></td>
+              <td style="color:var(--warning);"><b>${s.s}</b></td>
+              <td style="color:var(--primary);"><b>${secTimeStr}</b></td>
+              <td><b>${acc}</b></td>
+          </tr>`;
       }
+
+      // 🔥 NEW: Grand Total Row at the bottom of the table
+      sectionalHtml += `<tr style="background:var(--primary-light); color:var(--primary-dark); font-weight:900; border-top: 2px solid var(--primary);">
+          <td style="text-align:left;">GRAND TOTAL</td>
+          <td>${QUESTIONS.length}</td>
+          <td style="color:var(--success);">${correct}</td>
+          <td style="color:var(--danger);">${wrong}</td>
+          <td style="color:var(--warning);">${skipped}</td>
+          <td style="color:var(--primary);">${fmt(timeSpentSeconds)}</td>
+          <td>${accuracy}%</td>
+      </tr>`;
       sectionalHtml += `</table></div>`;
 
-      // 🔥 NAYA: Generate Top 3 Podium HTML
+      // 🔥 Generate Top 3 Podium HTML 🔥
       let podiumHtml = `<div class="podium-container">`;
       let top3 = data.toppersList ? data.toppersList.slice(0, 3) : [];
-      // Rank 2 (Left)
       if(top3[1]) podiumHtml += `<div class="podium-rank rank-2"><div class="p-avatar">🥈</div><div class="p-name">${top3[1].name}</div><div class="p-score">${top3[1].score} Pts</div></div>`;
-      // Rank 1 (Center)
-      if(top3[0]) podiumHtml += `<div class="podium-rank rank-1"><div class="p-avatar" style="font-size:35px;">👑</div><div class="p-name">${top3[0].name}</div><div class="p-score">${top3[0].score} Pts</div></div>`;
-      // Rank 3 (Right)
+      if(top3[0]) podiumHtml += `<div class="podium-rank rank-1"><div class="p-avatar" style="font-size:45px; margin-top:-20px;">👑</div><div class="p-name">${top3[0].name}</div><div class="p-score">${top3[0].score} Pts</div></div>`;
       if(top3[2]) podiumHtml += `<div class="podium-rank rank-3"><div class="p-avatar">🥉</div><div class="p-name">${top3[2].name}</div><div class="p-score">${top3[2].score} Pts</div></div>`;
       podiumHtml += `</div>`;
+
+      // 🔥 Percentile visual tracker 🔥
+      let percentileHtml = `
+          <div style="margin-top: 15px; text-align: left;">
+              <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:800; color:var(--text-muted);">
+                  <span>Need Work</span>
+                  <span>Average</span>
+                  <span style="color:var(--success);">Top Ranker</span>
+              </div>
+              <div class="percentile-track">
+                  <div class="percentile-fill" style="width: ${data.percentile}%"></div>
+              </div>
+              <div style="text-align:center; font-size:11px; margin-top:5px; font-weight:bold; color:var(--primary);">You beat ${data.percentile}% of students! 🚀</div>
+          </div>
+      `;
+
+      // 🔥 Telegram Share Link Generation 🔥
+      let shareText = encodeURIComponent(`🎯 I just scored ${totalScore.toFixed(2)}/${maxPossibleMarks} marks (${accuracy}% Acc) in "${CURRENT_TEST_TITLE}"!\n🏆 Rank: ${data.rank}/${data.total}\n⚡ Can you beat my score?\n\nTake the mock test now on PYQ Notes Portal!`);
+      let telegramShareHtml = `
+          <div class="share-telegram-card" onclick="window.open('https://t.me/share/url?url=&text=${shareText}', '_blank')">
+              <div>
+                  <h4><i class="fab fa-telegram-plane"></i> Flex Your Rank!</h4>
+                  <p>Share your result directly on Telegram</p>
+              </div>
+              <div style="background:rgba(255,255,255,0.2); padding:10px 15px; border-radius:10px; font-weight:bold;">Share ➔</div>
+          </div>
+      `;
 
       let html = `
       <div id="pdfContent" class="analysis-container">
@@ -2257,13 +2332,16 @@ async function submitTest() {
                   <div style="font-size: 16px;"><b>Candidate:</b> ${currentState.name}</div>
                   <div style="font-size: 16px; text-align: right;"><b>Status:</b> ${totalScore >= finalCutoff ? '<span style="color:var(--success); background: var(--success-bg); padding: 4px 10px; border-radius: 8px;">QUALIFIED 🏆</span>' : '<span style="color:var(--danger); background: var(--danger-bg); padding: 4px 10px; border-radius: 8px;">NOT QUALIFIED ❌</span>'} <br><span style="font-size:11px; color:var(--text-muted);">(Cut-off: ${finalCutoff})</span></div>
               </div>
+              ${percentileHtml}
+              ${telegramShareHtml}
           </div>
 
           <div class="card-dashboard score-summary" style="margin-top:15px; border:none; box-shadow:none; padding: 0;">
               <div class="score-item"><h4>🏆 Rank</h4><p style="color: var(--primary);">${data.rank} <span class="total-count">/ ${data.total}</span></p></div>
               <div class="score-item"><h4>📊 Percentile</h4><p style="color:var(--success);">${data.percentile}%</p></div>
-              <div class="score-item"><h4>🧮 Score</h4><p style="color:var(--warning);">${totalScore.toFixed(2)}</p></div>
-              <div class="score-item"><h4>⏱ Time</h4><p style="color:var(--danger);">${fmt(timeSpentSeconds)}</p></div>
+              
+              <div class="score-item"><h4>🧮 Score</h4><p style="color:var(--warning);">${totalScore.toFixed(2)} <span style="font-size:14px; color:var(--text-muted);">/ ${maxPossibleMarks}</span></p></div>
+              <div class="score-item"><h4>⏱ Time</h4><p style="color:var(--danger);">${fmt(timeSpentSeconds)} <span style="font-size:14px; color:var(--text-muted);">/ ${TOTAL_TIME_MINS}m</span></p></div>
           </div>
 
           <div class="card-dashboard attempt-summary" style="margin-top:15px;">
@@ -2274,7 +2352,7 @@ async function submitTest() {
           </div>
 
           <div class="card-dashboard" style="margin-top:15px;">
-              <h3 class="section-title">📈 Section-wise Performance</h3>
+              <h3 class="section-title">📈 Section-wise Performance Details</h3>
               ${sectionalHtml}
           </div>
 
@@ -2287,19 +2365,29 @@ async function submitTest() {
           </div>
           
           <div class="card-dashboard" style="margin-top:15px; overflow:hidden;">
-              <h3 class="section-title" style="text-align:center; border:none; margin-bottom: 0;">🏆 Hall of Fame</h3>
+              <h3 class="section-title" style="text-align:center; border:none; margin-bottom: 0;">🏆 Premium Hall of Fame</h3>
               ${podiumHtml}
               <div style="overflow-x:auto">
                   <table class="topper-table">
-                      <tr><th>Rank</th><th>Name</th><th>Score</th><th>Time</th></tr>
-                      ${data.toppersList && data.toppersList.length > 3 ? data.toppersList.slice(3, 10).map((t, idx) => `
-                      <tr style="${t.name === currentState.name ? 'background:var(--success-bg); font-weight:bold;' : ''}">
-                          <td>#${idx + 4}</td>
-                          <td>${t.name} ${t.name === currentState.name ? '<b style="color:var(--primary); font-size:10px;">(You)</b>' : ''}</td>
-                          <td><b style="color: var(--primary);">${t.score}</b></td>
-                          <td>${fmt(t.timeTaken)}</td>
-                      </tr>
-                      `).join('') : '<tr><td colspan="4" style="text-align:center; padding: 15px; color: var(--text-muted);">More ranks will appear here soon.</td></tr>'}
+                      <tr><th>Rank</th><th>Name</th><th>Score</th><th>Acc %</th><th>Time</th></tr>
+                      ${data.toppersList && data.toppersList.length > 3 ? data.toppersList.slice(3, 10).map((t, idx) => {
+                          
+                          // Smart Badge Logic
+                          let tAttempted = (t.correct || 0) + (t.wrong || 0);
+                          let tAcc = tAttempted > 0 ? ((t.correct / tAttempted) * 100).toFixed(0) : 0;
+                          let accBadge = tAcc >= 90 ? '<span class="badge-acc">🎯</span>' : '';
+                          let speedBadge = t.timeTaken < (TOTAL_TIME_MINS * 60 * 0.5) ? '<span class="badge-speed">⚡</span>' : '';
+                          
+                          return `
+                          <tr style="${t.name === currentState.name ? 'background:var(--success-bg); font-weight:bold;' : ''}">
+                              <td>#${idx + 4}</td>
+                              <td>${t.name} ${t.name === currentState.name ? '<b style="color:var(--primary); font-size:10px;">(You)</b>' : ''}</td>
+                              <td><b style="color: var(--primary);">${t.score}</b></td>
+                              <td>${tAcc}% ${accBadge}</td>
+                              <td>${fmt(t.timeTaken)} ${speedBadge}</td>
+                          </tr>
+                          `;
+                      }).join('') : '<tr><td colspan="5" style="text-align:center; padding: 15px; color: var(--text-muted);">More ranks will appear here soon.</td></tr>'}
                   </table>
               </div>
           </div>
