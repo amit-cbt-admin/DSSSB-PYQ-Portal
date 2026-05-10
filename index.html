@@ -45,8 +45,8 @@ window.MathJax = {
 /* 🔥 NAYA DARK MODE: PURE BLACK & PURE WHITE TEXT 🔥 */
 body.dark-mode {
     --primary: #6366f1; --primary-light: rgba(99, 102, 241, 0.15); --primary-dark: #818cf8;
-    --text-main: #ffffff; --text-muted: #a1a1aa; /* Text is now pure white and light grey */
-    --bg-body: #000000; --bg-card: #111111; /* Background is now AMOLED Black */
+    --text-main: #ffffff; --text-muted: #a1a1aa; 
+    --bg-body: #000000; --bg-card: #111111; 
     --bg-glass: rgba(0, 0, 0, 0.85);
     --border: #222222;
 }
@@ -92,11 +92,12 @@ body { display: block; background: var(--bg-body); color: var(--text-main); padd
 .dark-mode .daily-goal-card { background: linear-gradient(135deg, #2a1b0d, #1a0f05); border-color: #431407; }
 .dark-mode .daily-goal-card.completed { background: linear-gradient(135deg, #064e3b, #022c22); border-color: #065f46; }
 
-.quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 15px 20px 0; }
-.action-item { background: var(--bg-card); padding: 12px 8px; border-radius: 14px; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: 0.2s; border-bottom: 3px solid var(--border); }
+.quick-actions { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; padding: 15px 20px 0; overflow-x: auto; scrollbar-width: none;}
+.action-item { background: var(--bg-card); padding: 12px 8px; border-radius: 14px; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: 0.2s; border-bottom: 3px solid var(--border); min-width: 60px;}
 .action-item:active { transform: translateY(2px); border-bottom-width: 1px; margin-top: 2px;}
 .action-item i { font-size: 20px; color: var(--primary); }
 .action-item span { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+.ai-sparkle { color: #8b5cf6; animation: pulse 1.5s infinite; }
 
 .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; padding: 15px 20px; }
 .stat-card { background: var(--bg-card); padding: 15px 10px; border-radius: 16px; border: 1px solid var(--border); text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
@@ -261,13 +262,6 @@ textarea { height: 120px; resize: none; }
 .lb-table th { background: var(--primary-light); color: var(--primary-dark); padding: 12px 10px; font-weight: 800; border-radius: 8px 8px 0 0; }
 .lb-table td { padding: 12px 10px; border-bottom: 1px solid var(--border); font-weight: 600; color: var(--text-main); }
 .lb-table tr:last-child td { border-bottom: none; }
-
-/* --- AI TUTOR CSS --- */
-.ai-chat-box { max-height: 250px; overflow-y: auto; background: var(--bg-body); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); text-align: left; font-size: 13px; line-height: 1.5; }
-.ai-msg-user { background: var(--primary-light); color: var(--primary-dark); padding: 10px; border-radius: 10px 10px 0 10px; margin-bottom: 10px; align-self: flex-end; width: fit-content; max-width: 85%; margin-left: auto; font-weight: 600; }
-.ai-msg-bot { background: var(--bg-card); color: var(--text-main); padding: 10px; border-radius: 10px 10px 10px 0; margin-bottom: 10px; border: 1px solid var(--border); width: fit-content; max-width: 90%; }
-.ai-sparkle { color: #8b5cf6; animation: pulse 1.5s infinite; }
-
 /* --- DESKTOP NETFLIX STYLE ARROWS --- */
 .desk-scroll-btn {
     display: none; position: absolute; top: 50%; transform: translateY(-50%);
@@ -278,6 +272,12 @@ textarea { height: 120px; resize: none; }
 .desk-scroll-btn:hover { background: var(--primary); color: white; transform: translateY(-50%) scale(1.1); }
 .desk-scroll-btn.left-btn { left: -15px; }
 .desk-scroll-btn.right-btn { right: -15px; }
+
+/* --- AI TUTOR CSS --- */
+.ai-chat-box { max-height: 250px; overflow-y: auto; background: var(--bg-body); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); text-align: left; font-size: 13px; line-height: 1.5; }
+.ai-msg-user { background: var(--primary-light); color: var(--primary-dark); padding: 10px; border-radius: 10px 10px 0 10px; margin-bottom: 10px; align-self: flex-end; width: fit-content; max-width: 85%; margin-left: auto; font-weight: 600; }
+.ai-msg-bot { background: var(--bg-card); color: var(--text-main); padding: 10px; border-radius: 10px 10px 10px 0; margin-bottom: 10px; border: 1px solid var(--border); width: fit-content; max-width: 90%; }
+.ai-sparkle { color: #8b5cf6; animation: pulse 1.5s infinite; }
 
 @media (min-width: 1024px) {
     .desk-scroll-btn { display: flex; align-items: center; justify-content: center; }
@@ -307,54 +307,36 @@ textarea { height: 120px; resize: none; }
    📱 MOBILE OPTIMIZATION PATCH
    ========================================= */
 @media (max-width: 768px) {
-    /* 1. Prevent Horizontal Scrolling (Screen se bahar jane se rokna) */
     body, html { overflow-x: hidden !important; width: 100%; max-width: 100vw; }
-    
-    /* 2. Adjust Quick Actions Grid for small screens */
     .quick-actions { gap: 8px; padding: 15px 10px 0; }
     .action-item { padding: 10px 5px; }
     .action-item span { font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; text-align: center; }
-
-    /* 3. Adjust Stats Row */
     .stats-row { gap: 8px; padding: 15px 10px; }
     .stat-card { padding: 10px 5px; }
     .stat-val { font-size: 16px; }
-
-    /* 4. 3D Folders Adjustments (Squish hone se bachana) */
     .horizontal-3d-scroll { padding: 10px 10px 20px; gap: 10px; }
-    .horizontal-3d-scroll .folder-3d { min-width: 105px; } /* Thoda chota kiya mobile ke liye */
+    .horizontal-3d-scroll .folder-3d { min-width: 105px; } 
     .folder-3d .f-body { padding: 15px 10px; }
     .f-icon { font-size: 22px; margin-bottom: 8px; }
     .f-name { font-size: 12px; }
-
-    /* 5. Target Exams Grid */
     .target-exams-section { padding: 0 10px; }
     .folder-3d-grid { gap: 12px 10px; }
-
-    /* 6. List Container & Search Box */
     .list-container { padding: 0 10px; }
     .search-box { padding: 10px 15px; margin-bottom: 12px; }
     .filter-scroll { padding-bottom: 10px; gap: 8px; }
     .filter-pill { padding: 8px 14px; font-size: 11px; }
-
-    /* 7. Notebook Banner Padding Fix */
     .notebook-banner { margin: 0 10px 20px; padding: 12px 15px; }
     .nb-icon-box { width: 30px; height: 30px; }
-
-    /* 8. Fix App Padding so it doesn't touch the very edges */
     #app { padding-bottom: 80px; } 
 }  
 @media (min-width: 1024px) {
     body { padding-bottom: 0; display: flex; background: var(--bg-body); overflow-x: hidden; }
-    
     .nav-bar { position: fixed; top: 0; left: 0; width: 260px; height: 100vh; flex-direction: column; justify-content: flex-start; padding-top: 40px; gap: 10px; border-top: none; border-right: 1px solid var(--border); box-shadow: 4px 0 15px rgba(0,0,0,0.02); background: var(--bg-card); }
     .nav-item { width: 100%; text-align: left; padding: 15px 30px; font-size: 15px; display: flex; align-items: center; gap: 20px; border-radius: 0 30px 30px 0; margin-right: 20px; transition: 0.3s; cursor: pointer; opacity: 0.7;}
     .nav-item i { margin-bottom: 0; font-size: 20px; width: 24px; text-align: center; display: inline-block; }
     .nav-item.active { background: var(--primary-light); border-left: 4px solid var(--primary); transform: translateY(0); opacity: 1; font-weight: 800;}
-    
     #loader { margin-left: 260px; padding: 40px; width: calc(100% - 260px); }
     #app { margin-left: 260px; padding: 30px 40px; max-width: 1300px; width: calc(100% - 260px); margin-right: auto; display: none; min-height: 100vh; }
-    
     .hero-header { border-radius: 20px; top: 20px; margin-bottom: 30px; border: 1px solid var(--border); padding: 20px 30px;}
     .user-info h1 { font-size: 22px; }
     .quick-actions { padding: 0; margin-bottom: 25px; grid-template-columns: repeat(4, 1fr); gap: 20px; }
@@ -368,8 +350,6 @@ textarea { height: 120px; resize: none; }
     .test-card, .note-card, .video-card { margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between; height: 100%;}
     .pwa-banner, .segment-control, .countdown-box, .daily-goal-card, .qod-card { margin-left: 0; margin-right: 0; }
     #pwaBannerBtn { padding: 10px 24px; font-size: 14px; cursor: pointer;}
-    
-    /* 🔥 HEAVY HOVER EFFECTS ON DESKTOP 🔥 */
     .folder-3d-grid { grid-template-columns: repeat(4, 1fr); gap: 25px; }
     .folder-3d:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
     .test-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
@@ -711,7 +691,6 @@ textarea { height: 120px; resize: none; }
 
 </div>
 
-<!-- 🔥 NAYA: FAB SUPPORT BUTTON -->
 <div class="fab-support" onclick="document.getElementById('supportModal').style.display='flex'">
     <i class="fas fa-headset"></i>
 </div>
@@ -735,7 +714,7 @@ textarea { height: 120px; resize: none; }
             Special Offer: ₹99 <span style="font-size:12px; text-decoration:line-through; color:grey;">₹499</span>
         </div>
         
-        <p style="font-size:12px; color:var(--text-main); margin-bottom:10px; font-weight:600;">To upgrade, please contact Admin on Telegram.</p>
+        <p style="font-size:12px; color:var(--text-main); margin-bottom:10px; font-weight:600;">To upgrade, please contact Admin.</p>
         
         <div style="background:#f1f5f9; padding:10px; border-radius:8px; margin-bottom:15px; font-size:12px;">
             Your App ID: <b id="displayUserId" style="color:var(--primary); font-size: 14px;">--</b><br>
@@ -760,7 +739,6 @@ textarea { height: 120px; resize: none; }
     </div>
 </div>
 
-<!-- 🔥 NAYA: SUPPORT TICKET MODAL -->
 <div id="supportModal" class="modal">
     <div class="modal-content">
         <h2 style="margin-bottom:5px; font-weight:900;">💬 Contact Support</h2>
@@ -773,7 +751,6 @@ textarea { height: 120px; resize: none; }
     </div>
 </div>
 
-<!-- 🔥 NAYA: AI TUTOR MODAL -->
 <div id="aiTutorModal" class="modal">
     <div class="modal-content">
         <h2 style="margin-bottom:5px; font-weight:900; color: #8b5cf6;"><i class="fas fa-magic"></i> AI Doubt Solver ✨</h2>
@@ -836,6 +813,13 @@ function getSafeData(key) { try { return localStorage.getItem(key); } catch(e) {
 function setSafeData(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
 function removeSafeData(key) { try { localStorage.removeItem(key); } catch(e) {} }
 
+function showToast(msg, type="info") { 
+    const toast = document.getElementById('toast'); 
+    toast.innerText = msg; 
+    toast.style.display = 'block'; 
+    setTimeout(() => { toast.style.display = 'none'; }, 2500); 
+}
+
 /* 3. CONFIGURATION & SAFE FIREBASE INIT */
 let db = { 
     ref: function() { 
@@ -868,7 +852,10 @@ let currentNbType = 'bookmarks'; // NEW: Track notebook type globally
 let fallbackQOD = { q: "Fetching today's challenge...", opt: ["-", "-", "-", "-"], ans: 0 };
 
 // --- 🔥 GEMINI API INTEGRATION 🔥 ---
-const apiKey = ""; // Runtime will inject the key here
+// 👇👇👇 APNI PAY-AS-YOU-GO GEMINI API KEY YAHAN DALEIN 👇👇👇
+const apiKey = "AIzaSyAmG3vuLZWMIIfah0yrWZuY_fPWfV7AQHM"; // Runtime will inject the key here
+// 👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆
+
 async function callGemini(promptText, isJson = false) {
     try {
         let payload = {
@@ -879,13 +866,26 @@ async function callGemini(promptText, isJson = false) {
             payload.generationConfig = { responseMimeType: "application/json" };
         }
         
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        const result = await response.json();
-        return result.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't process that. Try again!";
+        let retries = 5;
+        let delay = 1000;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        
+        for (let i = 0; i < retries; i++) {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if(result.error) throw new Error(result.error.message);
+                return result.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't process that. Try again!";
+            } catch (err) {
+                if (i === retries - 1) throw err;
+                await new Promise(res => setTimeout(res, delay));
+                delay *= 2;
+            }
+        }
     } catch (error) {
         console.error("Gemini API Error:", error);
         return "Network error or API limit reached. Please try again later.";
@@ -1004,8 +1004,10 @@ function initDashboard() {
             if(navBadge) navBadge.style.display = 'none'; // Red dot OFF
         }
     } catch(e) { console.log("Mistake check skipped"); }
-    db.ref('dsssb_config/maintenance').on('value', snap => {
-        if(snap.val() === true) {
+    
+    // FETCH CACHED ALERTS & NEWS
+    fetchWithCache('dsssb_config/maintenance', 'cache_maint', 5).then(snap => {
+        if(snap.exists() && snap.val() === true) {
             document.getElementById('maintenanceScreen').style.display = 'flex';
             document.getElementById('app').style.display = 'none';
             if(document.getElementById('loader')) document.getElementById('loader').style.display = 'none';
@@ -1014,7 +1016,7 @@ function initDashboard() {
         }
     });
 
-    db.ref('dsssb_config/alert').on('value', snap => {
+    fetchWithCache('dsssb_config/alert', 'cache_alert', 15).then(snap => {
         if(snap.exists()) {
             const data = snap.val(); 
             if(data.time && data.time > lastAlertTime && data.msg) {
@@ -1025,7 +1027,7 @@ function initDashboard() {
         }
     });
 
-    db.ref('dsssb_config/news').on('value', snap => {
+    fetchWithCache('dsssb_config/news', 'cache_news', 30).then(snap => {
         if(snap.exists() && snap.val() !== "") {
             document.getElementById('newsSection').style.display = 'flex';
             document.getElementById('newsText').innerText = snap.val();
@@ -1088,7 +1090,7 @@ function loadAutoQOD() {
             }
         }
         
-        db.ref('dsssb_config/qod').on('value', manualSnap => {
+        db.ref('dsssb_config/qod').once('value').then(manualSnap => {
             if(manualSnap.exists()) {
                 const d = manualSnap.val();
                 document.getElementById('qodQuestion').innerText = d.q;
@@ -1138,12 +1140,6 @@ function registerPlayStoreUser() {
     window.location.reload();
 }
 
-/* 4. UTILS & UI */
-function toggleTheme() { 
-    document.body.classList.toggle('dark-mode'); 
-    setSafeData('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light'); 
-}
-
 function switchTab(tab, el) { 
     document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none'); 
     document.getElementById('tab-'+tab).style.display = 'block'; 
@@ -1158,13 +1154,6 @@ function switchStudy(type, el) {
     el.classList.add('active'); 
     document.getElementById('notesSection').style.display = (type === 'notes') ? 'block' : 'none'; 
     document.getElementById('videosSection').style.display = (type === 'videos') ? 'block' : 'none'; 
-}
-
-function showToast(msg, type="info") { 
-    const toast = document.getElementById('toast'); 
-    toast.innerText = msg; 
-    toast.style.display = 'block'; 
-    setTimeout(() => { toast.style.display = 'none'; }, 2500); 
 }
 
 /* 5. SMART ROUTING FROM 3D FOLDERS */
@@ -1628,133 +1617,146 @@ async function fetchData(user) {
         if(document.getElementById('loader')) document.getElementById('loader').style.display = 'none'; 
         document.getElementById('app').style.display = 'block'; 
 
-      // 🔥 OPTIMIZATION: Sirf aakhiri 100 results layenge taaki data size aur chota ho jaye
-        db.ref("dsssb_results_live").limitToLast(100).once("value").then(resultsSnap => {
-            const res = resultsSnap.val() || {};
-            
-            let unsynced = JSON.parse(getSafeData('dsssb_unsynced_results') || '[]');
-            unsynced.forEach((uRes, i) => { res['unsynced_' + i] = uRes; });
-            
-            let userMap = {}, myTestCount = 0, subScores = { 'Maths': [], 'English': [], 'Hindi': [], 'GK': [], 'Reasoning': [] };
-            Object.values(res).forEach(r => {
-                let rName = r.name || "Student", safeScore = parseFloat(r.score) || 0;
-                if(!userMap[rName]) userMap[rName] = {s:0, c:0, isMe: false};
-                userMap[rName].s += safeScore; 
-                userMap[rName].c++;
-                
-                if (String(r.userId || "").trim() === String(currentUserId).trim() || rName === currentUser) {
-                    userMap[rName].isMe = true; 
-                    myTestCount++; 
-                    if(r.testId) attemptedTestIds.set(r.testId, r.time || r.timestamp || Date.now()); 
-                    
-                    let cat = r.category || (testData[r.testId] ? testData[r.testId].category : "GK");
-                    let max = r.testId && testData[r.testId] ? (parseInt(testData[r.testId].qs) || parseInt(testData[r.testId].marks) || 20) : 20;
-                    let percent = (safeScore / max) * 100;
-                    let matchedCat = Object.keys(subScores).find(k => cat.toLowerCase().includes(k.toLowerCase()));
-                    
-                    if(matchedCat) subScores[matchedCat].push(percent); else subScores['GK'].push(percent); 
-                }
-            });
+      // 🔥 OPTIMIZATION: Results caching
+        const lbCache = getSafeData('cache_live_results');
+        const lbTime = getSafeData('cache_live_results_time');
+        let res = {};
 
-            document.getElementById('valTests').innerText = myTestCount;
-            let lb = Object.keys(userMap).map(k=>({name: k, avg: userMap[k].s / userMap[k].c, isMe: userMap[k].isMe})).sort((a,b) => b.avg - a.avg);
-            let myRank = lb.findIndex(u => u.isMe) + 1; 
-            document.getElementById('valRank').innerText = myRank > 0 ? `#${myRank}` : '--';
-            renderLeaderboard(lb);
-
-            let chartAverages = []; 
-            ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'].forEach(cat => { 
-                let arr = subScores[cat]; 
-                chartAverages.push(Math.round(arr.length > 0 ? (arr.reduce((a,b)=>a+b, 0) / arr.length) : 0)); 
-            });
-            
-           renderCharts(chartAverages);
-            filterTests('all', document.querySelector('.filter-pill.active')); 
-
-            // --- AI SMART RECOMMENDATION LOGIC ---
-            if (myTestCount > 0) {
-                let subjects = ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'];
-                let weakSubject = '';
-                let lowestScore = 101; 
-                
-                chartAverages.forEach((score, idx) => {
-                    if(score > 0 && score < lowestScore) { 
-                        lowestScore = score;
-                        weakSubject = subjects[idx];
+        if (lbCache && lbTime && (Date.now() - lbTime < 15 * 60 * 1000)) {
+            res = JSON.parse(lbCache);
+            // Silent update
+            setTimeout(() => {
+                db.ref("dsssb_results_live").limitToLast(100).once("value").then(resultsSnap => {
+                    if(resultsSnap.exists()) {
+                        setSafeData('cache_live_results', JSON.stringify(resultsSnap.val()));
+                        setSafeData('cache_live_results_time', Date.now());
                     }
                 });
-
-                let aiCard = document.getElementById('aiRecommendationCard');
-                if(weakSubject && aiCard) {
-                    aiCard.style.display = 'flex';
-                    document.getElementById('aiRecommendText').innerHTML = `<i class="fas fa-spinner fa-spin"></i> AI is analyzing your performance...`;
-                    document.getElementById('aiRecommendBtn').onclick = () => openExamFolder(weakSubject, true);
-                    
-                    // 🔥 Use Gemini to generate personalized advice based on their scores
-                    let promptObj = `The student's mock test averages are: Maths: ${chartAverages[0]}%, English: ${chartAverages[1]}%, Hindi: ${chartAverages[2]}%, GK: ${chartAverages[3]}%, Reasoning: ${chartAverages[4]}%. Their weakest is ${weakSubject} at ${lowestScore}%. Give a very short, 1-sentence highly motivating tip in Hinglish to improve this specific subject. Do not use asterisks or markdown.`;
-                    
-                    callGemini(promptObj).then(advice => {
-                        document.getElementById('aiRecommendText').innerText = advice;
-                    }).catch(err => {
-                        document.getElementById('aiRecommendText').innerText = `Your avg in ${weakSubject} is ${lowestScore}%. Needs focus!`;
-                    });
-                }
-            }
-            // -------------------------------------
-
-          if (myTestCount > 0) {
-                let goalCard = document.getElementById('dailyGoalCard');
-                if(goalCard && !goalCard.classList.contains('completed')) {
-                    goalCard.classList.add('completed');
-                    document.getElementById('dgStatus').innerText = 'Completed ✅';
-                    
-                    // 🎉 CONFETTI CELEBRATION (Sirf din me ek baar) 🎉
-                    if(!sessionStorage.getItem('dailyGoalCelebrated')) {
-                        setTimeout(() => {
-                            if(window.confetti) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, zIndex: 99999 });
-                            showToast("Awesome! You completed your daily mock goal! 🎯");
-                        }, 800);
-                        sessionStorage.setItem('dailyGoalCelebrated', 'true');
-                    }
-                }
-            }
-
-            // 🔥 UPDATE FOLDER PROGRESS BARS AFTER RESULTS ARE LOADED 🔥
-            if(Object.keys(dynamicFolders).length > 0) {
-                renderDynamicFolders();
-            }
-
-            // 🔥 SHARED LINK SECURITY CHECK 🔥
-            const urlParams = new URLSearchParams(window.location.search);
-            const openTestId = urlParams.get('openTest');
-            if (openTestId) {
-                let targetTest = allTests.find(t => t.dbKey === openTestId);
-                if (targetTest) {
-                    let isTestLocked = targetTest.type === 'pro' && !isPro;
-                    
-                    if (isTestLocked) {
-                        showToast("🔒 This is a Premium Challenge. Upgrade to PRO!");
-                        setTimeout(() => { document.getElementById('paymentModal').style.display = 'flex'; }, 1000);
-                    } else {
-                        showToast("⚔️ Challenge Accepted! Redirecting...");
-                        let pm = targetTest.pm !== undefined ? parseFloat(targetTest.pm) : 1;
-                        let nm = targetTest.nm !== undefined ? parseFloat(targetTest.nm) : 0.25;
-                        let isLocked = (targetTest.lock === false || targetTest.lock === "false") ? false : true;
-                        let urlQuery = `testid=${targetTest.dbKey}&title=${encodeURIComponent(targetTest.title)}&time=${targetTest.time||120}&pm=${pm}&nm=${nm}&lock=${isLocked}`;
-                        
-                        setTimeout(() => { window.location.href = `cbt.html?${urlQuery}&mode=exam`; }, 1500);
-                    }
-                }
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }
-            // ----------------------------------------
-
-        }).catch(e => console.error("Leaderboard fetch error:", e));
+            }, 5000);
+            processDashboardResults(res, testData);
+        } else {
+            db.ref("dsssb_results_live").limitToLast(100).once("value").then(resultsSnap => {
+                res = resultsSnap.val() || {};
+                setSafeData('cache_live_results', JSON.stringify(res));
+                setSafeData('cache_live_results_time', Date.now());
+                processDashboardResults(res, testData);
+            }).catch(e => console.error("Leaderboard fetch error:", e));
+        }
 
     } catch(e) { 
         console.error("Data Load Error:", e);
         if(document.getElementById('loader')) document.getElementById('loader').style.display = 'none'; 
         document.getElementById('app').style.display = 'block'; 
+    }
+}
+
+function processDashboardResults(res, testData) {
+    let unsynced = JSON.parse(getSafeData('dsssb_unsynced_results') || '[]');
+    unsynced.forEach((uRes, i) => { res['unsynced_' + i] = uRes; });
+    
+    let userMap = {}, myTestCount = 0, subScores = { 'Maths': [], 'English': [], 'Hindi': [], 'GK': [], 'Reasoning': [] };
+    Object.values(res).forEach(r => {
+        let rName = r.name || "Student", safeScore = parseFloat(r.score) || 0;
+        if(!userMap[rName]) userMap[rName] = {s:0, c:0, isMe: false};
+        userMap[rName].s += safeScore; 
+        userMap[rName].c++;
+        
+        if (String(r.userId || "").trim() === String(currentUserId).trim() || rName === currentUser) {
+            userMap[rName].isMe = true; 
+            myTestCount++; 
+            if(r.testId) attemptedTestIds.set(r.testId, r.time || r.timestamp || Date.now()); 
+            
+            let cat = r.category || (testData[r.testId] ? testData[r.testId].category : "GK");
+            let max = r.testId && testData[r.testId] ? (parseInt(testData[r.testId].qs) || parseInt(testData[r.testId].marks) || 20) : 20;
+            let percent = (safeScore / max) * 100;
+            let matchedCat = Object.keys(subScores).find(k => cat.toLowerCase().includes(k.toLowerCase()));
+            
+            if(matchedCat) subScores[matchedCat].push(percent); else subScores['GK'].push(percent); 
+        }
+    });
+
+    document.getElementById('valTests').innerText = myTestCount;
+    let lb = Object.keys(userMap).map(k=>({name: k, avg: userMap[k].s / userMap[k].c, isMe: userMap[k].isMe})).sort((a,b) => b.avg - a.avg);
+    let myRank = lb.findIndex(u => u.isMe) + 1; 
+    document.getElementById('valRank').innerText = myRank > 0 ? `#${myRank}` : '--';
+    renderLeaderboard(lb);
+
+    let chartAverages = []; 
+    ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'].forEach(cat => { 
+        let arr = subScores[cat]; 
+        chartAverages.push(Math.round(arr.length > 0 ? (arr.reduce((a,b)=>a+b, 0) / arr.length) : 0)); 
+    });
+    
+    renderCharts(chartAverages);
+    filterTests('all', document.querySelector('.filter-pill.active')); 
+
+    // --- AI SMART RECOMMENDATION LOGIC ---
+    if (myTestCount > 0) {
+        let subjects = ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'];
+        let weakSubject = '';
+        let lowestScore = 101; 
+        
+        chartAverages.forEach((score, idx) => {
+            if(score > 0 && score < lowestScore) { 
+                lowestScore = score;
+                weakSubject = subjects[idx];
+            }
+        });
+
+        let aiCard = document.getElementById('aiRecommendationCard');
+        if(weakSubject && aiCard) {
+            aiCard.style.display = 'flex';
+            document.getElementById('aiRecommendText').innerHTML = `<i class="fas fa-spinner fa-spin"></i> AI is analyzing your performance...`;
+            document.getElementById('aiRecommendBtn').onclick = () => openExamFolder(weakSubject, true);
+            
+            let promptObj = `The student's mock test averages are: Maths: ${chartAverages[0]}%, English: ${chartAverages[1]}%, Hindi: ${chartAverages[2]}%, GK: ${chartAverages[3]}%, Reasoning: ${chartAverages[4]}%. Their weakest is ${weakSubject} at ${lowestScore}%. Give a very short, 1-sentence highly motivating tip in Hinglish to improve this specific subject. Do not use asterisks or markdown.`;
+            
+            callGemini(promptObj).then(advice => {
+                document.getElementById('aiRecommendText').innerText = advice;
+            }).catch(err => {
+                document.getElementById('aiRecommendText').innerText = `Your avg in ${weakSubject} is ${lowestScore}%. Needs focus!`;
+            });
+        }
+    }
+
+    if (myTestCount > 0) {
+        let goalCard = document.getElementById('dailyGoalCard');
+        if(goalCard && !goalCard.classList.contains('completed')) {
+            goalCard.classList.add('completed');
+            document.getElementById('dgStatus').innerText = 'Completed ✅';
+            if(!sessionStorage.getItem('dailyGoalCelebrated')) {
+                setTimeout(() => {
+                    if(window.confetti) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, zIndex: 99999 });
+                    showToast("Awesome! You completed your daily mock goal! 🎯");
+                }, 800);
+                sessionStorage.setItem('dailyGoalCelebrated', 'true');
+            }
+        }
+    }
+
+    if(Object.keys(dynamicFolders).length > 0) {
+        renderDynamicFolders();
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const openTestId = urlParams.get('openTest');
+    if (openTestId) {
+        let targetTest = allTests.find(t => t.dbKey === openTestId);
+        if (targetTest) {
+            let isTestLocked = targetTest.type === 'pro' && !isPro;
+            if (isTestLocked) {
+                showToast("🔒 This is a Premium Challenge. Upgrade to PRO!");
+                setTimeout(() => { document.getElementById('paymentModal').style.display = 'flex'; }, 1000);
+            } else {
+                showToast("⚔️ Challenge Accepted! Redirecting...");
+                let pm = targetTest.pm !== undefined ? parseFloat(targetTest.pm) : 1;
+                let nm = targetTest.nm !== undefined ? parseFloat(targetTest.nm) : 0.25;
+                let isLocked = (targetTest.lock === false || targetTest.lock === "false") ? false : true;
+                let urlQuery = `testid=${targetTest.dbKey}&title=${encodeURIComponent(targetTest.title)}&time=${targetTest.time||120}&pm=${pm}&nm=${nm}&lock=${isLocked}`;
+                setTimeout(() => { window.location.href = `cbt.html?${urlQuery}&mode=exam`; }, 1500);
+            }
+        }
+        window.history.replaceState({}, document.title, window.location.pathname);
     }
 }
 
@@ -1853,7 +1855,7 @@ if (attemptTime) {
         
         let buttonHTML = locked ? 
             `<button class="start-btn locked" onclick="document.getElementById('paymentModal').style.display='flex'">Unlock Premium</button>` : 
-          isAttempted ? 
+           isAttempted ? 
             `${attemptLabel}<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-top:5px;">
                 <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); border:1px solid var(--border); padding: 8px; font-size:12px;" onclick="reattemptTest('${t.dbKey}', '${urlQuery}&mode=exam')">🔄 Retake</button>
                 <button class="start-btn" style="background:var(--warning); color:#fff; border:none; padding: 8px; font-size:12px;" onclick="window.location.href='cbt.html?${urlQuery}&mode=quiz'">⚡ Quiz Mode</button>
@@ -1861,7 +1863,6 @@ if (attemptTime) {
             </div>` : 
             `<button class="start-btn" onclick="window.location.href='cbt.html?${urlQuery}&mode=exam'">Start Mock Test ➔</button>`;
         
-// Sirf tabhi dikhega jab isAttempted true hoga
 let viewRankBtn = isAttempted ? `<button class="start-btn" style="background:var(--primary-light); color:var(--primary-dark); border:1px solid var(--primary); padding: 8px; font-size:13px; margin-top:8px; width:100%; box-shadow:none;" onclick="openTestLeaderboard('${t.dbKey}', '${(t.title||'').replace(/'/g, "\\'")}')">🏆 View Leaderboard</button>` : '';
         // 🔥 SMART TAGS LOGIC 🔥
         let tagStr = t.tags || t.tag || "";
@@ -2369,6 +2370,222 @@ let viewRankBtn = isAttempted ? `<button class="start-btn" style="background:var
     document.getElementById('testListContainer').innerHTML = html || "<div style='text-align:center; color:var(--text-muted); padding:40px;'><i class='fas fa-box-open fa-3x' style='opacity:0.3; margin-bottom:10px;'></i><br>No tests found matching your filters.</div>";
 }
 
+function searchNotes(query) {
+    let list = [...allNotes]; 
+    if(query) list = list.filter(n => (n.title||"").toLowerCase().includes(query.toLowerCase()) || (n.subject||"").toLowerCase().includes(query.toLowerCase()));
+    
+    let html = ""; 
+    list.forEach(n => { 
+        let locked = n.type === 'pro' && !isPro; 
+        html += `<div class="note-card ${locked?'locked':''}">
+                    <div class="t-title">${n.title || 'Study Material'}</div>
+                    <div class="t-info" style="margin-bottom:12px;">
+                        <span><i class="fas fa-book"></i> ${n.subject || 'General'}</span>
+                        <span style="color:#ef4444;"><i class="fas fa-file-pdf"></i> PDF File</span>
+                    </div>
+                    <button class="download-btn" onclick="${locked ? "document.getElementById('paymentModal').style.display='flex'" : `window.open('${n.url}', '_self')`}">
+                        <i class="fas fa-cloud-download-alt"></i> Download PDF
+                    </button>
+                </div>`; 
+    });
+    document.getElementById('notesListContainer').innerHTML = html || "<div style='text-align:center; color:grey; padding:20px;'>No notes available</div>";
+}
+
+function renderVideos(videoList = []) {
+    let html = ""; 
+    
+    videoList.forEach(v => { 
+        // Pro check (Agar admin ne true kiya hai)
+        let locked = (v.type === 'pro' || v.pro === true || v.pro === 'true') && !isPro; 
+        
+        // 🔥 SMART THUMBNAIL GENERATOR: Agar photo nahi hai toh YT link se nikal lega
+        let thumb = v.thumb || "https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg";
+        if (!v.thumb && v.url && v.url.includes("youtu")) {
+            let ytId = v.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
+            if(ytId && ytId[1]) thumb = `https://img.youtube.com/vi/${ytId[1]}/mqdefault.jpg`;
+        }
+
+        html += `<div class="video-card ${locked ? 'locked' : ''}" onclick="${locked ? "document.getElementById('paymentModal').style.display='flex'" : `window.open('${v.url}', '_self')`}">
+                    <div class="vid-thumb">
+                        <img src="${thumb}" alt="Video Thumbnail">
+                        <i class="fab fa-youtube fa-3x" style="position:absolute; color:red; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));"></i>
+                        ${locked ? '<div style="position:absolute; top:10px; right:10px; background:var(--warning); color:white; padding:4px 8px; border-radius:6px; font-size:10px; font-weight:800; z-index:5;">🔒 PRO</div>' : ''}
+                    </div>
+                    <div class="vid-content">
+                        <div class="t-title" style="margin-bottom:4px;">${v.title || 'Video Class'}</div>
+                        <div style="font-size:12px; color:var(--text-muted); font-weight:600;"><i class="fas fa-play-circle"></i> ${v.subject || 'General'}</div>
+                    </div>
+                </div>`; 
+    });
+    
+    // Agar Firebase mein 0 videos hain toh ye dikhayega
+    document.getElementById('videoListContainer').innerHTML = html || "<div style='text-align:center; color:var(--text-muted); padding:40px;'><i class='fas fa-video fa-3x' style='opacity:0.3; margin-bottom:10px;'></i><br>No new video classes available right now.</div>";
+}
+
+function renderCharts(dataArr) {
+    const ctx = document.getElementById('barChart').getContext('2d');
+    new Chart(ctx, { 
+        type: 'bar', 
+        data: { 
+            labels: ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'], 
+            datasets: [{ label: 'Avg Score %', data: dataArr, backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'], borderRadius: 8 }] 
+        }, 
+        options: { 
+            responsive: true, maintainAspectRatio: false, 
+            scales: { 
+                y: { beginAtZero: true, max: 100, grid: {color:'rgba(0,0,0,0.05)'}, ticks: {font:{size:10, weight:'bold'}} }, 
+                x: { grid: {display:false}, ticks: {font:{size:10, weight:'bold'}} } 
+            }, 
+            plugins: { legend: { display: false } } 
+        } 
+    });
+
+    const ctxRadar = document.getElementById('radarChart').getContext('2d');
+    const darkLine = document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)';
+    new Chart(ctxRadar, { 
+        type: 'radar', 
+        data: { 
+            labels: ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'], 
+            datasets: [{ 
+                label: 'Mastery Level', 
+                data: dataArr, 
+                backgroundColor: 'rgba(79, 70, 229, 0.25)', 
+                borderColor: '#4f46e5', 
+                pointBackgroundColor: '#4f46e5',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: '#4f46e5',
+                borderWidth: 2
+            }] 
+        }, 
+        options: { 
+            responsive: true, maintainAspectRatio: false, 
+            scales: { 
+                r: { 
+                    angleLines: { color: darkLine }, 
+                    grid: { color: darkLine }, 
+                    pointLabels: { font: { size: 11, weight: 'bold', family: "'Segoe UI', sans-serif" } }, 
+                    ticks: { display: false, min: 0, max: 100 } 
+                } 
+            }, 
+            plugins: { legend: { display: false } } 
+        } 
+    });
+}
+
+function renderLeaderboard(data) {
+    let html = ""; 
+    data.slice(0, 10).forEach((u, i) => { 
+        let badge = i===0?'🥇':i===1?'🥈':i===2?'🥉':`<div style="width:24px;height:24px;background:var(--border);border-radius:50%;display:grid;place-items:center;font-size:10px;">${i+1}</div>`; 
+        
+        let rankNameHTML = `<span style="font-weight:700;">${u.name}</span>`;
+        if (i === 0) rankNameHTML += ' <span style="font-size:10px; background:#fef08a; color:#854d0e; padding:2px 6px; border-radius:4px; font-weight:800; margin-top:2px; display:inline-block;">👑 Pro King</span>';
+        else if (i === 1) rankNameHTML += ' <span style="font-size:10px; background:#fed7aa; color:#9a3412; padding:2px 6px; border-radius:4px; font-weight:800; margin-top:2px; display:inline-block;">🎯 Sniper</span>';
+        else if (i === 2) rankNameHTML += ' <span style="font-size:10px; background:#fecaca; color:#991b1b; padding:2px 6px; border-radius:4px; font-weight:800; margin-top:2px; display:inline-block;">🔥 Veteran</span>';
+        
+        html += `<div class="rank-row" style="${u.isMe ? 'background:var(--primary-light); padding:15px; border-radius:12px; margin:5px 0;' : ''}">
+                    <span style="width:40px; font-weight:800; display:flex; align-items:center;">${badge}</span>
+                    <span style="flex:1; display:flex; flex-direction:column; justify-content:center;">${rankNameHTML}</span>
+                    <span style="color:var(--primary); font-weight:900; background:var(--bg-body); padding:4px 10px; border-radius:8px; align-self:center;">${Math.round(u.avg)} Pts</span>
+                </div>`; 
+    });
+    document.getElementById('leaderboardList').innerHTML = html || `<div style='text-align:center; padding:40px 20px; color:var(--text-muted);'>
+        <div style='font-size:50px; margin-bottom:10px;'>🚀</div>
+        <h3 style='color:var(--text-main); margin-bottom:5px; font-weight:800;'>Your journey starts here!</h3>
+        <p style='font-size:13px; font-weight:600;'>Attempt your first mock test to unlock your global rank.</p>
+    </div>`;
+}
+
+function openTestLeaderboard(testId, testTitle) {
+    document.getElementById('rankModalTitle').innerText = "🏆 " + testTitle;
+    document.getElementById('testRankModal').style.display = 'flex';
+    document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Fetching Ranks... ⏳</td></tr>';
+
+    db.ref("dsssb_results_live").orderByChild("testId").equalTo(testId).limitToLast(100).once("value").then(snap => {
+        let userBest = {}; 
+        
+        if(snap.exists()) {
+            snap.forEach(child => {
+                let d = child.val();
+                let uid = d.userId || d.name; 
+                let score = parseFloat(d.score) || 0;
+                
+                if(!userBest[uid] || userBest[uid].score < score) {
+                    userBest[uid] = { 
+                        name: d.name || 'Student', 
+                        score: score, 
+                        isMe: (String(d.userId).trim() === String(currentUserId).trim() || d.name === currentUser)
+                    };
+                }
+            });
+        }
+        
+        let ranks = Object.values(userBest);
+        
+        if(ranks.length === 0) {
+            document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 25px 10px; color:var(--text-muted);"><i class="fas fa-rocket fa-2x" style="margin-bottom:10px;"></i><br>Be the first to attempt and rank #1! 🚀</td></tr>';
+            return;
+        }
+
+        ranks.sort((a,b) => b.score - a.score);
+        
+        let myRankIndex = -1;
+        let myData = null;
+        
+        ranks.forEach((r, index) => {
+            if(r.isMe) {
+                myRankIndex = index + 1; 
+                myData = r;
+            }
+        });
+
+        let html = "";
+        let top5 = ranks.slice(0, 5); 
+        let amIInTop5 = false;
+
+        top5.forEach((r, i) => {
+            let rankNum = i + 1;
+            if(r.isMe) amIInTop5 = true;
+            
+            let badge = rankNum === 1 ? '<span style="font-size:18px;">🥇</span>' : 
+                        rankNum === 2 ? '<span style="font-size:18px;">🥈</span>' : 
+                        rankNum === 3 ? '<span style="font-size:18px;">🥉</span>' : 
+                        `<div style="width:22px; height:22px; background:var(--border); border-radius:50%; display:grid; place-items:center; font-size:11px; margin:auto;">${rankNum}</div>`;
+            
+            let rowStyle = r.isMe ? 'background:var(--primary-light);' : '';
+            let nameText = r.isMe ? `${r.name} <b style="color:var(--primary); font-size:10px;">(You)</b>` : r.name;
+            
+            html += `<tr style="${rowStyle}">
+                        <td style="width: 50px; text-align:center;">${badge}</td>
+                        <td style="font-weight:700;">${nameText}</td>
+                        <td style="color:var(--primary); font-weight:900;">${r.score} Pts</td>
+                    </tr>`;
+        });
+
+        if (myData && !amIInTop5) {
+            html += `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:8px; font-size:18px; letter-spacing:3px;">•••</td></tr>`;
+            html += `<tr style="background:var(--primary-light); border-top:2px solid var(--primary);">
+                        <td style="width: 50px; text-align:center; font-weight:900;">#${myRankIndex}</td>
+                        <td style="font-weight:800;">${myData.name} <b style="color:var(--primary); font-size:10px;">(You)</b></td>
+                        <td style="color:var(--primary); font-weight:900;">${myData.score} Pts</td>
+                    </tr>`;
+        } 
+        else if (!myData) {
+            html += `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:8px; font-size:18px; letter-spacing:3px;">•••</td></tr>`;
+            html += `<tr>
+                        <td colspan="3" style="text-align:center; padding:15px 10px; font-size:12px; font-weight:700; color:#ea580c; background:#fff7ed; border-radius:0 0 8px 8px;">
+                            <i class="fas fa-lock" style="margin-right:5px;"></i> Aapne test nahi diya hai. Start Mock Test par click karein!
+                        </td>
+                    </tr>`;
+        }
+        
+        document.getElementById('testRankBody').innerHTML = html;
+    }).catch(e => {
+        console.error(e);
+        document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; color:red;">Error fetching rank. Please try again.</td></tr>';
+    });
+}
+
 // 🔥 MOUSE DRAG TO SCROLL (LIKE MOBILE SWIPE ON PC FOR MULTIPLE SECTIONS) 🔥
 document.addEventListener('DOMContentLoaded', () => {
     const sliders = [document.getElementById('catBox'), document.getElementById('mockFiltersRow')];
@@ -2396,7 +2613,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(!isDown) return;
             e.preventDefault();
             const x = e.pageX - slider.offsetLeft;
-            const walk = (x - startX) * 2; // Scroll fast
+            const walk = (x - startX) * 2; 
             slider.scrollLeft = scrollLeft - walk;
         });
     });
@@ -2408,7 +2625,6 @@ document.addEventListener('keydown', function(e) {
     if (e.ctrlKey && ['U', 'u', 'C', 'c'].includes(e.key)) { e.preventDefault(); return false; }
 });
 
-// --- 🔥 CHALLENGE FRIEND FUNCTION 🔥 ---
 function shareMockTest(testId, title, event) {
     event.stopPropagation();
     const shareText = `🎯 I challenge you in this Mock Test: *${title}*\n\n🔥 Let's see who gets the better rank! Attempt here:\n`;
@@ -2431,7 +2647,6 @@ if ('serviceWorker' in navigator && window.location.protocol.startsWith('http'))
     });
 }
 
-// 🔥 Mobile Browser Full Screen Auto-Trigger (On First Tap)
 document.addEventListener('click', function goFullScreen() {
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         let doc = window.document;
@@ -2441,12 +2656,12 @@ document.addEventListener('click', function goFullScreen() {
             requestFullScreen.call(docEl).catch(err => console.log("Fullscreen auto-trigger ignored by browser"));
         }
     }
-    document.removeEventListener('click', goFullScreen); // Sirf pehli baar chalega
+    document.removeEventListener('click', goFullScreen); 
 });
   
 </script>
 
-  <script>
+<script>
 (function() {
     // Check if Firebase is loaded, otherwise init
     const trackerConfig = { 
@@ -2469,25 +2684,22 @@ document.addEventListener('click', function goFullScreen() {
             localStorage.setItem('dsssb_user_id', trackUid);
         }
 
-        // Determine current page activity
         let loc = window.location.pathname.split('/').pop() || 'index.html';
         if(loc.includes('cbt.html')) loc = 'Giving Mock Test 📝';
         else if(loc.includes('index.html') || loc === '') loc = 'On Dashboard 🏠';
         else loc = 'Exploring Portal 🔍';
 
-        // 1. Update Total/Weekly Users
         trackDb.ref('dsssb_analytics/users/' + trackUid).update({
             name: trackUname,
             last_active: firebase.database.ServerValue.TIMESTAMP
         });
 
-        // 2. Update Live Presence
         const connRef = trackDb.ref('.info/connected');
         const presRef = trackDb.ref('dsssb_analytics/presence/' + trackUid);
 
         connRef.on('value', (snap) => {
             if (snap.val() === true) {
-                presRef.onDisconnect().remove(); // Tab close hote hi offline
+                presRef.onDisconnect().remove(); 
                 presRef.set({ 
                     name: trackUname, 
                     activity: loc, 
