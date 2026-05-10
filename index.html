@@ -42,9 +42,9 @@ window.MathJax = {
     --nav-height: 70px;
 }
 
-/* 🔥 NAYA DARK MODE: PURE BLACK & PURE WHITE TEXT 🔥 */
+/* 🔥 PURE AMOLED DARK MODE: PURE BLACK & PURE WHITE TEXT 🔥 */
 body.dark-mode {
-    --primary: #6366f1; --primary-light: rgba(99, 102, 241, 0.15); --primary-dark: #818cf8;
+    --primary: #818cf8; --primary-light: rgba(99, 102, 241, 0.15); --primary-dark: #6366f1;
     --text-main: #ffffff; --text-muted: #a1a1aa; 
     --bg-body: #000000; --bg-card: #111111; 
     --bg-glass: rgba(0, 0, 0, 0.85);
@@ -91,6 +91,7 @@ body { display: block; background: var(--bg-body); color: var(--text-main); padd
 .daily-goal-card.completed .dg-btn { display: none; }
 .dark-mode .daily-goal-card { background: linear-gradient(135deg, #2a1b0d, #1a0f05); border-color: #431407; }
 .dark-mode .daily-goal-card.completed { background: linear-gradient(135deg, #064e3b, #022c22); border-color: #065f46; }
+.dark-mode .dg-title { color: #fde68a; }
 
 .quick-actions { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; padding: 15px 20px 0; overflow-x: auto; scrollbar-width: none;}
 .action-item { background: var(--bg-card); padding: 12px 8px; border-radius: 14px; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: 0.2s; border-bottom: 3px solid var(--border); min-width: 60px;}
@@ -144,10 +145,12 @@ body { display: block; background: var(--bg-body); color: var(--text-main); padd
 .qod-card { background: linear-gradient(135deg, #fffbeb 0%, #fff7ed 100%); border: 1px solid #fed7aa; border-radius: 18px; padding: 18px; margin: 0 20px 20px; box-shadow: 0 6px 15px rgba(251, 146, 60, 0.1); }
 .dark-mode .qod-card { background: linear-gradient(135deg, #2a1b0d, #1a0f05); border-color: #431407; }
 .qod-tag { background: #f97316; color: white; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;}
+.qod-text { font-weight: 700; margin-bottom:15px; font-size:14px; color:var(--text-main);}
+.dark-mode .qod-text { color: #fed7aa; }
 .qod-opt { padding: 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; cursor: pointer; text-align: center; font-weight: 600; margin-bottom:8px; transition: 0.2s; border-bottom: 3px solid var(--border);}
 .qod-opt:active { transform: translateY(2px); border-bottom-width: 1px; }
-.qod-opt.correct { background: #dcfce7 !important; border-color: #16a34a !important; color: #16a34a; box-shadow: 0 4px 10px rgba(22, 163, 74, 0.1); }
-.qod-opt.wrong { background: #fee2e2 !important; border-color: #dc2626 !important; color: #dc2626; }
+.qod-opt.correct { background: #dcfce7 !important; border-color: #16a34a !important; color: #16a34a !important; box-shadow: 0 4px 10px rgba(22, 163, 74, 0.1); }
+.qod-opt.wrong { background: #fee2e2 !important; border-color: #dc2626 !important; color: #dc2626 !important; }
 
 /* --- HEAVY 3D FILTER PILLS FOR MOCKS PAGE --- */
 .list-container { padding: 0 20px; }
@@ -250,7 +253,7 @@ body { display: block; background: var(--bg-body); color: var(--text-main); padd
 
 .news-container { background: linear-gradient(90deg, #4f46e5, #8b5cf6); color: white; padding: 10px 15px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; }
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
-.modal-content { background: var(--bg-card); width: 100%; max-width: 360px; padding: 25px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+.modal-content { background: var(--bg-card); width: 100%; max-width: 360px; padding: 25px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid var(--border); }
 textarea, input[type="text"] { width: 100%; padding: 14px; margin: 10px 0 20px; border: 2px solid var(--border); border-radius: 12px; background: var(--bg-body); color: var(--text-main); outline:none; font-size: 14px; transition: 0.2s; border-bottom: 3px solid var(--border);}
 textarea:focus, input[type="text"]:focus { border-color: var(--primary); }
 textarea { height: 120px; resize: none; }
@@ -410,7 +413,7 @@ textarea { height: 120px; resize: none; }
         </div>
         <div class="tools">
             <button class="tool-btn" id="installBtn" style="display:none;" onclick="installApp()"><i class="fas fa-download"></i></button>
-            <button class="tool-btn" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+            <button class="tool-btn" onclick="toggleTheme()"><i id="themeIcon" class="fas fa-moon"></i></button>
         </div>
     </div>
 
@@ -525,7 +528,7 @@ textarea { height: 120px; resize: none; }
             <div style="display:flex; justify-content:space-between; margin-bottom:12px; align-items:center;">
                 <span class="qod-tag"><i class="fas fa-bolt"></i> Daily Question</span><span style="font-size:12px; color:#ea580c; font-weight:800;">+2 Pts</span>
             </div>
-            <div class="qod-text" id="qodQuestion" style="font-weight: 700; margin-bottom:15px; font-size:14px; color:#431407;">Loading today's challenge...</div>
+            <div class="qod-text" id="qodQuestion">Loading today's challenge...</div>
             <div class="qod-options" id="qodOptions"></div>
         </div>
 
@@ -545,18 +548,18 @@ textarea { height: 120px; resize: none; }
   <div id="tab-tests" class="tab-content" style="display:none;">
         <div class="list-container" style="padding-top:15px;">
             
-            <div style="background:var(--bg-card); padding:15px; border-radius:16px; border:1px solid var(--border-color); margin-bottom:15px; box-shadow:0 4px 6px rgba(0,0,0,0.02);">
+            <div style="background:var(--bg-card); padding:15px; border-radius:16px; border:1px solid var(--border); margin-bottom:15px; box-shadow:0 4px 6px rgba(0,0,0,0.02);">
                 <div style="font-weight:800; color:var(--primary); margin-bottom:12px; font-size:15px;"><i class="fas fa-sliders-h"></i> Find Your Mock Test</div>
                 
                 <div style="display:flex; flex-direction:column; gap:12px;">
-                   <div class="search-box" style="margin:0; box-shadow:none; border:1px solid var(--border-color); padding: 10px 15px; display:flex; align-items:center;">
+                   <div class="search-box" style="margin:0; box-shadow:none; border:1px solid var(--border); padding: 10px 15px; display:flex; align-items:center;">
                         <i class="fas fa-search" style="color:var(--text-muted);"></i>
                         <input type="text" id="testSearch" placeholder="Search Mocks (e.g., SSC, Teaching)..." onkeyup="debouncedTestSearch(this.value)" style="flex:1;">
                         <i class="fas fa-microphone" style="color:var(--primary); cursor:pointer;" onclick="showToast('Voice search feature coming soon! 🎙️')"></i>
                     </div>
 
                     <div style="display:flex; gap:10px;">
-                        <select id="examCategoryFilter" onchange="applyModernFilters()" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border-color); background:var(--bg-body); color:var(--text-main); font-weight:600; outline:none; cursor:pointer; font-size:13px;">
+                        <select id="examCategoryFilter" onchange="applyModernFilters()" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--bg-body); color:var(--text-main); font-weight:600; outline:none; cursor:pointer; font-size:13px;">
                             <option value="all">📚 All Subjects</option>
                             <option value="full">📑 Full Mocks</option>
                             <option value="math">🧮 Maths</option>
@@ -567,7 +570,7 @@ textarea { height: 120px; resize: none; }
                             <option value="computer">💻 Computer</option>
                         </select>
 
-                        <select id="examStatusFilter" onchange="applyModernFilters()" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border-color); background:var(--bg-body); color:var(--text-main); font-weight:600; outline:none; cursor:pointer; font-size:13px;">
+                        <select id="examStatusFilter" onchange="applyModernFilters()" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--bg-body); color:var(--text-main); font-weight:600; outline:none; cursor:pointer; font-size:13px;">
                             <option value="all">⚡ All Status</option>
                             <option value="live">🔴 Live Now</option>
                             <option value="attempted">✅ Attempted</option>
@@ -716,7 +719,7 @@ textarea { height: 120px; resize: none; }
         
         <p style="font-size:12px; color:var(--text-main); margin-bottom:10px; font-weight:600;">To upgrade, please contact Admin.</p>
         
-        <div style="background:#f1f5f9; padding:10px; border-radius:8px; margin-bottom:15px; font-size:12px;">
+        <div style="background:var(--bg-body); padding:10px; border-radius:8px; margin-bottom:15px; font-size:12px; border:1px solid var(--border);">
             Your App ID: <b id="displayUserId" style="color:var(--primary); font-size: 14px;">--</b><br>
             <span style="font-size:10px; color:grey;">Send this ID to Admin on Telegram to activate PRO</span>
         </div>
@@ -847,14 +850,12 @@ let currentUser = "Student", currentUserId = "guest", isPro = false;
 let myScores = [], allTests = [], allNotes = [];
 let lastAlertTime = 0;
 let attemptedTestIds = new Map(); 
-let currentNbType = 'bookmarks'; // NEW: Track notebook type globally
+let currentNbType = 'bookmarks'; 
 
 let fallbackQOD = { q: "Fetching today's challenge...", opt: ["-", "-", "-", "-"], ans: 0 };
 
 // --- 🔥 GEMINI API INTEGRATION 🔥 ---
-// 👇👇👇 APNI PAY-AS-YOU-GO GEMINI API KEY YAHAN DALEIN 👇👇👇
-const apiKey = "AIzaSyAmG3vuLZWMIIfah0yrWZuY_fPWfV7AQHM"; // Runtime will inject the key here
-// 👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆👆
+const apiKey = ""; // Runtime will inject the key here
 
 async function callGemini(promptText, isJson = false) {
     try {
@@ -922,7 +923,6 @@ async function submitAiQuestion() {
     btn.disabled = false;
     btn.innerHTML = "Ask AI ✨";
 }
-// ------------------------------------
 
 function debounce(func, delay = 300) {
     let timeoutId;
@@ -932,14 +932,13 @@ function debounce(func, delay = 300) {
     };
 }
 
-/* 🔥 3.5 SMART CACHE SYSTEM FOR FIREBASE COST REDUCTION 🔥 */
+/* 🔥 SMART CACHE SYSTEM FOR FIREBASE COST REDUCTION 🔥 */
 async function fetchWithCache(refPath, cacheKey, expiryMinutes = 60) {
     const cached = getSafeData(cacheKey);
     const cacheTime = getSafeData(cacheKey + '_time');
     const now = Date.now();
     
     if (cached && cacheTime && (now - cacheTime < expiryMinutes * 60 * 1000)) {
-        // Background update to keep fresh for next time (Silent Update)
         setTimeout(() => {
             db.ref(refPath).once('value').then(s => {
                 if(s.exists()) {
@@ -947,9 +946,8 @@ async function fetchWithCache(refPath, cacheKey, expiryMinutes = 60) {
                     setSafeData(cacheKey + '_time', Date.now());
                 }
             });
-        }, 5000); // 5 seconds delay so app loads smoothly first
+        }, 5000); 
         
-        // Return dummy snapshot object from cache
         return { 
             exists: () => true, 
             val: () => JSON.parse(cached),
@@ -967,7 +965,13 @@ async function fetchWithCache(refPath, cacheKey, expiryMinutes = 60) {
     }
 }
 
-/* 4. MAIN APP INITIALIZATION */
+function toggleTheme() { 
+    const isDark = document.body.classList.toggle('dark-mode'); 
+    setSafeData('theme', isDark ? 'dark' : 'light'); 
+    const icon = document.getElementById('themeIcon');
+    if (icon) icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+}
+
 function initDashboard() {
     const hour = new Date().getHours();
     let greeting = "Good Morning ☀️";
@@ -979,19 +983,22 @@ function initDashboard() {
     const theme = getSafeData('theme');
     const isNight = hour >= 19 || hour < 6; // 7 PM se 6 AM tak Automatic Dark Mode
     
-    if (theme === 'dark' || (theme !== 'light' && isNight)) {
+    if (theme === 'dark' || (!theme && isNight)) {
         document.body.classList.add('dark-mode');
+        const icon = document.getElementById('themeIcon');
+        if (icon) icon.className = 'fas fa-sun';
     } else {
         document.body.classList.remove('dark-mode');
+        const icon = document.getElementById('themeIcon');
+        if (icon) icon.className = 'fas fa-moon';
     }
     
     checkStreak(); startCountdown(); renderSyllabus();
 
-   // 🔥 FIX: Safe JSON Parsing for Mistake Alert 🔥
     try {
         let mistakesObj = JSON.parse(getSafeData('dsssb_mistakes') || '{}');
         let mistakesCount = Object.keys(mistakesObj).length;
-        let navBadge = document.getElementById('navMistakeBadge'); // Nav badge
+        let navBadge = document.getElementById('navMistakeBadge'); 
         
         if (mistakesCount > 0) {
             let mCard = document.getElementById('mistakeAlertCard');
@@ -999,11 +1006,11 @@ function initDashboard() {
                 mCard.style.display = 'flex';
                 document.getElementById('mistakeCountText').innerText = `${mistakesCount} Unrevised Mistakes`;
             }
-            if(navBadge) navBadge.style.display = 'block'; // Red dot ON
+            if(navBadge) navBadge.style.display = 'block';
         } else {
-            if(navBadge) navBadge.style.display = 'none'; // Red dot OFF
+            if(navBadge) navBadge.style.display = 'none';
         }
-    } catch(e) { console.log("Mistake check skipped"); }
+    } catch(e) {}
     
     // FETCH CACHED ALERTS & NEWS
     fetchWithCache('dsssb_config/maintenance', 'cache_maint', 5).then(snap => {
@@ -1040,7 +1047,6 @@ function initDashboard() {
        const tg = window.Telegram.WebApp; 
         tg.expand();
         try { if(tg.requestFullscreen) tg.requestFullscreen(); } catch(e){} 
-        if(tg.colorScheme === 'dark' && !theme) document.body.classList.add('dark-mode');
         
         const u = tg.initDataUnsafe.user;
         currentUser = u.first_name + (u.last_name ? " " + u.last_name : "");
@@ -1062,10 +1068,8 @@ function initDashboard() {
     }
 }
 
-// Init on DOM load
 document.addEventListener('DOMContentLoaded', initDashboard);
 
-/* 🔥 AUTO QOD ENGINE 🔥 */
 function loadAutoQOD() {
     fetchWithCache('dsssb_questions_db/auto_qod', 'cache_qod', 240).then(snap => {
         if(snap.exists()) {
@@ -1156,7 +1160,6 @@ function switchStudy(type, el) {
     document.getElementById('videosSection').style.display = (type === 'videos') ? 'block' : 'none'; 
 }
 
-/* 5. SMART ROUTING FROM 3D FOLDERS */
 function openExamFolder(folderId, isSubject = false) {
     const testTabIcon = document.querySelectorAll('.nav-item')[1];
     switchTab('tests', testTabIcon);
@@ -1165,11 +1168,9 @@ function openExamFolder(folderId, isSubject = false) {
     let catDropdown = document.getElementById('examCategoryFilter');
     let statDropdown = document.getElementById('examStatusFilter');
     
-    // Reset defaults
     catDropdown.value = 'all';
     statDropdown.value = 'all';
 
-   // Set exact dropdown values based on the folder clicked
     if(folderId === 'my_attempts' || folderId === 'Attempted') statDropdown.value = 'attempted';
     else if(folderId === 'Live') statDropdown.value = 'live';
     else if(folderId === 'Saved') statDropdown.value = 'saved';
@@ -1181,7 +1182,6 @@ function openExamFolder(folderId, isSubject = false) {
     else if(folderId === 'GK') catDropdown.value = 'gk';
     else if(folderId === 'Computer') catDropdown.value = 'computer';
     else {
-        // For specific exams (SSC, DASS, etc) use the search box
         let searchText = folderId;
         if(folderId === 'asst_sup') searchText = 'Assistant Superintendent';
         if(folderId === 'dass_grade_2') searchText = 'DASS Grade II';
@@ -1189,9 +1189,10 @@ function openExamFolder(folderId, isSubject = false) {
         document.getElementById('testSearch').value = searchText;
     }
     
-    applyModernFilters(); // Trigger the new filter
+    applyModernFilters();
     showToast(`Opened ${folderId.replace('_', ' ')} Vault 📂`);
 }
+
 function checkStreak() {
     const last = getSafeData('lastVisit');
     const today = new Date().toDateString();
@@ -1204,20 +1205,15 @@ function checkStreak() {
     }
     document.getElementById('valStreak').innerText = s;
 
-    // 🔥 NEW: Update 7-Day Streak Dots 🔥
     let dotsHtml = "";
-    let filledDots = s > 7 ? 7 : s; // Max 7 dots show karenge
-    
+    let filledDots = s > 7 ? 7 : s; 
     for(let i = 1; i <= 7; i++) {
         if(i <= filledDots) {
-            // Green Dot (Completed)
             dotsHtml += `<div style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; box-shadow: 0 0 5px rgba(16, 185, 129, 0.4);"></div>`;
         } else {
-            // Gray Dot (Pending)
             dotsHtml += `<div style="width: 10px; height: 10px; border-radius: 50%; background: var(--border);"></div>`;
         }
     }
-    
     let tracker = document.getElementById('streakTrackerDots');
     if(tracker) tracker.innerHTML = dotsHtml;
 }
@@ -1271,7 +1267,6 @@ async function installApp() {
     }
 }
 
-/* 6. SYLLABUS TRACKER */
 const syllabusDB = {
     "Reasoning": ["Analogy", "Classification", "Series", "Coding-Decoding", "Blood Relation", "Direction", "Venn Diagram", "Mirror Image", "Dice & Cube", "Ranking"],
     "Maths": ["Number System", "HCF & LCM", "Percentage", "Profit & Loss", "SI & CI", "Time & Work", "Time Speed Distance", "Average", "Ratio", "Mensuration"],
@@ -1299,6 +1294,7 @@ function renderSyllabus() {
 }
 
 function toggleTopic(id) { document.getElementById(id).classList.toggle('open'); }
+
 function updateSyllabus(key, el) { 
     let saved = JSON.parse(getSafeData('syllabusProgress') || '{}'); 
     let textSpan = el.nextElementSibling;
@@ -1327,7 +1323,6 @@ function calcProgress() {
     if(pct === 100 && window.confetti) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
 }
 
-/* 7. QOD CHECK */
 function checkQOD(el, idx, correct) {
     document.querySelectorAll('.qod-opt').forEach(o => o.style.pointerEvents = "none");
     if(idx === correct) { 
@@ -1341,7 +1336,6 @@ function checkQOD(el, idx, correct) {
     }
 }
 
-/* 8. FORMS & UTILS */
 function submitReport() {
     const txt = document.getElementById('reportText').value;
     if(!txt) return showToast("Please write an issue first!");
@@ -1351,7 +1345,6 @@ function submitReport() {
     document.getElementById('reportText').value='';
 }
 
-// 🔥 NAYA: SUBMIT SUPPORT TICKET FUNCTION
 function submitSupportTicket() {
     const txt = document.getElementById('supportText').value.trim();
     if(!txt) return showToast("Please write a message first!", "warning");
@@ -1396,7 +1389,6 @@ function toggleSaveTest(testId, el, event) {
     setSafeData('savedTests', JSON.stringify(savedTests));
 }
 
-// --- NEW NOTEBOOK LOGIC & PRACTICE MODE ---
 function switchNotebook(type, resetFilters = false) {
     currentNbType = type;
     document.getElementById('nbTab-bookmarks').classList.remove('active');
@@ -1541,11 +1533,9 @@ function removeNotebookItem(key, type) {
         renderNotebook(type);
     }
 }
-// ------------------------------------------
 
 function reattemptTest(testId, fullUrlQuery) {
     showToast("Starting fresh attempt... 🔄");
-    
     setTimeout(() => {
         removeSafeData("dsssb_cbt_rank_v2_" + testId); 
         removeSafeData("dsssb_cbt_rank_v2_" + testId + "_final"); 
@@ -1553,7 +1543,7 @@ function reattemptTest(testId, fullUrlQuery) {
     }, 800); 
 }
 
-/* 9. MAIN DATA FETCHING (🔥 OPTIMIZED WITH SMART CACHE 🔥) */
+/* 9. MAIN DATA FETCHING */
 async function fetchData(user) {
     try {
         if(currentUserId !== "guest") {
@@ -1562,7 +1552,6 @@ async function fetchData(user) {
             userRef.onDisconnect().update({ state: 'offline', lastActive: firebase.database.ServerValue.TIMESTAMP });
         }
         
-        // 🔥 COST REDUCTION: Fetch using Smart Cache (Reduces Firebase Reads by 90%)
         const [testsSnap, proSnap, notesSnap, videosSnap] = await Promise.all([ 
             fetchWithCache("dsssb_tests_db", "cache_tests_v2", 60), 
             fetchWithCache("dsssb_pro_users", "cache_pro_v2", 120), 
@@ -1611,22 +1600,19 @@ async function fetchData(user) {
         allTests = Object.keys(testData).map(key => ({ dbKey: key, ...testData[key] }));
         filterTests('all', document.querySelector('.filter-pill.active'));
 
-        // 🔥 Dynamic Folder System Call
         fetchDynamicFolders();
 
         if(document.getElementById('loader')) document.getElementById('loader').style.display = 'none'; 
         document.getElementById('app').style.display = 'block'; 
 
-      // 🔥 OPTIMIZATION: Results caching
         const lbCache = getSafeData('cache_live_results');
         const lbTime = getSafeData('cache_live_results_time');
         let res = {};
 
-        if (lbCache && lbTime && (Date.now() - lbTime < 15 * 60 * 1000)) {
+        if (lbCache && lbTime && (Date.now() - lbTime < 30 * 60 * 1000)) { // 30 Min Cache
             res = JSON.parse(lbCache);
-            // Silent update
             setTimeout(() => {
-                db.ref("dsssb_results_live").limitToLast(100).once("value").then(resultsSnap => {
+                db.ref("dsssb_results_live").limitToLast(50).once("value").then(resultsSnap => {
                     if(resultsSnap.exists()) {
                         setSafeData('cache_live_results', JSON.stringify(resultsSnap.val()));
                         setSafeData('cache_live_results_time', Date.now());
@@ -1635,7 +1621,7 @@ async function fetchData(user) {
             }, 5000);
             processDashboardResults(res, testData);
         } else {
-            db.ref("dsssb_results_live").limitToLast(100).once("value").then(resultsSnap => {
+            db.ref("dsssb_results_live").limitToLast(50).once("value").then(resultsSnap => {
                 res = resultsSnap.val() || {};
                 setSafeData('cache_live_results', JSON.stringify(res));
                 setSafeData('cache_live_results_time', Date.now());
@@ -1763,7 +1749,6 @@ function processDashboardResults(res, testData) {
 const debouncedTestSearch = debounce((val) => searchTests(val), 300);
 const debouncedNoteSearch = debounce((val) => searchNotes(val), 300);
 
-// Fallback for existing calls inside the app
 function filterTests(cat, el, searchQuery = "") { applyModernFilters(); }
 function searchTests(query) { applyModernFilters(); }
 
@@ -1775,7 +1760,6 @@ function applyModernFilters() {
     let list = [...allTests].reverse().filter(t => t.dbKey !== 'auto_qod');
     let savedTests = JSON.parse(getSafeData('savedTests') || '[]');
 
-    // 1. Apply Search Filter
     if (searchQuery) {
         list = list.filter(t => 
             (t.title||"").toLowerCase().includes(searchQuery) || 
@@ -1784,7 +1768,6 @@ function applyModernFilters() {
         );
     }
 
-    // 2. Apply Category/Subject Filter
     if (categoryFilter !== 'all') {
         list = list.filter(t => {
             const title = (t.title||"").toLowerCase();
@@ -1799,12 +1782,10 @@ function applyModernFilters() {
             if(categoryFilter === 'gk') return title.includes('gk') || cat.includes('gk') || tags.includes('gk') || title.includes('general');
             if(categoryFilter === 'computer') return title.includes('comp') || cat.includes('comp') || tags.includes('comp');
             
-            // 🔥 FIX: Check in tags too
             return cat.includes(categoryFilter) || title.includes(categoryFilter) || tags.includes(categoryFilter);
         });
     }
 
-    // 3. Apply Status Filter (Live, Attempted, Saved)
     if (statusFilter !== 'all') {
         if (statusFilter === 'saved') {
             list = list.filter(t => savedTests.includes(t.dbKey));
@@ -1828,16 +1809,16 @@ function renderTestCards(filteredList) {
     let savedTests = JSON.parse(getSafeData('savedTests') || '[]');
 
     filteredList.forEach(t => {
-let locked = t.type === 'pro' && !isPro;
+        let locked = t.type === 'pro' && !isPro;
         let isAttempted = attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id);
        let attemptTime = attemptedTestIds.get(t.dbKey) || attemptedTestIds.get(t.id);
-let attemptDateStr = '';
-if (attemptTime) {
-    let parsedDate = new Date(isNaN(attemptTime) ? attemptTime : Number(attemptTime));
-    if (!isNaN(parsedDate.getTime())) {
-        attemptDateStr = parsedDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-    }
-}
+        let attemptDateStr = '';
+        if (attemptTime) {
+            let parsedDate = new Date(isNaN(attemptTime) ? attemptTime : Number(attemptTime));
+            if (!isNaN(parsedDate.getTime())) {
+                attemptDateStr = parsedDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+            }
+        }
         let attemptLabel = isAttempted && attemptDateStr ? `<div style="font-size: 11px; color: var(--success); font-weight: 800; margin-bottom: 5px; text-align: center; background: var(--bg-body); padding: 4px; border-radius: 6px;"><i class="fas fa-calendar-check"></i> Attempted on: ${attemptDateStr}</div>` : '';
         let isSaved = savedTests.includes(t.dbKey);
         let isActuallyLive = (t.isLive && t.isLive.toString() === 'true') || 
@@ -1863,8 +1844,7 @@ if (attemptTime) {
             </div>` : 
             `<button class="start-btn" onclick="window.location.href='cbt.html?${urlQuery}&mode=exam'">Start Mock Test ➔</button>`;
         
-let viewRankBtn = isAttempted ? `<button class="start-btn" style="background:var(--primary-light); color:var(--primary-dark); border:1px solid var(--primary); padding: 8px; font-size:13px; margin-top:8px; width:100%; box-shadow:none;" onclick="openTestLeaderboard('${t.dbKey}', '${(t.title||'').replace(/'/g, "\\'")}')">🏆 View Leaderboard</button>` : '';
-        // 🔥 SMART TAGS LOGIC 🔥
+        let viewRankBtn = isAttempted ? `<button class="start-btn" style="background:var(--primary-light); color:var(--primary-dark); border:1px solid var(--primary); padding: 8px; font-size:13px; margin-top:8px; width:100%; box-shadow:none;" onclick="openTestLeaderboard('${t.dbKey}', '${(t.title||'').replace(/'/g, "\\'")}')">🏆 View Leaderboard</button>` : '';
         let tagStr = t.tags || t.tag || "";
         let tagsHTML = "";
         if(tagStr) {
@@ -1872,9 +1852,9 @@ let viewRankBtn = isAttempted ? `<button class="start-btn" style="background:var
             tagStr.split(',').forEach(tag => {
                 let cleanTag = tag.trim().toLowerCase();
                 let bg = "var(--primary-light)", color = "var(--primary-dark)";
-                if(cleanTag.includes('pyq')) { bg = "#fef08a"; color = "#854d0e"; } // Yellow
-                else if(cleanTag.includes('hard')) { bg = "#fee2e2"; color = "#991b1b"; } // Red
-                else if(cleanTag.includes('new')) { bg = "#dcfce7"; color = "#166534"; } // Green
+                if(cleanTag.includes('pyq')) { bg = "#fef08a"; color = "#854d0e"; } 
+                else if(cleanTag.includes('hard')) { bg = "#fee2e2"; color = "#991b1b"; } 
+                else if(cleanTag.includes('new')) { bg = "#dcfce7"; color = "#166534"; } 
                 
                 tagsHTML += `<span style="background:${bg}; color:${color}; font-size:9px; padding:3px 8px; border-radius:6px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">${tag.trim()}</span>`;
             });
@@ -1931,10 +1911,8 @@ function renderVideos(videoList = []) {
     let html = ""; 
     
     videoList.forEach(v => { 
-        // Pro check (Agar admin ne true kiya hai)
         let locked = (v.type === 'pro' || v.pro === true || v.pro === 'true') && !isPro; 
         
-        // 🔥 SMART THUMBNAIL GENERATOR: Agar photo nahi hai toh YT link se nikal lega
         let thumb = v.thumb || "https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg";
         if (!v.thumb && v.url && v.url.includes("youtu")) {
             let ytId = v.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
@@ -1954,471 +1932,6 @@ function renderVideos(videoList = []) {
                 </div>`; 
     });
     
-    // Agar Firebase mein 0 videos hain toh ye dikhayega
-    document.getElementById('videoListContainer').innerHTML = html || "<div style='text-align:center; color:var(--text-muted); padding:40px;'><i class='fas fa-video fa-3x' style='opacity:0.3; margin-bottom:10px;'></i><br>No new video classes available right now.</div>";
-}
-
-function renderCharts(dataArr) {
-    const ctx = document.getElementById('barChart').getContext('2d');
-    new Chart(ctx, { 
-        type: 'bar', 
-        data: { 
-            labels: ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'], 
-            datasets: [{ label: 'Avg Score %', data: dataArr, backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'], borderRadius: 8 }] 
-        }, 
-        options: { 
-            responsive: true, maintainAspectRatio: false, 
-            scales: { 
-                y: { beginAtZero: true, max: 100, grid: {color:'rgba(0,0,0,0.05)'}, ticks: {font:{size:10, weight:'bold'}} }, 
-                x: { grid: {display:false}, ticks: {font:{size:10, weight:'bold'}} } 
-            }, 
-            plugins: { legend: { display: false } } 
-        } 
-    });
-
-    const ctxRadar = document.getElementById('radarChart').getContext('2d');
-    const darkLine = document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)';
-    new Chart(ctxRadar, { 
-        type: 'radar', 
-        data: { 
-            labels: ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'], 
-            datasets: [{ 
-                label: 'Mastery Level', 
-                data: dataArr, 
-                backgroundColor: 'rgba(79, 70, 229, 0.25)', 
-                borderColor: '#4f46e5', 
-                pointBackgroundColor: '#4f46e5',
-                pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: '#4f46e5',
-                borderWidth: 2
-            }] 
-        }, 
-        options: { 
-            responsive: true, maintainAspectRatio: false, 
-            scales: { 
-                r: { 
-                    angleLines: { color: darkLine }, 
-                    grid: { color: darkLine }, 
-                    pointLabels: { font: { size: 11, weight: 'bold', family: "'Segoe UI', sans-serif" } }, 
-                    ticks: { display: false, min: 0, max: 100 } 
-                } 
-            }, 
-            plugins: { legend: { display: false } } 
-        } 
-    });
-}
-
-function renderLeaderboard(data) {
-    let html = ""; 
-    data.slice(0, 10).forEach((u, i) => { 
-        let badge = i===0?'🥇':i===1?'🥈':i===2?'🥉':`<div style="width:24px;height:24px;background:var(--border);border-radius:50%;display:grid;place-items:center;font-size:10px;">${i+1}</div>`; 
-        
-        let rankNameHTML = `<span style="font-weight:700;">${u.name}</span>`;
-        if (i === 0) rankNameHTML += ' <span style="font-size:10px; background:#fef08a; color:#854d0e; padding:2px 6px; border-radius:4px; font-weight:800; margin-top:2px; display:inline-block;">👑 Pro King</span>';
-        else if (i === 1) rankNameHTML += ' <span style="font-size:10px; background:#fed7aa; color:#9a3412; padding:2px 6px; border-radius:4px; font-weight:800; margin-top:2px; display:inline-block;">🎯 Sniper</span>';
-        else if (i === 2) rankNameHTML += ' <span style="font-size:10px; background:#fecaca; color:#991b1b; padding:2px 6px; border-radius:4px; font-weight:800; margin-top:2px; display:inline-block;">🔥 Veteran</span>';
-        
-        html += `<div class="rank-row" style="${u.isMe ? 'background:var(--primary-light); padding:15px; border-radius:12px; margin:5px 0;' : ''}">
-                    <span style="width:40px; font-weight:800; display:flex; align-items:center;">${badge}</span>
-                    <span style="flex:1; display:flex; flex-direction:column; justify-content:center;">${rankNameHTML}</span>
-                    <span style="color:var(--primary); font-weight:900; background:var(--bg-body); padding:4px 10px; border-radius:8px; align-self:center;">${Math.round(u.avg)} Pts</span>
-                </div>`; 
-    });
-    document.getElementById('leaderboardList').innerHTML = html || `<div style='text-align:center; padding:40px 20px; color:var(--text-muted);'>
-        <div style='font-size:50px; margin-bottom:10px;'>🚀</div>
-        <h3 style='color:var(--text-main); margin-bottom:5px; font-weight:800;'>Your journey starts here!</h3>
-        <p style='font-size:13px; font-weight:600;'>Attempt your first mock test to unlock your global rank.</p>
-    </div>`;
-}
-// --- SPECIFIC TEST LEADERBOARD (TOP 5 + MY RANK) ---
-function openTestLeaderboard(testId, testTitle) {
-    document.getElementById('rankModalTitle').innerText = "🏆 " + testTitle;
-    document.getElementById('testRankModal').style.display = 'flex';
-    document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Fetching Ranks... ⏳</td></tr>';
-
-    // 🔥 OPTIMIZED QUERY: Sirf is test ki details fetch hongi
-    db.ref("dsssb_results_live").orderByChild("testId").equalTo(testId).limitToLast(100).once("value").then(snap => {
-        let userBest = {}; 
-        
-        if(snap.exists()) {
-            snap.forEach(child => {
-                let d = child.val();
-                let uid = d.userId || d.name; 
-                let score = parseFloat(d.score) || 0;
-                
-                if(!userBest[uid] || userBest[uid].score < score) {
-                    userBest[uid] = { 
-                        name: d.name || 'Student', 
-                        score: score, 
-                        isMe: (String(d.userId).trim() === String(currentUserId).trim() || d.name === currentUser)
-                    };
-                }
-            });
-        }
-        
-        let ranks = Object.values(userBest);
-        
-        // Agar kisi ne test nahi diya hai
-        if(ranks.length === 0) {
-            document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 25px 10px; color:var(--text-muted);"><i class="fas fa-rocket fa-2x" style="margin-bottom:10px;"></i><br>Be the first to attempt and rank #1! 🚀</td></tr>';
-            return;
-        }
-
-        // Highest se Lowest sort karein
-        ranks.sort((a,b) => b.score - a.score);
-        
-        let myRankIndex = -1;
-        let myData = null;
-        
-        ranks.forEach((r, index) => {
-            if(r.isMe) {
-                myRankIndex = index + 1; // 1-based ranking
-                myData = r;
-            }
-        });
-
-        let html = "";
-        let top5 = ranks.slice(0, 5); // Sirf Top 5 nikal rahe hain
-        let amIInTop5 = false;
-
-        // 1. Render Top 5 Students
-        top5.forEach((r, i) => {
-            let rankNum = i + 1;
-            if(r.isMe) amIInTop5 = true;
-            
-            let badge = rankNum === 1 ? '<span style="font-size:18px;">🥇</span>' : 
-                        rankNum === 2 ? '<span style="font-size:18px;">🥈</span>' : 
-                        rankNum === 3 ? '<span style="font-size:18px;">🥉</span>' : 
-                        `<div style="width:22px; height:22px; background:var(--border); border-radius:50%; display:grid; place-items:center; font-size:11px; margin:auto;">${rankNum}</div>`;
-            
-            let rowStyle = r.isMe ? 'background:var(--primary-light);' : '';
-            let nameText = r.isMe ? `${r.name} <b style="color:var(--primary); font-size:10px;">(You)</b>` : r.name;
-            
-            html += `<tr style="${rowStyle}">
-                        <td style="width: 50px; text-align:center;">${badge}</td>
-                        <td style="font-weight:700;">${nameText}</td>
-                        <td style="color:var(--primary); font-weight:900;">${r.score} Pts</td>
-                    </tr>`;
-        });
-
-        // 2. Render Current User (Agar Top 5 me nahi hai toh)
-        if (myData && !amIInTop5) {
-            html += `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:8px; font-size:18px; letter-spacing:3px;">•••</td></tr>`;
-            html += `<tr style="background:var(--primary-light); border-top:2px solid var(--primary);">
-                        <td style="width: 50px; text-align:center; font-weight:900;">#${myRankIndex}</td>
-                        <td style="font-weight:800;">${myData.name} <b style="color:var(--primary); font-size:10px;">(You)</b></td>
-                        <td style="color:var(--primary); font-weight:900;">${myData.score} Pts</td>
-                    </tr>`;
-        } 
-        // 3. Agar User ne Test attempt hi nahi kiya hai
-        else if (!myData) {
-            html += `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:8px; font-size:18px; letter-spacing:3px;">•••</td></tr>`;
-            html += `<tr>
-                        <td colspan="3" style="text-align:center; padding:15px 10px; font-size:12px; font-weight:700; color:#ea580c; background:#fff7ed; border-radius:0 0 8px 8px;">
-                            <i class="fas fa-lock" style="margin-right:5px;"></i> Aapne test nahi diya hai. Start Mock Test par click karein!
-                        </td>
-                    </tr>`;
-        }
-        
-        document.getElementById('testRankBody').innerHTML = html;
-    }).catch(e => {
-        console.error(e);
-        document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; color:red;">Error fetching rank. Please try again.</td></tr>';
-    });
-}
-// --- 🔥 NEW DYNAMIC 3D FOLDER ENGINE 🔥 ---
-let dynamicFolders = {};
-
-function fetchDynamicFolders() {
-    // 🔥 COST REDUCTION: Cache the dynamic folders tree for 60 mins
-    fetchWithCache('dsssb_folders_tree', 'cache_folders_v2', 60).then(snap => {
-        if(snap.exists()) {
-            dynamicFolders = snap.val();
-            renderDynamicFolders();
-        } else {
-            console.log("No dynamic folders found in Firebase.");
-            document.getElementById('catBox').innerHTML = `<div style="text-align:center; padding: 20px; color:var(--text-muted); width: 100%;">No Folders Found</div>`;
-        }
-    });
-}
-
-function renderDynamicFolders() {
-        let defaultTools = `
-        <div class="modern-cat-grid" style="margin-bottom: 25px;">
-            <div class="modern-cat-card" onclick="openExamFolder('Live')">
-                <div class="modern-cat-icon ic-red">🔴</div>
-                <div class="modern-cat-name">Live Tests</div>
-            </div>
-            <div class="modern-cat-card" onclick="openExamFolder('Saved')">
-                <div class="modern-cat-icon ic-yellow">⭐</div>
-                <div class="modern-cat-name">Saved</div>
-            </div>
-            <div class="modern-cat-card" onclick="openExamFolder('Attempted')">
-                <div class="modern-cat-icon ic-green">✅</div>
-                <div class="modern-cat-name">Attempted</div>
-            </div>
-        </div>`;
-
-        let folders = Object.values(dynamicFolders).sort((a,b) => (a.order || 99) - (b.order || 99));
-        
-        let groupedByBoard = {};
-        folders.forEach(f => {
-            let boardName = f.board || "Other Exams"; 
-            if(!groupedByBoard[boardName]) groupedByBoard[boardName] = [];
-            groupedByBoard[boardName].push(f);
-        });
-
-        let treeHtml = defaultTools;
-        let isFirstBoard = true; // 🔥 NEW: Pehle folder ko open rakhne ke liye
-
-        for (let board in groupedByBoard) {
-            let folderCount = groupedByBoard[board].length;
-            let displayState = isFirstBoard ? 'block' : 'none';
-            let chevronState = isFirstBoard ? 'rotate(180deg)' : 'rotate(0deg)';
-            isFirstBoard = false;
-
-            treeHtml += `
-            <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
-                <div onclick="let content = this.nextElementSibling; let icon = this.querySelector('.fa-chevron-down'); if(content.style.display === 'none'){content.style.display='block'; icon.style.transform='rotate(180deg)';}else{content.style.display='none'; icon.style.transform='rotate(0deg)';}" 
-                     style="padding: 12px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to right, var(--bg-body), var(--bg-card)); border-bottom: 1px solid var(--border);">
-                    
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <div style="background: white; width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; font-size: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); border: 1px solid var(--border);">🏛️</div>
-                        <div>
-                            <div style="font-weight: 900; font-size: 15px; color:var(--text-main);">${board}</div>
-                            <div style="font-size: 11px; color:var(--text-muted); font-weight:700;">📂 ${folderCount} Exam Categories</div>
-                        </div>
-                    </div>
-                    <i class="fas fa-chevron-down" style="transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--text-muted); transform: ${chevronState}; font-size: 16px; margin-right: 5px;"></i>
-                </div>
-
-                <div style="display: ${displayState}; padding: 18px 15px; background: var(--bg-card);">
-                    <div class="modern-cat-grid">`;
-            
-            groupedByBoard[board].forEach(f => {
-                let folderData = JSON.stringify(f).replace(/'/g, "&#39;"); 
-                let themeClass = "ic-blue";
-                if(f.colorClass) {
-                    if(f.colorClass.includes('purple')) themeClass = "ic-purple";
-                    else if(f.colorClass.includes('green')) themeClass = "ic-green";
-                    else if(f.colorClass.includes('orange') || f.colorClass.includes('hin')) themeClass = "ic-orange";
-                    else if(f.colorClass.includes('pink') || f.colorClass.includes('eng')) themeClass = "ic-pink";
-                }
-
-                // 🔥 REAL FIREBASE PROGRESS & COUNT LOGIC 🔥
-                let examKey = f.examKey ? f.examKey.toLowerCase() : "";
-                
-                // 1. Find Total Tests
-                let categoryTests = allTests.filter(t => t.dbKey !== 'auto_qod' && ((t.category||"").toLowerCase().includes(examKey) || (t.title||"").toLowerCase().includes(examKey)));
-                let totalTests = categoryTests.length;
-                
-                // 2. Find Attempted Tests
-                let attemptedInCat = categoryTests.filter(t => attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id)).length;
-                
-                // 3. Calculate Percentage
-                let realProgress = totalTests > 0 ? Math.round((attemptedInCat / totalTests) * 100) : 0;
-
-                treeHtml += `
-                <div class="modern-cat-card" onclick='openTreeFolder(${folderData})'>
-                    <div class="modern-cat-icon ${themeClass}">${f.icon || '📝'}</div>
-                    <div class="modern-cat-name">${f.name || 'Exam'}</div>
-                    
-                    <div style="font-size: 10px; font-weight: 800; color: var(--text-muted); background: var(--bg-body); padding: 2px 6px; border-radius: 6px; margin-top: -2px;">
-                        ${totalTests} Mocks
-                    </div>
-                    
-                    <div style="width: 80%; height: 5px; background: var(--bg-body); border-radius: 4px; margin-top: 6px; overflow: hidden; border: 1px solid var(--border); box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);">
-                        <div style="width: ${realProgress}%; height: 100%; background: var(--primary); border-radius: 4px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);"></div>
-                    </div>
-                </div>`;
-            });
-
-            treeHtml += `</div></div></div>`;
-        }
-
-        let container = document.getElementById('dynamicTreeContainer');
-        if(container) container.innerHTML = treeHtml;
-}
-function openTreeFolder(folderObj) {
-    const testTabIcon = document.querySelectorAll('.nav-item')[1];
-    switchTab('tests', testTabIcon);
-    document.getElementById('testSearch').value = ''; 
-
-    let filterHtml = `<div class="filter-pill active" onclick="filterDynamicTests('${folderObj.examKey}', 'all', this)">All ${folderObj.name}</div>`;
-    
-    if(folderObj.subCategories && folderObj.subCategories.length > 0) {
-        folderObj.subCategories.forEach(sub => {
-            filterHtml += `<div class="filter-pill" onclick="filterDynamicTests('${folderObj.examKey}', '${sub.filterKey}', this)">${sub.name}</div>`;
-        });
-    }
-
-    document.getElementById('mockFiltersRow').innerHTML = filterHtml;
-    filterDynamicTests(folderObj.examKey, 'all', document.querySelector('#mockFiltersRow .filter-pill.active'));
-    showToast(`Opened ${folderObj.name} 📂`);
-}
-
-function filterDynamicTests(examKey, subFilterKey, pillEl) {
-    if(pillEl) { 
-        document.querySelectorAll('#mockFiltersRow .filter-pill').forEach(p => p.classList.remove('active')); 
-        pillEl.classList.add('active'); 
-    }
-    
-    let list = [...allTests].reverse().filter(t => t.dbKey !== 'auto_qod');
-
-    if (examKey && examKey !== 'all') {
-        let targetExam = examKey.toLowerCase();
-        list = list.filter(t => (t.category||"").toLowerCase().includes(targetExam) || (t.title||"").toLowerCase().includes(targetExam));
-    }
-
-   if (subFilterKey && subFilterKey !== 'all') {
-                // 🔥 FIX: Underscore ko space se replace kiya taaki Tags perfectly match hon
-                let targetSub = subFilterKey.toLowerCase().trim().replace(/_/g, ' ');
-                list = list.filter(t => {
-                    let cat = (t.category||"").toLowerCase();
-                    let title = (t.title||"").toLowerCase();
-                    let tags = (t.tag||"").toLowerCase() + " " + (t.tags||"").toLowerCase();
-                    
-                    if(targetSub.includes('full')) return cat.includes('full') || title.includes('full') || tags.includes('full');
-                    if(targetSub === 'sectional') return !(cat.includes('full') || title.includes('full') || tags.includes('full'));
-                    
-                    return cat.includes(targetSub) || title.includes(targetSub) || tags.includes(targetSub);
-                });
-            }
-
-    let html = "";
-    let savedTests = JSON.parse(getSafeData('savedTests') || '[]');
-
-    list.forEach(t => {
-      let locked = t.type === 'pro' && !isPro;
-        let isAttempted = attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id);
-       let attemptTime = attemptedTestIds.get(t.dbKey) || attemptedTestIds.get(t.id);
-let attemptDateStr = '';
-if (attemptTime) {
-    let parsedDate = new Date(isNaN(attemptTime) ? attemptTime : Number(attemptTime));
-    if (!isNaN(parsedDate.getTime())) {
-        attemptDateStr = parsedDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-    }
-}
-        let attemptLabel = isAttempted && attemptDateStr ? `<div style="font-size: 11px; color: var(--success); font-weight: 800; margin-bottom: 5px; text-align: center; background: var(--bg-body); padding: 4px; border-radius: 6px;"><i class="fas fa-calendar-check"></i> Attempted on: ${attemptDateStr}</div>` : '';
-        let isSaved = savedTests.includes(t.dbKey);
-        
-        // 🔥 LIVE BADGE FIX DYNAMIC
-        let isActuallyLive = (t.isLive && t.isLive.toString() === 'true') || 
-                             (t.scheduledTime && Date.now() >= t.scheduledTime) ||
-                             (t.category && t.category.toLowerCase().includes('live')) ||
-                             (t.tag && t.tag.toLowerCase().includes('live')) ||
-                             (t.tags && t.tags.toLowerCase().includes('live'));
-                             
-        let liveHTML = isActuallyLive ? '<div class="live-badge">🔴 LIVE NOW</div>' : '';
-        
-        let pm = t.pm !== undefined ? parseFloat(t.pm) : 1;
-        let nm = t.nm !== undefined ? parseFloat(t.nm) : 0.25;
-        let isLocked = (t.lock === false || t.lock === "false") ? false : true;
-        let urlQuery = `testid=${t.dbKey}&title=${encodeURIComponent(t.title)}&time=${t.time||120}&pm=${pm}&nm=${nm}&lock=${isLocked}`;
-        
-        let buttonHTML = locked ? 
-            `<button class="start-btn locked" onclick="document.getElementById('paymentModal').style.display='flex'">Unlock Premium</button>` : 
-           isAttempted ? 
-            `${attemptLabel}<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-top:5px;">
-                <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); border:1px solid var(--border); padding: 8px; font-size:12px;" onclick="reattemptTest('${t.dbKey}', '${urlQuery}&mode=exam')">🔄 Retake</button>
-                <button class="start-btn" style="background:var(--warning); color:#fff; border:none; padding: 8px; font-size:12px;" onclick="window.location.href='cbt.html?${urlQuery}&mode=quiz'">⚡ Quiz Mode</button>
-                <button class="start-btn" style="padding: 8px; background:#10b981; font-size:12px;" onclick="window.location.href='cbt.html?${urlQuery}&mode=solution'">👁️ Solutions</button>
-            </div>` : 
-            `<button class="start-btn" onclick="window.location.href='cbt.html?${urlQuery}&mode=exam'">Start Mock Test ➔</button>`;
-        
-let viewRankBtn = isAttempted ? `<button class="start-btn" style="background:var(--primary-light); color:var(--primary-dark); border:1px solid var(--primary); padding: 8px; font-size:13px; margin-top:8px; width:100%; box-shadow:none;" onclick="openTestLeaderboard('${t.dbKey}', '${(t.title||'').replace(/'/g, "\\'")}')">🏆 View Leaderboard</button>` : '';
-        // 🔥 SMART TAGS LOGIC 🔥
-        let tagStr = t.tags || t.tag || "";
-        let tagsHTML = "";
-        if(tagStr) {
-            tagsHTML = `<div style="display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap; padding-right:70px;">`;
-            tagStr.split(',').forEach(tag => {
-                let cleanTag = tag.trim().toLowerCase();
-                let bg = "var(--primary-light)", color = "var(--primary-dark)";
-                if(cleanTag.includes('pyq')) { bg = "#fef08a"; color = "#854d0e"; } // Yellow
-                else if(cleanTag.includes('hard')) { bg = "#fee2e2"; color = "#991b1b"; } // Red
-                else if(cleanTag.includes('new')) { bg = "#dcfce7"; color = "#166534"; } // Green
-                
-                tagsHTML += `<span style="background:${bg}; color:${color}; font-size:9px; padding:3px 8px; border-radius:6px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">${tag.trim()}</span>`;
-            });
-            tagsHTML += `</div>`;
-        }
-
-        html += `<div class="test-card ${locked?'locked':''}">
-                    ${liveHTML}
-                    <div style="position:absolute; top:15px; right:15px; display:flex; gap:8px; z-index:10;">
-                        <button class="save-btn" style="position:relative; top:0; right:0; background:var(--bg-body); color:var(--text-main);" onclick="shareMockTest('${t.dbKey}', '${(t.title||'').replace(/'/g, "\\'")}', event)">
-                            <i class="fas fa-share-alt"></i>
-                        </button>
-                        <button class="save-btn ${isSaved?'saved':''}" style="position:relative; top:0; right:0;" onclick="toggleSaveTest('${t.dbKey}', this, event)">
-                            ${isSaved?'<i class="fas fa-star"></i>':'<i class="far fa-star"></i>'}
-                        </button>
-                    </div>
-                    ${tagsHTML}
-                    <div class="t-title">${t.title || 'PYQ Mock Test'}</div>
-                    <div class="t-info">
-                        <span><i class="fas fa-list-ol"></i> ${t.qs || '20'} Qs</span>
-                        <span><i class="far fa-clock"></i> ${t.time || '15'} Mins</span>
-                        <span><i class="fas fa-check-circle"></i> ${t.marks || t.qs || '20'} Marks</span>
-                    </div>
-                    ${buttonHTML}
-                    ${viewRankBtn}
-                </div>`;
-    });
-
-    document.getElementById('testListContainer').innerHTML = html || "<div style='text-align:center; color:var(--text-muted); padding:40px;'><i class='fas fa-box-open fa-3x' style='opacity:0.3; margin-bottom:10px;'></i><br>No tests found matching your filters.</div>";
-}
-
-function searchNotes(query) {
-    let list = [...allNotes]; 
-    if(query) list = list.filter(n => (n.title||"").toLowerCase().includes(query.toLowerCase()) || (n.subject||"").toLowerCase().includes(query.toLowerCase()));
-    
-    let html = ""; 
-    list.forEach(n => { 
-        let locked = n.type === 'pro' && !isPro; 
-        html += `<div class="note-card ${locked?'locked':''}">
-                    <div class="t-title">${n.title || 'Study Material'}</div>
-                    <div class="t-info" style="margin-bottom:12px;">
-                        <span><i class="fas fa-book"></i> ${n.subject || 'General'}</span>
-                        <span style="color:#ef4444;"><i class="fas fa-file-pdf"></i> PDF File</span>
-                    </div>
-                    <button class="download-btn" onclick="${locked ? "document.getElementById('paymentModal').style.display='flex'" : `window.open('${n.url}', '_self')`}">
-                        <i class="fas fa-cloud-download-alt"></i> Download PDF
-                    </button>
-                </div>`; 
-    });
-    document.getElementById('notesListContainer').innerHTML = html || "<div style='text-align:center; color:grey; padding:20px;'>No notes available</div>";
-}
-
-function renderVideos(videoList = []) {
-    let html = ""; 
-    
-    videoList.forEach(v => { 
-        // Pro check (Agar admin ne true kiya hai)
-        let locked = (v.type === 'pro' || v.pro === true || v.pro === 'true') && !isPro; 
-        
-        // 🔥 SMART THUMBNAIL GENERATOR: Agar photo nahi hai toh YT link se nikal lega
-        let thumb = v.thumb || "https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg";
-        if (!v.thumb && v.url && v.url.includes("youtu")) {
-            let ytId = v.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
-            if(ytId && ytId[1]) thumb = `https://img.youtube.com/vi/${ytId[1]}/mqdefault.jpg`;
-        }
-
-        html += `<div class="video-card ${locked ? 'locked' : ''}" onclick="${locked ? "document.getElementById('paymentModal').style.display='flex'" : `window.open('${v.url}', '_self')`}">
-                    <div class="vid-thumb">
-                        <img src="${thumb}" alt="Video Thumbnail">
-                        <i class="fab fa-youtube fa-3x" style="position:absolute; color:red; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));"></i>
-                        ${locked ? '<div style="position:absolute; top:10px; right:10px; background:var(--warning); color:white; padding:4px 8px; border-radius:6px; font-size:10px; font-weight:800; z-index:5;">🔒 PRO</div>' : ''}
-                    </div>
-                    <div class="vid-content">
-                        <div class="t-title" style="margin-bottom:4px;">${v.title || 'Video Class'}</div>
-                        <div style="font-size:12px; color:var(--text-muted); font-weight:600;"><i class="fas fa-play-circle"></i> ${v.subject || 'General'}</div>
-                    </div>
-                </div>`; 
-    });
-    
-    // Agar Firebase mein 0 videos hain toh ye dikhayega
     document.getElementById('videoListContainer').innerHTML = html || "<div style='text-align:center; color:var(--text-muted); padding:40px;'><i class='fas fa-video fa-3x' style='opacity:0.3; margin-bottom:10px;'></i><br>No new video classes available right now.</div>";
 }
 
@@ -2501,7 +2014,7 @@ function openTestLeaderboard(testId, testTitle) {
     document.getElementById('testRankModal').style.display = 'flex';
     document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Fetching Ranks... ⏳</td></tr>';
 
-    db.ref("dsssb_results_live").orderByChild("testId").equalTo(testId).limitToLast(100).once("value").then(snap => {
+    db.ref("dsssb_results_live").orderByChild("testId").equalTo(testId).limitToLast(50).once("value").then(snap => {
         let userBest = {}; 
         
         if(snap.exists()) {
@@ -2586,13 +2099,114 @@ function openTestLeaderboard(testId, testTitle) {
     });
 }
 
-// 🔥 MOUSE DRAG TO SCROLL (LIKE MOBILE SWIPE ON PC FOR MULTIPLE SECTIONS) 🔥
+function fetchDynamicFolders() {
+    fetchWithCache('dsssb_folders_tree', 'cache_folders_v2', 60).then(snap => {
+        if(snap.exists()) {
+            dynamicFolders = snap.val();
+            renderDynamicFolders();
+        } else {
+            console.log("No dynamic folders found in Firebase.");
+            document.getElementById('catBox').innerHTML = `<div style="text-align:center; padding: 20px; color:var(--text-muted); width: 100%;">No Folders Found</div>`;
+        }
+    });
+}
+
+function renderDynamicFolders() {
+        let defaultTools = `
+        <div class="modern-cat-grid" style="margin-bottom: 25px;">
+            <div class="modern-cat-card" onclick="openExamFolder('Live')">
+                <div class="modern-cat-icon ic-red">🔴</div>
+                <div class="modern-cat-name">Live Tests</div>
+            </div>
+            <div class="modern-cat-card" onclick="openExamFolder('Saved')">
+                <div class="modern-cat-icon ic-yellow">⭐</div>
+                <div class="modern-cat-name">Saved</div>
+            </div>
+            <div class="modern-cat-card" onclick="openExamFolder('Attempted')">
+                <div class="modern-cat-icon ic-green">✅</div>
+                <div class="modern-cat-name">Attempted</div>
+            </div>
+        </div>`;
+
+        let folders = Object.values(dynamicFolders).sort((a,b) => (a.order || 99) - (b.order || 99));
+        
+        let groupedByBoard = {};
+        folders.forEach(f => {
+            let boardName = f.board || "Other Exams"; 
+            if(!groupedByBoard[boardName]) groupedByBoard[boardName] = [];
+            groupedByBoard[boardName].push(f);
+        });
+
+        let treeHtml = defaultTools;
+        let isFirstBoard = true; 
+
+        for (let board in groupedByBoard) {
+            let folderCount = groupedByBoard[board].length;
+            let displayState = isFirstBoard ? 'block' : 'none';
+            let chevronState = isFirstBoard ? 'rotate(180deg)' : 'rotate(0deg)';
+            isFirstBoard = false;
+
+            treeHtml += `
+            <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                <div onclick="let content = this.nextElementSibling; let icon = this.querySelector('.fa-chevron-down'); if(content.style.display === 'none'){content.style.display='block'; icon.style.transform='rotate(180deg)';}else{content.style.display='none'; icon.style.transform='rotate(0deg)';}" 
+                     style="padding: 12px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to right, var(--bg-body), var(--bg-card)); border-bottom: 1px solid var(--border);">
+                    
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div style="background: var(--bg-body); width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; font-size: 20px; border: 1px solid var(--border);">🏛️</div>
+                        <div>
+                            <div style="font-weight: 900; font-size: 15px; color:var(--text-main);">${board}</div>
+                            <div style="font-size: 11px; color:var(--text-muted); font-weight:700;">📂 ${folderCount} Exam Categories</div>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-down" style="transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--text-muted); transform: ${chevronState}; font-size: 16px; margin-right: 5px;"></i>
+                </div>
+
+                <div style="display: ${displayState}; padding: 18px 15px; background: var(--bg-card);">
+                    <div class="modern-cat-grid">`;
+            
+            groupedByBoard[board].forEach(f => {
+                let folderData = JSON.stringify(f).replace(/'/g, "&#39;"); 
+                let themeClass = "ic-blue";
+                if(f.colorClass) {
+                    if(f.colorClass.includes('purple')) themeClass = "ic-purple";
+                    else if(f.colorClass.includes('green')) themeClass = "ic-green";
+                    else if(f.colorClass.includes('orange') || f.colorClass.includes('hin')) themeClass = "ic-orange";
+                    else if(f.colorClass.includes('pink') || f.colorClass.includes('eng')) themeClass = "ic-pink";
+                }
+
+                let examKey = f.examKey ? f.examKey.toLowerCase() : "";
+                let categoryTests = allTests.filter(t => t.dbKey !== 'auto_qod' && ((t.category||"").toLowerCase().includes(examKey) || (t.title||"").toLowerCase().includes(examKey)));
+                let totalTests = categoryTests.length;
+                let attemptedInCat = categoryTests.filter(t => attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id)).length;
+                let realProgress = totalTests > 0 ? Math.round((attemptedInCat / totalTests) * 100) : 0;
+
+                treeHtml += `
+                <div class="modern-cat-card" onclick='openTreeFolder(${folderData})'>
+                    <div class="modern-cat-icon ${themeClass}">${f.icon || '📝'}</div>
+                    <div class="modern-cat-name">${f.name || 'Exam'}</div>
+                    
+                    <div style="font-size: 10px; font-weight: 800; color: var(--text-muted); background: var(--bg-body); padding: 2px 6px; border-radius: 6px; margin-top: -2px;">
+                        ${totalTests} Mocks
+                    </div>
+                    
+                    <div style="width: 80%; height: 5px; background: var(--bg-body); border-radius: 4px; margin-top: 6px; overflow: hidden; border: 1px solid var(--border); box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);">
+                        <div style="width: ${realProgress}%; height: 100%; background: var(--primary); border-radius: 4px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+                    </div>
+                </div>`;
+            });
+
+            treeHtml += `</div></div></div>`;
+        }
+
+        let container = document.getElementById('dynamicTreeContainer');
+        if(container) container.innerHTML = treeHtml;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const sliders = [document.getElementById('catBox'), document.getElementById('mockFiltersRow')];
     
     sliders.forEach(slider => {
         if(!slider) return;
-        
         let isDown = false, startX, scrollLeft;
         
         slider.addEventListener('mousedown', (e) => {
@@ -2663,7 +2277,6 @@ document.addEventListener('click', function goFullScreen() {
 
 <script>
 (function() {
-    // Check if Firebase is loaded, otherwise init
     const trackerConfig = { 
         apiKey: "AIzaSyDGolcXv0efZxRdOvBthfeT72mkNLLbAwI", 
         authDomain: "dsssbexamportal.firebaseapp.com", 
@@ -2694,18 +2307,13 @@ document.addEventListener('click', function goFullScreen() {
             last_active: firebase.database.ServerValue.TIMESTAMP
         });
 
-        const connRef = trackDb.ref('.info/connected');
+        // 🔥 COST REDUCTION: Tracker sirf set karega, hamesha on() nahi rakhega
         const presRef = trackDb.ref('dsssb_analytics/presence/' + trackUid);
-
-        connRef.on('value', (snap) => {
-            if (snap.val() === true) {
-                presRef.onDisconnect().remove(); 
-                presRef.set({ 
-                    name: trackUname, 
-                    activity: loc, 
-                    time: firebase.database.ServerValue.TIMESTAMP 
-                });
-            }
+        presRef.onDisconnect().remove(); 
+        presRef.set({ 
+            name: trackUname, 
+            activity: loc, 
+            time: firebase.database.ServerValue.TIMESTAMP 
         });
     }
 })();
