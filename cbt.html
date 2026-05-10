@@ -668,6 +668,33 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
     </div>
 </div>
 
+<div id="paymentModal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px);">
+    <div style="background: var(--bg-card); width: 100%; max-width: 360px; padding: 25px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); text-align:center; max-height: 90vh; overflow-y: auto;">
+        <div style="font-size: 50px; margin-bottom: 10px;">👑</div>
+        <h2 style="color:var(--warning); margin-bottom:5px; font-weight:900; font-size: 20px;">Upgrade to PRO</h2>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px; font-weight:600; line-height:1.4;">
+            Unlock All Premium Mock Tests, Video Classes & PDF Notes!
+        </p>
+        
+        <div style="background:var(--primary-light); color:var(--primary-dark); padding:12px; border-radius:12px; margin-bottom:15px; font-size: 14px; font-weight: 700;">
+            Special Offer: ₹99 <span style="font-size:12px; text-decoration:line-through; color:grey;">₹499</span>
+        </div>
+        
+        <p style="font-size:12px; color:var(--text-main); margin-bottom:10px; font-weight:600;">To upgrade, please contact Admin.</p>
+        
+        <div style="background:#f1f5f9; padding:10px; border-radius:8px; margin-bottom:15px; font-size:12px;">
+            Your App ID: <b id="displayUserId" style="color:var(--primary); font-size: 14px;">--</b><br>
+            <span style="font-size:10px; color:grey;">Send this ID to Admin on Telegram to activate PRO</span>
+        </div>
+        
+        <button onclick="window.open('https://t.me/DSSSBRank', '_blank')" style="background:#0088cc; box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4); width: 100%; border: none; padding: 12px; border-radius: 10px; color: white; font-weight: 700; cursor: pointer;">
+            <i class="fab fa-telegram-plane"></i> Message Admin on Telegram
+        </button>
+        
+        <button onclick="document.getElementById('paymentModal').style.display='none'" style="background:none; color:var(--text-main); margin-top:10px; box-shadow:none; border: none; font-weight: 600; cursor: pointer; width: 100%; padding: 10px;">Cancel</button>
+    </div>
+</div>
+
 <footer id="examFooter">
     <button class="nav-btn btn-grid" onclick="togglePalette()">▦</button>
     <button class="nav-btn" id="prevBtn" onclick="prev()">◀ Prev</button>
@@ -685,6 +712,7 @@ function removeSafeData(key) { try { localStorage.removeItem(key); } catch(e) {}
 
 function showToast(msg, type="info") {
   const container = document.getElementById('toast-container'); 
+  if(!container) return;
   const t = document.createElement('div'); t.className = `toast ${type}`;
   let icon = "ℹ️"; if(type==="success") icon = "✅"; if(type==="error") icon = "❌"; if(type==="warning") icon = "⚠️";
   t.innerHTML = `<span>${icon}</span> <span>${msg}</span>`; 
@@ -820,7 +848,8 @@ async function askAITutor(idx) {
     respEl.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> AI Tutor is thinking...`;
     
     const q = QUESTIONS[idx];
-    const isHindi = document.getElementById('langBtn').innerText === "HI";
+    const currentLangBtnText = document.getElementById('langBtn').innerText.trim().toUpperCase();
+    const isHindi = currentLangBtnText === "HI";
     const qText = isHindi ? (q.q_hi || q.q_en) : (q.q_en || q.q_hi);
     const optsArr = isHindi ? (q.op_hi || q.op_en) : (q.op_en || q.op_hi);
     
@@ -878,7 +907,6 @@ document.getElementById('mainArea').addEventListener('touchstart', e => {
 }, {passive: true});
 
 document.getElementById('mainArea').addEventListener('touchend', e => { 
-    // 🔥 MASTER SWIPE FIX: Check if touch is on scrollable content like images/tables
     let el = e.target;
     let isScrollable = false;
     
@@ -904,6 +932,29 @@ document.getElementById('mainArea').addEventListener('touchend', e => {
         if(touchendX > touchstartX + 80) prev(); 
     }
 }, {passive: true});
+
+function toggleTheme() { 
+    const isDark = document.body.classList.toggle('dark-mode'); 
+    setSafeData('theme', isDark ? 'dark' : 'light'); 
+}
+
+function toggleLang() { 
+    const btn = document.getElementById('langBtn'); 
+    if (btn) {
+        btn.innerText = btn.innerText.trim().toUpperCase() === "HI" ? "EN" : "HI"; 
+        if (typeof loadQuestion === 'function' && typeof currentState !== 'undefined') {
+            loadQuestion(currentState.idx); 
+        }
+    }
+}
+
+function clearResponse() {
+    if (currentState.submitted || (TEST_MODE === 'quiz' && currentState.answers[currentState.idx] !== null)) return;
+    currentState.answers[currentState.idx] = null;
+    currentState.review[currentState.idx] = false;
+    saveState();
+    loadQuestion(currentState.idx);
+}
 
 function initApp() {
   document.getElementById('displayTitle').innerText = CURRENT_TEST_TITLE;
@@ -982,8 +1033,6 @@ function initApp() {
                 topLangBtn.style.display = 'flex';
             } else {
                 topLangBtn.style.display = 'none'; 
-                if (hasEn) topLangBtn.innerText = 'EN';
-                if (hasHi) topLangBtn.innerText = 'HI';
             }
         }
 
