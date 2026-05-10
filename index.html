@@ -1856,7 +1856,7 @@ function renderTestCards(filteredList) {
             `<button class="start-btn locked" onclick="document.getElementById('paymentModal').style.display='flex'">Unlock Premium</button>` : 
           isAttempted ? 
             `${attemptLabel}<div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:5px;">
-                <button class="start-btn" style="background:var(--primary); color:#fff; border:none; padding: 8px; font-size:12px; border-bottom: 3px solid var(--primary-dark);" onclick="window.location.href='cbt.html?${urlQuery}&mode=exam'">📊 Result / Analysis</button>
+                <button class="start-btn" style="background:var(--primary); color:#fff; border:none; padding: 8px; font-size:12px; border-bottom: 3px solid var(--primary-dark);" onclick="window.location.href='cbt.html?${urlQuery}&mode=result'">📊 Result / Analysis</button>
                 <button class="start-btn" style="padding: 8px; background:#10b981; font-size:12px; border-bottom: 3px solid #059669;" onclick="window.location.href='cbt.html?${urlQuery}&mode=solution'">👁️ Solutions</button>
                 <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); border:1px solid var(--border); padding: 8px; font-size:12px; border-bottom: 3px solid var(--border);" onclick="reattemptTest('${t.dbKey}', '${urlQuery}&mode=exam')">🔄 Retake</button>
                 <button class="start-btn" style="background:var(--warning); color:#fff; border:none; padding: 8px; font-size:12px; border-bottom: 3px solid #d97706;" onclick="window.location.href='cbt.html?${urlQuery}&mode=quiz'">⚡ Quiz Mode</button>
@@ -2323,7 +2323,7 @@ function filterDynamicTests(examKey, subFilterKey, pillEl) {
             `<button class="start-btn locked" onclick="document.getElementById('paymentModal').style.display='flex'">Unlock Premium</button>` : 
            isAttempted ? 
             `${attemptLabel}<div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:5px;">
-                <button class="start-btn" style="background:var(--primary); color:#fff; border:none; padding: 8px; font-size:12px; border-bottom: 3px solid var(--primary-dark);" onclick="window.location.href='cbt.html?${urlQuery}&mode=exam'">📊 Result / Analysis</button>
+                <button class="start-btn" style="background:var(--primary); color:#fff; border:none; padding: 8px; font-size:12px; border-bottom: 3px solid var(--primary-dark);" onclick="window.location.href='cbt.html?${urlQuery}&mode=result'">📊 Result / Analysis</button>
                 <button class="start-btn" style="padding: 8px; background:#10b981; font-size:12px; border-bottom: 3px solid #059669;" onclick="window.location.href='cbt.html?${urlQuery}&mode=solution'">👁️ Solutions</button>
                 <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); border:1px solid var(--border); padding: 8px; font-size:12px; border-bottom: 3px solid var(--border);" onclick="reattemptTest('${t.dbKey}', '${urlQuery}&mode=exam')">🔄 Retake</button>
                 <button class="start-btn" style="background:var(--warning); color:#fff; border:none; padding: 8px; font-size:12px; border-bottom: 3px solid #d97706;" onclick="window.location.href='cbt.html?${urlQuery}&mode=quiz'">⚡ Quiz Mode</button>
