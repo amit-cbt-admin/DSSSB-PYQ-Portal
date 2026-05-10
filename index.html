@@ -42,7 +42,7 @@ window.MathJax = {
     --nav-height: 70px;
 }
 
-/* 🔥 PURE AMOLED DARK MODE: PURE BLACK & PURE WHITE TEXT 🔥 */
+/* 🔥 NAYA DARK MODE: PURE BLACK & PURE WHITE TEXT 🔥 */
 body.dark-mode {
     --primary: #818cf8; --primary-light: rgba(99, 102, 241, 0.15); --primary-dark: #6366f1;
     --text-main: #ffffff; --text-muted: #a1a1aa; 
@@ -694,6 +694,45 @@ textarea { height: 120px; resize: none; }
 
 </div>
 
+<!-- 🔥 RESULT ANALYSIS MODAL 🔥 -->
+<div id="testAnalysisModal" class="modal">
+    <div class="modal-content" style="max-width: 400px; padding: 25px; border-radius: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h2 style="font-weight: 900; font-size: 18px; color: var(--primary); margin:0;">📊 Your Performance</h2>
+            <button onclick="document.getElementById('testAnalysisModal').style.display='none'" style="background:none; border:none; font-size: 24px; cursor: pointer; color: var(--text-muted);">&times;</button>
+        </div>
+        <div id="analysisModalTitle" style="font-size:14px; color:var(--text-muted); margin-bottom:20px; font-weight:700; padding-bottom:12px; border-bottom:1px dashed var(--border);">--</div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+            <div style="background:var(--primary-light); padding:15px; border-radius:12px; text-align:center; border:1px solid rgba(79,70,229,0.2);">
+                <div style="font-size:12px; color:var(--primary-dark); font-weight:bold;">Total Score</div>
+                <div style="font-size:24px; font-weight:900; color:var(--primary);" id="anaScore">0</div>
+            </div>
+            <div style="background:var(--warning-bg, #fef3c7); padding:15px; border-radius:12px; text-align:center; border:1px solid rgba(245,158,11,0.2);">
+                <div style="font-size:12px; color:#b45309; font-weight:bold;">Time Taken</div>
+                <div style="font-size:24px; font-weight:900; color:#d97706;" id="anaTime">00:00</div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align:center; margin-bottom: 25px;">
+            <div style="background:var(--success-bg, #d1fae5); padding:12px 10px; border-radius:10px; border:1px solid rgba(16,185,129,0.2);">
+                <div style="font-size:18px; font-weight:800; color:#059669;" id="anaCorrect">0</div>
+                <div style="font-size:11px; font-weight:bold; color:#047857; margin-top:2px;">Correct</div>
+            </div>
+            <div style="background:var(--danger-bg, #fee2e2); padding:12px 10px; border-radius:10px; border:1px solid rgba(239,68,68,0.2);">
+                <div style="font-size:18px; font-weight:800; color:#dc2626;" id="anaWrong">0</div>
+                <div style="font-size:11px; font-weight:bold; color:#b91c1c; margin-top:2px;">Wrong</div>
+            </div>
+            <div style="background:var(--bg-body); padding:12px 10px; border-radius:10px; border:1px solid var(--border);">
+                <div style="font-size:18px; font-weight:800; color:var(--text-main);" id="anaAcc">0%</div>
+                <div style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-top:2px;">Accuracy</div>
+            </div>
+        </div>
+
+        <button class="btn-primary" id="btnAnaLeaderboard" style="width: 100%; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);"><i class="fas fa-trophy"></i> View Global Leaderboard</button>
+    </div>
+</div>
+
 <div class="fab-support" onclick="document.getElementById('supportModal').style.display='flex'">
     <i class="fas fa-headset"></i>
 </div>
@@ -717,7 +756,7 @@ textarea { height: 120px; resize: none; }
             Special Offer: ₹99 <span style="font-size:12px; text-decoration:line-through; color:grey;">₹499</span>
         </div>
         
-        <p style="font-size:12px; color:var(--text-main); margin-bottom:10px; font-weight:600;">To upgrade, please contact Admin.</p>
+        <p style="font-size:12px; color:var(--text-main); margin-bottom:10px; font-weight:600;">To upgrade, please contact Admin on Whatsapp No 8587961053.</p>
         
         <div style="background:var(--bg-body); padding:10px; border-radius:8px; margin-bottom:15px; font-size:12px; border:1px solid var(--border);">
             Your App ID: <b id="displayUserId" style="color:var(--primary); font-size: 14px;">--</b><br>
@@ -823,6 +862,13 @@ function showToast(msg, type="info") {
     setTimeout(() => { toast.style.display = 'none'; }, 2500); 
 }
 
+function fmt(s){
+    s = Math.max(0, s || 0);
+    const m = Math.floor(s/60);
+    const sec = s%60;
+    return `${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
+}
+
 /* 3. CONFIGURATION & SAFE FIREBASE INIT */
 let db = { 
     ref: function() { 
@@ -831,7 +877,10 @@ let db = {
             once: function(){ return Promise.resolve({exists:()=>false, val:()=>null, forEach:()=>{} }); }, 
             set: function(){ return Promise.resolve(); }, 
             push: function(){ return Promise.resolve(); },
-            remove: function(){ return Promise.resolve(); }
+            remove: function(){ return Promise.resolve(); },
+            orderByChild: function(){ return this; },
+            equalTo: function(){ return this; },
+            limitToLast: function(){ return this; }
         }; 
     } 
 };
@@ -850,6 +899,7 @@ let currentUser = "Student", currentUserId = "guest", isPro = false;
 let myScores = [], allTests = [], allNotes = [];
 let lastAlertTime = 0;
 let attemptedTestIds = new Map(); 
+let myTestResults = {}; // 🔥 NAYA GLOBAL VARIABLE FOR RESULT ANALYSIS
 let currentNbType = 'bookmarks'; 
 
 let fallbackQOD = { q: "Fetching today's challenge...", opt: ["-", "-", "-", "-"], ans: 0 };
@@ -1543,6 +1593,35 @@ function reattemptTest(testId, fullUrlQuery) {
     }, 800); 
 }
 
+// 🔥 NAYA: TEST ANALYSIS MODAL FUNCTION
+function showTestAnalysis(testId, testTitle) {
+    const r = myTestResults[testId];
+    if(!r) {
+        return showToast("Result details not available offline.", "warning");
+    }
+    
+    document.getElementById('analysisModalTitle').innerText = testTitle;
+    document.getElementById('anaScore').innerText = r.score !== undefined ? r.score : '--';
+    document.getElementById('anaTime').innerText = r.timeTaken ? fmt(r.timeTaken) : '--';
+    
+    let c = r.correct || 0;
+    let w = r.wrong || 0;
+    let att = c + w;
+    let acc = att > 0 ? Math.round((c / att) * 100) : 0;
+    
+    document.getElementById('anaCorrect').innerText = c;
+    document.getElementById('anaWrong').innerText = w;
+    document.getElementById('anaAcc').innerText = acc + "%";
+    
+    let lbBtn = document.getElementById('btnAnaLeaderboard');
+    lbBtn.onclick = () => {
+        document.getElementById('testAnalysisModal').style.display = 'none';
+        openTestLeaderboard(testId, testTitle);
+    };
+    
+    document.getElementById('testAnalysisModal').style.display = 'flex';
+}
+
 /* 9. MAIN DATA FETCHING */
 async function fetchData(user) {
     try {
@@ -1650,7 +1729,14 @@ function processDashboardResults(res, testData) {
         if (String(r.userId || "").trim() === String(currentUserId).trim() || rName === currentUser) {
             userMap[rName].isMe = true; 
             myTestCount++; 
-            if(r.testId) attemptedTestIds.set(r.testId, r.time || r.timestamp || Date.now()); 
+            if(r.testId) {
+                attemptedTestIds.set(r.testId, r.time || r.timestamp || Date.now()); 
+                
+                // 🔥 NAYA: SAVE RESULT GLOBALLY FOR ANALYSIS MODAL
+                if(!myTestResults[r.testId] || myTestResults[r.testId].score < safeScore) {
+                    myTestResults[r.testId] = r;
+                }
+            }
             
             let cat = r.category || (testData[r.testId] ? testData[r.testId].category : "GK");
             let max = r.testId && testData[r.testId] ? (parseInt(testData[r.testId].qs) || parseInt(testData[r.testId].marks) || 20) : 20;
@@ -1834,17 +1920,18 @@ function renderTestCards(filteredList) {
         let isLocked = (t.lock === false || t.lock === "false") ? false : true;
         let urlQuery = `testid=${t.dbKey}&title=${encodeURIComponent(t.title)}&time=${t.time||120}&pm=${pm}&nm=${nm}&lock=${isLocked}`;
         
+        // 🔥 NAYA: RESULT (ANALYSIS) BUTTON ADDED IN GRID
         let buttonHTML = locked ? 
             `<button class="start-btn locked" onclick="document.getElementById('paymentModal').style.display='flex'">Unlock Premium</button>` : 
            isAttempted ? 
-            `${attemptLabel}<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-top:5px;">
-                <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); border:1px solid var(--border); padding: 8px; font-size:12px;" onclick="reattemptTest('${t.dbKey}', '${urlQuery}&mode=exam')">🔄 Retake</button>
-                <button class="start-btn" style="background:var(--warning); color:#fff; border:none; padding: 8px; font-size:12px;" onclick="window.location.href='cbt.html?${urlQuery}&mode=quiz'">⚡ Quiz Mode</button>
-                <button class="start-btn" style="padding: 8px; background:#10b981; font-size:12px;" onclick="window.location.href='cbt.html?${urlQuery}&mode=solution'">👁️ Solutions</button>
+            `${attemptLabel}<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
+                <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); border:1px solid var(--border); padding: 8px; font-size:13px;" onclick="reattemptTest('${t.dbKey}', '${urlQuery}&mode=exam')">🔄 Retake</button>
+                <button class="start-btn" style="background:var(--primary); color:#fff; border:none; padding: 8px; font-size:13px; box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);" onclick="showTestAnalysis('${t.dbKey}', '${(t.title||'').replace(/'/g, "\\'")}')">📊 Result</button>
+                <button class="start-btn" style="background:var(--warning); color:#fff; border:none; padding: 8px; font-size:13px;" onclick="window.location.href='cbt.html?${urlQuery}&mode=quiz'">⚡ Quiz</button>
+                <button class="start-btn" style="padding: 8px; background:#10b981; font-size:13px;" onclick="window.location.href='cbt.html?${urlQuery}&mode=solution'">👁️ Solutions</button>
             </div>` : 
             `<button class="start-btn" onclick="window.location.href='cbt.html?${urlQuery}&mode=exam'">Start Mock Test ➔</button>`;
         
-        let viewRankBtn = isAttempted ? `<button class="start-btn" style="background:var(--primary-light); color:var(--primary-dark); border:1px solid var(--primary); padding: 8px; font-size:13px; margin-top:8px; width:100%; box-shadow:none;" onclick="openTestLeaderboard('${t.dbKey}', '${(t.title||'').replace(/'/g, "\\'")}')">🏆 View Leaderboard</button>` : '';
         let tagStr = t.tags || t.tag || "";
         let tagsHTML = "";
         if(tagStr) {
@@ -1879,7 +1966,6 @@ function renderTestCards(filteredList) {
                         <span><i class="fas fa-check-circle"></i> ${t.marks || t.qs || '20'} Marks</span>
                     </div>
                     ${buttonHTML}
-                    ${viewRankBtn}
                 </div>`;
     });
 
@@ -2097,109 +2183,6 @@ function openTestLeaderboard(testId, testTitle) {
         console.error(e);
         document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; color:red;">Error fetching rank. Please try again.</td></tr>';
     });
-}
-
-function fetchDynamicFolders() {
-    fetchWithCache('dsssb_folders_tree', 'cache_folders_v2', 60).then(snap => {
-        if(snap.exists()) {
-            dynamicFolders = snap.val();
-            renderDynamicFolders();
-        } else {
-            console.log("No dynamic folders found in Firebase.");
-            document.getElementById('catBox').innerHTML = `<div style="text-align:center; padding: 20px; color:var(--text-muted); width: 100%;">No Folders Found</div>`;
-        }
-    });
-}
-
-function renderDynamicFolders() {
-        let defaultTools = `
-        <div class="modern-cat-grid" style="margin-bottom: 25px;">
-            <div class="modern-cat-card" onclick="openExamFolder('Live')">
-                <div class="modern-cat-icon ic-red">🔴</div>
-                <div class="modern-cat-name">Live Tests</div>
-            </div>
-            <div class="modern-cat-card" onclick="openExamFolder('Saved')">
-                <div class="modern-cat-icon ic-yellow">⭐</div>
-                <div class="modern-cat-name">Saved</div>
-            </div>
-            <div class="modern-cat-card" onclick="openExamFolder('Attempted')">
-                <div class="modern-cat-icon ic-green">✅</div>
-                <div class="modern-cat-name">Attempted</div>
-            </div>
-        </div>`;
-
-        let folders = Object.values(dynamicFolders).sort((a,b) => (a.order || 99) - (b.order || 99));
-        
-        let groupedByBoard = {};
-        folders.forEach(f => {
-            let boardName = f.board || "Other Exams"; 
-            if(!groupedByBoard[boardName]) groupedByBoard[boardName] = [];
-            groupedByBoard[boardName].push(f);
-        });
-
-        let treeHtml = defaultTools;
-        let isFirstBoard = true; 
-
-        for (let board in groupedByBoard) {
-            let folderCount = groupedByBoard[board].length;
-            let displayState = isFirstBoard ? 'block' : 'none';
-            let chevronState = isFirstBoard ? 'rotate(180deg)' : 'rotate(0deg)';
-            isFirstBoard = false;
-
-            treeHtml += `
-            <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
-                <div onclick="let content = this.nextElementSibling; let icon = this.querySelector('.fa-chevron-down'); if(content.style.display === 'none'){content.style.display='block'; icon.style.transform='rotate(180deg)';}else{content.style.display='none'; icon.style.transform='rotate(0deg)';}" 
-                     style="padding: 12px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to right, var(--bg-body), var(--bg-card)); border-bottom: 1px solid var(--border);">
-                    
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <div style="background: var(--bg-body); width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; font-size: 20px; border: 1px solid var(--border);">🏛️</div>
-                        <div>
-                            <div style="font-weight: 900; font-size: 15px; color:var(--text-main);">${board}</div>
-                            <div style="font-size: 11px; color:var(--text-muted); font-weight:700;">📂 ${folderCount} Exam Categories</div>
-                        </div>
-                    </div>
-                    <i class="fas fa-chevron-down" style="transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--text-muted); transform: ${chevronState}; font-size: 16px; margin-right: 5px;"></i>
-                </div>
-
-                <div style="display: ${displayState}; padding: 18px 15px; background: var(--bg-card);">
-                    <div class="modern-cat-grid">`;
-            
-            groupedByBoard[board].forEach(f => {
-                let folderData = JSON.stringify(f).replace(/'/g, "&#39;"); 
-                let themeClass = "ic-blue";
-                if(f.colorClass) {
-                    if(f.colorClass.includes('purple')) themeClass = "ic-purple";
-                    else if(f.colorClass.includes('green')) themeClass = "ic-green";
-                    else if(f.colorClass.includes('orange') || f.colorClass.includes('hin')) themeClass = "ic-orange";
-                    else if(f.colorClass.includes('pink') || f.colorClass.includes('eng')) themeClass = "ic-pink";
-                }
-
-                let examKey = f.examKey ? f.examKey.toLowerCase() : "";
-                let categoryTests = allTests.filter(t => t.dbKey !== 'auto_qod' && ((t.category||"").toLowerCase().includes(examKey) || (t.title||"").toLowerCase().includes(examKey)));
-                let totalTests = categoryTests.length;
-                let attemptedInCat = categoryTests.filter(t => attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id)).length;
-                let realProgress = totalTests > 0 ? Math.round((attemptedInCat / totalTests) * 100) : 0;
-
-                treeHtml += `
-                <div class="modern-cat-card" onclick='openTreeFolder(${folderData})'>
-                    <div class="modern-cat-icon ${themeClass}">${f.icon || '📝'}</div>
-                    <div class="modern-cat-name">${f.name || 'Exam'}</div>
-                    
-                    <div style="font-size: 10px; font-weight: 800; color: var(--text-muted); background: var(--bg-body); padding: 2px 6px; border-radius: 6px; margin-top: -2px;">
-                        ${totalTests} Mocks
-                    </div>
-                    
-                    <div style="width: 80%; height: 5px; background: var(--bg-body); border-radius: 4px; margin-top: 6px; overflow: hidden; border: 1px solid var(--border); box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);">
-                        <div style="width: ${realProgress}%; height: 100%; background: var(--primary); border-radius: 4px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);"></div>
-                    </div>
-                </div>`;
-            });
-
-            treeHtml += `</div></div></div>`;
-        }
-
-        let container = document.getElementById('dynamicTreeContainer');
-        if(container) container.innerHTML = treeHtml;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
