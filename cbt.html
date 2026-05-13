@@ -798,6 +798,13 @@ function escapeHTML(str) {
     });
 }
 
+// Centralized linking logic to prevent ANY string parsing errors in inline onclick attributes.
+function openMockTest(testId, title, time, pm, nm, isLocked, mode) {
+    let safeTitle = encodeURIComponent(title || 'PYQ Mock Test');
+    let query = `testid=${testId}&title=${safeTitle}&time=${time||120}&pm=${pm||1}&nm=${nm||0.25}&lock=${isLocked||false}&mode=${mode}`;
+    window.location.href = `cbt.html?${query}`;
+}
+
 const AppState = {
     testsRendered: false,
     studyRendered: false,
@@ -1591,12 +1598,12 @@ async function removeNotebookItem(key, type) {
     }
 }
 
-function reattemptTest(testId, fullUrlQuery) {
+function reattemptTest(testId, title, time, pm, nm, isLocked) {
     showToast("Starting fresh attempt... 🔄");
     setTimeout(async () => {
         await localforage.removeItem("dsssb_cbt_rank_v2_" + testId); 
         await localforage.removeItem("dsssb_cbt_rank_v2_" + testId + "_final"); 
-        window.location.href = `cbt.html?${fullUrlQuery}`;
+        openMockTest(testId, title, time, pm, nm, isLocked, 'exam');
     }, 800); 
 }
 
@@ -1792,9 +1799,10 @@ async function fetchData(user) {
                     let pm = !isNaN(parseFloat(targetTest.pm)) ? parseFloat(targetTest.pm) : 1;
                     let nm = !isNaN(parseFloat(targetTest.nm)) ? parseFloat(targetTest.nm) : 0.25;
                     let isLocked = (targetTest.lock === true || targetTest.lock === "true" || targetTest.type === 'pro') ? true : false;
-                    let urlQuery = `testid=${targetTest.dbKey}&title=${encodeURIComponent(targetTest.title || 'PYQ Mock Test')}&time=${targetTest.time||120}&pm=${pm}&nm=${nm}&lock=${isLocked}`;
                     
-                    setTimeout(() => { window.location.href = `cbt.html?${urlQuery}&mode=exam`; }, 1500);
+                    setTimeout(() => { 
+                        openMockTest(targetTest.dbKey, targetTest.title, targetTest.time, pm, nm, isLocked, 'exam');
+                    }, 1500);
                 }
             }
             window.history.replaceState({}, document.title, window.location.pathname);
@@ -1911,19 +1919,19 @@ function renderTestCards(filteredList, savedTests = []) {
         let pm = !isNaN(parseFloat(t.pm)) ? parseFloat(t.pm) : 1;
         let nm = !isNaN(parseFloat(t.nm)) ? parseFloat(t.nm) : 0.25;
         let isLocked = (t.lock === true || t.lock === "true" || t.type === 'pro') ? true : false;
-        
-        let urlQuery = `testid=${t.dbKey}&title=${encodeURIComponent(t.title || 'PYQ Mock Test')}&time=${t.time||120}&pm=${pm}&nm=${nm}&lock=${isLocked}`;
+        let safeTime = t.time || 120;
+        let safeTitleForJS = (t.title || 'PYQ Mock Test').replace(/'/g, "\\'").replace(/"/g, '&quot;');
         
         let buttonHTML = locked ? 
             `<button class="start-btn locked" onclick="document.getElementById('paymentModal').style.display='flex'">Unlock Premium</button>` : 
           isAttempted ? 
             `${attemptLabel}<div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:5px;">
-                <button class="start-btn" style="background:var(--primary); color:#fff; border:none; padding: 8px; font-size:12px; border-bottom: 3px solid var(--primary-dark);" onclick="window.location.href='cbt.html?${urlQuery}&mode=result'">📊 Result / Analysis</button>
-                <button class="start-btn" style="padding: 8px; background:#10b981; font-size:12px; border-bottom: 3px solid #059669;" onclick="window.location.href='cbt.html?${urlQuery}&mode=solution'">👁️ Solutions</button>
-                <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); border:1px solid var(--border); padding: 8px; font-size:12px; border-bottom: 3px solid var(--border);" onclick="reattemptTest('${t.dbKey}', '${urlQuery}&mode=exam')">🔄 Retake</button>
-                <button class="start-btn" style="background:var(--warning); color:#fff; border:none; padding: 8px; font-size:12px; border-bottom: 3px solid #d97706;" onclick="window.location.href='cbt.html?${urlQuery}&mode=quiz'">⚡ Quiz Mode</button>
+                <button class="start-btn" style="background:var(--primary); color:#fff; border:none; padding: 8px; font-size:12px; border-bottom: 3px solid var(--primary-dark);" onclick="openMockTest('${t.dbKey}', '${safeTitleForJS}', '${safeTime}', '${pm}', '${nm}', ${isLocked}, 'result')">📊 Result / Analysis</button>
+                <button class="start-btn" style="padding: 8px; background:#10b981; font-size:12px; border-bottom: 3px solid #059669;" onclick="openMockTest('${t.dbKey}', '${safeTitleForJS}', '${safeTime}', '${pm}', '${nm}', ${isLocked}, 'solution')">👁️ Solutions</button>
+                <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); border:1px solid var(--border); padding: 8px; font-size:12px; border-bottom: 3px solid var(--border);" onclick="reattemptTest('${t.dbKey}', '${safeTitleForJS}', '${safeTime}', '${pm}', '${nm}', ${isLocked})">🔄 Retake</button>
+                <button class="start-btn" style="background:var(--warning); color:#fff; border:none; padding: 8px; font-size:12px; border-bottom: 3px solid #d97706;" onclick="openMockTest('${t.dbKey}', '${safeTitleForJS}', '${safeTime}', '${pm}', '${nm}', ${isLocked}, 'quiz')">⚡ Quiz Mode</button>
             </div>` : 
-            `<button class="start-btn" onclick="window.location.href='cbt.html?${urlQuery}&mode=exam'">Start Mock Test ➔</button>`;
+            `<button class="start-btn" onclick="openMockTest('${t.dbKey}', '${safeTitleForJS}', '${safeTime}', '${pm}', '${nm}', ${isLocked}, 'exam')">Start Mock Test ➔</button>`;
         
         let viewRankBtn = isAttempted ? `<button class="start-btn" style="background:var(--primary-light); color:var(--primary-dark); border:1px solid var(--primary); padding: 8px; font-size:13px; margin-top:8px; width:100%; box-shadow:none;" onclick="openTestLeaderboard('${t.dbKey}')">🏆 View Leaderboard</button>` : '';
         
@@ -1943,14 +1951,12 @@ function renderTestCards(filteredList, savedTests = []) {
             tagsHTML += `</div>`;
         }
 
-        let safeTitleForShare = (t.title || 'PYQ Mock Test').replace(/'/g, "\\'").replace(/"/g, '&quot;');
-
         let card = document.createElement('div');
         card.className = `test-card ${locked?'locked':''}`;
         card.innerHTML = `
             ${liveHTML}
             <div style="position:absolute; top:15px; right:15px; display:flex; gap:8px; z-index:10;">
-                <button class="save-btn" style="position:relative; top:0; right:0; background:var(--bg-body); color:var(--text-main);" onclick="(function(e){ shareMockTest('${t.dbKey}', '${safeTitleForShare}', e); })(event)">
+                <button class="save-btn" style="position:relative; top:0; right:0; background:var(--bg-body); color:var(--text-main);" onclick="(function(e){ shareMockTest('${t.dbKey}', '${safeTitleForJS}', e); })(event)">
                     <i class="fas fa-share-alt"></i>
                 </button>
                 <button class="save-btn ${isSaved?'saved':''}" style="position:relative; top:0; right:0;" onclick="toggleSaveTest('${t.dbKey}', this, event)">
@@ -1990,7 +1996,6 @@ function searchNotes(query) {
         let locked = n.type === 'pro' && !isPro; 
         let card = document.createElement('div');
         card.className = `note-card ${locked?'locked':''}`;
-        // 🛠 FIX: Add robust replacing of single quotes to prevent window.open syntax error crashes.
         let safeUrl = (n.url || '').replace(/'/g, "\\'");
         card.innerHTML = `
             <div class="t-title">${escapeHTML(n.title || 'Study Material')}</div>
@@ -2027,7 +2032,6 @@ function renderVideos(videoList = []) {
 
         let card = document.createElement('div');
         card.className = `video-card ${locked ? 'locked' : ''}`;
-        // 🛠 FIX: Also added robust link escaping to window.open for videos
         let safeUrl = (v.url || '').replace(/'/g, "\\'");
         card.onclick = () => { if(locked) document.getElementById('paymentModal').style.display='flex'; else window.open(safeUrl, '_self'); };
         card.innerHTML = `
@@ -2341,7 +2345,6 @@ function renderDynamicFolders() {
                 let attemptedInCat = categoryTests.filter(t => attemptedTestIds.has(String(t.dbKey)) || (t.id && attemptedTestIds.has(String(t.id)))).length;
                 let realProgress = totalTests > 0 ? Math.round((attemptedInCat / totalTests) * 100) : 0;
 
-                // 🛠 FIX: Safely escape folder keys (JS string bounds & HTML attributes) without breaking JS execution syntax.
                 let safeFolderKey = (f.examKey || '').replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
                 treeHtml += `
