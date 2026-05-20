@@ -14,8 +14,7 @@
 <link rel="apple-touch-icon" href="icons/icon-192x192.png">
 <link rel="manifest" href="manifest.json">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
-<!-- Firebase & Libraries -->
+<script src="https://telegram.org/js/telegram-web-app.js" defer></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
@@ -29,107 +28,108 @@ window.MathJax = {
   startup: { typeset: false }
 };
 </script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 
 <style>
-/* =========================================================
-   CSS MODULARIZATION PREP: core.css
-   ========================================================= */
+/* --- THEME VARIABLES --- */
 :root {
     --primary: #4f46e5; --primary-light: #e0e7ff; --primary-dark: #3730a3;
     --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
     --text-main: #1f2937; --text-muted: #6b7280;
     --bg-body: #f4f6f8; --bg-card: #ffffff;
-    --bg-glass: rgba(255, 255, 255, 0.95);
+    --bg-glass: rgba(255, 255, 255, 0.85);
     --border: #e5e7eb;
     --nav-height: 70px;
 }
 
 body.dark-mode {
-    --primary: #818cf8; --primary-light: rgba(99, 102, 241, 0.15); --primary-dark: #a5b4fc;
-    --text-main: #f8fafc; --text-muted: #94a3b8;
-    --bg-body: #020617; --bg-card: #0f172a;
-    --bg-glass: rgba(15, 23, 42, 0.98); --border: #1e293b;
+    --primary: #6366f1; --primary-light: rgba(99, 102, 241, 0.15); --primary-dark: #818cf8;
+    --text-main: #ffffff; --text-muted: #a1a1aa; 
+    --bg-body: #000000; --bg-card: #111111; 
+    --bg-glass: rgba(0, 0, 0, 0.85);
+    --border: #222222;
 }
 
-/* Specific Dark Mode Overrides */
-.dark-mode .daily-goal-card, .dark-mode .qod-card { background: linear-gradient(135deg, #1e293b, #0f172a); border-color: #334155; }
-.dark-mode .daily-goal-card.completed { background: linear-gradient(135deg, #064e3b, #022c22); border-color: #065f46; }
-.dark-mode .qod-text { color: #f8fafc !important; }
-.dark-mode .qod-opt { background: #1e293b; border-color: #334155; color: #e2e8f0; }
-.dark-mode .start-btn, .dark-mode .download-btn { box-shadow: none; border-bottom-color: #000; }
-.dark-mode .filter-pill { border-bottom-color: #1e293b; background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-body) 100%); }
-.dark-mode .test-card, .dark-mode .note-card { box-shadow: 0 4px 8px rgba(0,0,0,0.4); }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; max-width: 100%; word-wrap: break-word; }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
+body { display: block; background: var(--bg-body); color: var(--text-main); padding-bottom: calc(var(--nav-height) + 20px); transition: background 0.3s ease, color 0.3s ease; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; overflow-x: hidden; }
 
-body { 
-    display: block; background: var(--bg-body); color: var(--text-main); 
-    padding-bottom: var(--nav-height); 
-    min-height: 100vh; overflow-x: hidden; 
-    transition: background 0.2s ease, color 0.2s ease; 
-    -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; 
+@keyframes tabFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.tab-content { animation: tabFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+/* 🔥 ADDICTIVE PREMIUM SHIMMER EFFECT 🔥 */
+@keyframes shimmerSweep {
+    0% { transform: translateX(-100%) skewX(-15deg); }
+    100% { transform: translateX(200%) skewX(-15deg); }
 }
-
-/* 🔥 Allow text selection in study/solution areas 🔥 */
-.ai-chat-box, #notebookFilters, [id^="sol_"], .qod-text { 
-    user-select: text; -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; 
+.premium-shimmer { position: relative; overflow: hidden; }
+.premium-shimmer::after {
+    content: ''; position: absolute; top: 0; left: 0; width: 50%; height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+    animation: shimmerSweep 3s infinite cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none;
 }
-
-@keyframes tabFade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-.tab-content { animation: tabFade 0.3s ease-out forwards; }
 
 .full-overlay { position: fixed; inset: 0; background: var(--bg-body); z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
-.login-card { background: var(--bg-card); padding: 40px 30px; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--border); animation: tabFade 0.4s ease; }
-.login-input { width: 100%; padding: 14px; margin: 10px 0 20px; border: 2px solid var(--border); border-radius: 12px; background: var(--bg-body); color: var(--text-main); font-size: 16px !important; outline:none; }
+.login-card { background: var(--bg-card); padding: 40px 30px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--border); animation: tabFade 0.5s ease; }
+.login-input { width: 100%; padding: 14px; margin: 10px 0 20px; border: 2px solid var(--border); border-radius: 12px; background: var(--bg-body); color: var(--text-main); font-size: 15px; transition: 0.3s; outline:none; }
 .login-input:focus { border-color: var(--primary); }
-.btn-primary { background: linear-gradient(135deg, #4f46e5 0%, #8b5cf6 100%); color: #fff; border: none; padding: 14px; width: 100%; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3); }
+.btn-primary { background: linear-gradient(135deg, #4f46e5 0%, #8b5cf6 100%); color: #fff; border: none; padding: 14px; width: 100%; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4); }
+.btn-primary:active { transform: scale(0.98); }
 
-/* =========================================================
-   CSS MODULARIZATION PREP: ui.css (Components)
-   ========================================================= */
-.hero-header { background: var(--bg-glass); padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+.hero-header { background: var(--bg-glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
 .user-profile { display: flex; align-items: center; gap: 12px; }
-.user-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: grid; place-items: center; font-weight: 800; font-size: 20px; border: 2px solid var(--primary); overflow: hidden; }
+.user-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: grid; place-items: center; font-weight: 800; font-size: 20px; border: 2px solid var(--primary); overflow: hidden; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2); }
 .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .user-info h1 { font-size: 18px; font-weight: 800; margin-bottom: 2px; letter-spacing: -0.5px;}
 .user-info .greeting { font-size: 11px; color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
-.tools { display: flex; gap: 10px; align-items: center; }
-.tool-btn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main); display: grid; place-items: center; cursor: pointer; transition: 0.2s; }
-.tool-btn:active { transform: scale(0.9); }
-.pro-badge-header { background: linear-gradient(135deg, #FFD700, #F59E0B); color: #000; padding: 4px 10px; border-radius: 20px; font-weight: 800; font-size: 10px; display: none; align-items: center; gap: 4px; border: 1px solid #fbbf24; }
-.buy-pro-btn { background: #dcfce7; color: #16a34a; font-weight: 800; padding: 5px 12px; border-radius: 20px; font-size: 11px; border: 1px solid #16a34a; cursor: pointer; }
 
-.countdown-box { background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 12px 20px; margin: 15px 20px 0; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; }
+/* Live Pulse Counter */
+.live-counter { font-size: 10px; font-weight: 800; color: #10b981; display: flex; align-items: center; gap: 4px; background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.3); }
+.pulse-dot { width: 6px; height: 6px; background: #10b981; border-radius: 50%; animation: pulse 1.5s infinite; }
+
+.tools { display: flex; gap: 10px; align-items: center; }
+.tool-btn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main); display: grid; place-items: center; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+.tool-btn:active { transform: scale(0.9); }
+.pro-badge-header { background: linear-gradient(135deg, #FFD700, #F59E0B); color: #000; padding: 4px 10px; border-radius: 20px; font-weight: 800; font-size: 10px; display: none; align-items: center; gap: 4px; box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3); border: 1px solid #fbbf24; }
+.buy-pro-btn { background: #dcfce7; color: #16a34a; font-weight: 800; padding: 5px 12px; border-radius: 20px; font-size: 11px; border: 1px solid #16a34a; cursor: pointer; animation: pulse 2s infinite; }
+
+.countdown-box { background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 12px 20px; margin: 15px 20px 0; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border: 1px solid #334155; }
 .cd-timer { font-size: 15px; font-weight: 800; color: #fbbf24; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 8px; }
 
-.daily-goal-card { background: linear-gradient(135deg, #fffbeb, #fef3c7); border: 1px solid #fde68a; margin: 15px 20px 0; padding: 15px 20px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; }
-.daily-goal-card.completed { background: linear-gradient(135deg, #dcfce7, #bbf7d0); border-color: #86efac; }
+.daily-goal-card { background: linear-gradient(135deg, #fffbeb, #fef3c7); border: 1px solid #fde68a; margin: 15px 20px 0; padding: 15px 20px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.daily-goal-card.completed { background: linear-gradient(135deg, #dcfce7, #bbf7d0); border-color: #86efac; box-shadow: 0 4px 10px rgba(22, 163, 74, 0.1); }
 .dg-text { display: flex; flex-direction: column; gap: 4px; }
 .dg-title { font-weight: 800; font-size: 14px; color: #b45309; }
 .daily-goal-card.completed .dg-title { color: #166534; }
 .dg-status { font-size: 12px; font-weight: 700; color: #d97706; }
 .daily-goal-card.completed .dg-status { color: #15803d; }
-.dg-btn { background: #f59e0b; color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 800; font-size: 12px; cursor: pointer; }
+.dg-btn { background: #f59e0b; color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 800; font-size: 12px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3); }
 .daily-goal-card.completed .dg-btn { display: none; }
+.dark-mode .daily-goal-card { background: linear-gradient(135deg, #2a1b0d, #1a0f05); border-color: #431407; }
+.dark-mode .daily-goal-card.completed { background: linear-gradient(135deg, #064e3b, #022c22); border-color: #065f46; }
 
 .quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 15px 20px 0; }
-.action-item { background: var(--bg-card); padding: 12px 8px; border-radius: 14px; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; border-bottom: 3px solid var(--border); }
+.action-item { background: var(--bg-card); padding: 12px 8px; border-radius: 14px; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: 0.2s; border-bottom: 3px solid var(--border); }
 .action-item:active { transform: translateY(2px); border-bottom-width: 1px; margin-top: 2px;}
 .action-item i { font-size: 20px; color: var(--primary); }
 .action-item span { font-size: 11px; font-weight: 600; color: var(--text-muted); }
 
 .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; padding: 15px 20px; }
-.stat-card { background: var(--bg-card); padding: 15px 10px; border-radius: 16px; border: 1px solid var(--border); text-align: center; }
+.stat-card { background: var(--bg-card); padding: 15px 10px; border-radius: 16px; border: 1px solid var(--border); text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+.stat-card:active { transform: scale(0.95); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 .stat-val { font-size: 20px; font-weight: 900; color: var(--primary); margin: 4px 0; pointer-events: none; }
 .stat-lbl { font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; pointer-events: none; }
 
-.notebook-banner { background: linear-gradient(135deg, #4f46e5, #8b5cf6); color: white; padding: 16px 20px; margin: 0 20px 25px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; }
+.notebook-banner { background: linear-gradient(135deg, #4f46e5, #8b5cf6); color: white; padding: 16px 20px; margin: 0 20px 25px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25); cursor: pointer; transition: transform 0.2s; }
+.notebook-banner:active { transform: scale(0.98); }
 .nb-icon-box { background: rgba(255,255,255,0.2); width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; }
 
+/* 🎯 MODERN CLEAN CATEGORY CARDS 🎯 */
 .modern-cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.modern-cat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 16px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; text-align: center; position: relative; overflow: hidden; }
-.modern-cat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--border); opacity: 0.5; }
-.modern-cat-card:hover { border-color: var(--primary-light); }
+.modern-cat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 16px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.03); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); text-align: center; position: relative; overflow: hidden; }
+.modern-cat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--border); transition: 0.3s; opacity: 0.5; }
+.modern-cat-card:active { transform: scale(0.95); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.modern-cat-card:hover { border-color: var(--primary-light); box-shadow: 0 8px 20px rgba(99, 102, 241, 0.08); }
 .modern-cat-card:hover::before { background: var(--primary); opacity: 1; }
 
 .modern-cat-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: inset 0 -3px 0 rgba(0,0,0,0.1); margin-bottom: 2px; }
@@ -145,61 +145,86 @@ body {
 .ic-yellow { background: #fef3c7; color: #d97706; }
 .ic-green { background: #dcfce7; color: #059669; }
 
+.horizontal-3d-scroll { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; padding: 5px 5px 20px 5px; }
+.horizontal-3d-scroll::-webkit-scrollbar { display: none; }
+.horizontal-3d-scroll .modern-cat-card { min-width: 105px; flex-shrink: 0; }
+
+@media(min-width: 1024px) {
+    .modern-cat-grid { grid-template-columns: repeat(6, 1fr); gap: 20px; }
+}
 .section-title { font-weight: 800; margin-bottom: 12px; font-size: 16px; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
 .target-exams-section { padding: 0 20px; margin-bottom: 25px; }
 
-.qod-card { background: linear-gradient(135deg, #fffbeb 0%, #fff7ed 100%); border: 1px solid #fed7aa; border-radius: 18px; padding: 18px; margin: 0 20px 20px; }
+/* 🔥 DARK MODE QOD FIXES 🔥 */
+.qod-card { background: linear-gradient(135deg, #fffbeb 0%, #fff7ed 100%); border: 1px solid #fed7aa; border-radius: 18px; padding: 18px; margin: 0 20px 20px; box-shadow: 0 6px 15px rgba(251, 146, 60, 0.1); transition: 0.3s; }
+.qod-text { font-weight: 700; margin-bottom:15px; font-size:14px; color:#78350f; transition: 0.3s; }
 .qod-tag { background: #f97316; color: white; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;}
-.qod-opt { padding: 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; cursor: pointer; text-align: center; font-weight: 600; margin-bottom:8px; border-bottom: 3px solid var(--border);}
+.qod-opt { padding: 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; cursor: pointer; text-align: center; font-weight: 600; margin-bottom:8px; transition: 0.2s; border-bottom: 3px solid var(--border);}
 .qod-opt:active { transform: translateY(2px); border-bottom-width: 1px; }
-.qod-opt.correct { background: #dcfce7 !important; border-color: #16a34a !important; color: #16a34a; }
-.qod-opt.wrong { background: #fee2e2 !important; border-color: #dc2626 !important; color: #dc2626; }
 
+/* Perfected Dark Mode QOD */
+.dark-mode .qod-card { background: linear-gradient(135deg, #2a1b0d, #1a0f05); border-color: #78350f; }
+.dark-mode .qod-text { color: #fde68a !important; }
+.dark-mode .qod-opt { background: #1f1209 !important; border-color: #78350f !important; color: #fef3c7 !important; border-bottom: 3px solid #431407 !important; }
+.dark-mode .qod-opt:hover { background: #381a0b !important; }
+
+.qod-opt.correct { background: #dcfce7 !important; border-color: #16a34a !important; color: #16a34a !important; box-shadow: 0 4px 10px rgba(22, 163, 74, 0.1); border-bottom-width: 1px !important; }
+.qod-opt.wrong { background: #fee2e2 !important; border-color: #dc2626 !important; color: #dc2626 !important; border-bottom-width: 1px !important; }
+
+/* --- HEAVY 3D FILTER PILLS FOR MOCKS PAGE --- */
 .list-container { padding: 0 20px; }
 .search-box { background: var(--bg-card); padding: 12px 18px; border-radius: 14px; border: 1px solid var(--border); display: flex; align-items: center; gap: 12px; margin-bottom: 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
-.search-box input { border: none; background: transparent; width: 100%; font-size: 16px !important; color: var(--text-main); outline: none; }
+.search-box input { border: none; background: transparent; width: 100%; font-size: 14px; color: var(--text-main); outline: none; }
 .filter-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 5px; scrollbar-width: none; }
 .filter-scroll::-webkit-scrollbar { display: none; }
 .filter-pill { 
     padding: 10px 18px; background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-body) 100%); 
     border: 1px solid var(--border); border-bottom: 3px solid #cbd5e1; border-radius: 12px; 
     font-size: 12px; font-weight: 800; color: var(--text-muted); white-space: nowrap; 
-    cursor: pointer;
+    cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.02); 
 }
+.dark-mode .filter-pill { border-bottom-color: #1e293b; }
 .filter-pill:active { transform: translateY(2px); border-bottom-width: 1px; }
-.filter-pill.active { background: var(--primary); color: white; border: none; border-bottom: 3px solid var(--primary-dark); }
+.filter-pill.active { 
+    background: var(--gradient-main); color: white; border: none; border-bottom: 3px solid var(--primary-dark); 
+    box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4); 
+}
 
-.test-card, .note-card, .video-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 18px; position: relative; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border-bottom: 4px solid var(--border); }
+/* CARDS HEAVY UI */
+.test-card, .note-card, .video-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 18px; position: relative; overflow: hidden; box-shadow: 0 6px 16px rgba(0,0,0,0.04); transition: 0.2s; border-bottom: 4px solid var(--border); }
 .test-card, .note-card { padding: 20px; } 
 .video-card { padding: 0; cursor: pointer; }
 
-.save-btn { background: var(--bg-body); color: var(--text-muted); border: 1px solid var(--border); width: 34px; height: 34px; border-radius: 50%; font-size: 14px; cursor: pointer; position: absolute; top: 15px; right: 15px; z-index: 10; display: grid; place-items: center;}
-.save-btn.saved { color: #f59e0b; background: #fef3c7; border-color: #fde68a; }
+.save-btn { background: var(--bg-body); color: var(--text-muted); border: 1px solid var(--border); width: 34px; height: 34px; border-radius: 50%; font-size: 14px; cursor: pointer; position: absolute; top: 15px; right: 15px; z-index: 10; transition: 0.3s; display: grid; place-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);}
+.save-btn.saved { color: #f59e0b; background: #fef3c7; border-color: #fde68a; filter: drop-shadow(0 2px 5px rgba(245, 158, 11, 0.3)); }
 .dark-mode .save-btn.saved { background: rgba(245, 158, 11, 0.2); border-color: rgba(245, 158, 11, 0.4); }
 
-.live-badge { display: inline-block; margin-bottom: 10px; background: #ef4444; color: white; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; letter-spacing: 0.5px;}
-.test-card.locked::after, .note-card.locked::after { content: "🔒 PRO"; position: absolute; top: 15px; right: 55px; background: var(--warning); color: white; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; z-index: 5;}
+.live-badge { display: inline-block; margin-bottom: 10px; background: #ef4444; color: white; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; animation: pulseLive 1.5s infinite; letter-spacing: 0.5px; box-shadow: 0 2px 5px rgba(239,68,68,0.4);}
+.test-card.locked::after, .note-card.locked::after { content: "🔒 PRO"; position: absolute; top: 15px; right: 55px; background: var(--warning); color: white; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(245,158,11,0.4);}
+
+@keyframes pulseLive { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); } 70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+@keyframes pulseFast { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
 
 .t-title { font-weight: 800; font-size: 16px; margin-bottom: 10px; line-height: 1.3; padding-right: 30px;}
 .t-info { display: flex; gap: 15px; font-size: 12px; color: var(--text-muted); margin-bottom: 18px; font-weight: 700; background: var(--bg-body); padding: 8px 12px; border-radius: 8px;}
-.start-btn, .download-btn { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 14px; border-bottom: 3px solid var(--primary-dark);}
+.start-btn, .download-btn { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 14px; transition: 0.2s; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2); border-bottom: 3px solid var(--primary-dark);}
 .start-btn:active, .download-btn:active { transform: translateY(2px); border-bottom-width: 1px; }
-.start-btn.locked { background: #fee2e2; color: #ef4444; border: 1px solid #fca5a5; border-bottom: 3px solid #f87171;}
-.download-btn { background: var(--bg-card); color: var(--primary); border: 2px solid var(--primary); border-bottom: 3px solid var(--primary); }
+.start-btn.locked { background: #fee2e2; color: #ef4444; box-shadow: none; border: 1px solid #fca5a5; border-bottom: 3px solid #f87171;}
+.download-btn { background: var(--bg-card); color: var(--primary); border: 2px solid var(--primary); border-bottom: 3px solid var(--primary); box-shadow: none; }
 
 .vid-thumb { width: 100%; height: 180px; background: #000; position: relative; display: flex; align-items: center; justify-content: center; }
 .vid-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
 .vid-content { padding: 15px; }
 
-.segment-control { display: flex; background: var(--bg-card); padding: 6px; border-radius: 14px; margin: 0 20px 20px; border: 1px solid var(--border); }
-.segment-btn { flex: 1; padding: 10px; text-align: center; font-size: 13px; font-weight: 800; border-radius: 10px; color: var(--text-muted); cursor: pointer; }
-.segment-btn.active { background: var(--primary); color: white; }
+.segment-control { display: flex; background: var(--bg-card); padding: 6px; border-radius: 14px; margin: 0 20px 20px; border: 1px solid var(--border); box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
+.segment-btn { flex: 1; padding: 10px; text-align: center; font-size: 13px; font-weight: 800; border-radius: 10px; color: var(--text-muted); cursor: pointer; transition: 0.3s; }
+.segment-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); }
 
 .syllabus-container { padding: 20px; }
-.progress-card { background: var(--bg-card); padding: 20px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 20px; }
+.progress-card { background: var(--bg-card); padding: 20px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
 .prog-ring { width: 100%; height: 12px; background: var(--bg-body); border-radius: 10px; overflow: hidden; margin-top: 12px; border: 1px solid var(--border); }
 .prog-fill { height: 100%; background: linear-gradient(90deg, #4f46e5, #8b5cf6); width: 0%; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
-.subject-group { margin-bottom: 15px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; border-bottom: 3px solid var(--border);}
+.subject-group { margin-bottom: 15px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.02); border-bottom: 3px solid var(--border);}
 .subject-head { padding: 16px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.01); cursor: pointer; font-weight: 800; font-size: 14px; }
 .topic-list { display: none; padding: 5px 15px 15px; }
 .topic-list.open { display: block; animation: fadeIn 0.3s; }
@@ -207,15 +232,16 @@ body {
 .topic-item:last-child { border-bottom: none; padding-bottom: 0; }
 .topic-chk { width: 20px; height: 20px; accent-color: var(--primary); }
 
-.nav-bar { position: fixed; bottom: 0; width: 100%; height: var(--nav-height); background: var(--bg-glass); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 100; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -2px 10px rgba(0,0,0,0.02); }
-.nav-item { text-align: center; color: var(--text-muted); font-size: 10px; font-weight: 800; opacity: 0.6; cursor: pointer; flex: 1; transition: 0.2s; }
-.nav-item i { font-size: 22px; margin-bottom: 4px; display: block; }
-.nav-item.active { color: var(--primary); opacity: 1; transform: translateY(-2px); }
+.nav-bar { position: fixed; bottom: 0; width: 100%; height: var(--nav-height); background: var(--bg-glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 100; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -4px 25px rgba(0,0,0,0.05); }
+.nav-item { text-align: center; color: var(--text-muted); font-size: 10px; font-weight: 800; opacity: 0.6; cursor: pointer; flex: 1; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.nav-item i { font-size: 22px; margin-bottom: 4px; display: block; transition: 0.3s; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.05));}
+.nav-item.active { color: var(--primary); opacity: 1; transform: translateY(-4px); }
+.nav-item.active i { transform: scale(1.15); filter: drop-shadow(0 4px 6px rgba(79,70,229,0.3));}
 
-.fab-support { position: fixed; bottom: 90px; right: 20px; background: var(--primary); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); cursor: pointer; z-index: 100; }
+.fab-support { position: fixed; bottom: 90px; right: 20px; background: var(--primary); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4); cursor: pointer; z-index: 100; transition: 0.3s; }
 .fab-support:active { transform: scale(0.9); }
 
-.chart-box { background: var(--bg-card); padding: 18px; border-radius: 18px; border: 1px solid var(--border); margin: 0 20px 20px; flex: 1;}
+.chart-box { background: var(--bg-card); padding: 18px; border-radius: 18px; border: 1px solid var(--border); margin: 0 20px 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); flex: 1;}
 .rank-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 600; }
 
 .skeleton-loader { display: flex; flex-direction: column; gap: 20px; padding: 20px; }
@@ -227,18 +253,16 @@ body {
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
 .news-container { background: linear-gradient(90deg, #4f46e5, #8b5cf6); color: white; padding: 10px 15px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; }
-.news-marquee-box { flex: 1; overflow: hidden; white-space: nowrap; position: relative; }
-.news-marquee-text { display: inline-block; padding-left: 100%; animation: scrollNews 15s linear infinite; }
-@keyframes scrollNews { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-
-.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; } 
-.modal-content { background: var(--bg-card); width: 100%; max-width: 360px; padding: 25px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-textarea, input[type="text"], input[type="tel"], select { width: 100%; padding: 14px; margin: 10px 0 20px; border: 2px solid var(--border); border-radius: 12px; background: var(--bg-body); color: var(--text-main); outline:none; font-size: 16px !important; border-bottom: 3px solid var(--border);}
-textarea:focus, input[type="text"]:focus, input[type="tel"]:focus, select:focus { border-color: var(--primary); }
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
+.modal-content { background: var(--bg-card); width: 100%; max-width: 360px; padding: 25px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+textarea, input[type="text"] { width: 100%; padding: 14px; margin: 10px 0 20px; border: 2px solid var(--border); border-radius: 12px; background: var(--bg-body); color: var(--text-main); outline:none; font-size: 14px; transition: 0.2s; border-bottom: 3px solid var(--border);}
+textarea:focus, input[type="text"]:focus { border-color: var(--primary); }
 textarea { height: 120px; resize: none; }
 
-#toast { display: none; position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: var(--text-main); color: var(--bg-card); padding: 12px 24px; border-radius: 30px; z-index: 9999; font-size: 13px; font-weight: 700; box-shadow: 0 4px 15px rgba(0,0,0,0.2); animation: fadeInOut 2.5s forwards; white-space: nowrap; }
+#toast { display: none; position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: var(--text-main); color: var(--bg-card); padding: 12px 24px; border-radius: 30px; z-index: 9999; font-size: 13px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: fadeInOut 2.5s forwards; white-space: nowrap; }
 @keyframes fadeInOut { 0% { opacity: 0; bottom: 80px; } 15% { opacity: 1; bottom: 90px; } 85% { opacity: 1; bottom: 90px; } 100% { opacity: 0; bottom: 80px; } }
+
+#updateToast { display: none; position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--primary); color: var(--bg-card); padding: 12px 24px; border-radius: 30px; z-index: 99999; font-size: 13px; font-weight: 800; box-shadow: 0 10px 30px rgba(0,0,0,0.3); align-items: center; gap: 12px; animation: fadeIn 0.5s forwards; white-space: nowrap; border: 2px solid var(--primary-light); }
 
 .lb-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; text-align: left;}
 .lb-table th { background: var(--primary-light); color: var(--primary-dark); padding: 12px 10px; font-weight: 800; border-radius: 8px 8px 0 0; }
@@ -248,19 +272,30 @@ textarea { height: 120px; resize: none; }
 .ai-chat-box { max-height: 250px; overflow-y: auto; background: var(--bg-body); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border); text-align: left; font-size: 13px; line-height: 1.5; }
 .ai-msg-user { background: var(--primary-light); color: var(--primary-dark); padding: 10px; border-radius: 10px 10px 0 10px; margin-bottom: 10px; align-self: flex-end; width: fit-content; max-width: 85%; margin-left: auto; font-weight: 600; }
 .ai-msg-bot { background: var(--bg-card); color: var(--text-main); padding: 10px; border-radius: 10px 10px 10px 0; margin-bottom: 10px; border: 1px solid var(--border); width: fit-content; max-width: 90%; }
+.ai-sparkle { color: #8b5cf6; animation: pulse 1.5s infinite; }
 
-.mega-folder { background: linear-gradient(135deg, #1e293b, #0f172a); color: white; border-radius: 20px; padding: 20px; display: flex; align-items: center; gap: 15px; cursor: pointer; border: 1px solid #334155; position: relative; overflow: hidden; }
+.desk-scroll-btn { display: none; position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--primary); font-size: 18px; cursor: pointer; z-index: 10; box-shadow: 0 6px 15px rgba(0,0,0,0.1); transition: 0.2s; }
+.desk-scroll-btn:hover { background: var(--primary); color: white; transform: translateY(-50%) scale(1.1); }
+.desk-scroll-btn.left-btn { left: -15px; }
+.desk-scroll-btn.right-btn { right: -15px; }
+
+@media (min-width: 1024px) {
+    .desk-scroll-btn { display: flex; align-items: center; justify-content: center; }
+    .horizontal-3d-scroll, .filter-scroll { cursor: grab; }
+    .horizontal-3d-scroll:active, .filter-scroll:active { cursor: grabbing; }
+}
+
+.mega-folder { background: linear-gradient(135deg, #1e293b, #0f172a); color: white; border-radius: 20px; padding: 20px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #334155; position: relative; overflow: hidden; }
 .dark-mode .mega-folder { background: linear-gradient(135deg, #0f172a, #020617); border-color: #1e293b; }
-.mega-folder:active { transform: scale(0.98); }
+.mega-folder::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%); opacity: 0; transition: 0.5s; }
+.mega-folder:hover::before { opacity: 1; }
+.mega-folder:active { transform: scale(0.96); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 .mf-icon { font-size: 32px; background: rgba(255,255,255,0.1); width: 60px; height: 60px; border-radius: 16px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,0.05); }
 .mf-content { flex: 1; }
 .mf-content h3 { font-size: 16px; font-weight: 800; margin-bottom: 4px; background: linear-gradient(to right, #fff, #cbd5e1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .mf-content p { font-size: 12px; font-weight: 600; color: #94a3b8; }
-.mf-arrow { width: 32px; height: 32px; border-radius: 50%; background: var(--primary); display: grid; place-items: center; color: white; font-size: 12px; }
+.mf-arrow { width: 32px; height: 32px; border-radius: 50%; background: var(--primary); display: grid; place-items: center; color: white; font-size: 12px; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.4); }
 
-/* =========================================================
-   CSS MODULARIZATION PREP: mobile.css
-   ========================================================= */
 @media (max-width: 768px) {
     body, html { overflow-x: hidden !important; width: 100%; max-width: 100vw; }
     .quick-actions { gap: 8px; padding: 15px 10px 0; }
@@ -270,7 +305,12 @@ textarea { height: 120px; resize: none; }
     .stat-card { padding: 10px 5px; }
     .stat-val { font-size: 16px; }
     .horizontal-3d-scroll { padding: 10px 10px 20px; gap: 10px; }
+    .horizontal-3d-scroll .folder-3d { min-width: 105px; } 
+    .folder-3d .f-body { padding: 15px 10px; }
+    .f-icon { font-size: 22px; margin-bottom: 8px; }
+    .f-name { font-size: 12px; }
     .target-exams-section { padding: 0 10px; }
+    .folder-3d-grid { gap: 12px 10px; }
     .list-container { padding: 0 10px; }
     .search-box { padding: 10px 15px; margin-bottom: 12px; }
     .filter-scroll { padding-bottom: 10px; gap: 8px; }
@@ -279,10 +319,9 @@ textarea { height: 120px; resize: none; }
     .nb-icon-box { width: 30px; height: 30px; }
     #app { padding-bottom: 80px; } 
 }  
-
 @media (min-width: 1024px) {
     body { padding-bottom: 0; display: flex; background: var(--bg-body); overflow-x: hidden; }
-    .nav-bar { position: fixed; top: 0; left: 0; width: 260px; height: 100vh; flex-direction: column; justify-content: flex-start; padding-top: 40px; gap: 10px; border-top: none; border-right: 1px solid var(--border); background: var(--bg-card); }
+    .nav-bar { position: fixed; top: 0; left: 0; width: 260px; height: 100vh; flex-direction: column; justify-content: flex-start; padding-top: 40px; gap: 10px; border-top: none; border-right: 1px solid var(--border); box-shadow: 4px 0 15px rgba(0,0,0,0.02); background: var(--bg-card); }
     .nav-item { width: 100%; text-align: left; padding: 15px 30px; font-size: 15px; display: flex; align-items: center; gap: 20px; border-radius: 0 30px 30px 0; margin-right: 20px; transition: 0.3s; cursor: pointer; opacity: 0.7;}
     .nav-item i { margin-bottom: 0; font-size: 20px; width: 24px; text-align: center; display: inline-block; }
     .nav-item.active { background: var(--primary-light); border-left: 4px solid var(--primary); transform: translateY(0); opacity: 1; font-weight: 800;}
@@ -301,10 +340,19 @@ textarea { height: 120px; resize: none; }
     .test-card, .note-card, .video-card { margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between; height: 100%;}
     .pwa-banner, .segment-control, .countdown-box, .daily-goal-card, .qod-card { margin-left: 0; margin-right: 0; }
     #pwaBannerBtn { padding: 10px 24px; font-size: 14px; cursor: pointer;}
+    .folder-3d-grid { grid-template-columns: repeat(4, 1fr); gap: 25px; }
+    .folder-3d:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+    .test-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
+    .mega-folder:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
 }
 </style>
 </head>
 <body>
+
+<div id="updateToast">
+    🚀 New Update Available!
+    <button onclick="window.location.reload()" style="background: white; color: var(--primary); border: none; padding: 6px 14px; border-radius: 20px; font-weight: 800; cursor: pointer; transition: 0.2s;">Refresh</button>
+</div>
 
 <div id="appLoginModal" class="full-overlay" style="display:none;">
     <div class="login-card">
@@ -316,7 +364,7 @@ textarea { height: 120px; resize: none; }
         <input type="text" id="regName" class="login-input" placeholder="e.g. Amit Kumar">
         
         <div style="text-align:left; margin-bottom:5px; font-size:12px; font-weight:700; margin-left:5px; color:var(--text-muted);">Mobile Number (Used as your unique ID)</div>
-        <input type="tel" inputmode="numeric" id="regPhone" class="login-input" placeholder="e.g. 9876543210">
+        <input type="number" id="regPhone" class="login-input" placeholder="e.g. 9876543210">
         
         <button class="btn-primary" onclick="registerPlayStoreUser()">START PREPARATION ➔</button>
     </div>
@@ -331,10 +379,7 @@ textarea { height: 120px; resize: none; }
 <div id="toast"></div>
 
 <div class="news-container" id="newsSection" style="display:none;">
-    <span>📢</span> 
-    <div class="news-marquee-box">
-        <div class="news-marquee-text" id="newsText">Welcome to PYQ Notes Portal!</div>
-    </div>
+    <span>📢</span> <marquee id="newsText" scrollamount="5">Welcome to PYQ Notes Portal!</marquee>
 </div>
 
 <div id="loader">
@@ -359,9 +404,12 @@ textarea { height: 120px; resize: none; }
             </div>
         </div>
         <div class="tools">
-            <button class="tool-btn" onclick="clearAppCache()" title="Clear App Cache & Reload"><i class="fas fa-sync-alt"></i></button>
-            <button class="tool-btn" id="installBtn" style="display:none;" onclick="installApp()"><i class="fas fa-download"></i></button>
-            <button class="tool-btn" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+            <div class="live-counter" id="liveUserCounter" title="Students practicing right now">
+                <div class="pulse-dot"></div> <span>1,240 Online</span>
+            </div>
+            <button class="tool-btn" id="installBtn" style="display:none;" onclick="installApp()" title="Install App"><i class="fas fa-download"></i></button>
+            <button class="tool-btn" onclick="toggleTheme(); triggerHaptic();" title="Dark Mode"><i class="fas fa-moon"></i></button>
+            <button class="tool-btn" onclick="logoutUser()" title="Logout"><i class="fas fa-sign-out-alt" style="color: #ef4444;"></i></button>
         </div>
     </div>
 
@@ -385,9 +433,11 @@ textarea { height: 120px; resize: none; }
             <div class="dg-text" style="flex:1;">
                 <span class="dg-title">🎯 Daily Mock Goal</span>
                 <span class="dg-status" id="dgStatus">Pending ⏳</span>
-                <div style="display: flex; gap: 5px; margin-top: 8px;" id="streakTrackerDots"></div>
+                
+                <div style="display: flex; gap: 5px; margin-top: 8px;" id="streakTrackerDots">
+                    </div>
             </div>
-            <button class="dg-btn" onclick="switchTab('tests')">Give Mock</button>
+            <button class="dg-btn" onclick="switchTab('tests', document.querySelectorAll('.nav-item')[1])">Give Mock</button>
         </div>
 
         <div id="mistakeAlertCard" class="daily-goal-card" style="display:none; background: linear-gradient(135deg, #fef2f2, #fee2e2); border-color: #fca5a5; margin-top: 10px;">
@@ -395,7 +445,7 @@ textarea { height: 120px; resize: none; }
                 <span class="dg-title" style="color: #991b1b;">⚠️ Revision Alert</span>
                 <span class="dg-status" style="color: #b91c1c;" id="mistakeCountText">Pending Mistakes</span>
             </div>
-            <button class="dg-btn" style="background: #ef4444; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);" onclick="switchTab('bookmarks'); setTimeout(()=>switchNotebook('mistakes'), 100);">Revise Now</button>
+            <button class="dg-btn" style="background: #ef4444; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);" onclick="switchTab('bookmarks', document.querySelectorAll('.nav-item')[5]); setTimeout(()=>switchNotebook('mistakes'), 100);">Revise Now</button>
         </div>
 
         <div class="quick-actions" style="grid-template-columns: repeat(5, 1fr); overflow-x: auto; scrollbar-width: none;">
@@ -409,13 +459,13 @@ textarea { height: 120px; resize: none; }
             </div>
             <div class="action-item" onclick="window.open('https://t.me/Dsssbsmartnotes')" style="min-width: 60px;"><i class="fab fa-telegram-plane"></i><span>Channel</span></div>
             <div class="action-item" onclick="shareApp()" style="min-width: 60px;"><i class="fas fa-share-alt"></i><span>Share</span></div>
-            <div class="action-item" onclick="switchTab('study')" style="min-width: 60px;"><i class="fas fa-book-open"></i><span>Library</span></div>
+            <div class="action-item" onclick="switchTab('study', document.getElementById('nav-study'))" style="min-width: 60px;"><i class="fas fa-book-open"></i><span>Library</span></div>
         </div>
 
       <div class="stats-row">
-            <div class="stat-card" onclick="switchTab('rank')"><div class="stat-val" id="valRank">--</div><div class="stat-lbl">Rank</div></div>
-            <div class="stat-card" onclick="switchTab('tests')"><div class="stat-val" id="valTests">0</div><div class="stat-lbl">Mocks</div></div>
-            <div class="stat-card" onclick="showStreakAlert()"><div class="stat-val"><i class="fas fa-fire" style="color:#f97316;"></i> <span id="valStreak">1</span></div><div class="stat-lbl">Streak</div></div>
+            <div class="stat-card" onclick="switchTab('rank', document.querySelectorAll('.nav-item')[4])"><div class="stat-val" id="valRank">--</div><div class="stat-lbl">Rank</div></div>
+            <div class="stat-card" onclick="switchTab('tests', document.querySelectorAll('.nav-item')[1])"><div class="stat-val" id="valTests">0</div><div class="stat-lbl">Mocks</div></div>
+            <div class="stat-card" onclick="showStreakAlert()"><div class="stat-val"><i class="fas fa-fire" id="streakFireIcon" style="color:#f97316;"></i> <span id="valStreak">1</span></div><div class="stat-lbl">Streak</div></div>
         </div>
 
         <div id="aiRecommendationCard" class="daily-goal-card" style="display:none; margin: 0 20px 20px; background: linear-gradient(135deg, #e0e7ff, #c7d2fe); border-color: #818cf8;">
@@ -426,7 +476,7 @@ textarea { height: 120px; resize: none; }
             <button class="dg-btn" style="background: #4f46e5; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);" id="aiRecommendBtn">Practice Now</button>
         </div>
 
-        <div class="notebook-banner" onclick="switchTab('bookmarks')">
+        <div class="notebook-banner premium-shimmer" onclick="switchTab('bookmarks', document.querySelectorAll('.nav-item')[5])">
             <div style="display: flex; align-items: center; gap: 15px;">
                 <div style="font-size: 32px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));">📓</div>
                 <div>
@@ -474,7 +524,7 @@ textarea { height: 120px; resize: none; }
             <div style="display:flex; justify-content:space-between; margin-bottom:12px; align-items:center;">
                 <span class="qod-tag"><i class="fas fa-bolt"></i> Daily Question</span><span style="font-size:12px; color:#ea580c; font-weight:800;">+2 Pts</span>
             </div>
-            <div class="qod-text" id="qodQuestion" style="font-weight: 700; margin-bottom:15px; font-size:14px; color:#431407;">Loading today's challenge...</div>
+            <div class="qod-text" id="qodQuestion" style="font-weight: 700; margin-bottom:15px; font-size:14px;">Loading today's challenge...</div>
             <div class="qod-options" id="qodOptions"></div>
         </div>
 
@@ -494,18 +544,18 @@ textarea { height: 120px; resize: none; }
   <div id="tab-tests" class="tab-content" style="display:none;">
         <div class="list-container" style="padding-top:15px;">
             
-            <div style="background:var(--bg-card); padding:15px; border-radius:16px; border:1px solid var(--border); margin-bottom:15px;">
+            <div style="background:var(--bg-card); padding:15px; border-radius:16px; border:1px solid var(--border-color); margin-bottom:15px; box-shadow:0 4px 6px rgba(0,0,0,0.02);">
                 <div style="font-weight:800; color:var(--primary); margin-bottom:12px; font-size:15px;"><i class="fas fa-sliders-h"></i> Find Your Mock Test</div>
                 
                 <div style="display:flex; flex-direction:column; gap:12px;">
-                   <div class="search-box" style="margin:0; box-shadow:none; border:1px solid var(--border); padding: 10px 15px; display:flex; align-items:center;">
+                   <div class="search-box" style="margin:0; box-shadow:none; border:1px solid var(--border-color); padding: 10px 15px; display:flex; align-items:center;">
                         <i class="fas fa-search" style="color:var(--text-muted);"></i>
-                        <input type="text" id="testSearch" placeholder="Search Mocks (e.g., SSC, Teaching)..." onkeyup="debouncedTestSearch()" style="flex:1;">
+                        <input type="text" id="testSearch" placeholder="Search Mocks (e.g., SSC, Teaching)..." onkeyup="debouncedTestSearch(this.value)" style="flex:1;">
                         <i class="fas fa-microphone" style="color:var(--primary); cursor:pointer;" onclick="showToast('Voice search feature coming soon! 🎙️')"></i>
                     </div>
 
                     <div style="display:flex; gap:10px;">
-                        <select id="examCategoryFilter" onchange="applyModernFilters()" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--bg-body); color:var(--text-main); font-weight:600; outline:none; cursor:pointer; font-size:16px !important;">
+                        <select id="examCategoryFilter" onchange="applyModernFilters()" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border-color); background:var(--bg-body); color:var(--text-main); font-weight:600; outline:none; cursor:pointer; font-size:13px;">
                             <option value="all">📚 All Subjects</option>
                             <option value="full">📑 Full Mocks</option>
                             <option value="math">🧮 Maths</option>
@@ -516,7 +566,7 @@ textarea { height: 120px; resize: none; }
                             <option value="computer">💻 Computer</option>
                         </select>
 
-                        <select id="examStatusFilter" onchange="applyModernFilters()" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--bg-body); color:var(--text-main); font-weight:600; outline:none; cursor:pointer; font-size:16px !important;">
+                        <select id="examStatusFilter" onchange="applyModernFilters()" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border-color); background:var(--bg-body); color:var(--text-main); font-weight:600; outline:none; cursor:pointer; font-size:13px;">
                             <option value="all">⚡ All Status</option>
                             <option value="live">🔴 Live Now</option>
                             <option value="attempted">✅ Attempted</option>
@@ -537,13 +587,13 @@ textarea { height: 120px; resize: none; }
     <div id="tab-study" class="tab-content" style="display:none;">
         <div style="padding-top:15px;">
             <div class="segment-control">
-                <div class="segment-btn active" onclick="switchStudy('notes', this)">📄 Notes & PDFs</div>
-                <div class="segment-btn" onclick="switchStudy('videos', this)">🎥 Video Classes</div>
+                <div class="segment-btn active" onclick="switchStudy('notes', this); triggerHaptic();">📄 Notes & PDFs</div>
+                <div class="segment-btn" onclick="switchStudy('videos', this); triggerHaptic();">🎥 Video Classes</div>
             </div>
             <div id="notesSection" class="list-container">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" id="noteSearch" placeholder="Search Notes..." onkeyup="debouncedNoteSearch()">
+                    <input type="text" id="noteSearch" placeholder="Search Notes..." onkeyup="debouncedNoteSearch(this.value)">
                 </div>
                 <div id="notesListContainer"></div>
             </div>
@@ -557,7 +607,7 @@ textarea { height: 120px; resize: none; }
         <h2 style="font-size:24px; font-weight:900; margin-bottom:5px; color:var(--text-main);">Premium Vault</h2>
         <p style="color:var(--text-muted); font-size:13px; margin-bottom:25px; font-weight:600;">Access dedicated PYQ and subject-wise mocks.</p>
         
-        <div class="mega-folder ssc-folder" onclick="openExamFolder('ssc_pyq', false)">
+        <div class="mega-folder ssc-folder premium-shimmer" onclick="openExamFolder('ssc_pyq', false)">
             <div class="mf-icon">🏛️</div>
             <div class="mf-content">
                 <h3>SSC PYQ Series</h3>
@@ -622,15 +672,15 @@ textarea { height: 120px; resize: none; }
         <div style="padding: 0 20px;">
             <h2 style="font-size:22px; font-weight:900; margin-bottom:15px;">📓 My Notebook</h2>
             <div class="segment-control" style="margin: 0 0 20px 0;">
-                <div class="segment-btn active" id="nbTab-bookmarks" onclick="switchNotebook('bookmarks')">🔖 Saved Qs</div>
-                <div class="segment-btn" id="nbTab-mistakes" onclick="switchNotebook('mistakes')">❌ Mistake Book</div>
+                <div class="segment-btn active" id="nbTab-bookmarks" onclick="switchNotebook('bookmarks'); triggerHaptic();">🔖 Saved Qs</div>
+                <div class="segment-btn" id="nbTab-mistakes" onclick="switchNotebook('mistakes'); triggerHaptic();">❌ Mistake Book</div>
             </div>
             
             <div id="notebookFilters" style="display:flex; gap:10px; margin-bottom: 20px;">
-                <select id="nbSecFilter" onchange="renderNotebook(currentNbType)" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--bg-card); color:var(--text-main); outline:none; font-weight: 600;">
+                <select id="nbSecFilter" onchange="renderNotebook(currentNbType)" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--bg-card); color:var(--text-main); font-size:13px; outline:none; font-weight: 600; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
                     <option value="ALL">All Sections</option>
                 </select>
-                <select id="nbTopFilter" onchange="renderNotebook(currentNbType)" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--bg-card); color:var(--text-main); outline:none; font-weight: 600;">
+                <select id="nbTopFilter" onchange="renderNotebook(currentNbType)" style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--bg-card); color:var(--text-main); font-size:13px; outline:none; font-weight: 600; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
                     <option value="ALL">All Topics</option>
                 </select>
             </div>
@@ -660,17 +710,17 @@ textarea { height: 120px; resize: none; }
         <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px; font-weight:600;">Unlock All Premium Mock Tests, Video Classes & PDF Notes!</p>
         
         <div style="background:var(--primary-light); color:var(--primary-dark); padding:12px; border-radius:12px; margin-bottom:15px; font-size: 14px; font-weight: 700;">
-            Special Offer: ₹99 <span style="font-size:12px; text-decoration:line-through; color:grey;">₹499</span>
+            Special Offer: <span id="proPriceDynamic">₹99</span> <span id="proPriceOriginal" style="font-size:12px; text-decoration:line-through; color:grey; margin-left: 5px;">₹499</span>
         </div>
         
-        <p style="font-size:12px; color:var(--text-main); margin-bottom:10px; font-weight:600;">To upgrade, please contact Admin on Whatsapp No 8587961053.</p>
+        <p style="font-size:12px; color:var(--text-main); margin-bottom:10px; font-weight:600;">To upgrade, please contact Admin.</p>
         
         <div style="background:#f1f5f9; padding:10px; border-radius:8px; margin-bottom:15px; font-size:12px;">
             Your App ID: <b id="displayUserId" style="color:var(--primary); font-size: 14px;">--</b><br>
-            <span style="font-size:10px; color:grey;">Send this ID to Admin to activate PRO</span>
+            <span style="font-size:10px; color:grey;">Send this ID to Admin on Telegram to activate PRO</span>
         </div>
         
-        <button onclick="window.open('https://t.me/Dsssbsmartnotes', '_blank')" class="start-btn" style="background:#0088cc; box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);"><i class="fab fa-telegram-plane"></i> Message Admin</button>
+        <button onclick="window.open('https://t.me/Dsssbsmartnotes', '_blank')" class="start-btn" style="background:#0088cc; box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);"><i class="fab fa-telegram-plane"></i> Message Admin on Telegram</button>
         
         <button onclick="document.getElementById('paymentModal').style.display='none'" class="start-btn" style="background:var(--bg-body); color:var(--text-main); margin-top:15px; box-shadow:none;">Cancel</button>
     </div>
@@ -695,7 +745,7 @@ textarea { height: 120px; resize: none; }
         <textarea id="supportText" placeholder="Write your message here..."></textarea>
         <div style="display:flex; gap:12px;">
             <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); box-shadow:none;" onclick="document.getElementById('supportModal').style.display='none'">Cancel</button>
-            <button class="start-btn" onclick="submitSupportTicket(this)">Send Message</button>
+            <button class="start-btn" onclick="submitSupportTicket()">Send Message</button>
         </div>
     </div>
 </div>
@@ -735,108 +785,40 @@ textarea { height: 120px; resize: none; }
     </div>
 </div>
 
-<div class="nav-bar" id="mainNavBar">
-    <div class="nav-item active" data-tab="home"><i class="fas fa-home"></i> <span>Home</span></div>
-    <div class="nav-item" data-tab="tests"><i class="fas fa-file-signature"></i> <span>Mocks</span></div>
-    <div class="nav-item" id="nav-study" data-tab="study"><i class="fas fa-book-open"></i> <span>Study</span></div>
-    <div class="nav-item" data-tab="vault"><i class="fas fa-layer-group"></i> <span>Vault</span></div>
-    <div class="nav-item" data-tab="rank"><i class="fas fa-trophy"></i> <span>Ranks</span></div>
-    <div class="nav-item" data-tab="bookmarks" style="position:relative;">
+<div class="nav-bar">
+    <div class="nav-item active" onclick="switchTab('home', this); triggerHaptic();"><i class="fas fa-home"></i> <span>Home</span></div>
+    <div class="nav-item" onclick="switchTab('tests', this); triggerHaptic();"><i class="fas fa-file-signature"></i> <span>Mocks</span></div>
+    <div class="nav-item" id="nav-study" onclick="switchTab('study', this); triggerHaptic();"><i class="fas fa-book-open"></i> <span>Study</span></div>
+    <div class="nav-item" onclick="switchTab('vault', this); triggerHaptic();"><i class="fas fa-layer-group"></i> <span>Vault</span></div>
+    <div class="nav-item" onclick="switchTab('rank', this); triggerHaptic();"><i class="fas fa-trophy"></i> <span>Ranks</span></div>
+    <div class="nav-item" onclick="switchTab('bookmarks', this); triggerHaptic();" style="position:relative;">
         <i class="fas fa-bookmark"></i> <span>Notebook</span>
         <span id="navMistakeBadge" style="display:none; position:absolute; top:8px; right:22%; background:#ef4444; width:10px; height:10px; border-radius:50%; border:2px solid var(--bg-glass); box-shadow: 0 2px 4px rgba(239,68,68,0.4);"></span>
     </div>
 </div>
 
 <script>
-// --- Global map for safe parsing of Dynamic Folders ---
-window.folderMap = {};
+/* 🔥 HAPTIC FEEDBACK FOR PREMIUM GAMING FEEL 🔥 */
+function triggerHaptic() {
+    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    } else if (navigator.vibrate) {
+        navigator.vibrate(10); // Small subtle vibration for android web
+    }
+}
 
 window.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         const loaderEl = document.getElementById('loader');
         const appEl = document.getElementById('app');
         if (loaderEl) loaderEl.style.display = 'none';
-        if (appEl) appEl.style.display = ''; 
+        if (appEl) appEl.style.display = 'block';
     }, 1500); 
-
-    document.getElementById('mainNavBar').addEventListener('click', (e) => {
-        const item = e.target.closest('.nav-item');
-        if (item) {
-            const tab = item.getAttribute('data-tab');
-            switchTab(tab, item);
-        }
-    });
 });
 
 function getSafeData(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
 function setSafeData(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
 function removeSafeData(key) { try { localStorage.removeItem(key); } catch(e) {} }
-
-async function clearAppCache() {
-    if(confirm("Refresh app to get the latest Mocks and Notes?")) {
-        const keys = await localforage.keys();
-        for (let k of keys) {
-            if (k.startsWith('cache_')) {
-                await localforage.removeItem(k);
-                await localforage.removeItem(k + '_time');
-            }
-        }
-        sessionStorage.clear();
-        window.location.reload(true);
-    }
-}
-
-function escapeHTML(str) {
-    if (typeof str !== 'string') return str;
-    return str.replace(/[&<>'"]/g, function(tag) {
-        const charsToReplace = { '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' };
-        return charsToReplace[tag] || tag;
-    });
-}
-
-// 🛠 FIX: Safely encode parameters to avoid breaking URL structure and properly pass pm and nm
-function openMockTest(testId, title, time, pm, nm, isLocked, mode) {
-    let safeTitle = encodeURIComponent(title || 'PYQ Mock Test');
-    let safeTestId = encodeURIComponent(testId);
-    let safePm = (pm !== undefined && pm !== null) ? pm : 1;
-    let safeNm = (nm !== undefined && nm !== null) ? nm : 0.25;
-    
-    let query = `testid=${safeTestId}&title=${safeTitle}&time=${time||120}&pm=${safePm}&nm=${safeNm}&lock=${isLocked||false}&mode=${mode}`;
-    window.location.href = `cbt.html?${query}`;
-}
-
-const AppState = {
-    testsRendered: false,
-    studyRendered: false,
-    rankRendered: false,
-    leaderboardData: [],
-    mathJaxLoading: false, 
-    mathJaxReady: false,
-    examDate: '2026-05-15',
-    aiModelString: 'gemini-1.5-pro'
-};
-
-function loadMathJax() {
-    if (AppState.mathJaxLoading || AppState.mathJaxReady) return;
-    AppState.mathJaxLoading = true;
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js';
-    script.async = true;
-    script.onload = () => { AppState.mathJaxReady = true; };
-    document.head.appendChild(script);
-}
-
-function renderMath(elementsArray, retryCount = 0) {
-    if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
-        requestAnimationFrame(() => { MathJax.typesetPromise(elementsArray).catch(e => console.log(e)); });
-    } else {
-        if (retryCount < 10) {
-            setTimeout(() => renderMath(elementsArray, retryCount + 1), 500);
-        } else {
-            console.warn("MathJax failed to load after multiple attempts.");
-        }
-    }
-}
 
 let db = { 
     ref: function() { 
@@ -844,12 +826,8 @@ let db = {
             on: function(){}, 
             once: function(){ return Promise.resolve({exists:()=>false, val:()=>null, forEach:()=>{} }); }, 
             set: function(){ return Promise.resolve(); }, 
-            push: function(){ return Promise.reject(new Error("You are currently offline.")); },
-            remove: function(){ return Promise.resolve(); },
-            update: function(){ return Promise.resolve(); },
-            orderByChild: function(){ return this; },
-            equalTo: function(){ return this; },
-            limitToLast: function(){ return this; }
+            push: function(){ return Promise.resolve(); },
+            remove: function(){ return Promise.resolve(); }
         }; 
     } 
 };
@@ -861,44 +839,36 @@ try {
         db = firebase.database();
     }
 } catch(err) {
-    console.error("Firebase Auth Error (Offline Mode):", err);
+    console.error("Firebase Auth Error:", err);
 }
 
 let currentUser = "Student", currentUserId = "guest", isPro = false;
-let myScores = [], allTests = [], allNotes = [], allVideos = [];
+let myScores = [], allTests = [], allNotes = [];
 let lastAlertTime = 0;
 let attemptedTestIds = new Map(); 
 let currentNbType = 'bookmarks';
-let barChartInst = null;
-let radarChartInst = null;
-let dynamicFolders = {};
-let apiKey = ""; 
 
+const apiKey = "AIzaSyCnyG1J31n2BLhsOG6DVnXTnqTz8yrmGs0"; 
 async function callGemini(promptText, isJson = false) {
-    if (!apiKey) return "API Key is missing. Please contact the administrator.";
-    let payload = {
-        contents: [{ parts: [{ text: promptText }] }],
-        systemInstruction: { parts: [{ text: "You are an expert, friendly teacher for competitive exams. Explain concepts clearly and concisely. If responding in Hindi, use Latin script (Hinglish). If mathematical formulas are needed, wrap them in $ for inline and $$ for block." }] }
-    };
-    if (isJson) { payload.generationConfig = { responseMimeType: "application/json" }; }
-    
-    const retries = 5;
-    const delays = [1000, 2000, 4000, 8000, 16000];
-
-    for(let i = 0; i < retries; i++) {
-        try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${AppState.aiModelString}:generateContent?key=${apiKey}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            if(!response.ok) throw new Error("API call unsuccessful");
-            const result = await response.json();
-            return result.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't process that. Try again!";
-        } catch (error) {
-            if(i === retries - 1) return "Network error or API limit reached. Please try again later.";
-            await new Promise(res => setTimeout(res, delays[i]));
+    try {
+        let payload = {
+            contents: [{ parts: [{ text: promptText }] }],
+            systemInstruction: { parts: [{ text: "You are an expert, friendly teacher for competitive exams (DSSSB, SSC). Explain concepts clearly and concisely. If responding in Hindi, use Latin script (Hinglish). STRICT RULE: NEVER use LaTeX ($ or \\( \\)). Use standard HTML tags like <b>, <sup>, <sub>, and HTML entities like &times;, &divide;, &radic; for math formatting." }] }
+        };
+        if (isJson) {
+            payload.generationConfig = { responseMimeType: "application/json" };
         }
+        
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        return result.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't process that. Try again!";
+    } catch (error) {
+        console.error("Gemini API Error:", error);
+        return "Network error or API limit reached. Please try again later.";
     }
 }
 
@@ -910,11 +880,11 @@ async function submitAiQuestion() {
     const chatBox = document.getElementById('aiChatHistory');
     const btn = document.getElementById('aiSubmitBtn');
     
-    chatBox.insertAdjacentHTML('beforeend', `<div class="ai-msg-user">${escapeHTML(qText)}</div>`);
+    chatBox.innerHTML += `<div class="ai-msg-user">${qText}</div>`;
     inputEl.value = "";
     
     const loadingId = "load_" + Date.now();
-    chatBox.insertAdjacentHTML('beforeend', `<div class="ai-msg-bot" id="${loadingId}"><i class="fas fa-spinner fa-spin"></i> Thinking...</div>`);
+    chatBox.innerHTML += `<div class="ai-msg-bot" id="${loadingId}"><i class="fas fa-spinner fa-spin"></i> Thinking...</div>`;
     chatBox.scrollTop = chatBox.scrollHeight;
     
     btn.disabled = true;
@@ -923,12 +893,11 @@ async function submitAiQuestion() {
     const answer = await callGemini(qText);
     
     document.getElementById(loadingId).remove();
-    const formattedAns = escapeHTML(answer).replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
-    chatBox.insertAdjacentHTML('beforeend', `<div class="ai-msg-bot">${formattedAns}</div>`);
+    const formattedAns = answer.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+    chatBox.innerHTML += `<div class="ai-msg-bot">${formattedAns}</div>`;
     chatBox.scrollTop = chatBox.scrollHeight;
     
-    loadMathJax();
-    renderMath([chatBox]);
+    if(window.MathJax) { MathJax.typesetPromise([chatBox]); }
     
     btn.disabled = false;
     btn.innerHTML = "Ask AI ✨";
@@ -942,47 +911,73 @@ function debounce(func, delay = 300) {
     };
 }
 
-async function fetchWithCache(refPath, cacheKey, expiryMinutes = 60) {
-    try {
-        const cached = await localforage.getItem(cacheKey);
-        const cacheTime = await localforage.getItem(cacheKey + '_time');
-        const now = Date.now();
-        
-        if (cached && cacheTime && (now - cacheTime < expiryMinutes * 60 * 1000)) {
-            let parsed = null;
-            try { parsed = JSON.parse(cached); } catch(e) {}
-            
-            if (parsed !== null && typeof parsed === 'object') {
-                return { 
-                    exists: () => true, 
-                    val: () => parsed,
-                    forEach: function(cb) { 
-                        Object.keys(parsed).forEach(k => cb({ key: String(k), val: () => parsed[k] }));
-                    }
-                };
-            }
-        }
-    } catch(e) { console.warn("Cache read issue", e); }
-
-    try {
-        const snap = await db.ref(refPath).once('value');
-        if(snap && snap.exists()) {
-            await localforage.setItem(cacheKey, JSON.stringify(snap.val()));
-            await localforage.setItem(cacheKey + '_time', Date.now());
-        }
-        return snap || { exists: () => false, val: () => null, forEach: () => {} };
-    } catch (error) {
-        console.error("Firebase fetch error", error);
-        return { exists: () => false, val: () => null, forEach: () => {} };
+function logoutUser() {
+    if(confirm("Kya aap sach me logout karna chahte hain?")) {
+        removeSafeData('dsssb_user_name');
+        removeSafeData('dsssb_user_id');
+        removeSafeData('dsssb_user_photo');
+        window.location.reload();
     }
 }
 
-async function initDashboard() {
+async function fetchWithCache(refPath, cacheKey, expiryMinutes = 60) {
+    const cached = getSafeData(cacheKey);
+    const cacheTime = getSafeData(cacheKey + '_time');
+    const now = Date.now();
+    
+    if (cached && cacheTime && (now - cacheTime < expiryMinutes * 60 * 1000)) {
+        setTimeout(() => {
+            db.ref(refPath).once('value').then(s => {
+                if(s.exists()) {
+                    setSafeData(cacheKey, JSON.stringify(s.val()));
+                    setSafeData(cacheKey + '_time', Date.now());
+                }
+            }).catch(e => console.log("Background sync ignored (Offline)"));
+        }, 5000); 
+        
+        return { 
+            exists: () => true, 
+            val: () => JSON.parse(cached),
+            forEach: function(cb) { 
+                Object.entries(JSON.parse(cached)).forEach(([k,v]) => cb({key:k, val:()=>v}));
+            }
+        };
+    } else {
+        try {
+            const snap = await db.ref(refPath).once('value');
+            if(snap.exists()) {
+                setSafeData(cacheKey, JSON.stringify(snap.val()));
+                setSafeData(cacheKey + '_time', Date.now());
+            }
+            return snap;
+        } catch (err) {
+            if (cached) {
+                console.log("Serving from local cache due to network failure.");
+                return { 
+                    exists: () => true, 
+                    val: () => JSON.parse(cached),
+                    forEach: function(cb) { 
+                        Object.entries(JSON.parse(cached)).forEach(([k,v]) => cb({key:k, val:()=>v}));
+                    }
+                };
+            }
+            throw err;
+        }
+    }
+}
+
+/* 4. MAIN APP INITIALIZATION */
+function initDashboard() {
     const hour = new Date().getHours();
     let greeting = "Good Morning ☀️";
     if(hour >= 12 && hour < 17) greeting = "Good Afternoon 🌤️";
     else if(hour >= 17) greeting = "Good Evening 🌙";
+    
+    // Addictive Personalized Greeting Logic
+    const savedName = getSafeData('dsssb_user_name') || "Student";
+    const firstName = savedName.split(" ")[0];
     document.getElementById('greetingText').innerText = greeting;
+    document.getElementById('uName').innerText = `Let's Crack It, ${firstName}! 🚀`;
 
     const theme = getSafeData('theme');
     const isNight = hour >= 19 || hour < 6; 
@@ -993,22 +988,28 @@ async function initDashboard() {
         document.body.classList.remove('dark-mode');
     }
     
-    checkStreak(); renderSyllabus();
+    checkStreak(); startCountdown(); renderSyllabus();
 
-    try {
-        const configSnap = await fetchWithCache('dsssb_config/system', 'cache_config_sys', 360);
-        if (configSnap.exists()) {
-            const sysConfig = configSnap.val();
-            if (sysConfig.exam_date) AppState.examDate = sysConfig.exam_date;
-            if (sysConfig.ai_model) AppState.aiModelString = sysConfig.ai_model;
-            if (sysConfig.gemini_key) apiKey = sysConfig.gemini_key; 
+    // Fake Live Counter Logic (FOMO Element)
+    const baseUsers = 1200;
+    const randomLive = baseUsers + Math.floor(Math.random() * 150);
+    document.getElementById('liveUserCounter').innerHTML = `<div class="pulse-dot"></div> <span>${randomLive} Online</span>`;
+
+    // Dynamic Pricing Fetch from Firebase Admin Panel
+    db.ref('dsssb_config/pricing').on('value', snap => {
+        if(snap.exists() && snap.val()) {
+            const pricingData = snap.val();
+            if(pricingData.offer && document.getElementById('proPriceDynamic')) {
+                document.getElementById('proPriceDynamic').innerText = "₹" + pricingData.offer;
+            }
+            if(pricingData.original && document.getElementById('proPriceOriginal')) {
+                document.getElementById('proPriceOriginal').innerText = "₹" + pricingData.original;
+            }
         }
-    } catch(e) {}
-    startCountdown();
+    });
 
     try {
-        let mistakesCache = await localforage.getItem('dsssb_mistakes');
-        let mistakesObj = JSON.parse(mistakesCache || '{}');
+        let mistakesObj = JSON.parse(getSafeData('dsssb_mistakes') || '{}');
         let mistakesCount = Object.keys(mistakesObj).length;
         let navBadge = document.getElementById('navMistakeBadge'); 
         
@@ -1022,7 +1023,7 @@ async function initDashboard() {
         } else {
             if(navBadge) navBadge.style.display = 'none'; 
         }
-    } catch(e) {}
+    } catch(e) { console.log("Mistake check skipped"); }
 
     db.ref('dsssb_config/maintenance').on('value', snap => {
         if(snap.val() === true) {
@@ -1034,7 +1035,7 @@ async function initDashboard() {
         }
     });
 
-    fetchWithCache('dsssb_config/alert', 'cache_config_alert', 120).then(snap => {
+    db.ref('dsssb_config/alert').on('value', snap => {
         if(snap.exists()) {
             const data = snap.val(); 
             if(data.time && data.time > lastAlertTime && data.msg) {
@@ -1045,7 +1046,7 @@ async function initDashboard() {
         }
     });
 
-    fetchWithCache('dsssb_config/news', 'cache_config_news', 360).then(snap => {
+    db.ref('dsssb_config/news').on('value', snap => {
         if(snap.exists() && snap.val() !== "") {
             document.getElementById('newsSection').style.display = 'flex';
             document.getElementById('newsText').innerText = snap.val();
@@ -1054,7 +1055,29 @@ async function initDashboard() {
 
     loadAutoQOD();
 
-    checkLocalUser();
+    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+       const tg = window.Telegram.WebApp; 
+        tg.expand();
+        try { if(tg.requestFullscreen) tg.requestFullscreen(); } catch(e){} 
+        if(tg.colorScheme === 'dark' && !theme) document.body.classList.add('dark-mode');
+        
+        const u = tg.initDataUnsafe.user;
+        currentUser = u.first_name + (u.last_name ? " " + u.last_name : "");
+        currentUserId = u.id.toString();
+        
+        setSafeData('dsssb_user_name', currentUser);
+        setSafeData('dsssb_user_id', currentUserId);
+        if(u.photo_url) setSafeData('dsssb_user_photo', u.photo_url);
+
+        if(u.photo_url) document.getElementById('uAvatar').innerHTML = `<img src="${u.photo_url}">`;
+        else document.getElementById('uAvatar').innerText = u.first_name.charAt(0);
+        
+        if(document.getElementById('displayUserId')) document.getElementById('displayUserId').innerText = currentUserId;
+
+        fetchData({username: "guest", id: currentUserId});
+    } else {
+        checkLocalUser();
+    }
 }
 
 document.addEventListener('DOMContentLoaded', initDashboard);
@@ -1071,24 +1094,24 @@ function loadAutoQOD() {
                 
                 let qText = d.q_hi || d.q_en || "Question loading...";
                 let opts = d.op_hi || d.op_en || ["-", "-", "-", "-"];
-                let ansIdx = (parseInt(d.ans) || 1) - 1;
+                let ansIdx = parseInt(d.ans) - 1;
                 
                 document.getElementById('qodQuestion').innerHTML = qText;
                 let html = "";
                 opts.forEach((o, i) => {
-                    html += `<div class="qod-opt" onclick="checkQOD(this, ${i}, ${ansIdx})">${o}</div>`;
+                    html += `<div class="qod-opt" onclick="checkQOD(this, ${i}, ${ansIdx}); triggerHaptic();">${o}</div>`;
                 });
                 document.getElementById('qodOptions').innerHTML = html;
                 return;
             }
         }
         
-        fetchWithCache('dsssb_config/qod', 'cache_manual_qod', 240).then(manualSnap => {
+        db.ref('dsssb_config/qod').on('value', manualSnap => {
             if(manualSnap.exists()) {
                 const d = manualSnap.val();
                 document.getElementById('qodQuestion').innerText = d.q;
                 let html = "";
-                d.opt.forEach((o, i) => html += `<div class="qod-opt" onclick="checkQOD(this, ${i}, ${d.ans})">${o}</div>`);
+                d.opt.forEach((o, i) => html += `<div class="qod-opt" onclick="checkQOD(this, ${i}, ${d.ans}); triggerHaptic();">${o}</div>`);
                 document.getElementById('qodOptions').innerHTML = html;
             } else {
                 document.getElementById('qodQuestion').innerText = "Update QOD from Admin Panel or upload to 'auto_qod' Test ID.";
@@ -1105,13 +1128,17 @@ function checkLocalUser() {
     if (savedName && savedId && savedId !== "guest") {
         currentUser = savedName;
         currentUserId = savedId;
-        document.getElementById('uName').innerText = savedName.split(" ")[0];
-        if(savedPhoto) document.getElementById('uAvatar').innerHTML = `<img src="${savedPhoto}" loading="lazy">`; 
+        
+        // Custom Greeting
+        const firstName = savedName.split(" ")[0];
+        document.getElementById('uName').innerText = `Let's Crack It, ${firstName}! 🚀`;
+
+        if(savedPhoto) document.getElementById('uAvatar').innerHTML = `<img src="${savedPhoto}">`;
         else document.getElementById('uAvatar').innerText = savedName.charAt(0);
         
         if(document.getElementById('displayUserId')) document.getElementById('displayUserId').innerText = currentUserId;
 
-        fetchData({username: savedName, id: currentUserId});
+        fetchData({username: "guest", id: currentUserId});
     } else {
         document.getElementById('appLoginModal').style.display = 'flex';
         if(document.getElementById('loader')) document.getElementById('loader').style.display = 'none';
@@ -1138,31 +1165,13 @@ function toggleTheme() {
     setSafeData('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light'); 
 }
 
-function switchTab(tab, el = null) { 
+function switchTab(tab, el) { 
     document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none'); 
     document.getElementById('tab-'+tab).style.display = 'block'; 
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); 
-    if(el) {
-        el.classList.add('active'); 
-    } else {
-        let matchingNav = document.querySelector(`.nav-item[data-tab='${tab}']`);
-        if(matchingNav) matchingNav.classList.add('active');
-    }
+    if(el) el.classList.add('active'); 
     window.scrollTo({ top: 0, behavior: 'smooth' }); 
-    
-    if(tab === 'tests' && !AppState.testsRendered) {
-        applyModernFilters();
-        AppState.testsRendered = true;
-    } else if (tab === 'study' && !AppState.studyRendered) {
-        searchNotes('');
-        renderVideos(allVideos);
-        AppState.studyRendered = true;
-    } else if (tab === 'rank' && !AppState.rankRendered) {
-        renderLeaderboard(AppState.leaderboardData);
-        AppState.rankRendered = true;
-    } else if (tab === 'bookmarks') {
-        switchNotebook('bookmarks', true);
-    }
+    if(tab === 'bookmarks') switchNotebook('bookmarks', true);
 }
 
 function switchStudy(type, el) { 
@@ -1180,7 +1189,9 @@ function showToast(msg, type="info") {
 }
 
 function openExamFolder(folderId, isSubject = false) {
-    switchTab('tests', document.querySelector(`.nav-item[data-tab='tests']`));
+    const testTabIcon = document.querySelectorAll('.nav-item')[1];
+    switchTab('tests', testTabIcon);
+    triggerHaptic();
     
     document.getElementById('testSearch').value = ''; 
     let catDropdown = document.getElementById('examCategoryFilter');
@@ -1223,6 +1234,11 @@ function checkStreak() {
     }
     document.getElementById('valStreak').innerText = s;
 
+    // 🔥 Dynamic Pulse on High Streak
+    if(s >= 3 && document.getElementById('streakFireIcon')) {
+        document.getElementById('streakFireIcon').style.animation = "pulseFast 1s infinite";
+    }
+
     let dotsHtml = "";
     let filledDots = s > 7 ? 7 : s; 
     
@@ -1245,15 +1261,14 @@ function showStreakAlert() {
 }
 
 function startCountdown() {
-    const target = new Date(AppState.examDate.replace(/-/g, '/')); 
+    const target = new Date(2026, 4, 15); 
     const days = Math.ceil((target - new Date()) / (1000 * 60 * 60 * 24));
     document.getElementById('examTimer').innerText = (days > 0 ? days : 0) + " Days Left";
 }
 
 function shareApp() {
-    const shareUrl = window.location.href.split('?')[0];
-    if (navigator.share) navigator.share({ title: 'PYQ Notes Portal', text: 'Best Exam Prep App!', url: shareUrl });
-    else { navigator.clipboard.writeText(shareUrl); showToast("Link copied to clipboard!"); }
+    if (navigator.share) navigator.share({ title: 'PYQ Notes Portal', text: 'Best Exam Prep App!', url: window.location.href });
+    else { navigator.clipboard.writeText(window.location.href); showToast("Link copied to clipboard!"); }
 }
 
 let deferredPrompt;
@@ -1275,12 +1290,13 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
 async function installApp() { 
     if(deferredPrompt) { 
-        try {
-            await deferredPrompt.prompt(); 
-            deferredPrompt = null; 
-            document.getElementById('installBtn').style.display='none'; 
-            document.getElementById('pwaBanner').style.display='none'; 
-        } catch(e) { console.error("PWA install error", e); }
+        deferredPrompt.prompt(); 
+        deferredPrompt = null; 
+        document.getElementById('installBtn').style.display='none'; 
+        document.getElementById('pwaBanner').style.display='none'; 
+    } 
+    else if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe.user) {
+        window.Telegram.WebApp.openLink(window.location.href);
     } 
     else {
         alert("App install karne ke liye browser ki settings (⋮) me jaakar 'Add to Home Screen' ya 'Install App' par click karein.");
@@ -1303,10 +1319,9 @@ function renderSyllabus() {
         html += `<div class="subject-group"><div class="subject-head" onclick="toggleTopic('sub${i}')"><span>📚 ${sub}</span> <i class="fas fa-chevron-down" style="color:var(--text-muted); font-size:12px;"></i></div><div class="topic-list" id="sub${i}">`;
         syllabusDB[sub].forEach(topic => {
             const key = `${sub}-${topic}`;
-            const safeKey = key.replace(/'/g, "\\'"); 
             const checked = saved[key] ? 'checked' : '';
             const textStyle = saved[key] ? 'text-decoration: line-through; color: var(--text-muted); opacity: 0.6;' : 'text-decoration: none; color: var(--text-main); opacity: 1;';
-            html += `<div class="topic-item"><input type="checkbox" class="topic-chk" onchange="updateSyllabus('${safeKey}', this)" ${checked}><span class="topic-text" style="transition: 0.3s; ${textStyle}">${escapeHTML(topic)}</span></div>`;
+            html += `<div class="topic-item"><input type="checkbox" class="topic-chk" onchange="updateSyllabus('${key}', this)" ${checked}><span class="topic-text" style="transition: 0.3s; ${textStyle}">${topic}</span></div>`;
         });
         html += `</div></div>`;
     });
@@ -1337,33 +1352,21 @@ function calcProgress() {
     let saved = JSON.parse(getSafeData('syllabusProgress') || '{}');
     let total = 0; Object.values(syllabusDB).forEach(list => total += list.length);
     let done = Object.keys(saved).length;
-    let pct = total > 0 ? Math.round((done/total)*100) : 0;
+    let pct = Math.round((done/total)*100);
     document.getElementById('progFill').style.width = pct + "%"; 
     document.getElementById('progText').innerText = pct + "%";
-    
-    if(pct === 100) {
-        if(window.confetti) {
-            confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
-        } else {
-            setTimeout(() => { if(window.confetti) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); }, 1000);
-        }
-    }
+    if(pct === 100 && window.confetti) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
 }
 
 function checkQOD(el, idx, correct) {
     document.querySelectorAll('.qod-opt').forEach(o => o.style.pointerEvents = "none");
     if(idx === correct) { 
         el.classList.add('correct'); 
-        if(window.confetti) {
-            confetti({particleCount: 50, spread: 50});
-        } else {
-            setTimeout(() => { if(window.confetti) confetti({particleCount: 50, spread: 50}); }, 1000);
-        }
+        if(window.confetti) confetti({particleCount: 50, spread: 50}); 
         showToast("Correct! +2 Points 🔥"); 
     } else { 
         el.classList.add('wrong'); 
-        const options = document.querySelectorAll('.qod-opt');
-        if (options[correct]) options[correct].classList.add('correct');
+        document.querySelectorAll('.qod-opt')[correct].classList.add('correct'); 
         showToast("Oops! Better luck tomorrow.");
     }
 }
@@ -1371,35 +1374,26 @@ function checkQOD(el, idx, correct) {
 function submitReport() {
     const txt = document.getElementById('reportText').value;
     if(!txt) return showToast("Please write an issue first!");
-    
-    const timeStamp = (typeof firebase !== 'undefined' && firebase.database && firebase.database.ServerValue) ? firebase.database.ServerValue.TIMESTAMP : Date.now();
-    
-    db.ref('dsssb_reports').push({ user: currentUser, id: currentUserId, issue: txt, time: timeStamp })
-        .then(() => {
-            showToast("Report Sent Successfully! 🛡️"); 
-            document.getElementById('reportModal').style.display='none'; 
-            document.getElementById('reportText').value='';
-        })
-        .catch(err => {
-            showToast("Could not send report. " + err.message, "error");
-        });
+    db.ref('dsssb_reports').push({ user: currentUser, id: currentUserId, issue: txt, time: firebase.database.ServerValue.TIMESTAMP });
+    showToast("Report Sent Successfully! 🛡️"); 
+    document.getElementById('reportModal').style.display='none'; 
+    document.getElementById('reportText').value='';
 }
 
-function submitSupportTicket(btnElement) {
+function submitSupportTicket() {
     const txt = document.getElementById('supportText').value.trim();
     if(!txt) return showToast("Please write a message first!", "warning");
     
-    const origText = btnElement.innerHTML;
-    btnElement.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Sending..."; 
-    btnElement.disabled = true;
-
-    const timeStamp = (typeof firebase !== 'undefined' && firebase.database && firebase.database.ServerValue) ? firebase.database.ServerValue.TIMESTAMP : Date.now();
+    const btn = event.currentTarget;
+    const origText = btn.innerHTML;
+    btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Sending..."; 
+    btn.disabled = true;
 
     db.ref('dsssb_support_tickets').push({ 
         user: currentUser, 
         userId: currentUserId, 
         message: txt, 
-        time: timeStamp,
+        time: firebase.database.ServerValue.TIMESTAMP,
         status: "Pending"
     }).then(() => {
         showToast("Message Sent to Admin! 🚀", "success"); 
@@ -1408,28 +1402,26 @@ function submitSupportTicket(btnElement) {
     }).catch(err => {
         showToast("Error: " + err.message, "error");
     }).finally(() => {
-        btnElement.innerHTML = origText; 
-        btnElement.disabled = false;
+        btn.innerHTML = origText; 
+        btn.disabled = false;
     });
 }
 
-async function toggleSaveTest(testId, el, event) {
-    if (event) event.stopPropagation(); 
-    let cached = await localforage.getItem('savedTests');
-    let savedTests = JSON.parse(cached || '[]');
-    let tIdStr = String(testId);
-    if (savedTests.includes(tIdStr)) {
-        savedTests = savedTests.filter(id => id !== tIdStr);
+function toggleSaveTest(testId, el, event) {
+    event.stopPropagation(); 
+    let savedTests = JSON.parse(getSafeData('savedTests') || '[]');
+    if (savedTests.includes(testId)) {
+        savedTests = savedTests.filter(id => id !== testId);
         el.classList.remove('saved'); 
         el.innerHTML = '<i class="far fa-star"></i>'; 
         showToast("Removed from Saved"); 
     } else {
-        savedTests.push(tIdStr);
+        savedTests.push(testId);
         el.classList.add('saved'); 
         el.innerHTML = '<i class="fas fa-star"></i>'; 
         showToast("Test Saved ⭐"); 
     }
-    await localforage.setItem('savedTests', JSON.stringify(savedTests));
+    setSafeData('savedTests', JSON.stringify(savedTests));
 }
 
 function switchNotebook(type, resetFilters = false) {
@@ -1446,12 +1438,11 @@ function switchNotebook(type, resetFilters = false) {
     renderNotebook(type);
 }
 
-async function renderNotebook(type = 'bookmarks') {
+function renderNotebook(type = 'bookmarks') {
     const container = document.getElementById('bookmarksListContainer');
     let dataObj = {};
-    let storageKey = type === 'bookmarks' ? 'dsssb_bookmarks' : 'dsssb_mistakes';
-    let cachedData = await localforage.getItem(storageKey);
-    dataObj = JSON.parse(cachedData || '{}');
+    if(type === 'bookmarks') dataObj = JSON.parse(getSafeData('dsssb_bookmarks')) || {};
+    else dataObj = JSON.parse(getSafeData('dsssb_mistakes')) || {};
 
     let availableSections = new Set();
     let availableTopics = new Set();
@@ -1468,9 +1459,9 @@ async function renderNotebook(type = 'bookmarks') {
     let currTop = topSelect.value;
     
     let secHtml = '<option value="ALL">All Sections</option>';
-    Array.from(availableSections).sort().forEach(s => secHtml += `<option value="${escapeHTML(s)}">${escapeHTML(s)}</option>`);
+    Array.from(availableSections).sort().forEach(s => secHtml += `<option value="${s}">${s}</option>`);
     let topHtml = '<option value="ALL">All Topics</option>';
-    Array.from(availableTopics).sort().forEach(t => topHtml += `<option value="${escapeHTML(t)}">${escapeHTML(t)}</option>`);
+    Array.from(availableTopics).sort().forEach(t => topHtml += `<option value="${t}">${t}</option>`);
     
     secSelect.innerHTML = secHtml;
     topSelect.innerHTML = topHtml;
@@ -1484,7 +1475,6 @@ async function renderNotebook(type = 'bookmarks') {
     let grouped = {};
     Object.keys(dataObj).forEach(k => {
         let q = dataObj[k];
-        if (!q || typeof q !== 'object') return;
         q._key = k;
         let sec = q.section || "General";
         let top = q.topic || "";
@@ -1496,8 +1486,6 @@ async function renderNotebook(type = 'bookmarks') {
         grouped[sec].push(q);
     });
 
-    container.innerHTML = ''; 
-    
     if(Object.keys(grouped).length === 0) {
         container.innerHTML = `<div style="text-align:center; padding:50px 20px; color:var(--text-muted);">
             <div style="font-size:40px; margin-bottom:10px;">${type === 'bookmarks' ? '🔖' : '❌'}</div>
@@ -1507,40 +1495,29 @@ async function renderNotebook(type = 'bookmarks') {
         return;
     }
 
-    const fragment = document.createDocumentFragment();
-
+    let html = "";
     for(let sec in grouped) {
-        let secHeader = document.createElement('h3');
-        secHeader.style.cssText = "color:var(--primary); border-bottom:2px solid var(--primary); padding-bottom:5px; margin-top:15px; font-size:16px;";
-        secHeader.innerHTML = `${escapeHTML(sec)} <span style="font-size:12px; color:var(--text-muted); float:right; background:var(--primary-light); padding:2px 8px; border-radius:10px;">${grouped[sec].length} Qs</span>`;
-        fragment.appendChild(secHeader);
+        html += `<h3 style="color:var(--primary); border-bottom:2px solid var(--primary); padding-bottom:5px; margin-top:15px; font-size:16px;">${sec} <span style="font-size:12px; color:var(--text-muted); float:right; background:var(--primary-light); padding:2px 8px; border-radius:10px;">${grouped[sec].length} Qs</span></h3>`;
         
         grouped[sec].reverse().forEach(q => {
-            let rawAns = parseInt(q.ans);
-            let correctIdx = isNaN(rawAns) ? 0 : (rawAns > 0 ? rawAns - 1 : rawAns);
-            let qText = escapeHTML(q.q_hi || q.q_en || "");
+            let correctIdx = parseInt(q.ans) - 1;
+            let qText = q.q_hi || q.q_en;
             let optArr = q.op_hi || q.op_en;
-            let correctAnsText = optArr && optArr[correctIdx] ? escapeHTML(optArr[correctIdx]) : "Not Specified";
+            let correctAnsText = optArr && optArr[correctIdx] ? optArr[correctIdx] : "Not Specified";
             
-            let topicHtml = q.topic ? `<span style="margin-left:8px; background:var(--primary-light); color:var(--primary-dark); padding:2px 6px; border-radius:4px; font-size:10px;">🏷️ ${escapeHTML(q.topic)}</span>` : '';
+            let topicHtml = q.topic ? `<span style="margin-left:8px; background:var(--primary-light); color:var(--primary-dark); padding:2px 6px; border-radius:4px; font-size:10px;">🏷️ ${q.topic}</span>` : '';
             let solId = `sol_${type}_${q._key}`;
 
             let optionsHTML = '<div style="margin-top:10px; display:flex; flex-direction:column; gap:8px;">';
             if (optArr) {
                 optArr.forEach((opt, optIdx) => {
-                    optionsHTML += `<div style="padding:12px 15px; border:1px solid var(--border); border-radius:10px; font-size:14px; background:var(--bg-body); color:var(--text-main);"><b>${String.fromCharCode(65+optIdx)})</b> ${escapeHTML(opt)}</div>`;
+                    optionsHTML += `<div style="padding:12px 15px; border:1px solid var(--border); border-radius:10px; font-size:14px; background:var(--bg-body); color:var(--text-main);"><b>${String.fromCharCode(65+optIdx)})</b> ${opt}</div>`;
                 });
             }
             optionsHTML += '</div>';
-            
-            let solHtml = escapeHTML(q.solution || 'No detailed solution.').replace(/\n/g, '<br>');
 
-            let card = document.createElement('div');
-            card.className = "test-card";
-            card.style.marginBottom = "15px";
-            card.style.borderLeft = `4px solid ${type==='bookmarks'?'var(--warning)':'var(--danger)'}`;
-            
-            card.innerHTML = `
+            html += `
+            <div class="test-card" style="margin-bottom:15px; border-left:4px solid ${type==='bookmarks'?'var(--warning)':'var(--danger)'};">
                 <div style="display:flex; justify-content:space-between; margin-bottom:12px; align-items:flex-start;">
                     <div>
                         <span style="font-size:11px; background:${type==='bookmarks'?'var(--warning)':'var(--danger)'}; color:#fff; padding:3px 8px; border-radius:6px; font-weight:800;">${type==='bookmarks'?'Saved':'Mistake'}</span>
@@ -1548,25 +1525,26 @@ async function renderNotebook(type = 'bookmarks') {
                     </div>
                     <button onclick="removeNotebookItem('${q._key}', '${type}')" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-weight:700;"><i class="fas fa-trash"></i></button>
                 </div>
+                
                 <div style="font-weight:700; font-size:15px; margin-bottom:10px; line-height:1.5;">${qText}</div>
+                
                 ${optionsHTML}
+
                 <button onclick="toggleNbSolution('${solId}', this)" style="margin-top:15px; width:100%; padding:12px; background:var(--primary-light); color:var(--primary-dark); border:1px solid var(--primary); border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px; transition:0.3s;">
                     👁️ Show Answer & Solution
                 </button>
+
                 <div id="${solId}" style="display:none; background:var(--bg-body); padding:15px; border-radius:10px; border:1px solid var(--border); margin-top:10px; animation: fadeIn 0.3s;">
                     <div style="font-size:14px; font-weight:800; color:var(--success); margin-bottom:8px;">✅ Answer: ${String.fromCharCode(65+correctIdx)}) ${correctAnsText}</div>
                     <hr style="border:none; border-top:1px dashed var(--border); margin:10px 0;">
-                    <div style="font-size:13px; color:var(--text-muted); line-height:1.5;"><b>💡 Detailed Solution:</b><br>${solHtml}</div>
-                </div>`;
-                
-            fragment.appendChild(card);
+                    <div style="font-size:13px; color:var(--text-muted); line-height:1.5;"><b>💡 Detailed Solution:</b><br>${q.solution || 'No detailed solution.'}</div>
+                </div>
+            </div>`;
         });
     }
     
-    container.appendChild(fragment);
-    
-    loadMathJax();
-    renderMath([container]); 
+    container.innerHTML = html;
+    if(window.MathJax) { MathJax.typesetPromise([container]); }
 }
 
 function toggleNbSolution(id, btn) {
@@ -1580,51 +1558,43 @@ function toggleNbSolution(id, btn) {
     }
 }
 
-async function removeNotebookItem(key, type) {
+function removeNotebookItem(key, type) {
     let storageKey = type === 'bookmarks' ? 'dsssb_bookmarks' : 'dsssb_mistakes';
-    let cached = await localforage.getItem(storageKey);
-    let data = JSON.parse(cached || '{}');
+    let data = JSON.parse(getSafeData(storageKey)) || {};
     if(data[key]) {
         delete data[key];
-        await localforage.setItem(storageKey, JSON.stringify(data));
+        setSafeData(storageKey, JSON.stringify(data));
         showToast("Removed from Notebook");
         renderNotebook(type);
     }
 }
 
-function reattemptTest(testId, title, time, pm, nm, isLocked) {
+function reattemptTest(testId, fullUrlQuery) {
     showToast("Starting fresh attempt... 🔄");
-    setTimeout(async () => {
-        try {
-            await localforage.removeItem("dsssb_cbt_rank_v2_" + testId); 
-            await localforage.removeItem("dsssb_cbt_rank_v2_" + testId + "_final"); 
-        } catch(e) { console.error(e); }
-        openMockTest(testId, title, time, pm, nm, isLocked, 'exam');
+    
+    setTimeout(() => {
+        removeSafeData("dsssb_cbt_rank_v2_" + testId); 
+        removeSafeData("dsssb_cbt_rank_v2_" + testId + "_final"); 
+        window.location.href = `cbt.html?${fullUrlQuery}`;
     }, 800); 
 }
 
 async function fetchData(user) {
     try {
         if(currentUserId !== "guest") {
-            const lastPresenceUpdate = sessionStorage.getItem('last_presence_update');
-            if(!lastPresenceUpdate) { 
-                const userRef = db.ref('dsssb_presence/' + currentUserId);
-                let serverTime = (typeof firebase !== 'undefined' && firebase.database && firebase.database.ServerValue) ? firebase.database.ServerValue.TIMESTAMP : Date.now();
-                userRef.update({ name: currentUser, id: currentUserId, state: 'online', lastActive: serverTime });
-                userRef.onDisconnect().update({ state: 'offline', lastActive: serverTime });
-                sessionStorage.setItem('last_presence_update', Date.now());
-            }
+            const userRef = db.ref('dsssb_presence/' + currentUserId);
+            userRef.set({ name: currentUser, id: currentUserId, state: 'online', lastActive: firebase.database.ServerValue.TIMESTAMP });
+            userRef.onDisconnect().update({ state: 'offline', lastActive: firebase.database.ServerValue.TIMESTAMP });
         }
         
-        const [testsSnap, proSnap, notesSnap, videosSnap, resultsSnap] = await Promise.all([ 
-            fetchWithCache("dsssb_tests_db", "cache_tests_v2", 1440), 
-            fetchWithCache("dsssb_pro_users", "cache_pro_v2", 1440), 
-            fetchWithCache("dsssb_notes_db", "cache_notes_v2", 1440),
-            fetchWithCache("dsssb_videos_db", "cache_videos_v2", 1440),
-            fetchWithCache("dsssb_results_live", "cache_global_leaderboard", 180) 
+        const [testsSnap, proSnap, notesSnap, videosSnap] = await Promise.all([ 
+            fetchWithCache("dsssb_tests_db", "cache_tests_v2", 60), 
+            fetchWithCache("dsssb_pro_users", "cache_pro_v2", 120), 
+            fetchWithCache("dsssb_notes_db", "cache_notes_v2", 60),
+            fetchWithCache("dsssb_videos_db", "cache_videos_v2", 60)
         ]).catch(e => {
             console.error("Promise.all error:", e);
-            return [{exists:()=>false, val:()=>null}, {exists:()=>false, val:()=>null}, {exists:()=>false, val:()=>null}, {exists:()=>false, val:()=>null}, {exists:()=>false, val:()=>null}];
+            return [{exists:()=>false, val:()=>null}, {exists:()=>false, val:()=>null}, {exists:()=>false, val:()=>null}, {exists:()=>false, val:()=>null}];
         });
 
         isPro = false;
@@ -1658,175 +1628,157 @@ async function fetchData(user) {
         }
 
         allNotes = Object.values(notesSnap.val() || {}).reverse(); 
-        allVideos = Object.values(videosSnap.val() || {}).reverse(); 
-        
-        const testData = testsSnap.val() || {}; 
-        allTests = Object.keys(testData)
-            .filter(key => typeof testData[key] === 'object' && testData[key] !== null)
-            .map(key => ({ dbKey: key, ...testData[key] }));
+        let allVideos = Object.values(videosSnap.val() || {}).reverse(); 
+        searchNotes(''); 
+        renderVideos(allVideos); 
+       const testData = testsSnap.val() || {}; 
+        allTests = Object.keys(testData).map(key => ({ dbKey: key, ...testData[key] }));
+        filterTests('all', document.querySelector('.filter-pill.active'));
 
         fetchDynamicFolders();
 
         if(document.getElementById('loader')) document.getElementById('loader').style.display = 'none'; 
-        document.getElementById('app').style.display = ''; 
+        document.getElementById('app').style.display = 'block'; 
 
-        const rawRes = resultsSnap.exists() ? resultsSnap.val() : {};
-        let res = Array.isArray(rawRes) ? { ...rawRes } : rawRes;
-        
-        let unsyncedCache = await localforage.getItem('dsssb_unsynced_results');
-        let unsynced = JSON.parse(unsyncedCache || '[]');
-        unsynced.forEach((uRes, i) => { res['unsynced_' + i] = uRes; });
-        
-        let userMap = {}, myTestCount = 0, subScores = { 'Maths': [], 'English': [], 'Hindi': [], 'GK': [], 'Reasoning': [] };
-        Object.values(res).forEach(r => {
-            let rName = r.name || "Student", safeScore = parseFloat(r.score) || 0;
-            let uid = r.userId || rName;
+        db.ref("dsssb_results_live").limitToLast(100).once("value").then(resultsSnap => {
+            const res = resultsSnap.val() || {};
             
-            if(!userMap[uid]) userMap[uid] = {name: rName, s:0, c:0, isMe: false};
-            userMap[uid].s += safeScore; 
-            userMap[uid].c++;
+            let unsynced = JSON.parse(getSafeData('dsssb_unsynced_results') || '[]');
+            unsynced.forEach((uRes, i) => { res['unsynced_' + i] = uRes; });
             
-            if (String(r.userId || "").trim() === String(currentUserId).trim() || rName === currentUser) {
-                userMap[uid].isMe = true; 
-                myTestCount++; 
+            let userMap = {}, myTestCount = 0, subScores = { 'Maths': [], 'English': [], 'Hindi': [], 'GK': [], 'Reasoning': [] };
+            Object.values(res).forEach(r => {
+                let rName = r.name || "Student", safeScore = parseFloat(r.score) || 0;
+                if(!userMap[rName]) userMap[rName] = {s:0, c:0, isMe: false};
+                userMap[rName].s += safeScore; 
+                userMap[rName].c++;
                 
-                if(r.testId) {
-                    let newTime = r.time || r.timestamp || Date.now();
-                    let existingTime = attemptedTestIds.get(String(r.testId)) || 0;
-                    if (newTime > existingTime) {
-                        attemptedTestIds.set(String(r.testId), newTime); 
-                    }
-                }
-                
-                let cat = r.category || (testData[r.testId] ? testData[r.testId].category : "GK");
-                let max = r.testId && testData[r.testId] ? (parseInt(testData[r.testId].qs) || parseInt(testData[r.testId].marks) || 20) : 20;
-                let percent = (safeScore / max) * 100;
-                
-                let catLower = cat.toLowerCase();
-                let matchedCat = 'GK';
-                if (catLower.includes('math') || catLower.includes('quant')) matchedCat = 'Maths';
-                else if (catLower.includes('reas') || catLower.includes('logic')) matchedCat = 'Reasoning';
-                else if (catLower.includes('eng')) matchedCat = 'English';
-                else if (catLower.includes('hin')) matchedCat = 'Hindi';
-                
-                subScores[matchedCat].push(percent);
-            }
-        });
-
-        document.getElementById('valTests').innerText = myTestCount;
-        let lb = Object.keys(userMap).map(k=>({name: userMap[k].name, avg: userMap[k].s / userMap[k].c, isMe: userMap[k].isMe})).sort((a,b) => b.avg - a.avg);
-        let myRank = lb.findIndex(u => u.isMe) + 1; 
-        document.getElementById('valRank').innerText = myRank > 0 ? `#${myRank}` : '--';
-        
-        AppState.leaderboardData = lb;
-
-        let chartAverages = []; 
-        ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'].forEach(cat => { 
-            let arr = subScores[cat]; 
-            chartAverages.push(Math.round(arr.length > 0 ? (arr.reduce((a,b)=>a+b, 0) / arr.length) : 0)); 
-        });
-        
-        tryRenderCharts(chartAverages);
-
-        if (myTestCount > 0) {
-            let subjects = ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'];
-            let weakSubject = '';
-            let lowestScore = 101; 
-            
-            chartAverages.forEach((score, idx) => {
-                if(score >= 0 && score < lowestScore) {
-                    lowestScore = score;
-                    weakSubject = subjects[idx];
+                if (String(r.userId || "").trim() === String(currentUserId).trim() || rName === currentUser) {
+                    userMap[rName].isMe = true; 
+                    myTestCount++; 
+                    if(r.testId) attemptedTestIds.set(r.testId, r.time || r.timestamp || Date.now()); 
+                    
+                    let cat = r.category || (testData[r.testId] ? testData[r.testId].category : "GK");
+                    let max = r.testId && testData[r.testId] ? (parseInt(testData[r.testId].qs) || parseInt(testData[r.testId].marks) || 20) : 20;
+                    let percent = (safeScore / max) * 100;
+                    let matchedCat = Object.keys(subScores).find(k => cat.toLowerCase().includes(k.toLowerCase()));
+                    
+                    if(matchedCat) subScores[matchedCat].push(percent); else subScores['GK'].push(percent); 
                 }
             });
 
-            let aiCard = document.getElementById('aiRecommendationCard');
-            if(weakSubject && aiCard) {
-                aiCard.style.display = 'flex';
-                document.getElementById('aiRecommendText').innerHTML = `<i class="fas fa-spinner fa-spin"></i> AI is analyzing your performance...`;
-                document.getElementById('aiRecommendBtn').onclick = () => openExamFolder(weakSubject, true);
+            document.getElementById('valTests').innerText = myTestCount;
+            let lb = Object.keys(userMap).map(k=>({name: k, avg: userMap[k].s / userMap[k].c, isMe: userMap[k].isMe})).sort((a,b) => b.avg - a.avg);
+            let myRank = lb.findIndex(u => u.isMe) + 1; 
+            document.getElementById('valRank').innerText = myRank > 0 ? `#${myRank}` : '--';
+            renderLeaderboard(lb);
+
+            let chartAverages = []; 
+            ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'].forEach(cat => { 
+                let arr = subScores[cat]; 
+                chartAverages.push(Math.round(arr.length > 0 ? (arr.reduce((a,b)=>a+b, 0) / arr.length) : 0)); 
+            });
+            
+           renderCharts(chartAverages);
+            filterTests('all', document.querySelector('.filter-pill.active')); 
+
+            if (myTestCount > 0) {
+                let subjects = ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'];
+                let weakSubject = '';
+                let lowestScore = 101; 
                 
-                let promptObj = `The student's mock test averages are: Maths: ${chartAverages[0]}%, English: ${chartAverages[1]}%, Hindi: ${chartAverages[2]}%, GK: ${chartAverages[3]}%, Reasoning: ${chartAverages[4]}%. Their weakest is ${weakSubject} at ${lowestScore}%. Give a very short, 1-sentence highly motivating tip in Hinglish to improve this specific subject. Do not use asterisks or markdown.`;
-                
-                callGemini(promptObj).then(advice => {
-                    document.getElementById('aiRecommendText').innerText = advice;
-                }).catch(err => {
-                    document.getElementById('aiRecommendText').innerText = `Your avg in ${weakSubject} is ${lowestScore}%. Needs focus!`;
+                chartAverages.forEach((score, idx) => {
+                    if(score > 0 && score < lowestScore) { 
+                        lowestScore = score;
+                        weakSubject = subjects[idx];
+                    }
                 });
-            }
-        }
 
-        if (myTestCount > 0) {
-            let goalCard = document.getElementById('dailyGoalCard');
-            if(goalCard && !goalCard.classList.contains('completed')) {
-                goalCard.classList.add('completed');
-                document.getElementById('dgStatus').innerText = 'Completed ✅';
-                
-                if(!sessionStorage.getItem('dailyGoalCelebrated')) {
-                    setTimeout(() => {
-                        if(window.confetti) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, zIndex: 99999 });
-                        showToast("Awesome! You completed your daily mock goal! 🎯");
-                    }, 800);
-                    sessionStorage.setItem('dailyGoalCelebrated', 'true');
-                }
-            }
-        }
-
-        if(Object.keys(dynamicFolders).length > 0) {
-            renderDynamicFolders();
-        }
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const openTestId = urlParams.get('openTest');
-        if (openTestId) {
-            let targetTest = allTests.find(t => t.dbKey === openTestId);
-            if (targetTest) {
-                let isTestLocked = targetTest.type === 'pro' && !isPro;
-                
-                if (isTestLocked) {
-                    showToast("🔒 This is a Premium Challenge. Upgrade to PRO!");
-                    setTimeout(() => { document.getElementById('paymentModal').style.display = 'flex'; }, 1000);
-                } else {
-                    showToast("⚔️ Challenge Accepted! Redirecting...");
-                    let t_pm = !isNaN(parseFloat(targetTest.pm)) ? parseFloat(targetTest.pm) : 1;
-                    let t_nm = !isNaN(parseFloat(targetTest.nm)) ? parseFloat(targetTest.nm) : 0.25;
-                    let t_isLocked = (targetTest.lock === true || targetTest.lock === "true" || targetTest.type === 'pro') ? true : false;
-                    let t_safeTime = !isNaN(parseInt(targetTest.time)) ? parseInt(targetTest.time) : 120;
+                let aiCard = document.getElementById('aiRecommendationCard');
+                if(weakSubject && aiCard) {
+                    aiCard.style.display = 'flex';
+                    document.getElementById('aiRecommendText').innerHTML = `<i class="fas fa-spinner fa-spin"></i> AI is analyzing your performance...`;
+                    document.getElementById('aiRecommendBtn').onclick = () => openExamFolder(weakSubject, true);
                     
-                    setTimeout(() => { 
-                        openMockTest(targetTest.dbKey, targetTest.title, t_safeTime, t_pm, t_nm, t_isLocked, 'exam');
-                    }, 1500);
+                    let promptObj = `The student's mock test averages are: Maths: ${chartAverages[0]}%, English: ${chartAverages[1]}%, Hindi: ${chartAverages[2]}%, GK: ${chartAverages[3]}%, Reasoning: ${chartAverages[4]}%. Their weakest is ${weakSubject} at ${lowestScore}%. Give a very short, 1-sentence highly motivating tip in Hinglish to improve this specific subject. Do not use asterisks or markdown.`;
+                    
+                    callGemini(promptObj).then(advice => {
+                        document.getElementById('aiRecommendText').innerText = advice;
+                    }).catch(err => {
+                        document.getElementById('aiRecommendText').innerText = `Your avg in ${weakSubject} is ${lowestScore}%. Needs focus!`;
+                    });
                 }
             }
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
 
-        if (AppState.testsRendered && document.getElementById('tab-tests').style.display === 'block') {
-            applyModernFilters();
-        }
-        if (AppState.studyRendered && document.getElementById('tab-study').style.display === 'block') {
-            searchNotes(document.getElementById('noteSearch').value);
-            renderVideos(allVideos);
-        }
+          if (myTestCount > 0) {
+                let goalCard = document.getElementById('dailyGoalCard');
+                if(goalCard && !goalCard.classList.contains('completed')) {
+                    goalCard.classList.add('completed');
+                    document.getElementById('dgStatus').innerText = 'Completed ✅';
+                    
+                    if(!sessionStorage.getItem('dailyGoalCelebrated')) {
+                        setTimeout(() => {
+                            if(window.confetti) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, zIndex: 99999 });
+                            showToast("Awesome! You completed your daily mock goal! 🎯");
+                        }, 800);
+                        sessionStorage.setItem('dailyGoalCelebrated', 'true');
+                    }
+                }
+            }
+
+            if(Object.keys(dynamicFolders).length > 0) {
+                renderDynamicFolders();
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const openTestId = urlParams.get('openTest');
+            if (openTestId) {
+                let targetTest = allTests.find(t => t.dbKey === openTestId);
+                if (targetTest) {
+                    let isTestLocked = targetTest.type === 'pro' && !isPro;
+                    
+                    if (isTestLocked) {
+                        showToast("🔒 This is a Premium Challenge. Upgrade to PRO!");
+                        setTimeout(() => { document.getElementById('paymentModal').style.display = 'flex'; }, 1000);
+                    } else {
+                        showToast("⚔️ Challenge Accepted! Redirecting...");
+                        let pm = targetTest.pm !== undefined ? parseFloat(targetTest.pm) : 1;
+                        let nm = targetTest.nm !== undefined ? parseFloat(targetTest.nm) : 0.25;
+                        let isLocked = (targetTest.lock === false || targetTest.lock === "false") ? false : true;
+                        
+                        let netlifyBaseUrl = "https://pyqnotes.netlify.app/tests"; 
+                        let fileUrlEncoded = encodeURIComponent(`${netlifyBaseUrl}/${targetTest.dbKey}.json`);
+                        
+                        let urlQuery = `testid=${encodeURIComponent(targetTest.dbKey)}&title=${encodeURIComponent(targetTest.title)}&time=${targetTest.time||120}&pm=${pm}&nm=${nm}&lock=${isLocked}&fileUrl=${fileUrlEncoded}`;
+                        
+                        setTimeout(() => { window.location.href = `cbt.html?${urlQuery}&mode=exam`; }, 1500);
+                    }
+                }
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
+        }).catch(e => console.error("Leaderboard fetch error:", e));
 
     } catch(e) { 
         console.error("Data Load Error:", e);
         if(document.getElementById('loader')) document.getElementById('loader').style.display = 'none'; 
-        document.getElementById('app').style.display = ''; 
+        document.getElementById('app').style.display = 'block'; 
     }
 }
 
-const debouncedTestSearch = debounce(() => applyModernFilters(), 300);
-const debouncedNoteSearch = debounce(() => searchNotes(document.getElementById('noteSearch').value), 300);
+const debouncedTestSearch = debounce((val) => searchTests(val), 300);
+const debouncedNoteSearch = debounce((val) => searchNotes(val), 300);
 
-async function applyModernFilters() {
+function filterTests(cat, el, searchQuery = "") { applyModernFilters(); }
+function searchTests(query) { applyModernFilters(); }
+
+function applyModernFilters() {
     const searchQuery = document.getElementById('testSearch').value.toLowerCase().trim();
     const categoryFilter = document.getElementById('examCategoryFilter').value.toLowerCase();
     const statusFilter = document.getElementById('examStatusFilter').value.toLowerCase();
 
     let list = [...allTests].reverse().filter(t => t.dbKey !== 'auto_qod');
-    let savedCache = await localforage.getItem('savedTests');
-    let savedTests = JSON.parse(savedCache || '[]');
+    let savedTests = JSON.parse(getSafeData('savedTests') || '[]');
 
     if (searchQuery) {
         list = list.filter(t => 
@@ -1840,7 +1792,7 @@ async function applyModernFilters() {
         list = list.filter(t => {
             const title = (t.title||"").toLowerCase();
             const cat = (t.category||"").toLowerCase();
-            const tags = `${t.tag || ""} ${t.tags || ""}`.toLowerCase();
+            const tags = (t.tag||"").toLowerCase() + " " + (t.tags||"").toLowerCase();
             
             if(categoryFilter === 'full' || categoryFilter.includes('full')) return cat.includes('full') || title.includes('full') || tags.includes('full');
             if(categoryFilter === 'math') return title.includes('math') || cat.includes('math') || tags.includes('math') || title.includes('quant');
@@ -1856,39 +1808,30 @@ async function applyModernFilters() {
 
     if (statusFilter !== 'all') {
         if (statusFilter === 'saved') {
-            list = list.filter(t => savedTests.includes(String(t.dbKey)));
+            list = list.filter(t => savedTests.includes(t.dbKey));
         } else if (statusFilter === 'attempted') {
-            list = list.filter(t => attemptedTestIds.has(String(t.dbKey)) || (t.id && attemptedTestIds.has(String(t.id))));
+            list = list.filter(t => attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id));
         } else if (statusFilter === 'live') {
             list = list.filter(t => 
                 (t.isLive && t.isLive.toString() === 'true') || 
                 (t.scheduledTime && Date.now() >= t.scheduledTime) ||
                 (t.category && t.category.toLowerCase().includes('live')) ||
-                (t.tag && t.tag.toLowerCase().includes('live')) ||
                 (t.tags && t.tags.toLowerCase().includes('live'))
             );
         }
     }
 
-    renderTestCards(list, savedTests);
-    AppState.testsRendered = true; 
+    renderTestCards(list);
 }
 
-function renderTestCards(filteredList, savedTests = []) {
-    const container = document.getElementById('testListContainer');
-    container.innerHTML = '';
-    
-    if(filteredList.length === 0) {
-        container.innerHTML = "<div style='text-align:center; color:var(--text-muted); padding:40px;'><i class='fas fa-box-open fa-3x' style='opacity:0.3; margin-bottom:10px;'></i><br>No tests found matching your filters.</div>";
-        return;
-    }
-
-    const fragment = document.createDocumentFragment();
+function renderTestCards(filteredList) {
+    let html = "";
+    let savedTests = JSON.parse(getSafeData('savedTests') || '[]');
 
     filteredList.forEach(t => {
         let locked = t.type === 'pro' && !isPro;
-        let isAttempted = attemptedTestIds.has(String(t.dbKey)) || (t.id && attemptedTestIds.has(String(t.id)));
-        let attemptTime = attemptedTestIds.get(String(t.dbKey)) || (t.id ? attemptedTestIds.get(String(t.id)) : null);
+        let isAttempted = attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id);
+        let attemptTime = attemptedTestIds.get(t.dbKey) || attemptedTestIds.get(t.id);
         let attemptDateStr = '';
         
         if (attemptTime) {
@@ -1899,7 +1842,7 @@ function renderTestCards(filteredList, savedTests = []) {
         }
         
         let attemptLabel = isAttempted && attemptDateStr ? `<div style="font-size: 11px; color: var(--success); font-weight: 800; margin-bottom: 5px; text-align: center; background: var(--bg-body); padding: 4px; border-radius: 6px;"><i class="fas fa-calendar-check"></i> Attempted on: ${attemptDateStr}</div>` : '';
-        let isSaved = savedTests.includes(String(t.dbKey));
+        let isSaved = savedTests.includes(t.dbKey);
         
         let isActuallyLive = (t.isLive && t.isLive.toString() === 'true') || 
                              (t.scheduledTime && Date.now() >= t.scheduledTime) ||
@@ -1909,33 +1852,27 @@ function renderTestCards(filteredList, savedTests = []) {
                              
         let liveHTML = isActuallyLive ? '<div class="live-badge">🔴 LIVE NOW</div>' : '';
         
-        let pm = !isNaN(parseFloat(t.pm)) ? parseFloat(t.pm) : 1;
-        let nm = !isNaN(parseFloat(t.nm)) ? parseFloat(t.nm) : 0.25;
-        let isLocked = (t.lock === true || t.lock === "true" || t.type === 'pro') ? true : false;
-        let safeTime = !isNaN(parseInt(t.time)) ? parseInt(t.time) : 120;
+        let pm = t.pm !== undefined ? parseFloat(t.pm) : 1;
+        let nm = t.nm !== undefined ? parseFloat(t.nm) : 0.25;
+        let isLocked = (t.lock === false || t.lock === "false") ? false : true;
         
-        // 🛠 FIX: Safely escape single quotes, double quotes, backslashes and newlines
-        let safeTitleForJS = (t.title || 'PYQ Mock Test')
-            .replace(/\\/g, "\\\\")
-            .replace(/'/g, "\\'")
-            .replace(/"/g, '&quot;')
-            .replace(/\n/g, ' ')
-            .replace(/\r/g, '');
-            
-        let safeDbKey = String(t.dbKey).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+        let netlifyBaseUrl = "https://pyqnotes.netlify.app/tests"; 
+        let fileUrlEncoded = encodeURIComponent(`${netlifyBaseUrl}/${t.dbKey}.json`);
+        
+        let urlQuery = `testid=${encodeURIComponent(t.dbKey)}&title=${encodeURIComponent(t.title)}&time=${t.time||120}&pm=${pm}&nm=${nm}&lock=${isLocked}&fileUrl=${fileUrlEncoded}`;
         
         let buttonHTML = locked ? 
             `<button class="start-btn locked" onclick="document.getElementById('paymentModal').style.display='flex'">Unlock Premium</button>` : 
           isAttempted ? 
             `${attemptLabel}<div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:5px;">
-                <button class="start-btn" style="background:var(--primary); color:#fff; border:none; padding: 8px; font-size:12px; border-bottom: 3px solid var(--primary-dark);" onclick="openMockTest('${safeDbKey}', '${safeTitleForJS}', ${safeTime}, ${pm}, ${nm}, ${isLocked}, 'result')">📊 Result / Analysis</button>
-                <button class="start-btn" style="padding: 8px; background:#10b981; font-size:12px; border-bottom: 3px solid #059669;" onclick="openMockTest('${safeDbKey}', '${safeTitleForJS}', ${safeTime}, ${pm}, ${nm}, ${isLocked}, 'solution')">👁️ Solutions</button>
-                <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); border:1px solid var(--border); padding: 8px; font-size:12px; border-bottom: 3px solid var(--border);" onclick="reattemptTest('${safeDbKey}', '${safeTitleForJS}', ${safeTime}, ${pm}, ${nm}, ${isLocked})">🔄 Retake</button>
-                <button class="start-btn" style="background:var(--warning); color:#fff; border:none; padding: 8px; font-size:12px; border-bottom: 3px solid #d97706;" onclick="openMockTest('${safeDbKey}', '${safeTitleForJS}', ${safeTime}, ${pm}, ${nm}, ${isLocked}, 'quiz')">⚡ Quiz Mode</button>
+                <button class="start-btn" style="background:var(--primary); color:#fff; border:none; padding: 8px; font-size:12px; border-bottom: 3px solid var(--primary-dark);" onclick="window.location.href='cbt.html?${urlQuery}&mode=result'">📊 Result / Analysis</button>
+                <button class="start-btn" style="padding: 8px; background:#10b981; font-size:12px; border-bottom: 3px solid #059669;" onclick="window.location.href='cbt.html?${urlQuery}&mode=solution'">👁️ Solutions</button>
+                <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); border:1px solid var(--border); padding: 8px; font-size:12px; border-bottom: 3px solid var(--border);" onclick="reattemptTest('${t.dbKey}', '${urlQuery}&mode=exam')">🔄 Retake</button>
+                <button class="start-btn" style="background:var(--warning); color:#fff; border:none; padding: 8px; font-size:12px; border-bottom: 3px solid #d97706;" onclick="window.location.href='cbt.html?${urlQuery}&mode=quiz'">⚡ Quiz Mode</button>
             </div>` : 
-            `<button class="start-btn" onclick="openMockTest('${safeDbKey}', '${safeTitleForJS}', ${safeTime}, ${pm}, ${nm}, ${isLocked}, 'exam')">Start Mock Test ➔</button>`;
+            `<button class="start-btn" onclick="window.location.href='cbt.html?${urlQuery}&mode=exam'">Start Mock Test ➔</button>`;
         
-        let viewRankBtn = isAttempted ? `<button class="start-btn" style="background:var(--primary-light); color:var(--primary-dark); border:1px solid var(--primary); padding: 8px; font-size:13px; margin-top:8px; width:100%; box-shadow:none;" onclick="openTestLeaderboard('${safeDbKey}')">🏆 View Leaderboard</button>` : '';
+        let viewRankBtn = isAttempted ? `<button class="start-btn" style="background:var(--primary-light); color:var(--primary-dark); border:1px solid var(--primary); padding: 8px; font-size:13px; margin-top:8px; width:100%; box-shadow:none;" onclick="openTestLeaderboard('${t.dbKey}', '${(t.title||'').replace(/'/g, "\\'")}')">🏆 View Leaderboard</button>` : '';
         
         let tagStr = t.tags || t.tag || "";
         let tagsHTML = "";
@@ -1948,124 +1885,88 @@ function renderTestCards(filteredList, savedTests = []) {
                 else if(cleanTag.includes('hard')) { bg = "#fee2e2"; color = "#991b1b"; }
                 else if(cleanTag.includes('new')) { bg = "#dcfce7"; color = "#166534"; }
                 
-                tagsHTML += `<span style="background:${bg}; color:${color}; font-size:9px; padding:3px 8px; border-radius:6px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">${escapeHTML(tag.trim())}</span>`;
+                tagsHTML += `<span style="background:${bg}; color:${color}; font-size:9px; padding:3px 8px; border-radius:6px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">${tag.trim()}</span>`;
             });
             tagsHTML += `</div>`;
         }
 
-        let card = document.createElement('div');
-        card.className = `test-card ${locked?'locked':''}`;
-        card.innerHTML = `
-            ${liveHTML}
-            <div style="position:absolute; top:15px; right:15px; display:flex; gap:8px; z-index:10;">
-                <button class="save-btn" style="position:relative; top:0; right:0; background:var(--bg-body); color:var(--text-main);" onclick="(function(e){ shareMockTest('${safeDbKey}', '${safeTitleForJS}', e); })(event)">
-                    <i class="fas fa-share-alt"></i>
-                </button>
-                <button class="save-btn ${isSaved?'saved':''}" style="position:relative; top:0; right:0;" onclick="toggleSaveTest('${safeDbKey}', this, event)">
-                    ${isSaved?'<i class="fas fa-star"></i>':'<i class="far fa-star"></i>'}
-                </button>
-            </div>
-            ${tagsHTML}
-            <div class="t-title">${escapeHTML(t.title || 'PYQ Mock Test')}</div>
-            <div class="t-info">
-                <span><i class="fas fa-list-ol"></i> ${t.qs || '20'} Qs</span>
-                <span><i class="far clock"></i> ${t.time || '15'} Mins</span>
-                <span><i class="fas fa-check-circle"></i> ${t.marks || t.qs || '20'} Marks</span>
-            </div>
-            ${buttonHTML}
-            ${viewRankBtn}`;
-            
-        fragment.appendChild(card);
+        html += `<div class="test-card ${locked?'locked':''}">
+                    ${liveHTML}
+                    <div style="position:absolute; top:15px; right:15px; display:flex; gap:8px; z-index:10;">
+                        <button class="save-btn" style="position:relative; top:0; right:0; background:var(--bg-body); color:var(--text-main);" onclick="shareMockTest('${t.dbKey}', '${(t.title||'').replace(/'/g, "\\'")}', event)">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                        <button class="save-btn ${isSaved?'saved':''}" style="position:relative; top:0; right:0;" onclick="toggleSaveTest('${t.dbKey}', this, event)">
+                            ${isSaved?'<i class="fas fa-star"></i>':'<i class="far fa-star"></i>'}
+                        </button>
+                    </div>
+                    ${tagsHTML}
+                    <div class="t-title">${t.title || 'PYQ Mock Test'}</div>
+                    <div class="t-info">
+                        <span><i class="fas fa-list-ol"></i> ${t.qs || '20'} Qs</span>
+                        <span><i class="far fa-clock"></i> ${t.time || '15'} Mins</span>
+                        <span><i class="fas fa-check-circle"></i> ${t.marks || t.qs || '20'} Marks</span>
+                    </div>
+                    ${buttonHTML}
+                    ${viewRankBtn}
+                </div>`;
     });
 
-    container.appendChild(fragment);
+    document.getElementById('testListContainer').innerHTML = html || "<div style='text-align:center; color:var(--text-muted); padding:40px;'><i class='fas fa-box-open fa-3x' style='opacity:0.3; margin-bottom:10px;'></i><br>No tests found matching your filters.</div>";
 }
 
 function searchNotes(query) {
     let list = [...allNotes]; 
     if(query) list = list.filter(n => (n.title||"").toLowerCase().includes(query.toLowerCase()) || (n.subject||"").toLowerCase().includes(query.toLowerCase()));
     
-    const container = document.getElementById('notesListContainer');
-    container.innerHTML = '';
-    
-    if(list.length === 0) {
-        container.innerHTML = "<div style='text-align:center; color:grey; padding:20px;'>No notes available</div>";
-        return;
-    }
-
-    const fragment = document.createDocumentFragment();
+    let html = ""; 
     list.forEach(n => { 
         let locked = n.type === 'pro' && !isPro; 
-        let card = document.createElement('div');
-        card.className = `note-card ${locked?'locked':''}`;
-        let safeUrl = (n.url || '').replace(/'/g, "\\'");
-        card.innerHTML = `
-            <div class="t-title">${escapeHTML(n.title || 'Study Material')}</div>
-            <div class="t-info" style="margin-bottom:12px;">
-                <span><i class="fas fa-book"></i> ${escapeHTML(n.subject || 'General')}</span>
-                <span style="color:#ef4444;"><i class="fas fa-file-pdf"></i> PDF File</span>
-            </div>
-            <button class="download-btn" onclick="${locked ? "document.getElementById('paymentModal').style.display='flex'" : `window.open('${safeUrl}', '_self')`}">
-                <i class="fas fa-cloud-download-alt"></i> Download PDF
-            </button>`;
-        fragment.appendChild(card);
+        html += `<div class="note-card ${locked?'locked':''}">
+                    <div class="t-title">${n.title || 'Study Material'}</div>
+                    <div class="t-info" style="margin-bottom:12px;">
+                        <span><i class="fas fa-book"></i> ${n.subject || 'General'}</span>
+                        <span style="color:#ef4444;"><i class="fas fa-file-pdf"></i> PDF File</span>
+                    </div>
+                    <button class="download-btn" onclick="${locked ? "document.getElementById('paymentModal').style.display='flex'" : `window.open('${n.url}', '_self')`}">
+                        <i class="fas fa-cloud-download-alt"></i> Download PDF
+                    </button>
+                </div>`; 
     });
-    container.appendChild(fragment);
+    document.getElementById('notesListContainer').innerHTML = html || "<div style='text-align:center; color:grey; padding:20px;'>No notes available</div>";
 }
 
 function renderVideos(videoList = []) {
-    const container = document.getElementById('videoListContainer');
-    container.innerHTML = '';
+    let html = ""; 
     
-    if(videoList.length === 0) {
-        container.innerHTML = "<div style='text-align:center; color:var(--text-muted); padding:40px;'><i class='fas fa-video fa-3x' style='opacity:0.3; margin-bottom:10px;'></i><br>No new video classes available right now.</div>";
-        return;
-    }
-
-    const fragment = document.createDocumentFragment();
     videoList.forEach(v => { 
         let locked = (v.type === 'pro' || v.pro === true || v.pro === 'true') && !isPro; 
         
         let thumb = v.thumb || "https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg";
         if (!v.thumb && v.url && v.url.includes("youtu")) {
-            let ytId = v.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|watch\?v=|watch\?.+&v=))([^&?]{11})/);
+            let ytId = v.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
             if(ytId && ytId[1]) thumb = `https://img.youtube.com/vi/${ytId[1]}/mqdefault.jpg`;
         }
 
-        let card = document.createElement('div');
-        card.className = `video-card ${locked ? 'locked' : ''}`;
-        let safeUrl = (v.url || '').replace(/'/g, "\\'");
-        card.onclick = () => { if(locked) document.getElementById('paymentModal').style.display='flex'; else window.open(safeUrl, '_self'); };
-        card.innerHTML = `
-            <div class="vid-thumb">
-                <img src="${thumb}" alt="Video Thumbnail" loading="lazy">
-                <i class="fab fa-youtube fa-3x" style="position:absolute; color:red; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));"></i>
-                ${locked ? '<div style="position:absolute; top:10px; right:10px; background:var(--warning); color:white; padding:4px 8px; border-radius:6px; font-size:10px; font-weight:800; z-index:5;">🔒 PRO</div>' : ''}
-            </div>
-            <div class="vid-content">
-                <div class="t-title" style="margin-bottom:4px;">${escapeHTML(v.title || 'Video Class')}</div>
-                <div style="font-size:12px; color:var(--text-muted); font-weight:600;"><i class="fas fa-play-circle"></i> ${escapeHTML(v.subject || 'General')}</div>
-            </div>`;
-        fragment.appendChild(card);
+        html += `<div class="video-card ${locked ? 'locked' : ''}" onclick="${locked ? "document.getElementById('paymentModal').style.display='flex'" : `window.open('${v.url}', '_self')`}">
+                    <div class="vid-thumb">
+                        <img src="${thumb}" alt="Video Thumbnail">
+                        <i class="fab fa-youtube fa-3x" style="position:absolute; color:red; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));"></i>
+                        ${locked ? '<div style="position:absolute; top:10px; right:10px; background:var(--warning); color:white; padding:4px 8px; border-radius:6px; font-size:10px; font-weight:800; z-index:5;">🔒 PRO</div>' : ''}
+                    </div>
+                    <div class="vid-content">
+                        <div class="t-title" style="margin-bottom:4px;">${v.title || 'Video Class'}</div>
+                        <div style="font-size:12px; color:var(--text-muted); font-weight:600;"><i class="fas fa-play-circle"></i> ${v.subject || 'General'}</div>
+                    </div>
+                </div>`; 
     });
-    container.appendChild(fragment);
-}
-
-function tryRenderCharts(dataArr, retries = 0) {
-    if (typeof Chart !== 'undefined') {
-        renderCharts(dataArr);
-    } else if (retries < 10) {
-        setTimeout(() => tryRenderCharts(dataArr, retries + 1), 500);
-    } else {
-        console.warn("Chart.js failed to load.");
-    }
+    
+    document.getElementById('videoListContainer').innerHTML = html || "<div style='text-align:center; color:var(--text-muted); padding:40px;'><i class='fas fa-video fa-3x' style='opacity:0.3; margin-bottom:10px;'></i><br>No new video classes available right now.</div>";
 }
 
 function renderCharts(dataArr) {
     const ctx = document.getElementById('barChart').getContext('2d');
-    if(barChartInst) barChartInst.destroy();
-    
-    barChartInst = new Chart(ctx, { 
+    new Chart(ctx, { 
         type: 'bar', 
         data: { 
             labels: ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'], 
@@ -2082,10 +1983,8 @@ function renderCharts(dataArr) {
     });
 
     const ctxRadar = document.getElementById('radarChart').getContext('2d');
-    if(radarChartInst) radarChartInst.destroy();
-    
     const darkLine = document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)';
-    radarChartInst = new Chart(ctxRadar, { 
+    new Chart(ctxRadar, { 
         type: 'radar', 
         data: { 
             labels: ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'], 
@@ -2117,158 +2016,127 @@ function renderCharts(dataArr) {
 }
 
 function renderLeaderboard(data) {
-    const container = document.getElementById('leaderboardList');
-    container.innerHTML = '';
-    
-    if(data.length === 0) {
-        container.innerHTML = `<div style='text-align:center; padding:40px 20px; color:var(--text-muted);'>
-            <div style='font-size:50px; margin-bottom:10px;'>🚀</div>
-            <h3 style='color:var(--text-main); margin-bottom:5px; font-weight:800;'>Your journey starts here!</h3>
-            <p style='font-size:13px; font-weight:600;'>Attempt your first mock test to unlock your global rank.</p>
-        </div>`;
-        return;
-    }
-
-    const fragment = document.createDocumentFragment();
+    let html = ""; 
     data.slice(0, 10).forEach((u, i) => { 
         let badge = i===0?'🥇':i===1?'🥈':i===2?'🥉':`<div style="width:24px;height:24px;background:var(--border);border-radius:50%;display:grid;place-items:center;font-size:10px;">${i+1}</div>`; 
         
-        let rankNameHTML = `<span style="font-weight:700;">${escapeHTML(u.name)}</span>`;
+        let rankNameHTML = `<span style="font-weight:700;">${u.name}</span>`;
         if (i === 0) rankNameHTML += ' <span style="font-size:10px; background:#fef08a; color:#854d0e; padding:2px 6px; border-radius:4px; font-weight:800; margin-top:2px; display:inline-block;">👑 Pro King</span>';
         else if (i === 1) rankNameHTML += ' <span style="font-size:10px; background:#fed7aa; color:#9a3412; padding:2px 6px; border-radius:4px; font-weight:800; margin-top:2px; display:inline-block;">🎯 Sniper</span>';
         else if (i === 2) rankNameHTML += ' <span style="font-size:10px; background:#fecaca; color:#991b1b; padding:2px 6px; border-radius:4px; font-weight:800; margin-top:2px; display:inline-block;">🔥 Veteran</span>';
         
-        let row = document.createElement('div');
-        row.className = 'rank-row';
-        if(u.isMe) {
-            row.style.background = 'var(--primary-light)';
-            row.style.padding = '15px';
-            row.style.borderRadius = '12px';
-            row.style.margin = '5px 0';
-        }
-        row.innerHTML = `
-            <span style="width:40px; font-weight:800; display:flex; align-items:center;">${badge}</span>
-            <span style="flex:1; display:flex; flex-direction:column; justify-content:center;">${rankNameHTML}</span>
-            <span style="color:var(--primary); font-weight:900; background:var(--bg-body); padding:4px 10px; border-radius:8px; align-self:center;">${Math.round(u.avg)} Pts</span>`;
-        fragment.appendChild(row);
+        html += `<div class="rank-row" style="${u.isMe ? 'background:var(--primary-light); padding:15px; border-radius:12px; margin:5px 0;' : ''}">
+                    <span style="width:40px; font-weight:800; display:flex; align-items:center;">${badge}</span>
+                    <span style="flex:1; display:flex; flex-direction:column; justify-content:center;">${rankNameHTML}</span>
+                    <span style="color:var(--primary); font-weight:900; background:var(--bg-body); padding:4px 10px; border-radius:8px; align-self:center;">${Math.round(u.avg)} Pts</span>
+                </div>`; 
     });
-    container.appendChild(fragment);
+    document.getElementById('leaderboardList').innerHTML = html || `<div style='text-align:center; padding:40px 20px; color:var(--text-muted);'>
+        <div style='font-size:50px; margin-bottom:10px;'>🚀</div>
+        <h3 style='color:var(--text-main); margin-bottom:5px; font-weight:800;'>Your journey starts here!</h3>
+        <p style='font-size:13px; font-weight:600;'>Attempt your first mock test to unlock your global rank.</p>
+    </div>`;
 }
 
-async function openTestLeaderboard(testId) {
-    let targetTest = allTests.find(t => t.dbKey === testId);
-    let testTitle = targetTest ? escapeHTML(targetTest.title) : "Mock Test Leaderboard";
-
+function openTestLeaderboard(testId, testTitle) {
     document.getElementById('rankModalTitle').innerText = "🏆 " + testTitle;
     document.getElementById('testRankModal').style.display = 'flex';
     document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Fetching Ranks... ⏳</td></tr>';
 
-    const globalCache = await localforage.getItem("cache_global_leaderboard");
-    if (globalCache) {
-        try {
-            let cachedResults = JSON.parse(globalCache);
-            let filteredRanks = Object.values(cachedResults).filter(r => r.testId === testId);
-            if (filteredRanks.length > 0) {
-                processTestRankData(filteredRanks);
-                return;
-            }
-        } catch(e) {}
-    }
-
     db.ref("dsssb_results_live").orderByChild("testId").equalTo(testId).limitToLast(100).once("value").then(snap => {
-        let rankArray = [];
+        let userBest = {}; 
+        
         if(snap.exists()) {
-            snap.forEach(child => rankArray.push(child.val()));
+            snap.forEach(child => {
+                let d = child.val();
+                let uid = d.userId || d.name; 
+                let score = parseFloat(d.score) || 0;
+                
+                if(!userBest[uid] || userBest[uid].score < score) {
+                    userBest[uid] = { 
+                        name: d.name || 'Student', 
+                        score: score, 
+                        isMe: (String(d.userId).trim() === String(currentUserId).trim() || d.name === currentUser)
+                    };
+                }
+            });
         }
-        processTestRankData(rankArray);
+        
+        let ranks = Object.values(userBest);
+        
+        if(ranks.length === 0) {
+            document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 25px 10px; color:var(--text-muted);"><i class="fas fa-rocket fa-2x" style="margin-bottom:10px;"></i><br>Be the first to attempt and rank #1! 🚀</td></tr>';
+            return;
+        }
+
+        ranks.sort((a,b) => b.score - a.score);
+        
+        let myRankIndex = -1;
+        let myData = null;
+        
+        ranks.forEach((r, index) => {
+            if(r.isMe) {
+                myRankIndex = index + 1; 
+                myData = r;
+            }
+        });
+
+        let html = "";
+        let top5 = ranks.slice(0, 5); 
+        let amIInTop5 = false;
+
+        top5.forEach((r, i) => {
+            let rankNum = i + 1;
+            if(r.isMe) amIInTop5 = true;
+            
+            let badge = rankNum === 1 ? '<span style="font-size:18px;">🥇</span>' : 
+                        rankNum === 2 ? '<span style="font-size:18px;">🥈</span>' : 
+                        rankNum === 3 ? '<span style="font-size:18px;">🥉</span>' : 
+                        `<div style="width:22px; height:22px; background:var(--border); border-radius:50%; display:grid; place-items:center; font-size:11px; margin:auto;">${rankNum}</div>`;
+            
+            let rowStyle = r.isMe ? 'background:var(--primary-light);' : '';
+            let nameText = r.isMe ? `${r.name} <b style="color:var(--primary); font-size:10px;">(You)</b>` : r.name;
+            
+            html += `<tr style="${rowStyle}">
+                        <td style="width: 50px; text-align:center;">${badge}</td>
+                        <td style="font-weight:700;">${nameText}</td>
+                        <td style="color:var(--primary); font-weight:900;">${r.score} Pts</td>
+                    </tr>`;
+        });
+
+        if (myData && !amIInTop5) {
+            html += `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:8px; font-size:18px; letter-spacing:3px;">•••</td></tr>`;
+            html += `<tr style="background:var(--primary-light); border-top:2px solid var(--primary);">
+                        <td style="width: 50px; text-align:center; font-weight:900;">#${myRankIndex}</td>
+                        <td style="font-weight:800;">${myData.name} <b style="color:var(--primary); font-size:10px;">(You)</b></td>
+                        <td style="color:var(--primary); font-weight:900;">${myData.score} Pts</td>
+                    </tr>`;
+        } 
+        else if (!myData) {
+            html += `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:8px; font-size:18px; letter-spacing:3px;">•••</td></tr>`;
+            html += `<tr>
+                        <td colspan="3" style="text-align:center; padding:15px 10px; font-size:12px; font-weight:700; color:#ea580c; background:#fff7ed; border-radius:0 0 8px 8px;">
+                            <i class="fas fa-lock" style="margin-right:5px;"></i> Aapne test nahi diya hai. Start Mock Test par click karein!
+                        </td>
+                    </tr>`;
+        }
+        
+        document.getElementById('testRankBody').innerHTML = html;
     }).catch(e => {
         console.error(e);
         document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; color:red;">Error fetching rank. Please try again.</td></tr>';
     });
 }
 
-function processTestRankData(dataArray) {
-    let userBest = {}; 
-    dataArray.forEach(d => {
-        let uid = (d.userId && d.userId !== "guest") ? d.userId : ("guest_" + (d.name || "Student").replace(/\s/g, '')); 
-        let score = parseFloat(d.score) || 0;
-        
-        if(!userBest[uid] || userBest[uid].score < score) {
-            userBest[uid] = { 
-                name: d.name || 'Student', 
-                score: score, 
-                isMe: (String(d.userId || "").trim() === String(currentUserId).trim() || d.name === currentUser)
-            };
-        }
-    });
-
-    let ranks = Object.values(userBest);
-    if(ranks.length === 0) {
-        document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 25px 10px; color:var(--text-muted);"><i class="fas fa-rocket fa-2x" style="margin-bottom:10px;"></i><br>Be the first to attempt and rank #1! 🚀</td></tr>';
-        return;
-    }
-
-    ranks.sort((a,b) => b.score - a.score);
-    
-    let myRankIndex = -1;
-    let myData = null;
-    
-    ranks.forEach((r, index) => {
-        if(r.isMe) {
-            myRankIndex = index + 1; 
-            myData = r;
-        }
-    });
-
-    let html = "";
-    let top5 = ranks.slice(0, 5); 
-    let amIInTop5 = false;
-
-    top5.forEach((r, i) => {
-        let rankNum = i + 1;
-        if(r.isMe) amIInTop5 = true;
-        
-        let badge = rankNum === 1 ? '<span style="font-size:18px;">🥇</span>' : 
-                    rankNum === 2 ? '<span style="font-size:18px;">🥈</span>' : 
-                    rankNum === 3 ? '<span style="font-size:18px;">🥉</span>' : 
-                    `<div style="width:22px; height:22px; background:var(--border); border-radius:50%; display:grid; place-items:center; font-size:11px; margin:auto;">${rankNum}</div>`;
-        
-        let rowStyle = r.isMe ? 'background:var(--primary-light);' : '';
-        let nameText = r.isMe ? `${escapeHTML(r.name)} <b style="color:var(--primary); font-size:10px;">(You)</b>` : escapeHTML(r.name);
-        
-        html += `<tr style="${rowStyle}">
-                    <td style="width: 50px; text-align:center;">${badge}</td>
-                    <td style="font-weight:700;">${nameText}</td>
-                    <td style="color:var(--primary); font-weight:900;">${r.score} Pts</td>
-                </tr>`;
-    });
-
-    if (myData && !amIInTop5) {
-        html += `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:8px; font-size:18px; letter-spacing:3px;">•••</td></tr>`;
-        html += `<tr style="background:var(--primary-light); border-top:2px solid var(--primary);">
-                    <td style="width: 50px; text-align:center; font-weight:900;">#${myRankIndex}</td>
-                    <td style="font-weight:800;">${escapeHTML(myData.name)} <b style="color:var(--primary); font-size:10px;">(You)</b></td>
-                    <td style="color:var(--primary); font-weight:900;">${myData.score} Pts</td>
-                </tr>`;
-    } 
-    else if (!myData) {
-        html += `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:8px; font-size:18px; letter-spacing:3px;">•••</td></tr>`;
-        html += `<tr>
-                    <td colspan="3" style="text-align:center; padding:15px 10px; font-size:12px; font-weight:700; color:#ea580c; background:#fff7ed; border-radius:0 0 8px 8px;">
-                        <i class="fas fa-lock" style="margin-right:5px;"></i> Aapne test nahi diya hai. Start Mock Test par click karein!
-                    </td>
-                </tr>`;
-    }
-    
-    document.getElementById('testRankBody').innerHTML = html;
-}
+let dynamicFolders = {};
 
 function fetchDynamicFolders() {
-    fetchWithCache('dsssb_folders_tree', 'cache_folders_v2', 1440).then(snap => {
+    fetchWithCache('dsssb_folders_tree', 'cache_folders_v2', 60).then(snap => {
         if(snap.exists()) {
             dynamicFolders = snap.val();
             renderDynamicFolders();
         } else {
+            console.log("No dynamic folders found in Firebase.");
             document.getElementById('dynamicTreeContainer').innerHTML = `<div style="text-align:center; padding: 20px; color:var(--text-muted); width: 100%;">No Folders Found</div>`;
         }
     });
@@ -2317,7 +2185,7 @@ function renderDynamicFolders() {
                     <div style="display:flex; align-items:center; gap:12px;">
                         <div style="background: white; width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; font-size: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); border: 1px solid var(--border);">🏛️</div>
                         <div>
-                            <div style="font-weight: 900; font-size: 15px; color:var(--text-main);">${escapeHTML(board)}</div>
+                            <div style="font-weight: 900; font-size: 15px; color:var(--text-main);">${board}</div>
                             <div style="font-size: 11px; color:var(--text-muted); font-weight:700;">📂 ${folderCount} Exam Categories</div>
                         </div>
                     </div>
@@ -2328,10 +2196,7 @@ function renderDynamicFolders() {
                     <div class="modern-cat-grid">`;
             
             groupedByBoard[board].forEach(f => {
-                if (f.examKey) {
-                    window.folderMap[f.examKey] = f; 
-                }
-                
+                let folderData = JSON.stringify(f).replace(/'/g, "&#39;"); 
                 let themeClass = "ic-blue";
                 if(f.colorClass) {
                     if(f.colorClass.includes('purple')) themeClass = "ic-purple";
@@ -2341,18 +2206,18 @@ function renderDynamicFolders() {
                 }
 
                 let examKey = f.examKey ? f.examKey.toLowerCase() : "";
+                
                 let categoryTests = allTests.filter(t => t.dbKey !== 'auto_qod' && ((t.category||"").toLowerCase().includes(examKey) || (t.title||"").toLowerCase().includes(examKey)));
                 let totalTests = categoryTests.length;
                 
-                let attemptedInCat = categoryTests.filter(t => attemptedTestIds.has(String(t.dbKey)) || (t.id && attemptedTestIds.has(String(t.id)))).length;
+                let attemptedInCat = categoryTests.filter(t => attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id)).length;
+                
                 let realProgress = totalTests > 0 ? Math.round((attemptedInCat / totalTests) * 100) : 0;
 
-                let safeFolderKey = (f.examKey || '').replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/"/g, '&quot;');
-
                 treeHtml += `
-                <div class="modern-cat-card" onclick="openTreeFolder('${safeFolderKey}')">
+                <div class="modern-cat-card" onclick='openTreeFolder(${folderData})'>
                     <div class="modern-cat-icon ${themeClass}">${f.icon || '📝'}</div>
-                    <div class="modern-cat-name">${escapeHTML(f.name || 'Exam')}</div>
+                    <div class="modern-cat-name">${f.name || 'Exam'}</div>
                     
                     <div style="font-size: 10px; font-weight: 800; color: var(--text-muted); background: var(--bg-body); padding: 2px 6px; border-radius: 6px; margin-top: -2px;">
                         ${totalTests} Mocks
@@ -2371,20 +2236,16 @@ function renderDynamicFolders() {
         if(container) container.innerHTML = treeHtml;
 }
 
-function openTreeFolder(folderKey) {
-    const folderObj = window.folderMap[folderKey];
-    if(!folderObj) return;
-
-    switchTab('tests', document.querySelector(`.nav-item[data-tab='tests']`));
+function openTreeFolder(folderObj) {
+    const testTabIcon = document.querySelectorAll('.nav-item')[1];
+    switchTab('tests', testTabIcon);
     document.getElementById('testSearch').value = ''; 
 
-    let safeExamKey = folderObj.examKey ? folderObj.examKey.replace(/'/g, "\\'") : '';
-    let filterHtml = `<div class="filter-pill active" onclick="filterDynamicTests('${safeExamKey}', 'all', this)">All ${escapeHTML(folderObj.name)}</div>`;
+    let filterHtml = `<div class="filter-pill active" onclick="filterDynamicTests('${folderObj.examKey}', 'all', this)">All ${folderObj.name}</div>`;
     
     if(folderObj.subCategories && folderObj.subCategories.length > 0) {
         folderObj.subCategories.forEach(sub => {
-            let safeSubKey = sub.filterKey ? sub.filterKey.replace(/'/g, "\\'") : '';
-            filterHtml += `<div class="filter-pill" onclick="filterDynamicTests('${safeExamKey}', '${safeSubKey}', this)">${escapeHTML(sub.name)}</div>`;
+            filterHtml += `<div class="filter-pill" onclick="filterDynamicTests('${folderObj.examKey}', '${sub.filterKey}', this)">${sub.name}</div>`;
         });
     }
 
@@ -2411,7 +2272,7 @@ function filterDynamicTests(examKey, subFilterKey, pillEl) {
                 list = list.filter(t => {
                     let cat = (t.category||"").toLowerCase();
                     let title = (t.title||"").toLowerCase();
-                    let tags = `${t.tag || ""} ${t.tags || ""}`.toLowerCase();
+                    let tags = (t.tag||"").toLowerCase() + " " + (t.tags||"").toLowerCase();
                     
                     if(targetSub.includes('full')) return cat.includes('full') || title.includes('full') || tags.includes('full');
                     if(targetSub === 'sectional') return !(cat.includes('full') || title.includes('full') || tags.includes('full'));
@@ -2423,8 +2284,9 @@ function filterDynamicTests(examKey, subFilterKey, pillEl) {
     renderTestCards(list);
 }
 
+// 🔥 MOUSE DRAG TO SCROLL 🔥
 document.addEventListener('DOMContentLoaded', () => {
-    const sliders = [document.getElementById('mockFiltersRow')];
+    const sliders = [document.getElementById('catBox'), document.getElementById('mockFiltersRow')];
     
     sliders.forEach(slider => {
         if(!slider) return;
@@ -2463,12 +2325,9 @@ document.addEventListener('keydown', function(e) {
 });
 
 function shareMockTest(testId, title, event) {
-    if (event) {
-        try { event.stopPropagation(); } catch(e){}
-    }
+    event.stopPropagation();
     const shareText = `🎯 I challenge you in this Mock Test: *${title}*\n\n🔥 Let's see who gets the better rank! Attempt here:\n`;
-    const baseUrl = window.location.href.split('?')[0]; 
-    const shareUrl = `${baseUrl}?openTest=${testId}`;
+    const shareUrl = `${window.location.origin}${window.location.pathname}?openTest=${testId}`;
     
     if (navigator.share) {
         navigator.share({ title: 'PYQ Notes Challenge', text: shareText, url: shareUrl })
@@ -2479,19 +2338,53 @@ function shareMockTest(testId, title, event) {
     }
 }
 
+// 🔥 NAYA: PWA Auto-Update / Version Control Setup 🔥
 if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('Main Branch SW Registered! Scope:', reg.scope))
-        .catch(err => console.error('Service Worker Error:', err));
+        navigator.serviceWorker.register('sw.js').then(reg => {
+            console.log('Main Branch SW Registered! Scope:', reg.scope);
+            
+            // Listen for waiting service worker (New version downloaded)
+            reg.onupdatefound = () => {
+                const installingWorker = reg.installing;
+                installingWorker.onstatechange = () => {
+                    if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        // Naya update mil gaya, UI mein popup dikhao
+                        document.getElementById('updateToast').style.display = 'flex';
+                    }
+                };
+            };
+        }).catch(err => console.error('Service Worker Error:', err));
     });
 }
+
+document.addEventListener('click', function goFullScreen() {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        let doc = window.document;
+        let docEl = doc.documentElement;
+        let requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+        if(requestFullScreen && !doc.fullscreenElement) {
+            requestFullScreen.call(docEl).catch(err => console.log("Fullscreen auto-trigger ignored by browser"));
+        }
+    }
+    document.removeEventListener('click', goFullScreen); 
+});
   
 </script>
 
-<script>
+  <script>
 (function() {
-    if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+    const trackerConfig = { 
+        apiKey: "AIzaSyDGolcXv0efZxRdOvBthfeT72mkNLLbAwI", 
+        authDomain: "dsssbexamportal.firebaseapp.com", 
+        databaseURL: "https://dsssbexamportal-default-rtdb.asia-southeast1.firebasedatabase.app", 
+        projectId: "dsssbexamportal", 
+        storageBucket: "dsssbexamportal.firebasestorage.app", 
+        messagingSenderId: "853373171134", 
+        appId: "1:853373171134:web:77b967374e6f34311af5ef" 
+    };
+    if (typeof firebase !== 'undefined') {
+        if (!firebase.apps.length) { firebase.initializeApp(trackerConfig); }
         
         const trackDb = firebase.database();
         let trackUid = localStorage.getItem('dsssb_user_id');
@@ -2506,33 +2399,22 @@ if ('serviceWorker' in navigator && window.location.protocol.startsWith('http'))
         else if(loc.includes('index.html') || loc === '') loc = 'On Dashboard 🏠';
         else loc = 'Exploring Portal 🔍';
 
-        let lastTracked = localStorage.getItem('last_tracked_time');
-        let nowTime = Date.now();
-        let analyticsTime = (typeof firebase !== 'undefined' && firebase.database && firebase.database.ServerValue) ? firebase.database.ServerValue.TIMESTAMP : Date.now();
-
-        if (!lastTracked || (nowTime - lastTracked > 43200000)) { 
-            trackDb.ref('dsssb_analytics/users/' + trackUid).update({
-                name: trackUname,
-                last_active: analyticsTime
-            });
-            localStorage.setItem('last_tracked_time', nowTime);
-        }
+        trackDb.ref('dsssb_analytics/users/' + trackUid).update({
+            name: trackUname,
+            last_active: firebase.database.ServerValue.TIMESTAMP
+        });
 
         const connRef = trackDb.ref('.info/connected');
         const presRef = trackDb.ref('dsssb_analytics/presence/' + trackUid);
-        let isAnalyticsConnected = false;
 
         connRef.on('value', (snap) => {
-            if (snap.val() === true && !isAnalyticsConnected) {
-                isAnalyticsConnected = true;
-                presRef.onDisconnect().remove();
+            if (snap.val() === true) {
+                presRef.onDisconnect().remove(); 
                 presRef.set({ 
                     name: trackUname, 
                     activity: loc, 
-                    time: analyticsTime 
+                    time: firebase.database.ServerValue.TIMESTAMP 
                 });
-            } else if (snap.val() === false) {
-                isAnalyticsConnected = false;
             }
         });
     }
