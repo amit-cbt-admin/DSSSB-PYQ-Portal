@@ -4,19 +4,30 @@
 <meta charset="utf-8">
 <title>PYQ Notes - Mock Test</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-
 <meta name="theme-color" content="#4f46e5">
 
 <link rel="manifest" href="manifest.json">
+<!-- Confetti for Gamified Results -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
 <script>
 window.MathJax = {
-  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] },
+  options: {
+    enableMenu: false, // Prevents right click menu on equations
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  },
+  tex: { 
+      inlineMath: [['$', '$'], ['\\(', '\\)']], 
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      processEscapes: true 
+  },
   svg: { fontCache: 'global' },
-  startup: { typeset: false }
+  startup: { typeset: false } // We typeset manually for performance
 };
 </script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
@@ -52,10 +63,20 @@ body.dark-mode {
   --shadow-lg: 0 10px 30px rgba(0,0,0,0.5);
 }
 
+/* 🔥 ANTI-COPY & HARDENED CSS 🔥 */
 * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-
-html, body { width: 100%; height: 100dvh; margin: 0; padding: 0; font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif; background: var(--bg-body-gradient); color: var(--text-main); user-select: none; transition: background 0.3s ease; }
+html, body { 
+    width: 100%; height: 100dvh; margin: 0; padding: 0; 
+    font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif; 
+    background: var(--bg-body-gradient); color: var(--text-main); 
+    /* Block Selection completely */
+    -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; 
+    transition: background 0.3s ease; 
+}
 body { display: flex; flex-direction: column; position: fixed; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; }
+
+/* Let user select code/text in explanation ONLY */
+.sol-content { -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text; }
 
 header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 20px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between; padding: 0 10px; z-index: 50; height: var(--header-height); color: white; gap: 8px; }
 .brand { font-weight: 900; font-size: 16px; color: #fff; display: flex; align-items: center; gap: 4px; flex: 1; min-width: 0; }
@@ -73,6 +94,9 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 .sec-tab.active { background: var(--gradient-main); color: #fff; box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4); }
 .sec-tab.done { color: var(--success); background: var(--success-bg); border-color: var(--success); }
 
+/* MathJax specific fix for overflowing tables/equations */
+.MathJax_SVG_Display { overflow-x: auto; overflow-y: hidden; }
+
 #mainArea { flex: 1; padding: 15px 15px 120px 15px; overflow-y: auto; overflow-x: hidden; display: none; position: relative; -webkit-overflow-scrolling: touch; }
 .q-card { background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); padding: 20px; box-shadow: var(--shadow-sm); margin-top: 10px; margin-bottom: 25px; transition: transform 0.2s; }
 .q-header { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px dashed var(--border-color); padding-bottom: 12px; font-size: 14px; color: var(--text-muted); font-weight: 600; align-items: center; flex-wrap: wrap; gap: 10px; }
@@ -86,12 +110,12 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 .badge-diff.medium { background: var(--warning-bg); color: #b77c00; border-color: rgba(245, 158, 11, 0.3); }
 .badge-diff.hard { background: var(--danger-bg); color: var(--danger); border-color: rgba(239, 68, 68, 0.3); }
 
-/* 🔥 Smooth Slide Animation for Questions */
+/* 🔥 Smooth Slide Animation for Questions (Optimized GPU Rendering) */
 @keyframes slideInRight { 
     from { opacity: 0; transform: translateX(15px); } 
     to { opacity: 1; transform: translateX(0); } 
 }
-.q-animate { animation: slideInRight 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+.q-animate { animation: slideInRight 0.25s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform, opacity; }
 
 .opt { display: flex; align-items: center; padding: 14px; border: 2px solid var(--border-color); border-radius: 12px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); background: var(--bg-card); font-size: 15px; position: relative; overflow: hidden; }
 .opt:hover { border-color: var(--primary); background: var(--primary-light); transform: translateY(-2px); }
@@ -193,87 +217,95 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 .qbtn-list.p-wrong { background: rgba(239, 68, 68, 0.15); border-color: #ef4444; color: #f87171; }
 .qbtn-list.p-skip { background: transparent; border-color: #475569; color: #64748b; }
 
-.modal-header { padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 18px; color: var(--primary); background: var(--primary-light); }
-
 /* Premium Scrollbar for Desktop (Dark Palette) */
 .palette-sections-container::-webkit-scrollbar { width: 6px; }
 .palette-sections-container::-webkit-scrollbar-track { background: transparent; }
 .palette-sections-container::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
 .palette-sections-container::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1500; display: none; backdrop-filter: blur(5px); justify-content: center; align-items: center; padding: 15px; }
-.modal-card { background: var(--bg-card); width: 100%; max-width: 800px; max-height: 90vh; border-radius: 24px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.4); border: 1px solid var(--glass-border); }
-.modal-body { padding: 25px; overflow-y: auto; }
-
-.notebook-tab { flex: 1; padding: 12px; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; transition: 0.2s; font-size: 14px; }
-.notebook-tab.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
-.notebook-tab.inactive { background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border-color); }
+/* 🔥 FULL SCREEN GAMIFIED RESULT MODAL 🔥 */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; display: none; backdrop-filter: blur(10px); justify-content: center; align-items: center; padding: 0; margin: 0; }
+.modal-card { background: var(--bg-body-gradient); width: 100vw; max-width: 100vw; height: 100vh; max-height: 100vh; border-radius: 0; display: flex; flex-direction: column; overflow: hidden; box-shadow: none; border: none; }
+.modal-header-fullscreen { position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: var(--bg-card); border-bottom: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+.modal-header-fullscreen span { font-weight: 900; font-size: 20px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+.modal-header-fullscreen .close-btn { font-size: 28px; font-weight: 900; color: #fff; background: var(--danger); width: 40px; height: 40px; border-radius: 10px; display: flex; justify-content: center; align-items: center; border: none; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4); }
+.modal-header-fullscreen .close-btn:hover { transform: scale(1.05) rotate(90deg); }
+.modal-body { padding: 25px; overflow-y: auto; flex: 1; padding-bottom: 80px; }
 
 /* Analysis UI */
-.analysis-container { max-width: 900px; margin: auto; display: flex; flex-direction: column; gap: 14px; padding: 10px 0; font-family: 'Poppins', sans-serif; }
-.card-dashboard { background: var(--bg-card); border-radius: 12px; padding: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); }
+.analysis-container { max-width: 1000px; margin: auto; display: flex; flex-direction: column; gap: 18px; padding: 10px 0; font-family: 'Poppins', sans-serif; }
+.card-dashboard { background: var(--bg-card); border-radius: 16px; padding: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: 0.3s; }
+.card-dashboard:hover { box-shadow: var(--shadow-lg); border-color: rgba(99, 102, 241, 0.3); }
+
+/* Gamified XP & Skill Tags */
+.gamified-header { display: flex; flex-direction: column; align-items: center; gap: 10px; background: linear-gradient(135deg, #1e1b4b, #312e81); padding: 30px 20px; border-radius: 20px; color: #fff; position: relative; overflow: hidden; border: 2px solid #4f46e5; box-shadow: 0 10px 30px rgba(79, 70, 229, 0.3); }
+.gamified-header::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 60%); animation: spin 10s linear infinite; }
+.skill-title { font-size: 28px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; background: linear-gradient(to right, #fde047, #fb923c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 10px rgba(251, 146, 60, 0.3); z-index: 1; }
+.xp-gained { font-size: 18px; font-weight: 700; background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 20px; backdrop-filter: blur(5px); z-index: 1; border: 1px solid rgba(255,255,255,0.2); }
+
 .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; font-size: 14px; color: var(--text-muted); }
 .info-grid div b { color: var(--text-main); }
 .score-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; text-align: center; }
-.score-item { background: var(--bg-body); border-radius: 10px; padding: 14px; border: 1px solid var(--border-color); transition: 0.3s; }
-.score-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-sm); }
-.score-item h4 { margin: 0; font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-.score-item p { margin: 6px 0 0; font-size: 22px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; justify-content: center; gap: 5px; }
-.score-item p .total-count { font-size: 14px; color: var(--text-muted); font-weight: 600; margin-top: 3px; }
+.score-item { background: var(--bg-body); border-radius: 12px; padding: 16px; border: 1px solid var(--border-color); transition: 0.3s; position: relative; overflow: hidden; }
+.score-item:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); border-color: var(--primary-light); }
+.score-item h4 { margin: 0; font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800; }
+.score-item p { margin: 8px 0 0; font-size: 26px; font-weight: 900; color: var(--text-main); display: flex; align-items: center; justify-content: center; gap: 5px; }
+.score-item p .total-count { font-size: 14px; color: var(--text-muted); font-weight: 600; margin-top: 5px; }
 .attempt-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; text-align: center; }
-.attempt-box { padding: 12px; border-radius: 10px; font-weight: 700; font-size: 13px; border: 1px solid transparent; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
-.attempt-box span { display: block; font-size: 20px; margin-top: 4px; font-weight: 800; }
+.attempt-box { padding: 15px; border-radius: 12px; font-weight: 700; font-size: 14px; border: 1px solid transparent; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); transition: 0.3s; }
+.attempt-box:hover { transform: scale(1.02); }
+.attempt-box span { display: block; font-size: 22px; margin-top: 6px; font-weight: 900; }
 .at-correct { background: var(--success-bg); color: var(--success); border-color: rgba(16, 185, 129, 0.3); }
 .at-wrong { background: var(--danger-bg); color: var(--danger); border-color: rgba(239, 68, 68, 0.3); }
 .at-unattempted { background: var(--warning-bg); color: #b77c00; border-color: rgba(245, 158, 11, 0.3); }
 .at-total { background: var(--primary-light); color: var(--primary-dark); border-color: rgba(99, 102, 241, 0.3); }
 
 /* 🔥 UPGRADED PREMIUM PODIUM 🔥 */
-.podium-container { display: flex; justify-content: center; align-items: flex-end; gap: 15px; margin: 30px 0 20px 0; padding-bottom: 20px; border-bottom: 1px dashed var(--border-color); }
-.podium-rank { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px 10px; border-radius: 20px 20px 0 0; width: 30%; position: relative; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-.podium-rank:hover { transform: translateY(-10px); }
+.podium-container { display: flex; justify-content: center; align-items: flex-end; gap: 15px; margin: 40px 0 30px 0; padding-bottom: 20px; border-bottom: 1px dashed var(--border-color); }
+.podium-rank { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px 10px; border-radius: 20px 20px 0 0; width: 30%; max-width: 120px; position: relative; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation: slideUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards; }
+.podium-rank:hover { transform: translateY(-15px) scale(1.05); }
 
 /* Rank 1: Glowing Gold */
-.podium-rank.rank-1 { height: 180px; background: linear-gradient(180deg, #fbbf24 0%, #b45309 100%); border: 2px solid #fde047; z-index: 3; box-shadow: 0 -10px 40px rgba(245, 158, 11, 0.5); }
-.podium-rank.rank-1 .p-name, .podium-rank.rank-1 .p-score { color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.podium-rank.rank-1 { height: 200px; background: linear-gradient(180deg, #fbbf24 0%, #b45309 100%); border: 3px solid #fde047; z-index: 3; box-shadow: 0 -10px 40px rgba(245, 158, 11, 0.6), inset 0 0 20px rgba(255,255,255,0.4); animation-delay: 0.4s; }
+.podium-rank.rank-1 .p-name, .podium-rank.rank-1 .p-score { color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
 
 /* Rank 2: Silver */
-.podium-rank.rank-2 { height: 140px; background: linear-gradient(180deg, #e2e8f0 0%, #64748b 100%); border: 2px solid #f1f5f9; box-shadow: 0 -5px 20px rgba(100, 116, 139, 0.3); }
-.podium-rank.rank-2 .p-name, .podium-rank.rank-2 .p-score { color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+.podium-rank.rank-2 { height: 160px; background: linear-gradient(180deg, #e2e8f0 0%, #64748b 100%); border: 3px solid #f1f5f9; box-shadow: 0 -5px 20px rgba(100, 116, 139, 0.4); animation-delay: 0.2s; }
+.podium-rank.rank-2 .p-name, .podium-rank.rank-2 .p-score { color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
 
 /* Rank 3: Bronze */
-.podium-rank.rank-3 { height: 120px; background: linear-gradient(180deg, #fed7aa 0%, #9a3412 100%); border: 2px solid #ffedd5; box-shadow: 0 -5px 20px rgba(154, 52, 18, 0.3); }
-.podium-rank.rank-3 .p-name, .podium-rank.rank-3 .p-score { color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+.podium-rank.rank-3 { height: 140px; background: linear-gradient(180deg, #fed7aa 0%, #9a3412 100%); border: 3px solid #ffedd5; box-shadow: 0 -5px 20px rgba(154, 52, 18, 0.4); animation-delay: 0.6s; }
+.podium-rank.rank-3 .p-name, .podium-rank.rank-3 .p-score { color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
 
-.p-avatar { font-size: 35px; margin-bottom: 8px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); }
-.p-name { font-size: 13px; font-weight: 800; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; letter-spacing: 0.5px; }
-.p-score { font-size: 16px; font-weight: 900; margin-top: auto; background: rgba(0,0,0,0.2); padding: 4px 12px; border-radius: 20px; }
+.p-avatar { font-size: 40px; margin-bottom: 8px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.4)); animation: pulse 2s infinite; }
+.p-name { font-size: 14px; font-weight: 900; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; letter-spacing: 0.5px; }
+.p-score { font-size: 18px; font-weight: 900; margin-top: auto; background: rgba(0,0,0,0.3); padding: 4px 14px; border-radius: 20px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.3); }
 
 /* Smart Badges */
 .badge-speed { background: #dbeafe; color: #1e3a8a; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 900; letter-spacing: 0.5px; border: 1px solid #bfdbfe; margin-left: 5px; }
 .badge-acc { background: #dcfce7; color: #166534; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 900; letter-spacing: 0.5px; border: 1px solid #bbf7d0; margin-left: 5px; }
 
 /* Share Card */
-.share-telegram-card { background: linear-gradient(135deg, #0088cc 0%, #005580 100%); padding: 15px 20px; border-radius: 16px; color: white; display: flex; align-items: center; justify-content: space-between; margin-top: 20px; box-shadow: 0 10px 25px rgba(0,136,204,0.4); cursor: pointer; transition: 0.3s; border: 1px solid #33aadd; }
-.share-telegram-card:hover { transform: scale(1.02); box-shadow: 0 15px 35px rgba(0,136,204,0.5); }
-.share-telegram-card h4 { margin: 0; font-size: 16px; font-weight: 900; }
-.share-telegram-card p { margin: 2px 0 0 0; font-size: 12px; opacity: 0.9; }
+.share-telegram-card { background: linear-gradient(135deg, #0088cc 0%, #005580 100%); padding: 18px 24px; border-radius: 16px; color: white; display: flex; align-items: center; justify-content: space-between; margin-top: 20px; box-shadow: 0 10px 25px rgba(0,136,204,0.4); cursor: pointer; transition: 0.3s; border: 1px solid #33aadd; }
+.share-telegram-card:hover { transform: translateY(-3px) scale(1.01); box-shadow: 0 15px 35px rgba(0,136,204,0.6); }
+.share-telegram-card h4 { margin: 0; font-size: 18px; font-weight: 900; }
+.share-telegram-card p { margin: 4px 0 0 0; font-size: 13px; opacity: 0.9; }
 
 /* Percentile Tracker */
-.percentile-track { width: 100%; height: 12px; background: var(--bg-body); border-radius: 20px; margin-top: 10px; overflow: hidden; position: relative; border: 1px solid var(--border-color); }
-.percentile-fill { height: 100%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981); border-radius: 20px; transition: 1.5s ease-out; }
+.percentile-track { width: 100%; height: 16px; background: var(--bg-body); border-radius: 20px; margin-top: 10px; overflow: hidden; position: relative; border: 1px solid var(--border-color); box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); }
+.percentile-fill { height: 100%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981, #3b82f6); border-radius: 20px; transition: 1.5s ease-out; box-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
 
 /* 🔥 NEW SECTIONAL TABLE UI 🔥 */
-.sectional-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 15px; border-radius: 8px; overflow: hidden; }
-.sectional-table th { background: var(--primary-light); color: var(--primary-dark); padding: 10px; text-align: left; font-weight: 800; }
-.sectional-table td { padding: 10px; border-bottom: 1px solid var(--border-color); color: var(--text-main); font-weight: 600; }
+.sectional-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 15px; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm); }
+.sectional-table th { background: var(--primary-light); color: var(--primary-dark); padding: 12px; text-align: left; font-weight: 900; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; }
+.sectional-table td { padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main); font-weight: 600; background: var(--bg-card); }
 .sectional-table tr:last-child td { border-bottom: none; }
 .sectional-table tr:hover td { background: var(--bg-body); }
 
 /* 🔥 GLOWING AI BUTTON 🔥 */
 @keyframes glowingBtn {
     0% { box-shadow: 0 0 5px #8b5cf6; }
-    50% { box-shadow: 0 0 20px #8b5cf6, 0 0 10px #c084fc; transform: scale(1.02); }
+    50% { box-shadow: 0 0 25px #8b5cf6, 0 0 15px #c084fc; transform: scale(1.02); }
     100% { box-shadow: 0 0 5px #8b5cf6; }
 }
 .btn-ai-glow { animation: glowingBtn 2.5s infinite; background: linear-gradient(90deg, #7c3aed, #db2777) !important; border:none !important; color: white !important; font-weight: 900 !important; }
@@ -284,17 +316,17 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 .ai-msg-bot { background: var(--bg-card); color: var(--text-main); padding: 10px; border-radius: 10px 10px 10px 0; margin-bottom: 10px; border: 1px solid var(--border); width: fit-content; max-width: 90%; }
 .ai-sparkle { color: #8b5cf6; animation: pulse 1.5s infinite; }
 
-.bar-section { margin-top: 10px; }
-.bar-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--text-muted); }
-.bar-track { height: 10px; background: var(--border-color); border-radius: 99px; overflow: hidden; position: relative; }
-.bar-fill { height: 100%; border-radius: 99px; transition: width 1s ease-out; }
-.fill-you { background: var(--primary); }
-.fill-topper { background: var(--success); }
+.bar-section { margin-top: 15px; }
+.bar-label { display: flex; justify-content: space-between; font-size: 14px; font-weight: 800; margin-bottom: 8px; color: var(--text-muted); text-transform: uppercase; }
+.bar-track { height: 12px; background: var(--bg-body); border: 1px solid var(--border-color); border-radius: 99px; overflow: hidden; position: relative; }
+.bar-fill { height: 100%; border-radius: 99px; transition: width 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.fill-you { background: linear-gradient(90deg, #3b82f6, #6366f1); box-shadow: 0 0 10px rgba(99, 102, 241, 0.5); }
+.fill-topper { background: linear-gradient(90deg, #10b981, #34d399); box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
 
-.topper-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 10px; }
-.topper-table th { background: var(--bg-body); color: var(--text-muted); font-weight: 700; padding: 10px; text-align: left; border-bottom: 2px solid var(--border-color); }
-.topper-table td { padding: 10px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
-.section-title { font-size: 16px; font-weight: 700; margin: 0 0 14px; color: var(--text-main); padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
+.topper-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14px; margin-top: 15px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); }
+.topper-table th { background: var(--bg-body); color: var(--text-muted); font-weight: 800; padding: 12px; text-align: left; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; }
+.topper-table td { padding: 12px; border-top: 1px solid var(--border-color); color: var(--text-main); background: var(--bg-card); }
+.section-title { font-size: 18px; font-weight: 800; margin: 0 0 16px; color: var(--text-main); padding-bottom: 10px; border-bottom: 2px solid var(--border-color); }
 
 .discussion-section { margin-top: 15px; border-top: 1px dashed var(--border-color); padding-top: 15px; }
 .comment-box { background: var(--bg-body); border-radius: 8px; padding: 10px; margin-bottom: 10px; font-size: 13px; }
@@ -325,54 +357,52 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
       padding-bottom: 5px; 
   }
   .q-text img, .opt img { 
-      max-width: none !important; /* इमेज को स्क्रीन के साइज़ में सिकुड़ने से रोकेगा */
-      width: auto !important;     /* असली साइज़ रखेगा (छोटे आइकॉन छोटे, बड़े टेबल बड़े) */
+      max-width: none !important; 
+      width: auto !important;     
   }
+  /* Mobile adjustments for full screen modal */
+  .modal-header-fullscreen { padding: 15px; }
+  .modal-header-fullscreen span { font-size: 16px; }
+  .modal-header-fullscreen .close-btn { width: 35px; height: 35px; font-size: 24px; }
+  .modal-body { padding: 15px; }
 }
 
 @media(min-width: 1024px) {
     body {
         display: grid; 
         grid-template-columns: 1fr 340px; 
-        grid-template-rows: var(--header-height) auto 1fr 70px; /* Fixed Footer Height */
+        grid-template-rows: var(--header-height) auto 1fr 70px; 
         grid-template-areas: "header header" "secbar secbar" "main palette" "footer palette"; 
         height: 100vh; overflow: hidden;
     }
     header { grid-area: header; }
     #sectionBar { grid-area: secbar; }
-    /* FIXED MAIN AREA SCROLL */
     #mainArea { grid-area: main; padding: 40px 60px; max-width: 1100px; margin: 0 auto; width: 100%; overflow-y: auto; height: 100%; } 
     #palettePanel {
         grid-area: palette; position: relative; transform: none; width: 100%; height: 100%;
         box-shadow: -5px 0 15px rgba(0,0,0,0.02); border-left: 1px solid var(--border-color); display: flex !important; z-index: 10;
     }
     
-    /* Hide close button on desktop palette */
     #palettePanel > div:first-child button { display: none; }
-    .modal-header button { display: none; } 
     
     #paletteOverlay { display: none !important; }
     #examFooter .btn-grid { display: none; } 
-    /* FIXED FOOTER POSITION */
     #examFooter { grid-area: footer; justify-content: center; border-right: 1px solid var(--border-color); position: relative; border-top: 1px solid var(--border-color); }
     .q-card { box-shadow: 0 10px 40px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); margin-bottom: 20px; }
     .opt { padding: 18px; } 
 }
 
-/* Preloader styles */
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* =========================
    PRINT PREVIEW HIGH QUALITY PDF
    ========================= */
 @media print {
-    /* 1. फालतू UI को हाइड करें, साथ ही #mainArea को भी हाइड करें ताकि वो Modal के पीछे से प्रिंट न हो */
     header, #sectionBar, #examFooter, #palettePanel, #paletteOverlay, 
     #startScreen, #instructionScreen, #declarationScreen, #toast-container, 
     #tgOverlay, #tgPopup, #customConfirm, #zoomModal, #paymentModal, #mainArea,
-    .btn-primary { display: none !important; }
+    .btn-primary, .modal-header-fullscreen { display: none !important; }
 
-    /* 2. MASTER FIX: Body का fixed position हटाकर static करें ताकि सारे पेज खुल सकें */
     html, body {
         position: static !important; 
         height: auto !important; 
@@ -384,7 +414,6 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         padding: 0 !important;
     }
 
-    /* 3. Modal की max-height हटा दें और इसे पूरा एक्सपेंड होने दें */
     #resultModal, .modal-overlay, .modal-card, .modal-body {
         position: static !important; 
         display: block !important;
@@ -401,13 +430,11 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         transform: none !important;
     }
 
-    /* 4. कलर्स प्रिंट में वैसे ही दिखें जैसे स्क्रीन पर हैं */
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
 
-    /* 5. पेज के बीच में से सवाल कटने से बचाएं */
     .pdf-q-card, .card-dashboard {
         page-break-inside: avoid !important; 
         break-inside: avoid !important;
@@ -421,6 +448,18 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 </style>
 </head>
 <body onload="initApp()">
+
+<script>
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.addEventListener('keydown', function (e) {
+        // Prevent F12, Ctrl+Shift+I, Ctrl+U
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.key === 'U')) {
+            e.preventDefault();
+        }
+    });
+    // Prevent Copy
+    document.addEventListener('copy', (e) => { e.preventDefault(); return false; });
+</script>
 
 <div id="preloader" style="position: fixed; inset: 0; background: var(--bg-body-gradient); z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center;">
     <div style="width: 50px; height: 50px; border: 5px solid rgba(99, 102, 241, 0.2); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
@@ -453,7 +492,7 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
     <span onclick="closeZoom()" style="position:fixed; top:20px; right:20px; font-size:40px; color:#fff; cursor:pointer; z-index:5001; background:rgba(0,0,0,0.6); width:45px; height:45px; border-radius:50%; display:flex; align-items:center; justify-content:center; line-height: 1;">&times;</span>
     
     <div style="padding: 80px 20px 40px 20px; min-height: 100vh; box-sizing: border-box; text-align: center;">
-        <img id="zoomImg" src="" style="width:100%; max-width:none; border-radius:8px; background-color:#ffffff; padding:10px; display:inline-block; margin:0 auto;">
+        <img id="zoomImg" src="" style="width:100%; max-width:none; border-radius:8px; background-color:#ffffff; padding:10px; display:inline-block; margin:0 auto; transition: transform 0.3s ease;">
     </div>
 </div>
 
@@ -599,9 +638,9 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 
 <div id="sectionBar"></div>
 
-<div id="mainArea">
+<div id="mainArea" class="tex2jax_process">
     <div class="q-card">
-        <div class="q-header">
+        <div class="q-header tex2jax_ignore">
            <span style="display:flex; align-items:center; gap:12px;">
                 <span style="background:var(--primary); color:#fff; padding:2px 8px; border-radius:6px; font-size:12px;">Q.<span id="qNumDisp">1</span></span>
                 <button id="bookmarkBtn" onclick="toggleBookmark()" style="background:transparent; border:none; cursor:pointer; font-size:18px; padding:0; transition:0.2s;" title="Save to Notebook">🔖</button>
@@ -616,7 +655,7 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
         <div id="opts"></div>
         <div id="solutionDisplay" class="sol-box" style="display:none; margin-top:20px;"></div>
         
-        <div id="discussionArea" style="display:none;">
+        <div id="discussionArea" style="display:none;" class="tex2jax_ignore">
             <button class="toggle-discuss-btn" onclick="toggleDiscussion()">💬 Discuss this Question</button>
             <div id="discussionContainer" class="discussion-section" style="display:none;">
                 <div id="commentsList" style="max-height: 200px; overflow-y: auto; margin-bottom: 10px;">
@@ -629,7 +668,7 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
             </div>
         </div>
 
-        <div id="actionButtons" style="margin-top:25px; display:flex; gap:15px;">
+        <div id="actionButtons" style="margin-top:25px; display:flex; gap:15px;" class="tex2jax_ignore">
             <button class="nav-btn" style="border:1px solid var(--text-muted); color:var(--text-muted); flex:1; background:transparent; padding: 10px; border-radius: 8px;" onclick="clearResponse()">↺ Clear Response</button>
         </div>
     </div>
@@ -660,9 +699,9 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 
 <div id="resultModal" class="modal-overlay">
     <div class="modal-card">
-        <div class="modal-header">
-            <span>🏆 Analysis & Leaderboard</span>
-            <button onclick="closeResult()" style="border:none; background:none; font-size:24px; color:var(--primary); cursor:pointer;">&times;</button>
+        <div class="modal-header-fullscreen">
+            <span>🏆 Performance Analysis</span>
+            <button class="close-btn" onclick="closeResult()" title="Close Analysis">&times;</button>
         </div>
         <div class="modal-body" id="resultContent"></div>
     </div>
@@ -704,7 +743,7 @@ header { flex-shrink: 0; background: var(--gradient-header); box-shadow: 0 4px 2
 
 <script>
 /* =========================
-   SAFE STORAGE HELPERS (Anti-Crash)
+   SAFE STORAGE HELPERS
    ========================= */
 function getSafeData(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
 function setSafeData(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
@@ -735,6 +774,8 @@ const TOTAL_TIME_MINS = parseInt(urlParams.get('time')) || 120;
 const MIN_SUBMIT_MINS = parseInt(urlParams.get('mintime')) || 0; 
 const TEST_MODE = urlParams.get('mode') || "exam"; 
 
+const FILE_URL = decodeURIComponent(urlParams.get('fileUrl') || "");
+
 const POSITIVE_MARK = parseFloat(urlParams.get('pm')) || 1.0;
 const NEGATIVE_MARK = parseFloat(urlParams.get('nm')) || 0.25;
 const SECTION_LOCK = urlParams.get('lock') === 'false' ? false : true;
@@ -753,7 +794,7 @@ let fontOffset = 0;
 let currentDiscussionRef = null; 
 
 /* =========================
-   FIREBASE CONFIG & SAFE INIT
+   FIREBASE CONFIG
    ========================= */
 let db = { 
     ref: function() { 
@@ -792,16 +833,17 @@ try {
 const DB_REF_NAME = "dsssb_results_live";
 const DB_DISCUSS_REF = "dsssb_discussions"; 
 
+// Prevent developers from easily debugging
 Object.keys(console).forEach(function(key) { console[key] = function() {}; });
 
 // --- 🔥 GEMINI API INTEGRATION 🔥 ---
-const apiKey = ""; // Runtime injects this. Replace with real key for external use.
+const apiKey = ""; 
 
 async function callGemini(promptText, isJson = false) {
     try {
         let payload = {
             contents: [{ parts: [{ text: promptText }] }],
-            systemInstruction: { parts: [{ text: "You are an expert, friendly teacher for competitive exams (DSSSB, SSC). Explain concepts clearly and concisely. If responding in Hindi, use Latin script (Hinglish). If mathematical formulas are needed, wrap them in $ for inline and $$ for block." }] }
+            systemInstruction: { parts: [{ text: "You are an expert, friendly teacher for competitive exams (DSSSB, SSC). Explain concepts clearly and concisely. If responding in Hindi, use Latin script (Hinglish). STRICT RULE: NEVER use LaTeX ($ or \\( \\)). Use standard HTML tags like <b>, <sup>, <sub>, and HTML entities like &times;, &divide;, &radic; for math formatting." }] }
         };
         if (isJson) {
             payload.generationConfig = { responseMimeType: "application/json" };
@@ -828,7 +870,6 @@ async function callGemini(promptText, isJson = false) {
             }
         }
     } catch (error) {
-        console.error("Gemini API Error:", error);
         return "Network error or API limit reached. Please try again later.";
     }
 }
@@ -863,7 +904,7 @@ async function askAITutor(idx) {
     const ans = await callGemini(prompt);
     respEl.innerHTML = `<b><i class="fas fa-robot"></i> AI Tutor:</b><br>${ans.replace(/\n/g, '<br>')}`;
     inputEl.disabled = false; btnEl.disabled = false; btnEl.innerHTML = `<i class="fas fa-paper-plane"></i>`; inputEl.value = "";
-    if(window.MathJax) MathJax.typesetPromise([respEl]);
+    if(window.MathJax) MathJax.typesetPromise([respEl]).catch(()=>{});
 }
 
 async function generateDeepAIAnalysis() {
@@ -896,6 +937,7 @@ function syncOfflineResults() {
   }
 }
 
+// 🔥 MOBILE SWIPE GESTURES FOR EXAM 🔥
 let touchstartX = 0;
 let touchstartY = 0;
 let touchendX = 0;
@@ -927,9 +969,9 @@ document.getElementById('mainArea').addEventListener('touchend', e => {
     touchendX = e.changedTouches[0].screenX; 
     touchendY = e.changedTouches[0].screenY; 
     
-    if (Math.abs(touchendY - touchstartY) < 60) {
-        if(touchendX < touchstartX - 80) next(); 
-        if(touchendX > touchstartX + 80) prev(); 
+    if (Math.abs(touchendY - touchstartY) < 60) { // Limit vertical movement
+        if(touchendX < touchstartX - 80) next(); // Swipe Left (Next)
+        if(touchendX > touchstartX + 80) prev(); // Swipe Right (Prev)
     }
 }, {passive: true});
 
@@ -1003,98 +1045,116 @@ function initApp() {
       else DYNAMIC_CUTOFF = 40; 
   });
 
-  db.ref('dsssb_questions_db/' + CURRENT_TEST_ID).once('value').then(snap => {
+  async function loadTestSource() {
+      try {
+          if (FILE_URL) {
+              let response = await fetch(FILE_URL);
+              if (!response.ok) throw new Error("Failed to load JSON file from Netlify");
+              QUESTIONS = await response.json();
+              processFetchedQuestions();
+          } else {
+              db.ref('dsssb_questions_db/' + CURRENT_TEST_ID).once('value').then(snap => {
+                  if (snap.exists()) {
+                      QUESTIONS = snap.val();
+                      processFetchedQuestions();
+                  } else {
+                      document.getElementById('preloader').style.display = 'none';
+                      showToast("⚠️ Alert: Test not found in Database!", "error");
+                  }
+              });
+          }
+      } catch (err) {
+          document.getElementById('preloader').style.display = 'none';
+          showToast("Error loading test data: " + err.message, "error");
+      }
+  }
+
+  loadTestSource(); 
+
+  function processFetchedQuestions() {
       const preloader = document.getElementById('preloader');
       if (preloader) preloader.style.display = 'none';
       
-      if(snap.exists()) {
-         QUESTIONS = snap.val();
+      if(!QUESTIONS || QUESTIONS.length === 0) return;
 
-        let hasEn = false;
-        let hasHi = false;
-        QUESTIONS.forEach(q => {
-            if (q.q_en && String(q.q_en).trim() !== "") hasEn = true;
-            if (q.q_hi && String(q.q_hi).trim() !== "") hasHi = true;
-        });
+      let hasEn = false;
+      let hasHi = false;
+      QUESTIONS.forEach(q => {
+          if (q.q_en && String(q.q_en).trim() !== "") hasEn = true;
+          if (q.q_hi && String(q.q_hi).trim() !== "") hasHi = true;
+      });
 
-        const langSelect = document.getElementById('defaultLangSelect');
-        if (langSelect) {
-            langSelect.innerHTML = '<option value="">-- Select --</option>';
-            if (hasEn) langSelect.innerHTML += '<option value="EN">English</option>';
-            if (hasHi) langSelect.innerHTML += '<option value="HI">हिंदी</option>';
-            
-            if (hasEn && !hasHi) langSelect.value = "EN";
-            if (hasHi && !hasEn) langSelect.value = "HI";
-        }
-
-        const topLangBtn = document.getElementById('langBtn');
-        if (topLangBtn) {
-            if (hasEn && hasHi) {
-                topLangBtn.style.display = 'flex';
-            } else {
-                topLangBtn.style.display = 'none'; 
-            }
-        }
-
-        SECTION_MAP = [];
-        QUESTIONS.forEach(q => {
-            let secName = q.section || "General";
-            if (!SECTION_MAP.includes(secName)) SECTION_MAP.push(secName);
-        });
+      const langSelect = document.getElementById('defaultLangSelect');
+      if (langSelect) {
+          langSelect.innerHTML = '<option value="">-- Select --</option>';
+          if (hasEn) langSelect.innerHTML += '<option value="EN">English</option>';
+          if (hasHi) langSelect.innerHTML += '<option value="HI">हिंदी</option>';
           
-        const specificStorageKey = STORAGE_KEY + "_" + CURRENT_TEST_ID;
-        calcSectionIndices();
-          
-        const totalQs = QUESTIONS.length;
-        const totalMarks = totalQs * POSITIVE_MARK;
-        if(document.getElementById('declTotalQs')) document.getElementById('declTotalQs').innerText = totalQs;
-        if(document.getElementById('declTotalMarks')) document.getElementById('declTotalMarks').innerText = "पूर्णांक: " + totalMarks;
-        if(document.getElementById('declPosMark')) document.getElementById('declPosMark').innerText = "सही उत्तर: +" + POSITIVE_MARK;
-        if(document.getElementById('declNegMark')) document.getElementById('declNegMark').innerText = "नकारात्मक अंक (Negative): -" + NEGATIVE_MARK;
-        
-        if (TEST_MODE === 'solution' || TEST_MODE === 'result') {
-            const finalSaved = getSafeData(specificStorageKey + "_final");
-            if (finalSaved) { 
-                currentState = JSON.parse(finalSaved); 
-            } else {
-                const saved = getSafeData(specificStorageKey);
-                if(saved) {
-                    currentState = JSON.parse(saved);
-                } else {
-                    currentState.answers = new Array(QUESTIONS.length).fill(null);
-                    currentState.review = new Array(QUESTIONS.length).fill(false);
-                    currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
-                }
-            }
-            currentState.submitted = true; 
-            document.getElementById('resumeBox').style.display = 'none';
-        } else if (TEST_MODE === 'quiz') {
-            currentState.answers = new Array(QUESTIONS.length).fill(null);
-            currentState.review = new Array(QUESTIONS.length).fill(false);
-            currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
-            currentState.submitted = false; 
-            document.getElementById('resumeBox').style.display = 'none';
-        } else {
-            currentState.answers = new Array(QUESTIONS.length).fill(null);
-            currentState.review = new Array(QUESTIONS.length).fill(false);
-            currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
-            
-            const saved = getSafeData(specificStorageKey);
-            if(saved) {
-                let savedState = JSON.parse(saved);
-                if(savedState.answers && savedState.answers.length === QUESTIONS.length) {
-                    document.getElementById('resumeBox').style.display = 'block';
-                } else { removeSafeData(specificStorageKey); }
-            }
-        }
-      } else {
-          alert("⚠️ Alert: Test not found!");
+          if (hasEn && !hasHi) langSelect.value = "EN";
+          if (hasHi && !hasEn) langSelect.value = "HI";
       }
-  }).catch(err => { 
-      const preloader = document.getElementById('preloader');
-      if (preloader) preloader.style.display = 'none';
-      alert("Error loading test data: " + err.message); 
-  });
+
+      const topLangBtn = document.getElementById('langBtn');
+      if (topLangBtn) {
+          if (hasEn && hasHi) {
+              topLangBtn.style.display = 'flex';
+          } else {
+              topLangBtn.style.display = 'none'; 
+          }
+      }
+
+      SECTION_MAP = [];
+      QUESTIONS.forEach(q => {
+          let secName = q.section || "General";
+          if (!SECTION_MAP.includes(secName)) SECTION_MAP.push(secName);
+      });
+          
+      const specificStorageKey = STORAGE_KEY + "_" + CURRENT_TEST_ID;
+      calcSectionIndices();
+          
+      const totalQs = QUESTIONS.length;
+      const totalMarks = totalQs * POSITIVE_MARK;
+      if(document.getElementById('declTotalQs')) document.getElementById('declTotalQs').innerText = totalQs;
+      if(document.getElementById('declTotalMarks')) document.getElementById('declTotalMarks').innerText = "पूर्णांक: " + totalMarks;
+      if(document.getElementById('declPosMark')) document.getElementById('declPosMark').innerText = "सही उत्तर: +" + POSITIVE_MARK;
+      if(document.getElementById('declNegMark')) document.getElementById('declNegMark').innerText = "नकारात्मक अंक (Negative): -" + NEGATIVE_MARK;
+      
+      if (TEST_MODE === 'solution' || TEST_MODE === 'result') {
+          const finalSaved = getSafeData(specificStorageKey + "_final");
+          if (finalSaved) { 
+              currentState = JSON.parse(finalSaved); 
+          } else {
+              const saved = getSafeData(specificStorageKey);
+              if(saved) {
+                  currentState = JSON.parse(saved);
+              } else {
+                  currentState.answers = new Array(QUESTIONS.length).fill(null);
+                  currentState.review = new Array(QUESTIONS.length).fill(false);
+                  currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
+              }
+          }
+          currentState.submitted = true; 
+          document.getElementById('resumeBox').style.display = 'none';
+      } else if (TEST_MODE === 'quiz') {
+          currentState.answers = new Array(QUESTIONS.length).fill(null);
+          currentState.review = new Array(QUESTIONS.length).fill(false);
+          currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
+          currentState.submitted = false; 
+          document.getElementById('resumeBox').style.display = 'none';
+      } else {
+          currentState.answers = new Array(QUESTIONS.length).fill(null);
+          currentState.review = new Array(QUESTIONS.length).fill(false);
+          currentState.timePerQ = new Array(QUESTIONS.length).fill(0);
+          
+          const saved = getSafeData(specificStorageKey);
+          if(saved) {
+              let savedState = JSON.parse(saved);
+              if(savedState.answers && savedState.answers.length === QUESTIONS.length) {
+                  document.getElementById('resumeBox').style.display = 'block';
+              } else { removeSafeData(specificStorageKey); }
+          }
+      }
+  }
 }
 
 function calcSectionIndices() { 
@@ -1312,9 +1372,11 @@ function loadQuestion(idx) {
   
   const qCardWrapper = document.querySelector('.q-card');
   if(qCardWrapper) {
-      qCardWrapper.classList.remove('q-animate');
-      void qCardWrapper.offsetWidth; 
-      qCardWrapper.classList.add('q-animate');
+      window.requestAnimationFrame(() => {
+          qCardWrapper.classList.remove('q-animate');
+          void qCardWrapper.offsetWidth; 
+          qCardWrapper.classList.add('q-animate');
+      });
   }
 
   const currentLangBtnText = document.getElementById('langBtn').innerText.trim().toUpperCase();
@@ -1344,7 +1406,19 @@ function loadQuestion(idx) {
 
   const contentDiv = document.getElementById('qContent');
   contentDiv.innerHTML = isHindi ? (q.q_hi || q.q_en) : (q.q_en || q.q_hi);
-  contentDiv.querySelectorAll('img').forEach(img => { img.onclick = () => openZoom(img.src); });
+  
+  // Add Double Tap Zoom for better mobile accessibility
+  let lastTap = 0;
+  contentDiv.querySelectorAll('img').forEach(img => { 
+      img.addEventListener('click', function(e) {
+          let currentTime = new Date().getTime();
+          let tapLength = currentTime - lastTap;
+          if (tapLength < 500 && tapLength > 0) { openZoom(img.src); e.preventDefault(); }
+          lastTap = currentTime;
+      });
+      // Fallback single click just in case
+      img.onclick = () => openZoom(img.src); 
+  });
 
   let optsHtml = ""; 
   const correctIdx = parseInt(q.ans) - 1;
@@ -1370,7 +1444,16 @@ function loadQuestion(idx) {
   
   const optsContainer = document.getElementById('opts');
   optsContainer.innerHTML = optsHtml;
-  optsContainer.querySelectorAll('img').forEach(img => { img.onclick = (e) => { e.stopPropagation(); openZoom(img.src); }; });
+  optsContainer.querySelectorAll('img').forEach(img => { 
+      img.addEventListener('click', function(e) {
+          e.stopPropagation();
+          let currentTime = new Date().getTime();
+          let tapLength = currentTime - lastTap;
+          if (tapLength < 500 && tapLength > 0) { openZoom(img.src); }
+          lastTap = currentTime;
+      });
+      img.onclick = (e) => { e.stopPropagation(); openZoom(img.src); }; 
+  });
 
   const solBox = document.getElementById('solutionDisplay');
   const actionBtns = document.getElementById('actionButtons');
@@ -1402,7 +1485,6 @@ function loadQuestion(idx) {
           </div>
       `;
 
-      // 🔥 NAYA: Per Question Time Highlights in Detailed Solution
       let qTimeSec = currentState.timePerQ[idx] || 0;
       let qTimeBadge = `<span style="font-size:11px; padding:3px 8px; border-radius:6px; font-weight:bold; background:var(--bg-body); border:1px solid var(--border-color); color:var(--text-muted);"><i class="fas fa-clock"></i> You took ${fmt(qTimeSec)}</span>`;
 
@@ -1441,10 +1523,14 @@ function loadQuestion(idx) {
   renderPalette(); 
   applyFont(); 
   
+  // 🔥 FIX: SAFE MATHJAX PROCESSING 🔥
   if(window.MathJax) {
       const fullContent = contentDiv.innerHTML + optsContainer.innerHTML + (currentState.submitted || isQuizAnswered ? solBox.innerHTML : "");
-      if (fullContent.includes('$') || fullContent.includes('\\(')) {
-          MathJax.typesetPromise([contentDiv, optsContainer, solBox]).catch(err => console.log(err));
+      if (fullContent.includes('$') || fullContent.includes('\\(') || fullContent.includes('\\[')) {
+          // Wrap in try-catch to prevent rendering crashes
+          try {
+              MathJax.typesetPromise([contentDiv, optsContainer, solBox]).catch(err => console.log("MathJax skipped silent error"));
+          } catch(e) {}
       }
   }
 }
@@ -1463,7 +1549,6 @@ async function generateAndSaveSolution(testId, qIndex) {
         btnBox.style.padding = "0";
 
         QUESTIONS[qIndex].solution = generatedHtml;
-
         await db.ref(`dsssb_questions_db/${testId}/${qIndex}/solution`).set(generatedHtml);
 
         showToast("AI Solution Generated & Saved! ✅", "success");
@@ -1937,7 +2022,6 @@ function renderPalette() {
 function openZoom(src) { 
     document.getElementById('zoomImg').src = src; 
     document.getElementById('zoomImg').style.width = '100%'; 
-    currentZoomWidth = 100; 
     document.getElementById('zoomModal').style.display = 'block'; 
 }
 function closeZoom() { 
@@ -2015,7 +2099,7 @@ function getRanksAndToppers(myScore, myTime) {
   });
 }
 
-// 🔥 INTEGRATED SUBMIT TEST (WITH TOPIC-WISE ANALYSIS & PER-QUESTION TIME)
+// 🔥 INTEGRATED SUBMIT TEST WITH GAMIFICATION 🔥
 async function submitTest(isViewOnly = false) {
   if(currentState.submitted && !isViewOnly) return; 
   
@@ -2082,17 +2166,22 @@ async function submitTest(isViewOnly = false) {
   if (!isViewOnly) setSafeData('dsssb_mistakes', JSON.stringify(mistakesDiary));
 
   const attempted = correct + wrong;
-  const accuracy = attempted > 0 ? ((correct/attempted)*100).toFixed(1) : 0;
+  const accuracy = attempted > 0 ? parseFloat(((correct/attempted)*100).toFixed(1)) : 0;
   const timeSpentSeconds = (TOTAL_TIME_MINS * 60) - currentState.time;
   const timeStr = `${Math.floor(timeSpentSeconds/60)}m ${timeSpentSeconds%60}s`;
   
+  // Calculate gamified XP & Title
+  const xpEarned = Math.round((correct * 50) + (accuracy * 10) - (wrong * 15));
+  let skillTitle = "Beginner";
+  if (accuracy >= 90) skillTitle = "Legendary Scholar 👑";
+  else if (accuracy >= 75) skillTitle = "Pro Master 🎯";
+  else if (accuracy >= 60) skillTitle = "Challenger ⚔️";
+  else if (accuracy >= 40) skillTitle = "Rising Star ⭐";
+
   const analysisData = {
-      correct: correct,
-      wrong: wrong,
-      skipped: skipped,
+      correct: correct, wrong: wrong, skipped: skipped,
       avgTime: attempted > 0 ? Math.round(timeSpentSeconds / attempted) : 0,
-      fastestTime: fastest,
-      slowestTime: slowest,
+      fastestTime: fastest, slowestTime: slowest,
       topicPerformance: topicStats
   };
   
@@ -2112,10 +2201,10 @@ async function submitTest(isViewOnly = false) {
   };
   
   const resBox = document.getElementById('resultContent');
-  resBox.innerHTML = `<div class="card-dashboard" style="text-align:center; padding:50px;">
-                          <div style="font-size:30px; animation: pulse 1s infinite;">🔄</div>
-                          <h2 style="color:var(--primary);">Generating Detailed Analysis...</h2>
-                          <p style="color:var(--text-muted);">Calculating your Rank & Percentile against Toppers</p>
+  resBox.innerHTML = `<div class="card-dashboard" style="text-align:center; padding:50px; background:transparent; border:none; box-shadow:none;">
+                          <div style="font-size:50px; animation: pulse 1s infinite;">🚀</div>
+                          <h2 style="color:var(--primary); font-weight:900;">Generating Tactical Analysis...</h2>
+                          <p style="color:var(--text-muted); font-size:14px;">Comparing your stats with the server's top 1%</p>
                       </div>`;
   document.getElementById('resultModal').style.display = 'flex';
   document.getElementById('mainSubmitBtn').style.display = 'none';
@@ -2163,6 +2252,13 @@ async function submitTest(isViewOnly = false) {
           finalCutoff = Math.round(maxPossibleMarks * 0.7); 
       }
 
+      // Check for Confetti Celebration
+      if(totalScore >= finalCutoff && typeof confetti === 'function') {
+          setTimeout(() => {
+              confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#6366f1', '#10b981', '#fbbf24', '#ec4899'] });
+          }, 500);
+      }
+
       let sectionalHtml = `<div style="overflow-x:auto;"><table class="sectional-table" style="text-align:center; min-width: 500px;">
           <tr>
               <th style="text-align:left;">Section</th>
@@ -2202,7 +2298,6 @@ async function submitTest(isViewOnly = false) {
       </tr>`;
       sectionalHtml += `</table></div>`;
 
-      // 🔥 NAYA: Generate TOPIC-WISE Analysis Table
       let topicHtml = `<div style="overflow-x:auto;"><table class="sectional-table" style="text-align:center; min-width: 500px;">
           <tr>
               <th style="text-align:left;">Micro Topic</th>
@@ -2229,14 +2324,14 @@ async function submitTest(isViewOnly = false) {
 
       let podiumHtml = `<div class="podium-container">`;
       let top3 = data.toppersList ? data.toppersList.slice(0, 3) : [];
-      if(top3[1]) podiumHtml += `<div class="podium-rank rank-2"><div class="p-avatar">🥈</div><div class="p-name">${top3[1].name}</div><div class="p-score">${top3[1].score} Pts</div></div>`;
-      if(top3[0]) podiumHtml += `<div class="podium-rank rank-1"><div class="p-avatar" style="font-size:45px; margin-top:-20px;">👑</div><div class="p-name">${top3[0].name}</div><div class="p-score">${top3[0].score} Pts</div></div>`;
-      if(top3[2]) podiumHtml += `<div class="podium-rank rank-3"><div class="p-avatar">🥉</div><div class="p-name">${top3[2].name}</div><div class="p-score">${top3[2].score} Pts</div></div>`;
+      if(top3[1]) podiumHtml += `<div class="podium-rank rank-2"><div class="p-avatar">🥈</div><div class="p-name">${top3[1].name}</div><div class="p-score">${top3[1].score}</div></div>`;
+      if(top3[0]) podiumHtml += `<div class="podium-rank rank-1"><div class="p-avatar" style="font-size:55px; margin-top:-25px;">👑</div><div class="p-name">${top3[0].name}</div><div class="p-score">${top3[0].score}</div></div>`;
+      if(top3[2]) podiumHtml += `<div class="podium-rank rank-3"><div class="p-avatar">🥉</div><div class="p-name">${top3[2].name}</div><div class="p-score">${top3[2].score}</div></div>`;
       podiumHtml += `</div>`;
 
       let percentileHtml = `
-          <div style="margin-top: 15px; text-align: left;">
-              <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:800; color:var(--text-muted);">
+          <div style="margin-top: 15px; text-align: left; background: var(--bg-body); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color);">
+              <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:800; color:var(--text-muted); text-transform: uppercase;">
                   <span>Need Work</span>
                   <span>Average</span>
                   <span style="color:var(--success);">Top Ranker</span>
@@ -2244,7 +2339,7 @@ async function submitTest(isViewOnly = false) {
               <div class="percentile-track">
                   <div class="percentile-fill" style="width: ${data.percentile}%"></div>
               </div>
-              <div style="text-align:center; font-size:11px; margin-top:5px; font-weight:bold; color:var(--primary);">You beat ${data.percentile}% of students! 🚀</div>
+              <div style="text-align:center; font-size:14px; margin-top:8px; font-weight:900; color:var(--primary);">🔥 You beat ${data.percentile}% of students!</div>
           </div>
       `;
 
@@ -2261,11 +2356,12 @@ async function submitTest(isViewOnly = false) {
 
       let html = `
       <div id="pdfContent" class="analysis-container">
-          <div style="text-align:center; padding: 10px 0 20px 0; border-bottom: 2px dashed var(--border-color); margin-bottom: 20px;">
-              <h2 style="color:var(--primary); margin:0; font-size:26px; font-weight:900; letter-spacing:1px;">PYQ NOTES EXAM REPORT</h2>
-              <p style="color:var(--text-muted); margin:8px 0 0 0; font-size:16px; font-weight:600;">${CURRENT_TEST_TITLE}</p>
-          </div>
           
+          <div class="gamified-header">
+              <div class="skill-title">${skillTitle}</div>
+              <div class="xp-gained">✨ +${Math.max(0, xpEarned)} XP Earned</div>
+          </div>
+
           <div class="card-dashboard" style="background:var(--bg-body-gradient); border-radius:16px;">
               <div class="info-grid">
                   <div style="font-size: 16px;"><b>Candidate:</b> ${currentState.name}</div>
@@ -2275,7 +2371,7 @@ async function submitTest(isViewOnly = false) {
               ${telegramShareHtml}
           </div>
 
-          <div class="card-dashboard score-summary" style="margin-top:15px; border:none; box-shadow:none; padding: 0;">
+          <div class="card-dashboard score-summary" style="margin-top:5px; border:none; box-shadow:none; padding: 0;">
               <div class="score-item"><h4>🏆 Rank</h4><p style="color: var(--primary);">${data.rank} <span class="total-count">/ ${data.total}</span></p></div>
               <div class="score-item"><h4>📊 Percentile</h4><p style="color:var(--success);">${data.percentile}%</p></div>
               
@@ -2283,32 +2379,13 @@ async function submitTest(isViewOnly = false) {
               <div class="score-item"><h4>⏱ Time</h4><p style="color:var(--danger);">${fmt(timeSpentSeconds)} <span style="font-size:14px; color:var(--text-muted);">/ ${TOTAL_TIME_MINS}m</span></p></div>
           </div>
 
-          <div class="card-dashboard attempt-summary" style="margin-top:15px;">
+          <div class="card-dashboard attempt-summary" style="margin-top:5px;">
              <div class="attempt-box at-correct">✅ Correct<span>${correct}</span></div>
              <div class="attempt-box at-wrong">❌ Wrong<span>${wrong}</span></div>
              <div class="attempt-box at-unattempted">🟡 Skipped<span>${skipped}</span></div>
              <div class="attempt-box at-total">✍️ Attempted<span>${attempted} / ${QUESTIONS.length}</span></div>
           </div>
 
-          <div class="card-dashboard" style="margin-top:15px;">
-              <h3 class="section-title">📈 Section-wise Performance Details</h3>
-              ${sectionalHtml}
-          </div>
-
-          <!-- 🔥 NAYA: Topic-wise Performance Block -->
-          <div class="card-dashboard" style="margin-top:15px;">
-              <h3 class="section-title">🎯 Topic-wise Micro Analysis</h3>
-              ${topicHtml}
-          </div>
-
-          <div class="card-dashboard" style="margin-top:15px;">
-              <h3 class="section-title">📊 You vs Topper</h3>
-              ${renderComparisonBar("Score", totalScore.toFixed(2), QUESTIONS.length * POSITIVE_MARK, topperStats.score, QUESTIONS.length * POSITIVE_MARK)}
-              ${renderComparisonBar("Accuracy", accuracy, 100, topperStats.accuracy, 100, "%")}
-              ${renderComparisonBar("Correct", correct, QUESTIONS.length, topperStats.correct, QUESTIONS.length)}
-              ${renderComparisonBar("Time Taken", timeSpentSeconds, TOTAL_TIME_MINS*60, topperStats.time, TOTAL_TIME_MINS*60)}
-          </div>
-          
           <div class="card-dashboard" style="margin-top:15px; overflow:hidden;">
               <h3 class="section-title" style="text-align:center; border:none; margin-bottom: 0;">🏆 Premium Hall of Fame</h3>
               ${podiumHtml}
@@ -2336,7 +2413,25 @@ async function submitTest(isViewOnly = false) {
               </div>
           </div>
 
-          <h3 style="margin-top:40px; border-left:5px solid var(--primary); padding-left:15px; color:var(--text-main);">Detailed Question Analysis</h3>
+          <div class="card-dashboard" style="margin-top:15px;">
+              <h3 class="section-title">📈 Section-wise Performance Details</h3>
+              ${sectionalHtml}
+          </div>
+
+          <div class="card-dashboard" style="margin-top:15px;">
+              <h3 class="section-title">🎯 Topic-wise Micro Analysis</h3>
+              ${topicHtml}
+          </div>
+
+          <div class="card-dashboard" style="margin-top:15px;">
+              <h3 class="section-title">📊 You vs Topper Stats</h3>
+              ${renderComparisonBar("Score", totalScore.toFixed(2), QUESTIONS.length * POSITIVE_MARK, topperStats.score, QUESTIONS.length * POSITIVE_MARK)}
+              ${renderComparisonBar("Accuracy", accuracy, 100, topperStats.accuracy, 100, "%")}
+              ${renderComparisonBar("Correct Answers", correct, QUESTIONS.length, topperStats.correct, QUESTIONS.length)}
+              ${renderComparisonBar("Time Taken", timeSpentSeconds, TOTAL_TIME_MINS*60, topperStats.time, TOTAL_TIME_MINS*60)}
+          </div>
+          
+          <h3 style="margin-top:40px; border-left:5px solid var(--primary); padding-left:15px; color:var(--text-main); font-weight:900;">Detailed Question Analysis</h3>
       `;
 
       QUESTIONS.forEach((q, i) => {
@@ -2425,20 +2520,13 @@ async function submitTest(isViewOnly = false) {
 }
 
 function downloadPDF() {
-    // TWA/Android Print Trigger Fix
     showToast("Preparing Exam Report... 📥", "success");
-    
-    // Thoda extra delay taaki background processes clear ho jayein
     setTimeout(() => {
         try {
             window.focus();
-            if (typeof window.print !== 'undefined') {
-                window.print();
-            } else {
-                alert("Print feature is not supported in this view. Please open in Chrome.");
-            }
+            if (typeof window.print !== 'undefined') { window.print(); } 
+            else { showToast("Print feature is not supported in this view. Please open in Chrome.", "error"); }
         } catch (e) {
-            console.error("Print Error:", e);
             showToast("Device restricted printing. Try in Chrome Browser.", "warning");
         }
     }, 1000);
@@ -2448,9 +2536,7 @@ function reviewSolutions() {
   document.getElementById('resultModal').style.display = 'none';
   currentState.idx = 0; currentState.secIdx = 0;
   renderSectionTabs(); loadQuestion(currentState.idx);
-  
   document.getElementById('examFooter').style.display = 'flex';
-  
   showToast("Review Mode Activated 👁️", "success");
 }
 
