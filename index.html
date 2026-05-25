@@ -957,7 +957,10 @@ try {
 /* =======================================================
    🔥 INDEXED DB ENGINE (FOR UNLIMITED OFFLINE STORAGE) 🔥
    ======================================================= */
-const IDB_NAME = 'PYQNotes_Dash_DB';
+/* FIXED: Database name was changed from 'PYQNotes_Dash_DB' to 'PYQNotes_CBT_DB'
+   so that it can read the bookmarks and mistakes saved by cbt.html perfectly.
+*/
+const IDB_NAME = 'PYQNotes_CBT_DB';
 const IDB_STORE = 'Store';
 
 const initDB = () => new Promise((res, rej) => {
