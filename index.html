@@ -886,6 +886,74 @@ textarea { height: 120px; resize: none; }
 </div>
 
 <script>
+window.db = null;
+
+function initFirebase() {
+    try {
+        const firebaseConfig = { 
+            apiKey: "AIzaSyDGolcXv0efZxRdOvBthfeT72mkNLLbAwI", 
+            authDomain: "dsssbexamportal.firebaseapp.com", 
+            databaseURL: "https://dsssbexamportal-default-rtdb.asia-southeast1.firebasedatabase.app", 
+            projectId: "dsssbexamportal", 
+            storageBucket: "dsssbexamportal.firebasestorage.app", 
+            messagingSenderId: "853373171134", 
+            appId: "1:853373171134:web:77b967374e6f34311af5ef" 
+        };
+        if (typeof firebase !== 'undefined') {
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            window.db = firebase.database();
+            initAnalyticsTracker();
+        } else {
+            console.error("Firebase SDK not loaded.");
+        }
+    } catch(err) {
+        console.error("Firebase Init Error:", err);
+    }
+}
+
+function initAnalyticsTracker() {
+    if(!window.db) return;
+    let trackUid = localStorage.getItem('dsssb_user_id');
+    let trackUname = localStorage.getItem('dsssb_user_name') || 'Student';
+    if(!trackUid) {
+        trackUid = 'user_' + Math.floor(Math.random() * 1000000);
+        localStorage.setItem('dsssb_user_id', trackUid);
+    }
+
+    let loc = window.location.pathname.split('/').pop() || 'index.html';
+    if(loc.includes('cbt.html')) loc = 'Giving Mock Test 📝';
+    else if(loc.includes('index.html') || loc === '') loc = 'On Dashboard 🏠';
+    else loc = 'Exploring Portal 🔍';
+
+    window.db.ref('dsssb_analytics/users/' + trackUid).update({
+        name: trackUname,
+        last_active: firebase.database.ServerValue.TIMESTAMP
+    });
+
+    const connRef = window.db.ref('.info/connected');
+    const presRef = window.db.ref('dsssb_analytics/presence/' + trackUid);
+
+    connRef.on('value', (snap) => {
+        if (snap.val() === true) {
+            presRef.onDisconnect().remove(); 
+            presRef.set({ 
+                name: trackUname, 
+                activity: loc, 
+                time: firebase.database.ServerValue.TIMESTAMP 
+            });
+        }
+    });
+}
+
+// ANTI CHEAT OVERRIDE
+try {
+    ['log', 'warn', 'info', 'error', 'debug', 'dir'].forEach(function(key) { 
+        if (typeof console[key] === 'function') {
+            console[key] = function() {}; 
+        }
+    });
+} catch (e) {}
+
 /* =======================================================
    🔥 INDEXED DB ENGINE (FOR UNLIMITED OFFLINE STORAGE) 🔥
    ======================================================= */
@@ -916,7 +984,7 @@ async function getItemDB(key) {
         const tx = db.transaction(IDB_STORE, 'readonly');
         const req = tx.objectStore(IDB_STORE).get(key);
         return new Promise((res, rej) => {
-            req.onsccess = () => res(req.result);
+            req.onsuccess = () => res(req.result); // FIXED TYPO: changed from req.onsccess to req.onsuccess
             req.onerror = () => rej(req.error);
         });
     } catch(e) {
@@ -945,11 +1013,13 @@ function triggerHaptic() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+    initFirebase();
     setTimeout(() => {
         const loaderEl = document.getElementById('loader');
         const appEl = document.getElementById('app');
         if (loaderEl) loaderEl.style.display = 'none';
         if (appEl) appEl.style.display = 'block';
+        initDashboard();
     }, 1500); 
 });
 
@@ -969,7 +1039,7 @@ function setupSessionSecurity(userId, username) {
 
     // Register this device's session in Firebase
     if(window.db && navigator.onLine) {
-        db.ref('dsssb_presence/' + userId).update({
+        window.db.ref('dsssb_presence/' + userId).update({
             currentSessionId: localSessionId,
             lastActive: firebase.database.ServerValue.TIMESTAMP
         });
@@ -977,7 +1047,8 @@ function setupSessionSecurity(userId, username) {
         // Smart Polling - Check every 60 seconds if session ID matches
         setInterval(() => {
             if (document.hidden || !navigator.onLine) return; // Do not consume database reads if app is in background or offline
-            db.ref('dsssb_presence/' + userId + '/currentSessionId').once('value').then(snap => {
+            if(!window.db) return;
+            window.db.ref('dsssb_presence/' + userId + '/currentSessionId').once('value').then(snap => {
                 if (snap.exists() && snap.val() !== localSessionId) {
                     // Session ID mismatched, means logged in from another device
                     triggerKickout();
@@ -1034,7 +1105,7 @@ function addXP(amount) {
     
     // Save to Firebase (Optional sync)
     if(currentUserId !== "guest" && window.db && navigator.onLine) {
-        db.ref('dsssb_users/' + currentUserId + '/xp').set(parseInt(getSafeData('dsssb_user_xp')));
+        window.db.ref('dsssb_users/' + currentUserId + '/xp').set(parseInt(getSafeData('dsssb_user_xp')));
     }
     showToast(`+${amount} XP Gained! ⭐`, "success");
 }
@@ -1070,7 +1141,7 @@ function startNewsTicker() {
     let currentIndex = 0;
 
     if (navigator.onLine && window.db) {
-        db.ref('dsssb_config/news_list').once('value').then(snap => {
+        window.db.ref('dsssb_config/news_list').once('value').then(snap => {
             if(snap.exists() && Array.isArray(snap.val())) {
                 newsMessages = snap.val();
             }
@@ -1251,7 +1322,7 @@ let attemptedTestIds = new Map();
 let currentNbType = 'bookmarks';
 let SAVED_TESTS_CACHE = [];
 
-const apiKey = "AIzaSyCnyG1J31n2BLhsOG6DVnXTnqTz8yrmGs0"; // Universal key is assigned by the execution environment automatically!
+const apiKey = ""; // Universal key is assigned by the execution environment automatically!
 async function callGemini(promptText, isJson = false) {
     try {
         let payload = {
@@ -1347,7 +1418,8 @@ async function fetchWithCache(refPath, cacheKey, expiryMinutes = 60) {
     if (navigator.onLine && cachedStr && cacheTime && (now - cacheTime < expiryMinutes * 60 * 1000)) {
         // Cache is valid, trigger background sync
         setTimeout(() => {
-            db.ref(refPath).once('value').then(async s => {
+            if(!window.db) return;
+            window.db.ref(refPath).once('value').then(async s => {
                 if(s.exists()) {
                     await setItemDB(cacheKey, JSON.stringify(s.val()));
                     await setItemDB(cacheKey + '_time', Date.now());
@@ -1366,7 +1438,8 @@ async function fetchWithCache(refPath, cacheKey, expiryMinutes = 60) {
     } else if (navigator.onLine) {
         // Online and cache expired or doesn't exist, fetch fresh
         try {
-            const snap = await db.ref(refPath).once('value');
+            if(!window.db) throw new Error("DB not ready");
+            const snap = await window.db.ref(refPath).once('value');
             if(snap.exists()) {
                 await setItemDB(cacheKey, JSON.stringify(snap.val()));
                 await setItemDB(cacheKey + '_time', Date.now());
@@ -1522,7 +1595,7 @@ async function initDashboard() {
     startRealisticOnlineCounter(); // Start realistic live counter
 
     if(navigator.onLine && window.db) {
-        db.ref('dsssb_config/pricing').on('value', snap => {
+        window.db.ref('dsssb_config/pricing').on('value', snap => {
             if(snap.exists() && snap.val()) {
                 const pricingData = snap.val();
                 if(pricingData.offer && document.getElementById('proPriceDynamic')) {
@@ -1554,7 +1627,7 @@ async function initDashboard() {
     } catch(e) { console.log("Mistake check skipped"); }
 
     if(navigator.onLine && window.db) {
-        db.ref('dsssb_config/maintenance').on('value', snap => {
+        window.db.ref('dsssb_config/maintenance').on('value', snap => {
             if(snap.val() === true) {
                 document.getElementById('maintenanceScreen').style.display = 'flex';
                 document.getElementById('app').style.display = 'none';
@@ -1564,7 +1637,7 @@ async function initDashboard() {
             }
         });
 
-        db.ref('dsssb_config/alert').on('value', snap => {
+        window.db.ref('dsssb_config/alert').on('value', snap => {
             if(snap.exists()) {
                 const data = snap.val(); 
                 if(data.time && data.time > lastAlertTime && data.msg) {
@@ -1603,8 +1676,6 @@ async function initDashboard() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', initDashboard);
-
 function loadAutoQOD() {
     fetchWithCache('dsssb_questions_db/auto_qod', 'cache_qod', 240).then(snap => {
         if(snap.exists()) {
@@ -1630,7 +1701,7 @@ function loadAutoQOD() {
         }
         
         if(navigator.onLine && window.db) {
-            db.ref('dsssb_config/qod').on('value', manualSnap => {
+            window.db.ref('dsssb_config/qod').on('value', manualSnap => {
                 if(manualSnap.exists()) {
                     const d = manualSnap.val();
                     document.getElementById('qodQuestion').innerText = d.q;
@@ -1923,7 +1994,7 @@ async function submitReport() {
     let reportData = { user: currentUser, id: currentUserId, issue: txt, time: Date.now() };
     
     if (navigator.onLine && window.db) {
-        db.ref('dsssb_reports').push(reportData);
+        window.db.ref('dsssb_reports').push(reportData);
     } else {
         // Queue it for later if offline
         let queued = JSON.parse(await getItemDB('dsssb_queued_reports') || '[]');
@@ -1954,7 +2025,7 @@ async function submitSupportTicket() {
     };
 
     if (navigator.onLine && window.db) {
-        db.ref('dsssb_support_tickets').push(ticketData).then(() => {
+        window.db.ref('dsssb_support_tickets').push(ticketData).then(() => {
             showToast("Message Sent to Admin! 🚀", "success"); 
         }).catch(err => {
             showToast("Error: " + err.message, "error");
@@ -2166,7 +2237,7 @@ async function fetchData(user) {
 
     try {
         if(currentUserId !== "guest" && window.db && navigator.onLine) {
-            const userRef = db.ref('dsssb_presence/' + currentUserId);
+            const userRef = window.db.ref('dsssb_presence/' + currentUserId);
             userRef.update({ name: currentUser, id: currentUserId, state: 'online', lastActive: firebase.database.ServerValue.TIMESTAMP });
         }
         
@@ -2226,7 +2297,7 @@ async function fetchData(user) {
         // Offline compatibility for Ranks:
         let resultsObj = {};
         if (navigator.onLine && window.db) {
-             const resultsSnap = await db.ref("dsssb_results_live").limitToLast(100).once("value");
+             const resultsSnap = await window.db.ref("dsssb_results_live").limitToLast(100).once("value");
              resultsObj = resultsSnap.val() || {};
         }
 
@@ -2629,92 +2700,94 @@ function openTestLeaderboard(testId, testTitle) {
     document.getElementById('testRankModal').style.display = 'flex';
     document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Fetching Ranks... ⏳</td></tr>';
 
-    db.ref("dsssb_results_live").orderByChild("testId").equalTo(testId).limitToLast(100).once("value").then(snap => {
-        let userBest = {}; 
-        
-        if(snap.exists()) {
-            snap.forEach(child => {
-                let d = child.val();
-                let uid = d.userId || d.name; 
-                let score = parseFloat(d.score) || 0;
-                
-                if(!userBest[uid] || userBest[uid].score < score) {
-                    userBest[uid] = { 
-                        name: d.name || 'Student', 
-                        score: score, 
-                        isMe: (String(d.userId).trim() === String(currentUserId).trim() || d.name === currentUser)
-                    };
+    if(window.db && navigator.onLine) {
+        window.db.ref("dsssb_results_live").orderByChild("testId").equalTo(testId).limitToLast(100).once("value").then(snap => {
+            let userBest = {}; 
+            
+            if(snap.exists()) {
+                snap.forEach(child => {
+                    let d = child.val();
+                    let uid = d.userId || d.name; 
+                    let score = parseFloat(d.score) || 0;
+                    
+                    if(!userBest[uid] || userBest[uid].score < score) {
+                        userBest[uid] = { 
+                            name: d.name || 'Student', 
+                            score: score, 
+                            isMe: (String(d.userId).trim() === String(currentUserId).trim() || d.name === currentUser)
+                        };
+                    }
+                });
+            }
+            
+            let ranks = Object.values(userBest);
+            
+            if(ranks.length === 0) {
+                document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 25px 10px; color:var(--text-muted);"><i class="fas fa-rocket fa-2x" style="margin-bottom:10px;"></i><br>Be the first to attempt and rank #1! 🚀</td></tr>';
+                return;
+            }
+
+            ranks.sort((a,b) => b.score - a.score);
+            
+            let myRankIndex = -1;
+            let myData = null;
+            
+            ranks.forEach((r, index) => {
+                if(r.isMe) {
+                    myRankIndex = index + 1; 
+                    myData = r;
                 }
             });
-        }
-        
-        let ranks = Object.values(userBest);
-        
-        if(ranks.length === 0) {
-            document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 25px 10px; color:var(--text-muted);"><i class="fas fa-rocket fa-2x" style="margin-bottom:10px;"></i><br>Be the first to attempt and rank #1! 🚀</td></tr>';
-            return;
-        }
 
-        ranks.sort((a,b) => b.score - a.score);
-        
-        let myRankIndex = -1;
-        let myData = null;
-        
-        ranks.forEach((r, index) => {
-            if(r.isMe) {
-                myRankIndex = index + 1; 
-                myData = r;
+            let html = "";
+            let top5 = ranks.slice(0, 5); 
+            let amIInTop5 = false;
+
+            top5.forEach((r, i) => {
+                let rankNum = i + 1;
+                if(r.isMe) amIInTop5 = true;
+                
+                let badge = rankNum === 1 ? '<span style="font-size:18px;">🥇</span>' : 
+                            rankNum === 2 ? '<span style="font-size:18px;">🥈</span>' : 
+                            rankNum === 3 ? '<span style="font-size:18px;">🥉</span>' : 
+                            `<div style="width:22px; height:22px; background:var(--border); border-radius:50%; display:grid; place-items:center; font-size:11px; margin:auto;">${rankNum}</div>`;
+                
+                let rowStyle = r.isMe ? 'background:var(--primary-light);' : '';
+                let nameText = r.isMe ? `${r.name} <b style="color:var(--primary); font-size:10px;">(You)</b>` : r.name;
+                
+                html += `<tr style="${rowStyle}">
+                            <td style="width: 50px; text-align:center;">${badge}</td>
+                            <td style="font-weight:700;">${nameText}</td>
+                            <td style="color:var(--primary); font-weight:900;">${r.score} Pts</td>
+                        </tr>`;
+            });
+
+            if (myData && !amIInTop5) {
+                html += `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:8px; font-size:18px; letter-spacing:3px;">•••</td></tr>`;
+                html += `<tr style="background:var(--primary-light); border-top:2px solid var(--primary);">
+                            <td style="width: 50px; text-align:center; font-weight:900;">#${myRankIndex}</td>
+                            <td style="font-weight:800;">${myData.name} <b style="color:var(--primary); font-size:10px;">(You)</b></td>
+                            <td style="color:var(--primary); font-weight:900;">${myData.score} Pts</td>
+                        </tr>`;
+            } 
+            else if (!myData) {
+                html += `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:8px; font-size:18px; letter-spacing:3px;">•••</td></tr>`;
+                html += `<tr>
+                            <td colspan="3" style="text-align:center; padding:15px 10px; font-size:12px; font-weight:700; color:#ea580c; background:#fff7ed; border-radius:0 0 8px 8px;">
+                                <i class="fas fa-lock" style="margin-right:5px;"></i> Aapne test nahi diya hai. Start Mock Test par click karein!
+                            </td>
+                        </tr>`;
             }
+            
+            document.getElementById('testRankBody').innerHTML = html;
+        }).catch(e => {
+            console.error(e);
+            document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; color:red;">Error fetching rank. Please try again.</td></tr>';
         });
-
-        let html = "";
-        let top5 = ranks.slice(0, 5); 
-        let amIInTop5 = false;
-
-        top5.forEach((r, i) => {
-            let rankNum = i + 1;
-            if(r.isMe) amIInTop5 = true;
-            
-            let badge = rankNum === 1 ? '<span style="font-size:18px;">🥇</span>' : 
-                        rankNum === 2 ? '<span style="font-size:18px;">🥈</span>' : 
-                        rankNum === 3 ? '<span style="font-size:18px;">🥉</span>' : 
-                        `<div style="width:22px; height:22px; background:var(--border); border-radius:50%; display:grid; place-items:center; font-size:11px; margin:auto;">${rankNum}</div>`;
-            
-            let rowStyle = r.isMe ? 'background:var(--primary-light);' : '';
-            let nameText = r.isMe ? `${r.name} <b style="color:var(--primary); font-size:10px;">(You)</b>` : r.name;
-            
-            html += `<tr style="${rowStyle}">
-                        <td style="width: 50px; text-align:center;">${badge}</td>
-                        <td style="font-weight:700;">${nameText}</td>
-                        <td style="color:var(--primary); font-weight:900;">${r.score} Pts</td>
-                    </tr>`;
-        });
-
-        if (myData && !amIInTop5) {
-            html += `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:8px; font-size:18px; letter-spacing:3px;">•••</td></tr>`;
-            html += `<tr style="background:var(--primary-light); border-top:2px solid var(--primary);">
-                        <td style="width: 50px; text-align:center; font-weight:900;">#${myRankIndex}</td>
-                        <td style="font-weight:800;">${myData.name} <b style="color:var(--primary); font-size:10px;">(You)</b></td>
-                        <td style="color:var(--primary); font-weight:900;">${myData.score} Pts</td>
-                    </tr>`;
-        } 
-        else if (!myData) {
-            html += `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:8px; font-size:18px; letter-spacing:3px;">•••</td></tr>`;
-            html += `<tr>
-                        <td colspan="3" style="text-align:center; padding:15px 10px; font-size:12px; font-weight:700; color:#ea580c; background:#fff7ed; border-radius:0 0 8px 8px;">
-                            <i class="fas fa-lock" style="margin-right:5px;"></i> Aapne test nahi diya hai. Start Mock Test par click karein!
-                        </td>
-                    </tr>`;
-        }
-        
-        document.getElementById('testRankBody').innerHTML = html;
-    }).catch(e => {
-        console.error(e);
-        document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; color:red;">Error fetching rank. Please try again.</td></tr>';
-    });
+    } else {
+        document.getElementById('testRankBody').innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px; color:var(--warning);">Offline Mode: Ranks hidden.</td></tr>';
+    }
 }
-
-let dynamicFolders = {};
 
 function fetchDynamicFolders() {
     fetchWithCache('dsssb_folders_tree', 'cache_folders_v2', 60).then(snap => {
@@ -2722,7 +2795,7 @@ function fetchDynamicFolders() {
             dynamicFolders = snap.val();
             renderDynamicFolders();
         } else {
-            console.log("No dynamic folders found.");
+            console.log("No dynamic folders found in Firebase.");
             document.getElementById('dynamicTreeContainer').innerHTML = `<div style="text-align:center; padding: 20px; color:var(--text-muted); width: 100%;">No Folders Found</div>`;
         }
     });
@@ -2958,53 +3031,5 @@ document.addEventListener('click', function goFullScreen() {
   
 </script>
 
-<script>
-(function() {
-    const trackerConfig = { 
-        apiKey: "AIzaSyDGolcXv0efZxRdOvBthfeT72mkNLLbAwI", 
-        authDomain: "dsssbexamportal.firebaseapp.com", 
-        databaseURL: "https://dsssbexamportal-default-rtdb.asia-southeast1.firebasedatabase.app", 
-        projectId: "dsssbexamportal", 
-        storageBucket: "dsssbexamportal.firebasestorage.app", 
-        messagingSenderId: "853373171134", 
-        appId: "1:853373171134:web:77b967374e6f34311af5ef" 
-    };
-    if (typeof firebase !== 'undefined' && navigator.onLine) {
-        if (!firebase.apps.length) { firebase.initializeApp(trackerConfig); }
-        
-        const trackDb = firebase.database();
-        let trackUid = localStorage.getItem('dsssb_user_id');
-        let trackUname = localStorage.getItem('dsssb_user_name') || 'Student';
-        if(!trackUid) {
-            trackUid = 'user_' + Math.floor(Math.random() * 1000000);
-            localStorage.setItem('dsssb_user_id', trackUid);
-        }
-
-        let loc = window.location.pathname.split('/').pop() || 'index.html';
-        if(loc.includes('cbt.html')) loc = 'Giving Mock Test 📝';
-        else if(loc.includes('index.html') || loc === '') loc = 'On Dashboard 🏠';
-        else loc = 'Exploring Portal 🔍';
-
-        trackDb.ref('dsssb_analytics/users/' + trackUid).update({
-            name: trackUname,
-            last_active: firebase.database.ServerValue.TIMESTAMP
-        });
-
-        const connRef = trackDb.ref('.info/connected');
-        const presRef = trackDb.ref('dsssb_analytics/presence/' + trackUid);
-
-        connRef.on('value', (snap) => {
-            if (snap.val() === true) {
-                presRef.onDisconnect().remove(); 
-                presRef.set({ 
-                    name: trackUname, 
-                    activity: loc, 
-                    time: firebase.database.ServerValue.TIMESTAMP 
-                });
-            }
-        });
-    }
-})();
-</script>
 </body>
 </html>
