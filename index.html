@@ -83,6 +83,11 @@ body { display: block; background: var(--bg-body); color: var(--text-main); padd
 .user-info h1 { font-size: 18px; font-weight: 800; margin-bottom: 2px; letter-spacing: -0.5px;}
 .user-info .greeting { font-size: 11px; color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
 
+/* XP Bar Styles */
+.xp-container { margin-top: 4px; font-size: 10px; font-weight: 700; color: var(--primary); display: flex; flex-direction: column; gap: 2px; }
+.xp-bar-bg { width: 100px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.xp-bar-fill { height: 100%; background: var(--warning); border-radius: 2px; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+
 /* Live Pulse Counter */
 .live-counter { font-size: 10px; font-weight: 800; color: #10b981; display: flex; align-items: center; gap: 4px; background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.3); }
 .pulse-dot { width: 6px; height: 6px; background: #10b981; border-radius: 50%; animation: pulse 1.5s infinite; }
@@ -93,7 +98,9 @@ body { display: block; background: var(--bg-body); color: var(--text-main); padd
 .pro-badge-header { background: linear-gradient(135deg, #FFD700, #F59E0B); color: #000; padding: 4px 10px; border-radius: 20px; font-weight: 800; font-size: 10px; display: none; align-items: center; gap: 4px; box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3); border: 1px solid #fbbf24; }
 .buy-pro-btn { background: #dcfce7; color: #16a34a; font-weight: 800; padding: 5px 12px; border-radius: 20px; font-size: 11px; border: 1px solid #16a34a; cursor: pointer; animation: pulse 2s infinite; }
 
-.countdown-box { background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 12px 20px; margin: 15px 20px 0; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border: 1px solid #334155; }
+.countdown-box { cursor: pointer; background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 12px 20px; margin: 15px 20px 0; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border: 1px solid #334155; transition: transform 0.2s; }
+.countdown-box:active { transform: scale(0.98); }
+.cd-text i { color: #fbbf24; margin-right: 5px; }
 .cd-timer { font-size: 15px; font-weight: 800; color: #fbbf24; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 8px; }
 
 .daily-goal-card { background: linear-gradient(135deg, #fffbeb, #fef3c7); border: 1px solid #fde68a; margin: 15px 20px 0; padding: 15px 20px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
@@ -252,11 +259,22 @@ body { display: block; background: var(--bg-body); color: var(--text-main); padd
 @keyframes sk-pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
-.news-container { background: linear-gradient(90deg, #4f46e5, #8b5cf6); color: white; padding: 10px 15px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; }
+/* MODERN NEWS TICKER */
+.news-container { background: linear-gradient(135deg, #4f46e5 0%, #8b5cf6 100%); color: white; padding: 12px 15px; margin: 15px 20px; border-radius: 14px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3); overflow: hidden; position: relative; height: 45px; cursor: pointer; transition: 0.2s;}
+.news-container:active { transform: scale(0.98); }
+.news-ticker-item { width: 100%; text-align: left; opacity: 0; transform: translateY(10px); transition: all 0.5s ease; position: absolute; left: 40px; right: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.news-ticker-item.active { opacity: 1; transform: translateY(0); }
+
+/* MISTAKE REELS */
+.reel-card { background: var(--bg-card); width: 90%; max-width: 400px; height: 75vh; border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); display: flex; flex-direction: column; overflow-y: auto; position: absolute; transition: transform 0.3s ease, opacity 0.3s ease; opacity: 0; transform: translateY(100px); border: 1px solid var(--border); }
+.reel-card.active { opacity: 1; transform: translateY(0); z-index: 2; }
+.reel-card.prev { opacity: 0; transform: translateY(-100px); z-index: 1; }
+.reel-card.next { opacity: 0; transform: translateY(100px); z-index: 1; }
+
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
 .modal-content { background: var(--bg-card); width: 100%; max-width: 360px; padding: 25px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-textarea, input[type="text"] { width: 100%; padding: 14px; margin: 10px 0 20px; border: 2px solid var(--border); border-radius: 12px; background: var(--bg-body); color: var(--text-main); outline:none; font-size: 14px; transition: 0.2s; border-bottom: 3px solid var(--border);}
-textarea:focus, input[type="text"]:focus { border-color: var(--primary); }
+textarea, input[type="text"], input[type="date"], input[type="number"] { width: 100%; padding: 14px; margin: 10px 0 20px; border: 2px solid var(--border); border-radius: 12px; background: var(--bg-body); color: var(--text-main); outline:none; font-size: 14px; transition: 0.2s; border-bottom: 3px solid var(--border);}
+textarea:focus, input[type="text"]:focus, input[type="date"]:focus, input[type="number"]:focus { border-color: var(--primary); }
 textarea { height: 120px; resize: none; }
 
 #toast { display: none; position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: var(--text-main); color: var(--bg-card); padding: 12px 24px; border-radius: 30px; z-index: 9999; font-size: 13px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: fadeInOut 2.5s forwards; white-space: nowrap; }
@@ -378,8 +396,10 @@ textarea { height: 120px; resize: none; }
 
 <div id="toast"></div>
 
-<div class="news-container" id="newsSection" style="display:none;">
-    <span>📢</span> <marquee id="newsText" scrollamount="5">Welcome to PYQ Notes Portal!</marquee>
+<!-- MODERN NEWS TICKER -->
+<div class="news-container" id="newsSection" style="display:none;" onclick="triggerHaptic()">
+    <span>📢</span>
+    <div id="tickerBox" style="position:relative; flex:1; height: 18px; overflow:hidden;"></div>
 </div>
 
 <div id="loader">
@@ -397,6 +417,13 @@ textarea { height: 120px; resize: none; }
             <div class="user-info">
                 <div class="greeting" id="greetingText">Good Morning</div>
                 <h1 id="uName">Student</h1>
+                <!-- XP System Integration -->
+                <div class="xp-container">
+                    <div>⭐ Lvl <span id="userLevel">1</span> (<span id="userXpText">0</span>/500 XP)</div>
+                    <div class="xp-bar-bg">
+                        <div id="xpProgressBar" class="xp-bar-fill" style="width: 0%;"></div>
+                    </div>
+                </div>
                 <div id="badgePro" class="pro-badge-header" style="display:none; margin-top:4px;">
                     <i class="fas fa-crown"></i> PRO
                 </div>
@@ -405,7 +432,7 @@ textarea { height: 120px; resize: none; }
         </div>
         <div class="tools">
             <div class="live-counter" id="liveUserCounter" title="Students practicing right now">
-                <div class="pulse-dot"></div> <span>1,240 Online</span>
+                <div class="pulse-dot"></div> <span>Loading...</span>
             </div>
             <button class="tool-btn" id="installBtn" style="display:none;" onclick="installApp()" title="Install App"><i class="fas fa-download"></i></button>
             <button class="tool-btn" onclick="toggleTheme(); triggerHaptic();" title="Dark Mode"><i class="fas fa-moon"></i></button>
@@ -425,8 +452,9 @@ textarea { height: 120px; resize: none; }
             <button id="pwaBannerBtn">Install Now</button>
         </div>
 
-        <div class="countdown-box">
-            <span class="cd-text" style="font-weight: 700;">🎯 Target Exam</span><span class="cd-timer" id="examTimer">00 Days Left</span>
+        <div class="countdown-box" onclick="openTargetModal()">
+            <span class="cd-text" style="font-weight: 700;"><i class="fas fa-bullseye"></i> <span id="dispExamName">Set Target Exam</span></span>
+            <span class="cd-timer" id="examTimer">Click to Set</span>
         </div>
 
        <div id="dailyGoalCard" class="daily-goal-card">
@@ -438,6 +466,24 @@ textarea { height: 120px; resize: none; }
                     </div>
             </div>
             <button class="dg-btn" onclick="switchTab('tests', document.querySelectorAll('.nav-item')[1])">Give Mock</button>
+        </div>
+
+        <!-- NEW: Daily Rival System -->
+        <div id="rivalCard" class="daily-goal-card" style="background: linear-gradient(135deg, #fee2e2, #fecaca); border-color: #fca5a5; display:none;">
+            <div class="dg-text" style="flex:1;">
+                <span class="dg-title" style="color: #991b1b;"><i class="fas fa-crosshairs"></i> Daily Rival</span>
+                <span class="dg-status" style="color: #b91c1c; font-size:13px;" id="rivalText">Beat someone today!</span>
+            </div>
+            <button class="dg-btn" style="background: #ef4444; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);" onclick="switchTab('tests', document.querySelectorAll('.nav-item')[1])">Battle</button>
+        </div>
+
+        <!-- NEW: Streak Repair System -->
+        <div id="streakRepairCard" class="daily-goal-card" style="display:none; background: linear-gradient(135deg, #ffedd5, #fdba74); border-color: #f97316;">
+            <div class="dg-text" style="flex:1;">
+                <span class="dg-title" style="color: #c2410c;"><i class="fas fa-snowflake"></i> Streak Broken!</span>
+                <span class="dg-status" style="color: #9a3412;">Spend 200 XP to restore your streak?</span>
+            </div>
+            <button class="dg-btn" style="background: #f97316;" onclick="repairStreak()">Repair</button>
         </div>
 
         <div id="mistakeAlertCard" class="daily-goal-card" style="display:none; background: linear-gradient(135deg, #fef2f2, #fee2e2); border-color: #fca5a5; margin-top: 10px;">
@@ -522,7 +568,7 @@ textarea { height: 120px; resize: none; }
 
         <div class="qod-card">
             <div style="display:flex; justify-content:space-between; margin-bottom:12px; align-items:center;">
-                <span class="qod-tag"><i class="fas fa-bolt"></i> Daily Question</span><span style="font-size:12px; color:#ea580c; font-weight:800;">+2 Pts</span>
+                <span class="qod-tag"><i class="fas fa-bolt"></i> Daily Question</span><span style="font-size:12px; color:#ea580c; font-weight:800;">+10 XP</span>
             </div>
             <div class="qod-text" id="qodQuestion" style="font-weight: 700; margin-bottom:15px; font-size:14px;">Loading today's challenge...</div>
             <div class="qod-options" id="qodOptions"></div>
@@ -670,7 +716,11 @@ textarea { height: 120px; resize: none; }
 
     <div id="tab-bookmarks" class="tab-content" style="display:none; padding: 20px 0;">
         <div style="padding: 0 20px;">
-            <h2 style="font-size:22px; font-weight:900; margin-bottom:15px;">📓 My Notebook</h2>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h2 style="font-size:22px; font-weight:900; margin:0;">📓 My Notebook</h2>
+                <!-- NEW: Insta-Revise Button -->
+                <button onclick="openMistakeReels()" style="background: linear-gradient(135deg, #ec4899, #8b5cf6); border:none; color:white; padding:8px 15px; border-radius:20px; font-weight:bold; font-size:12px; cursor:pointer; box-shadow: 0 4px 10px rgba(236,72,153,0.3);"><i class="fas fa-play"></i> Insta-Revise</button>
+            </div>
             <div class="segment-control" style="margin: 0 0 20px 0;">
                 <div class="segment-btn active" id="nbTab-bookmarks" onclick="switchNotebook('bookmarks'); triggerHaptic();">🔖 Saved Qs</div>
                 <div class="segment-btn" id="nbTab-mistakes" onclick="switchNotebook('mistakes'); triggerHaptic();">❌ Mistake Book</div>
@@ -688,6 +738,43 @@ textarea { height: 120px; resize: none; }
         <div id="bookmarksListContainer" style="padding: 0 20px;"></div>
     </div>
 
+</div>
+
+<!-- Target Exam Modal -->
+<div id="targetModal" class="modal">
+    <div class="modal-content">
+        <h2 style="margin-bottom:5px; font-weight:900;">🎯 Set Target Exam</h2>
+        <p style="font-size:12px; color:var(--text-muted); font-weight:600; margin-bottom: 15px;">Set your goal and date. It will be saved locally.</p>
+        
+        <div style="text-align:left; font-size:12px; font-weight:700; color:var(--text-muted); margin-left:5px;">Exam Name</div>
+        <input type="text" id="targetNameInp" placeholder="e.g., DSSSB PRT 2024">
+        
+        <div style="text-align:left; font-size:12px; font-weight:700; color:var(--text-muted); margin-left:5px; margin-top:10px;">Target Date</div>
+        <input type="date" id="targetDateInp">
+        
+        <div style="display:flex; gap:12px;">
+            <button class="start-btn" style="background:var(--bg-body); color:var(--text-main); box-shadow:none;" onclick="closeTargetModal()">Cancel</button>
+            <button class="start-btn" onclick="saveTargetExam()">Save Target</button>
+        </div>
+    </div>
+</div>
+
+<!-- FULLSCREEN REELS OVERLAY FOR REVISION -->
+<div id="reelModal" class="full-overlay" style="display:none; background:rgba(0,0,0,0.95); z-index: 100000; flex-direction: column;">
+    <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px; position: absolute; top: 0; z-index: 10;">
+        <h3 style="color: white; margin:0;"><i class="fas fa-bolt" style="color: #f59e0b;"></i> Insta-Revise</h3>
+        <div style="color: #a1a1aa; font-size: 14px; font-weight: bold;"><span id="reelCurrentIndex">1</span>/<span id="reelTotalCount">10</span></div>
+        <button onclick="document.getElementById('reelModal').style.display='none'" style="background:none; border:none; color:white; font-size:28px; cursor: pointer;">&times;</button>
+    </div>
+    
+    <div id="reelContainer" style="width:100%; height:100%; position:relative; overflow:hidden; display: flex; align-items: center; justify-content: center;">
+        <!-- Cards inject here -->
+    </div>
+    
+    <div style="position: absolute; bottom: 30px; color: rgba(255,255,255,0.5); font-size: 13px; font-weight: bold; animation: pulse 2s infinite; display: flex; flex-direction: column; align-items: center; pointer-events: none;">
+        <i class="fas fa-chevron-up"></i>
+        <span>Swipe Up for Next</span>
+    </div>
 </div>
 
 <div class="fab-support" onclick="document.getElementById('supportModal').style.display='flex'">
@@ -713,7 +800,7 @@ textarea { height: 120px; resize: none; }
             Special Offer: <span id="proPriceDynamic">₹99</span> <span id="proPriceOriginal" style="font-size:12px; text-decoration:line-through; color:grey; margin-left: 5px;">₹499</span>
         </div>
         
-        <p style="font-size:12px; color:var(--text-main); margin-bottom:10px; font-weight:600;">To upgrade, please contact Admin.</p>
+        <p style="font-size:12px; color:var(--text-main); margin-bottom:10px; font-weight:600;">To upgrade, please contact whatsapp 8587961053 Admin.</p>
         
         <div style="background:#f1f5f9; padding:10px; border-radius:8px; margin-bottom:15px; font-size:12px;">
             Your App ID: <b id="displayUserId" style="color:var(--primary); font-size: 14px;">--</b><br>
@@ -785,6 +872,7 @@ textarea { height: 120px; resize: none; }
     </div>
 </div>
 
+<!-- Bottom Navigation Bar -->
 <div class="nav-bar">
     <div class="nav-item active" onclick="switchTab('home', this); triggerHaptic();"><i class="fas fa-home"></i> <span>Home</span></div>
     <div class="nav-item" onclick="switchTab('tests', this); triggerHaptic();"><i class="fas fa-file-signature"></i> <span>Mocks</span></div>
@@ -798,6 +886,55 @@ textarea { height: 120px; resize: none; }
 </div>
 
 <script>
+/* =======================================================
+   🔥 INDEXED DB ENGINE (FOR UNLIMITED OFFLINE STORAGE) 🔥
+   ======================================================= */
+const IDB_NAME = 'PYQNotes_Dash_DB';
+const IDB_STORE = 'Store';
+
+const initDB = () => new Promise((res, rej) => {
+    const req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = e => e.target.result.createObjectStore(IDB_STORE);
+    req.onsuccess = e => res(e.target.result);
+    req.onerror = e => rej(e.target.error);
+});
+
+async function setItemDB(key, val) {
+    try {
+        const db = await initDB();
+        const tx = db.transaction(IDB_STORE, 'readwrite');
+        tx.objectStore(IDB_STORE).put(val, key);
+        return new Promise((res, rej) => { tx.oncomplete = () => res(true); tx.onerror = () => rej(tx.error); });
+    } catch(e) {
+        try { localStorage.setItem(key, val); } catch(e2) {} 
+    }
+}
+
+async function getItemDB(key) {
+    try {
+        const db = await initDB();
+        const tx = db.transaction(IDB_STORE, 'readonly');
+        const req = tx.objectStore(IDB_STORE).get(key);
+        return new Promise((res, rej) => {
+            req.onsccess = () => res(req.result);
+            req.onerror = () => rej(req.error);
+        });
+    } catch(e) {
+        try { return localStorage.getItem(key); } catch(e2) { return null; } 
+    }
+}
+
+async function removeItemDB(key) {
+    try {
+        const db = await initDB();
+        const tx = db.transaction(IDB_STORE, 'readwrite');
+        tx.objectStore(IDB_STORE).delete(key);
+        return new Promise((res, rej) => { tx.oncomplete = () => res(true); tx.onerror = () => rej(tx.error); });
+    } catch(e) {
+        try { localStorage.removeItem(key); } catch(e2) {}
+    }
+}
+
 /* 🔥 HAPTIC FEEDBACK FOR PREMIUM GAMING FEEL 🔥 */
 function triggerHaptic() {
     if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.HapticFeedback) {
@@ -820,35 +957,301 @@ function getSafeData(key) { try { return localStorage.getItem(key); } catch(e) {
 function setSafeData(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
 function removeSafeData(key) { try { localStorage.removeItem(key); } catch(e) {} }
 
-let db = { 
-    ref: function() { 
-        return { 
-            on: function(){}, 
-            once: function(){ return Promise.resolve({exists:()=>false, val:()=>null, forEach:()=>{} }); }, 
-            set: function(){ return Promise.resolve(); }, 
-            push: function(){ return Promise.resolve(); },
-            remove: function(){ return Promise.resolve(); }
-        }; 
-    } 
-};
-
-try {
-    const firebaseConfig = { apiKey: "AIzaSyDGolcXv0efZxRdOvBthfeT72mkNLLbAwI", authDomain: "dsssbexamportal.firebaseapp.com", databaseURL: "https://dsssbexamportal-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "dsssbexamportal", storageBucket: "dsssbexamportal.firebasestorage.app", messagingSenderId: "853373171134", appId: "1:853373171134:web:77b967374e6f34311af5ef" };
-    if (typeof firebase !== 'undefined') {
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        db = firebase.database();
+/* 🔥 SESSION SECURITY & CONCURRENT LOGIN PREVENTION (Zero Cost Polling) 🔥 */
+function setupSessionSecurity(userId, username) {
+    if (!userId || userId === "guest") return;
+    
+    let localSessionId = localStorage.getItem('dsssb_session_id');
+    if (!localSessionId) {
+        localSessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('dsssb_session_id', localSessionId);
     }
-} catch(err) {
-    console.error("Firebase Auth Error:", err);
+
+    // Register this device's session in Firebase
+    if(window.db && navigator.onLine) {
+        db.ref('dsssb_presence/' + userId).update({
+            currentSessionId: localSessionId,
+            lastActive: firebase.database.ServerValue.TIMESTAMP
+        });
+
+        // Smart Polling - Check every 60 seconds if session ID matches
+        setInterval(() => {
+            if (document.hidden || !navigator.onLine) return; // Do not consume database reads if app is in background or offline
+            db.ref('dsssb_presence/' + userId + '/currentSessionId').once('value').then(snap => {
+                if (snap.exists() && snap.val() !== localSessionId) {
+                    // Session ID mismatched, means logged in from another device
+                    triggerKickout();
+                }
+            });
+        }, 60000); 
+    }
 }
+
+function triggerKickout() {
+    localStorage.removeItem('dsssb_user_name');
+    localStorage.removeItem('dsssb_user_id');
+    localStorage.removeItem('dsssb_session_id');
+    
+    document.body.innerHTML = `
+        <div style="height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; background:#0f172a; color:white; text-align:center; padding:20px;">
+            <div style="font-size:60px; margin-bottom:20px;">⚠️</div>
+            <h1 style="color:#ef4444; margin-bottom:10px;">Session Terminated</h1>
+            <p style="color:#94a3b8; margin-bottom:30px;">Your account was logged in from another device. For security, this session has been closed.</p>
+            <button onclick="window.location.reload()" style="background:#4f46e5; color:white; padding:14px 28px; border:none; border-radius:12px; font-weight:bold; font-size:16px; cursor:pointer;">Login Again</button>
+        </div>
+    `;
+}
+
+/* 🔥 SYNC XP WITH COMPLETED MOCK TESTS 🔥 */
+async function syncXpFromTests() {
+    // Read past CBT mock test results from IndexedDB
+    let historyStr = await getItemDB('dsssb_unsynced_results');
+    let history = historyStr ? JSON.parse(historyStr) : [];
+    let computedXpFromTests = 0;
+    
+    history.forEach(t => {
+        if(t.score) computedXpFromTests += Math.floor(t.score * 10);
+    });
+    
+    // Check and set base engagement XP if missing
+    let baseXP = parseInt(getSafeData('dsssb_base_xp') || 0);
+    if(baseXP === 0) {
+        baseXP = 120; // Initial welcome bonus
+        setSafeData('dsssb_base_xp', baseXP);
+    }
+    
+    let finalXP = baseXP + computedXpFromTests;
+    setSafeData('dsssb_user_xp', finalXP);
+    updateXPUI();
+}
+
+/* 🔥 NEW: XP System 🔥 */
+function addXP(amount) {
+    let baseXP = parseInt(getSafeData('dsssb_base_xp') || 0);
+    if(baseXP === 0) baseXP = 120;
+    setSafeData('dsssb_base_xp', baseXP + amount);
+    syncXpFromTests(); // Sync with tests and upgrade UI
+    
+    // Save to Firebase (Optional sync)
+    if(currentUserId !== "guest" && window.db && navigator.onLine) {
+        db.ref('dsssb_users/' + currentUserId + '/xp').set(parseInt(getSafeData('dsssb_user_xp')));
+    }
+    showToast(`+${amount} XP Gained! ⭐`, "success");
+}
+
+function updateXPUI() {
+    let currentXP = parseInt(getSafeData('dsssb_user_xp') || 0);
+    let level = Math.floor(currentXP / 500) + 1;
+    let xpInLevel = currentXP % 500;
+    let progressPct = (xpInLevel / 500) * 100;
+
+    const lvlEl = document.getElementById('userLevel');
+    const xpTextEl = document.getElementById('userXpText');
+    const progressEl = document.getElementById('xpProgressBar');
+
+    if(lvlEl) lvlEl.innerText = level;
+    if(xpTextEl) xpTextEl.innerText = xpInLevel;
+    if(progressEl) progressEl.style.width = `${progressPct}%`;
+}
+
+/* 🔥 NEW: Modern News Ticker 🔥 */
+function startNewsTicker() {
+    const tickerBox = document.getElementById('tickerBox');
+    const newsSection = document.getElementById('newsSection');
+    
+    const defaultNews = [
+        "Welcome to PYQ Notes Portal! 🚀",
+        "Complete Daily Goals to earn extra XP! 🎯",
+        "Revise your mistakes in 'Insta-Revise' mode ⚡",
+        "Climb the Global Leaderboard today! 🏆"
+    ];
+
+    let newsMessages = [...defaultNews];
+    let currentIndex = 0;
+
+    if (navigator.onLine && window.db) {
+        db.ref('dsssb_config/news_list').once('value').then(snap => {
+            if(snap.exists() && Array.isArray(snap.val())) {
+                newsMessages = snap.val();
+            }
+        });
+    }
+
+    function showMessage() {
+        if(newsMessages.length === 0) return;
+        tickerBox.innerHTML = `<div class="news-ticker-item active">${newsMessages[currentIndex]}</div>`;
+        currentIndex = (currentIndex + 1) % newsMessages.length;
+        
+        setTimeout(() => {
+            const currentItem = tickerBox.querySelector('.news-ticker-item');
+            if(currentItem) currentItem.classList.remove('active');
+        }, 4500);
+    }
+
+    newsSection.style.display = 'flex';
+    showMessage();
+    setInterval(showMessage, 5000);
+}
+
+/* 🔥 NEW: 3-Hour Smart Nudge 🔥 */
+function initEngagementLoop() {
+    const NUDGE_INTERVAL = 10800000; // 3 Hours
+    setInterval(() => {
+        const lastNudge = parseInt(getSafeData('last_nudge_time') || 0);
+        const currentTime = Date.now();
+
+        if (currentTime - lastNudge >= NUDGE_INTERVAL) {
+            if (document.visibilityState === 'visible') {
+                showSmartNudge();
+                setSafeData('last_nudge_time', currentTime);
+            }
+        }
+    }, 60000); // Check every minute
+}
+
+function showSmartNudge() {
+    const nudges = [
+        "Aapki preparation track par hai! Ek chota quiz solve karein? 🚀",
+        "Consistency is key! Notebook mein jaake mistakes revise karein. ⚡",
+        "Global rank drop ho sakti hai, ek aur mock test de dein! 🏆",
+        "Exam nazdeek hai! Let's clear one specific weakness today. 🎯"
+    ];
+    const randomNudge = nudges[Math.floor(Math.random() * nudges.length)];
+    
+    document.getElementById('alertMsgText').innerHTML = `<b>Smart Nudge 💡</b><br><br>${randomNudge}`;
+    document.getElementById('alertModal').style.display = 'flex';
+    triggerHaptic();
+    
+    // Auto-close after 6 seconds
+    setTimeout(() => { document.getElementById('alertModal').style.display = 'none'; }, 6000);
+}
+
+/* 🔥 NEW: Daily Rival System 🔥 */
+function initRival() {
+    const today = new Date().toDateString();
+    const savedRivalDate = getSafeData('rival_date');
+    
+    if(today !== savedRivalDate) {
+        // Generate a new random rival
+        const names = ["Aman", "Priya", "Rahul", "Sneha", "Vikash", "Pooja", "Deepak"];
+        const randomName = names[Math.floor(Math.random() * names.length)];
+        const randomScore = Math.floor(Math.random() * 50) + 50; // Random score 50-100
+        
+        setSafeData('rival_date', today);
+        setSafeData('rival_name', randomName);
+        setSafeData('rival_score', randomScore);
+    }
+    
+    const rName = getSafeData('rival_name');
+    const rScore = getSafeData('rival_score');
+    
+    document.getElementById('rivalCard').style.display = 'flex';
+    document.getElementById('rivalText').innerHTML = `<b>${rName}</b> scored ${rScore} points today. Beat them!`;
+}
+
+/* 🔥 NEW: Insta-Revise (Swipeable Reels) 🔥 */
+let reelDataList = [];
+let currentReelIndex = 0;
+let touchStartY = 0;
+
+async function openMistakeReels() {
+    let mistakesStr = await getItemDB('dsssb_mistakes');
+    let mistakesObj = mistakesStr ? JSON.parse(mistakesStr) : {};
+    
+    reelDataList = Object.keys(mistakesObj).map(k => {
+        let item = mistakesObj[k];
+        item._key = k;
+        return item;
+    });
+
+    if (reelDataList.length === 0) {
+        return showToast("No mistakes to revise! Awesome! 🎉");
+    }
+
+    // Shuffle array for randomness
+    reelDataList.sort(() => Math.random() - 0.5);
+    
+    currentReelIndex = 0;
+    document.getElementById('reelModal').style.display = 'flex';
+    document.getElementById('reelTotalCount').innerText = reelDataList.length;
+    
+    renderCurrentReel();
+    triggerHaptic();
+}
+
+function renderCurrentReel() {
+    const container = document.getElementById('reelContainer');
+    document.getElementById('reelCurrentIndex').innerText = currentReelIndex + 1;
+    
+    const q = reelDataList[currentReelIndex];
+    let correctIdx = parseInt(q.ans) - 1;
+    let qText = q.q_hi || q.q_en;
+    let optArr = q.op_hi || q.op_en;
+    let correctAnsText = optArr && optArr[correctIdx] ? optArr[correctIdx] : "Not Specified";
+
+    let optionsHTML = '<div style="margin-top:15px; display:flex; flex-direction:column; gap:10px;">';
+    if (optArr) {
+        optArr.forEach((opt, optIdx) => {
+            let isCorrect = (optIdx === correctIdx);
+            let style = isCorrect ? 'background: #dcfce7; border: 2px solid #16a34a; color: #166534;' : 'background: var(--bg-body); border: 2px solid var(--border); color: var(--text-main);';
+            optionsHTML += `<div style="padding:15px; border-radius:12px; font-size:14px; font-weight:600; ${style}"><b>${String.fromCharCode(65+optIdx)})</b> ${opt} ${isCorrect ? '✅' : ''}</div>`;
+        });
+    }
+    optionsHTML += '</div>';
+
+    let html = `
+    <div class="reel-card active">
+        <div style="font-size: 11px; background: #ef4444; color: white; padding: 4px 10px; border-radius: 8px; font-weight: 800; display: inline-block; margin-bottom: 15px;">MISTAKE #${currentReelIndex + 1}</div>
+        
+        <div style="font-weight: 800; font-size: 16px; margin-bottom: 15px; color: var(--text-main); line-height: 1.5;">${qText}</div>
+        
+        ${optionsHTML}
+        
+        <div style="margin-top: 20px; font-size: 13px; color: var(--text-muted); background: var(--primary-light); padding: 15px; border-radius: 12px; border-left: 4px solid var(--primary);">
+            <b>💡 Solution Notes:</b><br>${q.solution || 'Focus on remembering this correct answer!'}
+        </div>
+    </div>`;
+
+    container.innerHTML = html;
+    if(window.MathJax) { MathJax.typesetPromise([container]); }
+}
+
+document.getElementById('reelContainer').addEventListener('touchstart', e => {
+    touchStartY = e.changedTouches[0].screenY;
+});
+
+document.getElementById('reelContainer').addEventListener('touchend', e => {
+    let touchEndY = e.changedTouches[0].screenY;
+    if (touchStartY - touchEndY > 60) {
+        // Swipe Up
+        if (currentReelIndex < reelDataList.length - 1) {
+            currentReelIndex++;
+            triggerHaptic();
+            renderCurrentReel();
+        } else {
+            showToast("All caught up! Excellent revision! 🚀");
+            addXP(20); // Reward for finishing reels
+            document.getElementById('reelModal').style.display='none';
+        }
+    } else if (touchEndY - touchStartY > 60) {
+        // Swipe Down
+        if (currentReelIndex > 0) {
+            currentReelIndex--;
+            triggerHaptic();
+            renderCurrentReel();
+        }
+    }
+});
+
 
 let currentUser = "Student", currentUserId = "guest", isPro = false;
 let myScores = [], allTests = [], allNotes = [];
 let lastAlertTime = 0;
 let attemptedTestIds = new Map(); 
 let currentNbType = 'bookmarks';
+let SAVED_TESTS_CACHE = [];
 
-const apiKey = "AIzaSyCnyG1J31n2BLhsOG6DVnXTnqTz8yrmGs0"; 
+const apiKey = ""; // Universal key is assigned by the execution environment automatically!
 async function callGemini(promptText, isJson = false) {
     try {
         let payload = {
@@ -859,7 +1262,9 @@ async function callGemini(promptText, isJson = false) {
             payload.generationConfig = { responseMimeType: "application/json" };
         }
         
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+        // Using the universally supported model
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+        const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -920,60 +1325,176 @@ function logoutUser() {
     }
 }
 
+// 🔥 OFFLINE FIRST FETCH SYSTEM 🔥
 async function fetchWithCache(refPath, cacheKey, expiryMinutes = 60) {
-    const cached = getSafeData(cacheKey);
-    const cacheTime = getSafeData(cacheKey + '_time');
-    const now = Date.now();
+    let cachedStr = await getItemDB(cacheKey);
+    let cacheTime = await getItemDB(cacheKey + '_time');
+    let now = Date.now();
     
-    if (cached && cacheTime && (now - cacheTime < expiryMinutes * 60 * 1000)) {
-        setTimeout(() => {
-            db.ref(refPath).once('value').then(s => {
-                if(s.exists()) {
-                    setSafeData(cacheKey, JSON.stringify(s.val()));
-                    setSafeData(cacheKey + '_time', Date.now());
-                }
-            }).catch(e => console.log("Background sync ignored (Offline)"));
-        }, 5000); 
-        
+    // If offline and cache exists, serve immediately
+    if (!navigator.onLine && cachedStr) {
+        console.log(`[Offline] Serving ${cacheKey} from IndexedDB.`);
         return { 
             exists: () => true, 
-            val: () => JSON.parse(cached),
+            val: () => JSON.parse(cachedStr),
             forEach: function(cb) { 
-                Object.entries(JSON.parse(cached)).forEach(([k,v]) => cb({key:k, val:()=>v}));
+                Object.entries(JSON.parse(cachedStr)).forEach(([k,v]) => cb({key:k, val:()=>v}));
             }
         };
-    } else {
+    }
+    
+    // If online, check cache expiry
+    if (navigator.onLine && cachedStr && cacheTime && (now - cacheTime < expiryMinutes * 60 * 1000)) {
+        // Cache is valid, trigger background sync
+        setTimeout(() => {
+            db.ref(refPath).once('value').then(async s => {
+                if(s.exists()) {
+                    await setItemDB(cacheKey, JSON.stringify(s.val()));
+                    await setItemDB(cacheKey + '_time', Date.now());
+                }
+            }).catch(e => console.log("Background sync error"));
+        }, 3000); 
+        
+        console.log(`[Cache] Serving ${cacheKey} from IndexedDB. Syncing in BG.`);
+        return { 
+            exists: () => true, 
+            val: () => JSON.parse(cachedStr),
+            forEach: function(cb) { 
+                Object.entries(JSON.parse(cachedStr)).forEach(([k,v]) => cb({key:k, val:()=>v}));
+            }
+        };
+    } else if (navigator.onLine) {
+        // Online and cache expired or doesn't exist, fetch fresh
         try {
             const snap = await db.ref(refPath).once('value');
             if(snap.exists()) {
-                setSafeData(cacheKey, JSON.stringify(snap.val()));
-                setSafeData(cacheKey + '_time', Date.now());
+                await setItemDB(cacheKey, JSON.stringify(snap.val()));
+                await setItemDB(cacheKey + '_time', Date.now());
             }
             return snap;
         } catch (err) {
-            if (cached) {
-                console.log("Serving from local cache due to network failure.");
+            if (cachedStr) {
+                console.log(`[Network Error] Serving ${cacheKey} from local fallback.`);
                 return { 
                     exists: () => true, 
-                    val: () => JSON.parse(cached),
+                    val: () => JSON.parse(cachedStr),
                     forEach: function(cb) { 
-                        Object.entries(JSON.parse(cached)).forEach(([k,v]) => cb({key:k, val:()=>v}));
+                        Object.entries(JSON.parse(cachedStr)).forEach(([k,v]) => cb({key:k, val:()=>v}));
                     }
                 };
             }
             throw err;
         }
+    } else {
+         return { exists: () => false, val: () => null };
     }
 }
 
+/* 🔥 EDITABLE TARGET EXAM FEATURE 🔥 */
+function openTargetModal() {
+    document.getElementById('targetNameInp').value = getSafeData('my_target_name') || "";
+    document.getElementById('targetDateInp').value = getSafeData('my_target_date') || "";
+    document.getElementById('targetModal').style.display = 'flex';
+}
+
+function closeTargetModal() {
+    document.getElementById('targetModal').style.display = 'none';
+}
+
+function saveTargetExam() {
+    const name = document.getElementById('targetNameInp').value.trim();
+    const dateStr = document.getElementById('targetDateInp').value;
+    
+    if(!name || !dateStr) {
+        showToast("Please enter Exam Name and Date!", "error");
+        return;
+    }
+    
+    setSafeData('my_target_name', name);
+    setSafeData('my_target_date', dateStr);
+    
+    loadTargetExam();
+    closeTargetModal();
+    showToast("Target Saved Successfully! 🎯", "success");
+}
+
+function loadTargetExam() {
+    const savedName = getSafeData('my_target_name');
+    const savedDate = getSafeData('my_target_date');
+    
+    if (savedName) document.getElementById('dispExamName').innerText = savedName;
+    else document.getElementById('dispExamName').innerText = "Set Target Exam";
+    
+    if (savedDate) {
+        const targetDate = new Date(savedDate);
+        targetDate.setHours(0,0,0,0);
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        
+        const diffTime = targetDate - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays < 0) {
+            document.getElementById('examTimer').innerText = "Ended";
+            document.getElementById('examTimer').style.color = "var(--danger)";
+        } else {
+            document.getElementById('examTimer').innerText = diffDays + " Days Left";
+            document.getElementById('examTimer').style.color = "#fbbf24";
+        }
+    } else {
+        document.getElementById('examTimer').innerText = "Click to Set";
+    }
+}
+
+/* 🔥 REALISTIC LIVE ONLINE STUDENTS 🔥 */
+function startRealisticOnlineCounter() {
+    const display = document.getElementById('liveUserCounter');
+    
+    function getBaseOnlineCount() {
+        const now = new Date();
+        const h = now.getHours();
+        
+        if (h >= 18 && h <= 23) {
+            // 6 PM to 11 PM: Peak Traffic
+            return 2800 + Math.floor(Math.random() * 1200); 
+        } else if (h >= 0 && h < 6) {
+            // 12 AM to 6 AM: Negligible
+            return 15 + Math.floor(Math.random() * 35);
+        } else if (h >= 12 && h < 18) {
+            // Afternoon: Good traffic
+            return 1200 + Math.floor(Math.random() * 800);
+        } else {
+            // Morning
+            return 400 + Math.floor(Math.random() * 400);
+        }
+    }
+
+    let currentOnline = getBaseOnlineCount();
+    
+    function updateDisplay() {
+        display.innerHTML = `<div class="pulse-dot"></div> <span>${currentOnline.toLocaleString('en-IN')} Online</span>`;
+    }
+    updateDisplay();
+    
+    // Fluctuate randomly every few seconds
+    setInterval(() => {
+        const isNight = new Date().getHours() >= 0 && new Date().getHours() < 6;
+        let fluctuation = isNight ? (Math.floor(Math.random() * 7) - 3) : (Math.floor(Math.random() * 41) - 20);
+        
+        currentOnline += fluctuation;
+        if(currentOnline < 5) currentOnline = 5 + Math.floor(Math.random()*10); 
+        
+        updateDisplay();
+    }, 3500);
+}
+
 /* 4. MAIN APP INITIALIZATION */
-function initDashboard() {
+async function initDashboard() {
     const hour = new Date().getHours();
     let greeting = "Good Morning ☀️";
     if(hour >= 12 && hour < 17) greeting = "Good Afternoon 🌤️";
     else if(hour >= 17) greeting = "Good Evening 🌙";
     
-    // Addictive Personalized Greeting Logic
     const savedName = getSafeData('dsssb_user_name') || "Student";
     const firstName = savedName.split(" ")[0];
     document.getElementById('greetingText').innerText = greeting;
@@ -988,28 +1509,35 @@ function initDashboard() {
         document.body.classList.remove('dark-mode');
     }
     
-    checkStreak(); startCountdown(); renderSyllabus();
+    // Preload heavy data from IndexedDB
+    let savedTestsStr = await getItemDB('savedTests');
+    SAVED_TESTS_CACHE = savedTestsStr ? JSON.parse(savedTestsStr) : [];
+    
+    syncXpFromTests(); // Initialize and Sync XP UI
+    startNewsTicker(); // Initialize Modern Ticker
+    initEngagementLoop(); // Initialize 3-Hour Nudges
+    initRival(); // Initialize Daily Rival
 
-    // Fake Live Counter Logic (FOMO Element)
-    const baseUsers = 1200;
-    const randomLive = baseUsers + Math.floor(Math.random() * 150);
-    document.getElementById('liveUserCounter').innerHTML = `<div class="pulse-dot"></div> <span>${randomLive} Online</span>`;
+    checkStreak(); loadTargetExam(); renderSyllabus();
+    startRealisticOnlineCounter(); // Start realistic live counter
 
-    // Dynamic Pricing Fetch from Firebase Admin Panel
-    db.ref('dsssb_config/pricing').on('value', snap => {
-        if(snap.exists() && snap.val()) {
-            const pricingData = snap.val();
-            if(pricingData.offer && document.getElementById('proPriceDynamic')) {
-                document.getElementById('proPriceDynamic').innerText = "₹" + pricingData.offer;
+    if(navigator.onLine && window.db) {
+        db.ref('dsssb_config/pricing').on('value', snap => {
+            if(snap.exists() && snap.val()) {
+                const pricingData = snap.val();
+                if(pricingData.offer && document.getElementById('proPriceDynamic')) {
+                    document.getElementById('proPriceDynamic').innerText = "₹" + pricingData.offer;
+                }
+                if(pricingData.original && document.getElementById('proPriceOriginal')) {
+                    document.getElementById('proPriceOriginal').innerText = "₹" + pricingData.original;
+                }
             }
-            if(pricingData.original && document.getElementById('proPriceOriginal')) {
-                document.getElementById('proPriceOriginal').innerText = "₹" + pricingData.original;
-            }
-        }
-    });
+        });
+    }
 
     try {
-        let mistakesObj = JSON.parse(getSafeData('dsssb_mistakes') || '{}');
+        let mistakesStr = await getItemDB('dsssb_mistakes');
+        let mistakesObj = mistakesStr ? JSON.parse(mistakesStr) : {};
         let mistakesCount = Object.keys(mistakesObj).length;
         let navBadge = document.getElementById('navMistakeBadge'); 
         
@@ -1025,33 +1553,28 @@ function initDashboard() {
         }
     } catch(e) { console.log("Mistake check skipped"); }
 
-    db.ref('dsssb_config/maintenance').on('value', snap => {
-        if(snap.val() === true) {
-            document.getElementById('maintenanceScreen').style.display = 'flex';
-            document.getElementById('app').style.display = 'none';
-            if(document.getElementById('loader')) document.getElementById('loader').style.display = 'none';
-        } else {
-            document.getElementById('maintenanceScreen').style.display = 'none';
-        }
-    });
-
-    db.ref('dsssb_config/alert').on('value', snap => {
-        if(snap.exists()) {
-            const data = snap.val(); 
-            if(data.time && data.time > lastAlertTime && data.msg) {
-                document.getElementById('alertMsgText').innerHTML = data.msg;
-                document.getElementById('alertModal').style.display = 'flex';
-                lastAlertTime = data.time;
+    if(navigator.onLine && window.db) {
+        db.ref('dsssb_config/maintenance').on('value', snap => {
+            if(snap.val() === true) {
+                document.getElementById('maintenanceScreen').style.display = 'flex';
+                document.getElementById('app').style.display = 'none';
+                if(document.getElementById('loader')) document.getElementById('loader').style.display = 'none';
+            } else {
+                document.getElementById('maintenanceScreen').style.display = 'none';
             }
-        }
-    });
+        });
 
-    db.ref('dsssb_config/news').on('value', snap => {
-        if(snap.exists() && snap.val() !== "") {
-            document.getElementById('newsSection').style.display = 'flex';
-            document.getElementById('newsText').innerText = snap.val();
-        } else { document.getElementById('newsSection').style.display = 'none'; }
-    });
+        db.ref('dsssb_config/alert').on('value', snap => {
+            if(snap.exists()) {
+                const data = snap.val(); 
+                if(data.time && data.time > lastAlertTime && data.msg) {
+                    document.getElementById('alertMsgText').innerHTML = data.msg;
+                    document.getElementById('alertModal').style.display = 'flex';
+                    lastAlertTime = data.time;
+                }
+            }
+        });
+    }
 
     loadAutoQOD();
 
@@ -1106,17 +1629,19 @@ function loadAutoQOD() {
             }
         }
         
-        db.ref('dsssb_config/qod').on('value', manualSnap => {
-            if(manualSnap.exists()) {
-                const d = manualSnap.val();
-                document.getElementById('qodQuestion').innerText = d.q;
-                let html = "";
-                d.opt.forEach((o, i) => html += `<div class="qod-opt" onclick="checkQOD(this, ${i}, ${d.ans}); triggerHaptic();">${o}</div>`);
-                document.getElementById('qodOptions').innerHTML = html;
-            } else {
-                document.getElementById('qodQuestion').innerText = "Update QOD from Admin Panel or upload to 'auto_qod' Test ID.";
-            }
-        });
+        if(navigator.onLine && window.db) {
+            db.ref('dsssb_config/qod').on('value', manualSnap => {
+                if(manualSnap.exists()) {
+                    const d = manualSnap.val();
+                    document.getElementById('qodQuestion').innerText = d.q;
+                    let html = "";
+                    d.opt.forEach((o, i) => html += `<div class="qod-opt" onclick="checkQOD(this, ${i}, ${d.ans}); triggerHaptic();">${o}</div>`);
+                    document.getElementById('qodOptions').innerHTML = html;
+                } else {
+                    document.getElementById('qodQuestion').innerText = "Update QOD from Admin Panel or upload to 'auto_qod' Test ID.";
+                }
+            });
+        }
     }).catch(err => console.error("QOD Error:", err));
 }
 
@@ -1129,7 +1654,6 @@ function checkLocalUser() {
         currentUser = savedName;
         currentUserId = savedId;
         
-        // Custom Greeting
         const firstName = savedName.split(" ")[0];
         document.getElementById('uName').innerText = `Let's Crack It, ${firstName}! 🚀`;
 
@@ -1226,15 +1750,26 @@ function checkStreak() {
     const last = getSafeData('lastVisit');
     const today = new Date().toDateString();
     let s = parseInt(getSafeData('streak') || 0);
+    
     if(last !== today) { 
         const y = new Date(); y.setDate(y.getDate()-1); 
-        if(last === y.toDateString()) s++; else s = 1; 
+        if(last === y.toDateString()) {
+            s++; 
+        } else if (last) {
+            // Streak broken! Check if they have enough XP to repair
+            let currentXP = parseInt(getSafeData('dsssb_user_xp') || 0);
+            if (s > 2 && currentXP >= 200) {
+                document.getElementById('streakRepairCard').style.display = 'flex';
+            }
+            s = 1; // Reset until repaired
+        } else {
+            s = 1;
+        }
         setSafeData('lastVisit', today); 
         setSafeData('streak', s); 
     }
     document.getElementById('valStreak').innerText = s;
 
-    // 🔥 Dynamic Pulse on High Streak
     if(s >= 3 && document.getElementById('streakFireIcon')) {
         document.getElementById('streakFireIcon').style.animation = "pulseFast 1s infinite";
     }
@@ -1254,16 +1789,26 @@ function checkStreak() {
     if(tracker) tracker.innerHTML = dotsHtml;
 }
 
+function repairStreak() {
+    let currentXP = parseInt(getSafeData('dsssb_user_xp') || 0);
+    if(currentXP >= 200) {
+        setSafeData('dsssb_user_xp', currentXP - 200);
+        let oldStreak = parseInt(getSafeData('streak') || 1);
+        setSafeData('streak', oldStreak > 1 ? oldStreak : 3); // minimum 3 if repaired
+        document.getElementById('streakRepairCard').style.display = 'none';
+        checkStreak();
+        updateXPUI();
+        showToast("Streak Repaired successfully! 🔥", "success");
+        if(window.confetti) confetti({particleCount: 80, spread: 60, origin: {y:0.6}});
+    } else {
+        showToast("Not enough XP to repair streak!", "error");
+    }
+}
+
 function showStreakAlert() {
     const s = document.getElementById('valStreak').innerText;
     document.getElementById('alertMsgText').innerHTML = `You are on a <b>${s} Day Streak!</b> 🔥<br><br>Give at least one mock test daily to keep your streak alive and boost your confidence.`;
     document.getElementById('alertModal').style.display = 'flex';
-}
-
-function startCountdown() {
-    const target = new Date(2026, 4, 15); 
-    const days = Math.ceil((target - new Date()) / (1000 * 60 * 60 * 24));
-    document.getElementById('examTimer').innerText = (days > 0 ? days : 0) + " Days Left";
 }
 
 function shareApp() {
@@ -1359,11 +1904,12 @@ function calcProgress() {
 }
 
 function checkQOD(el, idx, correct) {
+    if(el.classList.contains('correct') || el.classList.contains('wrong')) return; // Prevent double click
     document.querySelectorAll('.qod-opt').forEach(o => o.style.pointerEvents = "none");
     if(idx === correct) { 
         el.classList.add('correct'); 
         if(window.confetti) confetti({particleCount: 50, spread: 50}); 
-        showToast("Correct! +2 Points 🔥"); 
+        addXP(10); // Reward for correct QOD
     } else { 
         el.classList.add('wrong'); 
         document.querySelectorAll('.qod-opt')[correct].classList.add('correct'); 
@@ -1371,16 +1917,26 @@ function checkQOD(el, idx, correct) {
     }
 }
 
-function submitReport() {
+async function submitReport() {
     const txt = document.getElementById('reportText').value;
     if(!txt) return showToast("Please write an issue first!");
-    db.ref('dsssb_reports').push({ user: currentUser, id: currentUserId, issue: txt, time: firebase.database.ServerValue.TIMESTAMP });
+    let reportData = { user: currentUser, id: currentUserId, issue: txt, time: Date.now() };
+    
+    if (navigator.onLine && window.db) {
+        db.ref('dsssb_reports').push(reportData);
+    } else {
+        // Queue it for later if offline
+        let queued = JSON.parse(await getItemDB('dsssb_queued_reports') || '[]');
+        queued.push(reportData);
+        await setItemDB('dsssb_queued_reports', JSON.stringify(queued));
+    }
+    
     showToast("Report Sent Successfully! 🛡️"); 
     document.getElementById('reportModal').style.display='none'; 
     document.getElementById('reportText').value='';
 }
 
-function submitSupportTicket() {
+async function submitSupportTicket() {
     const txt = document.getElementById('supportText').value.trim();
     if(!txt) return showToast("Please write a message first!", "warning");
     
@@ -1389,27 +1945,42 @@ function submitSupportTicket() {
     btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Sending..."; 
     btn.disabled = true;
 
-    db.ref('dsssb_support_tickets').push({ 
+    let ticketData = { 
         user: currentUser, 
         userId: currentUserId, 
         message: txt, 
-        time: firebase.database.ServerValue.TIMESTAMP,
+        time: Date.now(),
         status: "Pending"
-    }).then(() => {
-        showToast("Message Sent to Admin! 🚀", "success"); 
-        document.getElementById('supportModal').style.display='none'; 
-        document.getElementById('supportText').value='';
-    }).catch(err => {
-        showToast("Error: " + err.message, "error");
-    }).finally(() => {
-        btn.innerHTML = origText; 
-        btn.disabled = false;
-    });
+    };
+
+    if (navigator.onLine && window.db) {
+        db.ref('dsssb_support_tickets').push(ticketData).then(() => {
+            showToast("Message Sent to Admin! 🚀", "success"); 
+        }).catch(err => {
+            showToast("Error: " + err.message, "error");
+        }).finally(() => {
+            document.getElementById('supportModal').style.display='none'; 
+            document.getElementById('supportText').value='';
+            btn.innerHTML = origText; 
+            btn.disabled = false;
+        });
+    } else {
+         let queued = JSON.parse(await getItemDB('dsssb_queued_tickets') || '[]');
+         queued.push(ticketData);
+         await setItemDB('dsssb_queued_tickets', JSON.stringify(queued));
+         showToast("Saved offline. Will sync when online! 🚀", "success"); 
+         document.getElementById('supportModal').style.display='none'; 
+         document.getElementById('supportText').value='';
+         btn.innerHTML = origText; 
+         btn.disabled = false;
+    }
 }
 
-function toggleSaveTest(testId, el, event) {
+async function toggleSaveTest(testId, el, event) {
     event.stopPropagation(); 
-    let savedTests = JSON.parse(getSafeData('savedTests') || '[]');
+    let savedTestsStr = await getItemDB('savedTests');
+    let savedTests = savedTestsStr ? JSON.parse(savedTestsStr) : [];
+    
     if (savedTests.includes(testId)) {
         savedTests = savedTests.filter(id => id !== testId);
         el.classList.remove('saved'); 
@@ -1421,10 +1992,11 @@ function toggleSaveTest(testId, el, event) {
         el.innerHTML = '<i class="fas fa-star"></i>'; 
         showToast("Test Saved ⭐"); 
     }
-    setSafeData('savedTests', JSON.stringify(savedTests));
+    SAVED_TESTS_CACHE = savedTests;
+    await setItemDB('savedTests', JSON.stringify(savedTests));
 }
 
-function switchNotebook(type, resetFilters = false) {
+async function switchNotebook(type, resetFilters = false) {
     currentNbType = type;
     document.getElementById('nbTab-bookmarks').classList.remove('active');
     document.getElementById('nbTab-mistakes').classList.remove('active');
@@ -1435,14 +2007,19 @@ function switchNotebook(type, resetFilters = false) {
         document.getElementById('nbTopFilter').value = 'ALL';
     }
     
-    renderNotebook(type);
+    await renderNotebook(type);
 }
 
-function renderNotebook(type = 'bookmarks') {
+async function renderNotebook(type = 'bookmarks') {
     const container = document.getElementById('bookmarksListContainer');
     let dataObj = {};
-    if(type === 'bookmarks') dataObj = JSON.parse(getSafeData('dsssb_bookmarks')) || {};
-    else dataObj = JSON.parse(getSafeData('dsssb_mistakes')) || {};
+    if(type === 'bookmarks') {
+        let str = await getItemDB('dsssb_bookmarks');
+        dataObj = str ? JSON.parse(str) : {};
+    } else {
+        let str = await getItemDB('dsssb_mistakes');
+        dataObj = str ? JSON.parse(str) : {};
+    }
 
     let availableSections = new Set();
     let availableTopics = new Set();
@@ -1558,12 +2135,14 @@ function toggleNbSolution(id, btn) {
     }
 }
 
-function removeNotebookItem(key, type) {
+async function removeNotebookItem(key, type) {
     let storageKey = type === 'bookmarks' ? 'dsssb_bookmarks' : 'dsssb_mistakes';
-    let data = JSON.parse(getSafeData(storageKey)) || {};
+    let dataStr = await getItemDB(storageKey);
+    let data = dataStr ? JSON.parse(dataStr) : {};
+    
     if(data[key]) {
         delete data[key];
-        setSafeData(storageKey, JSON.stringify(data));
+        await setItemDB(storageKey, JSON.stringify(data));
         showToast("Removed from Notebook");
         renderNotebook(type);
     }
@@ -1580,11 +2159,15 @@ function reattemptTest(testId, fullUrlQuery) {
 }
 
 async function fetchData(user) {
+    // 🔥 Security Hook: Trigger Multi-Device Concurrent Login Detection 🔥
+    if (user && user.id !== "guest") {
+        setupSessionSecurity(user.id, currentUser);
+    }
+
     try {
-        if(currentUserId !== "guest") {
+        if(currentUserId !== "guest" && window.db && navigator.onLine) {
             const userRef = db.ref('dsssb_presence/' + currentUserId);
-            userRef.set({ name: currentUser, id: currentUserId, state: 'online', lastActive: firebase.database.ServerValue.TIMESTAMP });
-            userRef.onDisconnect().update({ state: 'offline', lastActive: firebase.database.ServerValue.TIMESTAMP });
+            userRef.update({ name: currentUser, id: currentUserId, state: 'online', lastActive: firebase.database.ServerValue.TIMESTAMP });
         }
         
         const [testsSnap, proSnap, notesSnap, videosSnap] = await Promise.all([ 
@@ -1640,124 +2223,128 @@ async function fetchData(user) {
         if(document.getElementById('loader')) document.getElementById('loader').style.display = 'none'; 
         document.getElementById('app').style.display = 'block'; 
 
-        db.ref("dsssb_results_live").limitToLast(100).once("value").then(resultsSnap => {
-            const res = resultsSnap.val() || {};
+        // Offline compatibility for Ranks:
+        let resultsObj = {};
+        if (navigator.onLine && window.db) {
+             const resultsSnap = await db.ref("dsssb_results_live").limitToLast(100).once("value");
+             resultsObj = resultsSnap.val() || {};
+        }
+
+        let unsyncedStr = await getItemDB('dsssb_unsynced_results');
+        let unsynced = unsyncedStr ? JSON.parse(unsyncedStr) : [];
+        unsynced.forEach((uRes, i) => { resultsObj['unsynced_' + i] = uRes; });
+        
+        let userMap = {}, myTestCount = 0, subScores = { 'Maths': [], 'English': [], 'Hindi': [], 'GK': [], 'Reasoning': [] };
+        Object.values(resultsObj).forEach(r => {
+            let rName = r.name || "Student", safeScore = parseFloat(r.score) || 0;
+            if(!userMap[rName]) userMap[rName] = {s:0, c:0, isMe: false};
+            userMap[rName].s += safeScore; 
+            userMap[rName].c++;
             
-            let unsynced = JSON.parse(getSafeData('dsssb_unsynced_results') || '[]');
-            unsynced.forEach((uRes, i) => { res['unsynced_' + i] = uRes; });
-            
-            let userMap = {}, myTestCount = 0, subScores = { 'Maths': [], 'English': [], 'Hindi': [], 'GK': [], 'Reasoning': [] };
-            Object.values(res).forEach(r => {
-                let rName = r.name || "Student", safeScore = parseFloat(r.score) || 0;
-                if(!userMap[rName]) userMap[rName] = {s:0, c:0, isMe: false};
-                userMap[rName].s += safeScore; 
-                userMap[rName].c++;
+            if (String(r.userId || "").trim() === String(currentUserId).trim() || rName === currentUser) {
+                userMap[rName].isMe = true; 
+                myTestCount++; 
+                if(r.testId) attemptedTestIds.set(r.testId, r.time || r.timestamp || Date.now()); 
                 
-                if (String(r.userId || "").trim() === String(currentUserId).trim() || rName === currentUser) {
-                    userMap[rName].isMe = true; 
-                    myTestCount++; 
-                    if(r.testId) attemptedTestIds.set(r.testId, r.time || r.timestamp || Date.now()); 
-                    
-                    let cat = r.category || (testData[r.testId] ? testData[r.testId].category : "GK");
-                    let max = r.testId && testData[r.testId] ? (parseInt(testData[r.testId].qs) || parseInt(testData[r.testId].marks) || 20) : 20;
-                    let percent = (safeScore / max) * 100;
-                    let matchedCat = Object.keys(subScores).find(k => cat.toLowerCase().includes(k.toLowerCase()));
-                    
-                    if(matchedCat) subScores[matchedCat].push(percent); else subScores['GK'].push(percent); 
+                let cat = r.category || (testData[r.testId] ? testData[r.testId].category : "GK");
+                let max = r.testId && testData[r.testId] ? (parseInt(testData[r.testId].qs) || parseInt(testData[r.testId].marks) || 20) : 20;
+                let percent = (safeScore / max) * 100;
+                let matchedCat = Object.keys(subScores).find(k => cat.toLowerCase().includes(k.toLowerCase()));
+                
+                if(matchedCat) subScores[matchedCat].push(percent); else subScores['GK'].push(percent); 
+            }
+        });
+
+        document.getElementById('valTests').innerText = myTestCount;
+        let lb = Object.keys(userMap).map(k=>({name: k, avg: userMap[k].s / userMap[k].c, isMe: userMap[k].isMe})).sort((a,b) => b.avg - a.avg);
+        let myRank = lb.findIndex(u => u.isMe) + 1; 
+        document.getElementById('valRank').innerText = myRank > 0 ? `#${myRank}` : '--';
+        renderLeaderboard(lb);
+
+        let chartAverages = []; 
+        ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'].forEach(cat => { 
+            let arr = subScores[cat]; 
+            chartAverages.push(Math.round(arr.length > 0 ? (arr.reduce((a,b)=>a+b, 0) / arr.length) : 0)); 
+        });
+        
+       renderCharts(chartAverages);
+        filterTests('all', document.querySelector('.filter-pill.active')); 
+
+        if (myTestCount > 0) {
+            let subjects = ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'];
+            let weakSubject = '';
+            let lowestScore = 101; 
+            
+            chartAverages.forEach((score, idx) => {
+                if(score > 0 && score < lowestScore) { 
+                    lowestScore = score;
+                    weakSubject = subjects[idx];
                 }
             });
 
-            document.getElementById('valTests').innerText = myTestCount;
-            let lb = Object.keys(userMap).map(k=>({name: k, avg: userMap[k].s / userMap[k].c, isMe: userMap[k].isMe})).sort((a,b) => b.avg - a.avg);
-            let myRank = lb.findIndex(u => u.isMe) + 1; 
-            document.getElementById('valRank').innerText = myRank > 0 ? `#${myRank}` : '--';
-            renderLeaderboard(lb);
-
-            let chartAverages = []; 
-            ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'].forEach(cat => { 
-                let arr = subScores[cat]; 
-                chartAverages.push(Math.round(arr.length > 0 ? (arr.reduce((a,b)=>a+b, 0) / arr.length) : 0)); 
-            });
-            
-           renderCharts(chartAverages);
-            filterTests('all', document.querySelector('.filter-pill.active')); 
-
-            if (myTestCount > 0) {
-                let subjects = ['Maths', 'English', 'Hindi', 'GK', 'Reasoning'];
-                let weakSubject = '';
-                let lowestScore = 101; 
+            let aiCard = document.getElementById('aiRecommendationCard');
+            if(weakSubject && aiCard) {
+                aiCard.style.display = 'flex';
+                document.getElementById('aiRecommendText').innerHTML = `<i class="fas fa-spinner fa-spin"></i> AI is analyzing your performance...`;
+                document.getElementById('aiRecommendBtn').onclick = () => openExamFolder(weakSubject, true);
                 
-                chartAverages.forEach((score, idx) => {
-                    if(score > 0 && score < lowestScore) { 
-                        lowestScore = score;
-                        weakSubject = subjects[idx];
-                    }
+                let promptObj = `The student's mock test averages are: Maths: ${chartAverages[0]}%, English: ${chartAverages[1]}%, Hindi: ${chartAverages[2]}%, GK: ${chartAverages[3]}%, Reasoning: ${chartAverages[4]}%. Their weakest is ${weakSubject} at ${lowestScore}%. Give a very short, 1-sentence highly motivating tip in Hinglish to improve this specific subject. Do not use asterisks or markdown.`;
+                
+                callGemini(promptObj).then(advice => {
+                    document.getElementById('aiRecommendText').innerText = advice;
+                }).catch(err => {
+                    document.getElementById('aiRecommendText').innerText = `Your avg in ${weakSubject} is ${lowestScore}%. Needs focus!`;
                 });
+            }
+        }
 
-                let aiCard = document.getElementById('aiRecommendationCard');
-                if(weakSubject && aiCard) {
-                    aiCard.style.display = 'flex';
-                    document.getElementById('aiRecommendText').innerHTML = `<i class="fas fa-spinner fa-spin"></i> AI is analyzing your performance...`;
-                    document.getElementById('aiRecommendBtn').onclick = () => openExamFolder(weakSubject, true);
-                    
-                    let promptObj = `The student's mock test averages are: Maths: ${chartAverages[0]}%, English: ${chartAverages[1]}%, Hindi: ${chartAverages[2]}%, GK: ${chartAverages[3]}%, Reasoning: ${chartAverages[4]}%. Their weakest is ${weakSubject} at ${lowestScore}%. Give a very short, 1-sentence highly motivating tip in Hinglish to improve this specific subject. Do not use asterisks or markdown.`;
-                    
-                    callGemini(promptObj).then(advice => {
-                        document.getElementById('aiRecommendText').innerText = advice;
-                    }).catch(err => {
-                        document.getElementById('aiRecommendText').innerText = `Your avg in ${weakSubject} is ${lowestScore}%. Needs focus!`;
-                    });
+      if (myTestCount > 0) {
+            let goalCard = document.getElementById('dailyGoalCard');
+            if(goalCard && !goalCard.classList.contains('completed')) {
+                goalCard.classList.add('completed');
+                document.getElementById('dgStatus').innerText = 'Completed ✅';
+                
+                if(!sessionStorage.getItem('dailyGoalCelebrated')) {
+                    setTimeout(() => {
+                        if(window.confetti) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, zIndex: 99999 });
+                        showToast("Awesome! You completed your daily mock goal! 🎯");
+                        addXP(50); // Give XP for daily goal
+                    }, 800);
+                    sessionStorage.setItem('dailyGoalCelebrated', 'true');
                 }
             }
+        }
 
-          if (myTestCount > 0) {
-                let goalCard = document.getElementById('dailyGoalCard');
-                if(goalCard && !goalCard.classList.contains('completed')) {
-                    goalCard.classList.add('completed');
-                    document.getElementById('dgStatus').innerText = 'Completed ✅';
+        if(Object.keys(dynamicFolders).length > 0) {
+            renderDynamicFolders();
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const openTestId = urlParams.get('openTest');
+        if (openTestId) {
+            let targetTest = allTests.find(t => t.dbKey === openTestId);
+            if (targetTest) {
+                let isTestLocked = targetTest.type === 'pro' && !isPro;
+                
+                if (isTestLocked) {
+                    showToast("🔒 This is a Premium Challenge. Upgrade to PRO!");
+                    setTimeout(() => { document.getElementById('paymentModal').style.display = 'flex'; }, 1000);
+                } else {
+                    showToast("⚔️ Challenge Accepted! Redirecting...");
+                    let pm = targetTest.pm !== undefined ? parseFloat(targetTest.pm) : 1;
+                    let nm = targetTest.nm !== undefined ? parseFloat(targetTest.nm) : 0.25;
+                    let isLocked = (targetTest.lock === false || targetTest.lock === "false") ? false : true;
                     
-                    if(!sessionStorage.getItem('dailyGoalCelebrated')) {
-                        setTimeout(() => {
-                            if(window.confetti) confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, zIndex: 99999 });
-                            showToast("Awesome! You completed your daily mock goal! 🎯");
-                        }, 800);
-                        sessionStorage.setItem('dailyGoalCelebrated', 'true');
-                    }
+                    let netlifyBaseUrl = "https://pyqnotes.netlify.app/tests"; 
+                    let fileUrlEncoded = encodeURIComponent(`${netlifyBaseUrl}/${targetTest.dbKey}.json`);
+                    
+                    let urlQuery = `testid=${encodeURIComponent(targetTest.dbKey)}&title=${encodeURIComponent(targetTest.title)}&time=${targetTest.time||120}&pm=${pm}&nm=${nm}&lock=${isLocked}&fileUrl=${fileUrlEncoded}`;
+                    
+                    setTimeout(() => { window.location.href = `cbt.html?${urlQuery}&mode=exam`; }, 1500);
                 }
             }
-
-            if(Object.keys(dynamicFolders).length > 0) {
-                renderDynamicFolders();
-            }
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const openTestId = urlParams.get('openTest');
-            if (openTestId) {
-                let targetTest = allTests.find(t => t.dbKey === openTestId);
-                if (targetTest) {
-                    let isTestLocked = targetTest.type === 'pro' && !isPro;
-                    
-                    if (isTestLocked) {
-                        showToast("🔒 This is a Premium Challenge. Upgrade to PRO!");
-                        setTimeout(() => { document.getElementById('paymentModal').style.display = 'flex'; }, 1000);
-                    } else {
-                        showToast("⚔️ Challenge Accepted! Redirecting...");
-                        let pm = targetTest.pm !== undefined ? parseFloat(targetTest.pm) : 1;
-                        let nm = targetTest.nm !== undefined ? parseFloat(targetTest.nm) : 0.25;
-                        let isLocked = (targetTest.lock === false || targetTest.lock === "false") ? false : true;
-                        
-                        let netlifyBaseUrl = "https://pyqnotes.netlify.app/tests"; 
-                        let fileUrlEncoded = encodeURIComponent(`${netlifyBaseUrl}/${targetTest.dbKey}.json`);
-                        
-                        let urlQuery = `testid=${encodeURIComponent(targetTest.dbKey)}&title=${encodeURIComponent(targetTest.title)}&time=${targetTest.time||120}&pm=${pm}&nm=${nm}&lock=${isLocked}&fileUrl=${fileUrlEncoded}`;
-                        
-                        setTimeout(() => { window.location.href = `cbt.html?${urlQuery}&mode=exam`; }, 1500);
-                    }
-                }
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }
-
-        }).catch(e => console.error("Leaderboard fetch error:", e));
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
 
     } catch(e) { 
         console.error("Data Load Error:", e);
@@ -1778,7 +2365,6 @@ function applyModernFilters() {
     const statusFilter = document.getElementById('examStatusFilter').value.toLowerCase();
 
     let list = [...allTests].reverse().filter(t => t.dbKey !== 'auto_qod');
-    let savedTests = JSON.parse(getSafeData('savedTests') || '[]');
 
     if (searchQuery) {
         list = list.filter(t => 
@@ -1808,7 +2394,7 @@ function applyModernFilters() {
 
     if (statusFilter !== 'all') {
         if (statusFilter === 'saved') {
-            list = list.filter(t => savedTests.includes(t.dbKey));
+            list = list.filter(t => SAVED_TESTS_CACHE.includes(t.dbKey));
         } else if (statusFilter === 'attempted') {
             list = list.filter(t => attemptedTestIds.has(t.dbKey) || attemptedTestIds.has(t.id));
         } else if (statusFilter === 'live') {
@@ -1826,7 +2412,7 @@ function applyModernFilters() {
 
 function renderTestCards(filteredList) {
     let html = "";
-    let savedTests = JSON.parse(getSafeData('savedTests') || '[]');
+    let savedTests = SAVED_TESTS_CACHE;
 
     filteredList.forEach(t => {
         let locked = t.type === 'pro' && !isPro;
@@ -2136,7 +2722,7 @@ function fetchDynamicFolders() {
             dynamicFolders = snap.val();
             renderDynamicFolders();
         } else {
-            console.log("No dynamic folders found in Firebase.");
+            console.log("No dynamic folders found.");
             document.getElementById('dynamicTreeContainer').innerHTML = `<div style="text-align:center; padding: 20px; color:var(--text-muted); width: 100%;">No Folders Found</div>`;
         }
     });
@@ -2372,7 +2958,7 @@ document.addEventListener('click', function goFullScreen() {
   
 </script>
 
-  <script>
+<script>
 (function() {
     const trackerConfig = { 
         apiKey: "AIzaSyDGolcXv0efZxRdOvBthfeT72mkNLLbAwI", 
@@ -2383,7 +2969,7 @@ document.addEventListener('click', function goFullScreen() {
         messagingSenderId: "853373171134", 
         appId: "1:853373171134:web:77b967374e6f34311af5ef" 
     };
-    if (typeof firebase !== 'undefined') {
+    if (typeof firebase !== 'undefined' && navigator.onLine) {
         if (!firebase.apps.length) { firebase.initializeApp(trackerConfig); }
         
         const trackDb = firebase.database();
